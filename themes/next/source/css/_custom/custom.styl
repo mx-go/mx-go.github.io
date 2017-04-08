@@ -1,0 +1,224 @@
+// Custom styles.
+
+body { 
+    background:url();
+ }
+ 
+.tag-cloud-tags {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  margin-top: 20px;
+}
+.tag-cloud-tags a:hover {
+  border-bottom: #649ab6 solid 3.5px;
+  transition: 0.2s ease-in-out;
+  transition-duration: 0.2s;
+  transition-duration: 0.2s;
+}
+.tag-cloud-title:hover {
+  color: #fff;
+  background-color: #649ab6;
+  transition: 0.5s ease-out;
+  cursor: pointer;
+}
+//首页文章阴影样式
+.post {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    padding: 25px;
+    -webkit-box-shadow: 0 0 14px rgba(202, 203, 203, .5);
+    -moz-box-shadow: 0 0 14px rgba(202, 203, 204, .5);
+}
+//首页头部样式
+.menu {
+  margin-top: 20px;
+  padding-left: 0;
+  text-align: center;
+  background: rgba(255,255,255,0.82);
+  margin-left: auto;
+  margin-right: auto;
+  width: 510px;
+  border-radius: initial;
+}
+.header {
+	  background: url(http://on937g0jc.bkt.clouddn.com/header-bk2.jpg);
+}
+.site-meta {
+    float: none;
+}
+.menu {
+    float: none;
+}
+.logo-line-before,
+.logo-line-after {
+    display: none;
+}
+.menu .menu-item a {
+    font-size: 14px;
+    color: rgb(15, 46, 65);
+    border-radius: 4px;
+}
+.menu .menu-item a:hover {
+  background: #fff;
+}
+.site-meta {
+    margin-left: 0px;
+    text-align: center;
+}
+.site-meta .site-title {
+    font-size: 28px;
+    font-family: 'Comic Sans MS', sans-serif;
+    color: #222;
+}
+//首页尾部样式
+.footer {
+    background: none;
+    font-size: 16px;
+}
+.footer-inner {
+    font-family: 'Comic Sans MS', sans-serif;
+    text-align: center;
+    color: #4c618f;
+}
+//侧栏按钮样式
+.sidebar-toggle {
+    background: #649ab6;
+}
+.back-to-top {
+    background: #649ab6;
+}
+//文章目录样式
+.post-toc .nav .active>a {
+    color: #4f7e96;
+}
+.post-toc ol a:hover {
+    color: #7784ba;
+}
+.sidebar-nav .sidebar-nav-active:hover {
+    color: #37596c;
+}
+.sidebar-nav li {
+  color: #adadad;
+}
+a {
+    border-bottom: none;
+}
+//首页阅读全文样式
+.post-button {
+    margin-top: 30px;
+    text-align: center;
+}
+.post-button .btn {
+    color: #fff;
+    font-size: 15px;
+    background: #686868;
+    border-radius: 16px;
+    line-height: 2;
+    margin: 0 4px 8px 4px;
+    padding: 0 20px;
+}
+.post-button a{
+  border-bottom: 1px solid #666;
+}
+.post-button a:hover {
+    color: #7784ba;
+}
+.posts-expand .post-title:hover {
+  border-left: #649ab6 20px solid;
+  padding-left: 15px;
+  cursor: pointer;
+  transition: border-width 0.3s linear 0.1s, color 0.2s linear 0.3s;
+}
+.posts-expand .post-tags a:hover {
+  background: rgba(100,154,182,0.902);
+  color: #fff;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+//右侧头像和name间隔
+.site-author-name {
+  margin: 48px 0 0;
+  color: white;
+  font-size: 20px;
+  font-family: 'Comic Sans MS', sans-serif;
+}
+
+//网易云跟帖评论样式增添
+.post-comments-count a::before {
+    content: "评论";
+}
+#yun-tie-sdk-wrap .input-box .tie-submit-row .tie-submit-btn {
+    background-color: #649ab6;
+}
+#yun-tie-sdk-wrap .input-box .tie-submit-row .tie-submit-btn:hover {
+    background-color: #4c618f;
+}
+.tie-empty-tip {
+    display: none;
+}
+//即将发布消息人样式
+#yun-tie-sdk-wrap .input-box .tie-submit-row .user-info img:hover {
+box-shadow: 0 0 10px #fff;
+rgba(255, 255, 255, .6) inset 0 0 20px rgba(255, 255, 255, 1);
+-webkit-box-shadow: 0 0 10px #fff;
+rgba(255, 255, 255, .6) inset 0 0 20px rgba(255, 255, 255, 1);
+transform: rotateZ(360deg); 
+-webkit-transform: rotateZ(360deg);
+-moz-transform: rotateZ(360deg);
+}
+#yun-tie-sdk-wrap .input-box .tie-submit-row .user-info img {
+width: 32px;
+height: 32px;
+border-radius: 50%;
+margin: 4px 10px 4px 8px;
+padding: 0;
+cursor: pointer;
+box-shadow: inset 0 -1px 0 #3333sf; /*设置图像阴影效果*/
+-webkit-box-shadow: inset 0 -1px 0 #3333sf;
+-webkit-transition: 0.4s;
+-webkit-transition: -webkit-transform 0.4s ease-out;
+transition: transform 0.4s ease-out; /*变化时间设置为0.4秒(变化动作即为下面的图像旋转360）*/
+-moz-transition: -moz-transform 0.4s ease-out;
+}
+//评论框内其他人样式
+#yun-tie-sdk-wrap .single-tie .photo img:hover {
+box-shadow: 0 0 10px #fff;
+rgba(255, 255, 255, .6) inset 0 0 20px rgba(255, 255, 255, 1);
+-webkit-box-shadow: 0 0 10px #fff;
+rgba(255, 255, 255, .6) inset 0 0 20px rgba(255, 255, 255, 1);
+transform: rotateZ(360deg); 
+-webkit-transform: rotateZ(360deg);
+-moz-transform: rotateZ(360deg);
+}
+#yun-tie-sdk-wrap .single-tie .photo img {
+width: 42px;
+height: 42px;
+border-radius: 50%;
+padding: 0;
+cursor: pointer;
+box-shadow: inset 0 -1px 0 #3333sf; /*设置图像阴影效果*/
+-webkit-box-shadow: inset 0 -1px 0 #3333sf;
+-webkit-transition: 0.4s;
+-webkit-transition: -webkit-transform 0.4s ease-out;
+transition: transform 0.4s ease-out; /*变化时间设置为0.4秒(变化动作即为下面的图像旋转360读）*/
+-moz-transition: -moz-transform 0.4s ease-out;
+}
+.name-nick:hover {
+    border-left: 14px solid #3264b4;
+}
+.name-desp:hover {
+    border-left: 14px solid #3264b4;
+}
+#yun-tie-sdk-wrap .single-tie .tie-author .name-nick{
+    cursor: pointer;
+    transition: border-width 0.3s linear 0.1s, color 0.2s linear 0.3s;
+}
+#yun-tie-sdk-wrap .single-tie .tie-author .name-desp {
+    cursor: pointer;
+    transition: border-width 0.3s linear 0.1s, color 0.2s linear 0.3s;
+}
+.tie-time:hover {
+    border-right: 14px solid #3264b4;
+}
+#yun-tie-sdk-wrap .single-tie .tie-time {
+    transition: border-width 0.3s linear 0.1s, color 0.2s linear 0.3s;
+    cursor: pointer;
+}
