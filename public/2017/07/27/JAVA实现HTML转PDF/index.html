@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="firstday," />
+  <meta name="keywords" content="java,tips," />
 
 
 
@@ -87,19 +87,20 @@
 
 
 
-<meta name="description" content="经过几天的努力，自己的博客终于搭建起来了，打心里很开心。 这不是贴吧，不是豆瓣，不是CSDN，这是我自己在互联网上的一小点领地。 从开始博客基本样式，到域名，自己一步一步摸索搭建起来的，我相信自己可以做的更好，加油!">
-<meta name="keywords" content="firstday">
+<meta name="description" content="​    最近公司里面有一个任务，在线题卡，就是把客户在线编辑的题卡样式保存下来，然后可以导出为PDF格式。于是上网找了一系列的资料，找到了以下两种方法：  使用wkhtmltox 使用iText+Flying Saucer  但是还是强烈推荐用第一种方法。">
+<meta name="keywords" content="java,tips">
 <meta property="og:type" content="article">
-<meta property="og:title" content="博客建成第一天">
-<meta property="og:url" content="https://sunny0715.github.io/2017/03/07/博客建成第一天/index.html">
+<meta property="og:title" content="JAVA实现HTML转PDF">
+<meta property="og:url" content="https://sunny0715.github.io/2017/07/27/JAVA实现HTML转PDF/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
-<meta property="og:description" content="经过几天的努力，自己的博客终于搭建起来了，打心里很开心。 这不是贴吧，不是豆瓣，不是CSDN，这是我自己在互联网上的一小点领地。 从开始博客基本样式，到域名，自己一步一步摸索搭建起来的，我相信自己可以做的更好，加油!">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/avatar.jpg">
-<meta property="og:updated_time" content="2017-06-04T01:41:33.000Z">
+<meta property="og:description" content="​    最近公司里面有一个任务，在线题卡，就是把客户在线编辑的题卡样式保存下来，然后可以导出为PDF格式。于是上网找了一系列的资料，找到了以下两种方法：  使用wkhtmltox 使用iText+Flying Saucer  但是还是强烈推荐用第一种方法。">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-8-27/HtmlToPdf/HtmlToPdf.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-8-27/HtmlToPdf/command.png">
+<meta property="og:updated_time" content="2017-09-01T03:00:19.443Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="博客建成第一天">
-<meta name="twitter:description" content="经过几天的努力，自己的博客终于搭建起来了，打心里很开心。 这不是贴吧，不是豆瓣，不是CSDN，这是我自己在互联网上的一小点领地。 从开始博客基本样式，到域名，自己一步一步摸索搭建起来的，我相信自己可以做的更好，加油!">
-<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/avatar.jpg">
+<meta name="twitter:title" content="JAVA实现HTML转PDF">
+<meta name="twitter:description" content="​    最近公司里面有一个任务，在线题卡，就是把客户在线编辑的题卡样式保存下来，然后可以导出为PDF格式。于是上网找了一系列的资料，找到了以下两种方法：  使用wkhtmltox 使用iText+Flying Saucer  但是还是强烈推荐用第一种方法。">
+<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2017-8-27/HtmlToPdf/HtmlToPdf.png">
 
 
 
@@ -127,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="https://sunny0715.github.io/2017/03/07/博客建成第一天/"/>
+  <link rel="canonical" href="https://sunny0715.github.io/2017/07/27/JAVA实现HTML转PDF/"/>
 
 
 
 
 
-  <title> 博客建成第一天 | rainbowhorse's blog </title>
+  <title> JAVA实现HTML转PDF | rainbowhorse's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -316,7 +317,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/03/07/博客建成第一天/">
+    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/07/27/JAVA实现HTML转PDF/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rainbowhorse">
@@ -337,7 +338,7 @@
             
             
               
-                博客建成第一天
+                JAVA实现HTML转PDF
               
             
           </h2>
@@ -352,8 +353,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-07T13:30:26+08:00">
-                2017-03-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-27T13:22:32+08:00">
+                2017-07-27
               </time>
             
 
@@ -375,8 +376,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/life/" itemprop="url" rel="index">
-                    <span itemprop="name">life</span>
+                  <a href="/categories/technology/" itemprop="url" rel="index">
+                    <span itemprop="name">technology</span>
                   </a>
                 </span>
 
@@ -393,7 +394,7 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a class="cloud-tie-join-count" href="/2017/03/07/博客建成第一天/#comments" itemprop="discussionUrl">
+                <a class="cloud-tie-join-count" href="/2017/07/27/JAVA实现HTML转PDF/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count join-count" itemprop="commentCount"></span>
                 </a>
               </span>
@@ -402,7 +403,7 @@
 
           
           
-             <span id="/2017/03/07/博客建成第一天/" class="leancloud_visitors" data-flag-title="博客建成第一天">
+             <span id="/2017/07/27/JAVA实现HTML转PDF/" class="leancloud_visitors" data-flag-title="JAVA实现HTML转PDF">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -425,7 +426,7 @@
                    <span class="post-meta-item-text">字数统计</span>
                  
                    <span title="字数统计" }}">
-                     91 字
+                     1,020 字
                    </span>
              
              
@@ -439,7 +440,7 @@
                    <span class="post-meta-item-text">阅读时长</span>
                  
                    <span title="阅读时长" }}">
-                     1 分钟
+                     4 分钟
                    </span>
              
            </div>
@@ -461,13 +462,45 @@
       
 
       
-        <blockquote>
-<p>经过几天的努力，自己的博客终于搭建起来了，打心里很开心。</p>
-<p>这不是贴吧，不是豆瓣，不是CSDN，这是我自己在互联网上的一小点领地。</p>
-<p>从开始博客基本样式，到域名，自己一步一步摸索搭建起来的，我相信自己可以做的更好，加油!</p>
-</blockquote>
-<div align="center"><img width="300" height="300" src="http://on937g0jc.bkt.clouddn.com/avatar.jpg" algin="center"></div>
-
+        <p>​    最近公司里面有一个任务，在线题卡，就是把客户在线编辑的题卡样式保存下来，然后可以导出为PDF格式。于是上网找了一系列的资料，找到了以下两种方法：</p>
+<ol>
+<li>使用<code>wkhtmltox</code></li>
+<li>使用<code>iText+Flying Saucer</code></li>
+</ol>
+<p>但是还是强烈推荐用第一种方法。</p>
+<a id="more"></a>
+<h1 id="使用wkhtmltox-推荐"><a href="#使用wkhtmltox-推荐" class="headerlink" title="使用wkhtmltox(推荐)"></a>使用wkhtmltox(推荐)</h1><p>wkhtmltox实现网页转换成图片或PDF</p>
+<h2 id="命令实现"><a href="#命令实现" class="headerlink" title="命令实现"></a>命令实现</h2><ol>
+<li>进入wkhtmltox官网软件下载  ：<a href="https://wkhtmltopdf.org/downloads.html" target="_blank" rel="external">https://wkhtmltopdf.org/downloads.html</a></li>
+<li>安装完成后进入${home}/bin目录下有两个exe文件，通过名称就可以辨别<code>wkhtmltoimage.exe</code>是将HTML转化为image，<code>wkhtmltopdf.exe</code>是将HTML转化为PDF文件，这正是我们想要的。</li>
+</ol>
+<p><img src="http://on937g0jc.bkt.clouddn.com/2017-8-27/HtmlToPdf/HtmlToPdf.png" alt="path"></p>
+<ol>
+<li>进入${home}/bin目录下打开cmd输入以下命令验证 </li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wkhtmltopdf HTML路径 保存路径</div><div class="line">如： wkhtmltopdf www.baidu.com d:\test.pdf</div></pre></td></tr></table></figure>
+<p><img src="http://on937g0jc.bkt.clouddn.com/2017-8-27/HtmlToPdf/command.png" alt="command"></p>
+<p>生成完成后会出现Done。</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>JAVA代码中调用wkhtmltopdf生成PDF文件，以下为代码片段</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * HTMLTOPPDF</div><div class="line"> * 利用wkhtmltopdf生成PDF</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HtmlToPDF</span> </span>&#123;</div><div class="line">    <span class="comment">//wkhtmltopdf.exe安装路径</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String toPdfTool = <span class="string">"E:\\SmallTools\\wkhtmltox\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"</span>;</div><div class="line">    <span class="comment">//需要生成PDF的URL</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String srcPath = <span class="string">"http://www.jianshu.com/p/4d65857ffe5e"</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</div><div class="line"> 		<span class="comment">//设置纸张大小: A4, Letter, etc.</span></div><div class="line">        String pageSize = <span class="string">"A4"</span>;</div><div class="line">		<span class="comment">//生成后存放路径</span></div><div class="line">        String destPath = <span class="string">"E:\\PDF生成教程及讲解.pdf"</span>; </div><div class="line">        convert(pageSize, destPath);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">convert</span><span class="params">(String pageSize, String destPath)</span></span>&#123;</div><div class="line">        File file = <span class="keyword">new</span> File(destPath);</div><div class="line">        File parent = file.getParentFile();</div><div class="line">        <span class="keyword">if</span> (!parent.exists())&#123;</div><div class="line">            parent.mkdirs();</div><div class="line">        &#125;</div><div class="line">        StringBuilder cmd = <span class="keyword">new</span> StringBuilder();</div><div class="line">        cmd.append(toPdfTool).append(<span class="string">" "</span>);</div><div class="line">        cmd.append(<span class="string">"--page-size "</span>);</div><div class="line">        cmd.append(pageSize).append(<span class="string">" "</span>);</div><div class="line">        cmd.append(srcPath).append(<span class="string">" "</span>);</div><div class="line">        cmd.append(destPath);</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            Runtime.getRuntime().exec(cmd.toString());</div><div class="line">        &#125;<span class="keyword">catch</span> (IOException e)&#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>详细参数说明可参考：<a href="http://www.jianshu.com/p/4d65857ffe5e" target="_blank" rel="external">http://www.jianshu.com/p/4d65857ffe5e</a></p>
+<h1 id="使用iText-Flying-Saucer"><a href="#使用iText-Flying-Saucer" class="headerlink" title="使用iText+Flying Saucer"></a>使用iText+Flying Saucer</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">itext可实现 </div><div class="line">1.可以进行块的创建</div><div class="line">2.表格的使用</div><div class="line">3.设置页面的事件</div><div class="line">4.字体的设置</div><div class="line">5.图片的设置（包含水印）</div><div class="line">6.HTML转化成PDF（支持css,javascript）</div><div class="line">7.表单创建</div><div class="line">8.PDF之间的操作等详细的内容可以查看网站的说明。</div></pre></td></tr></table></figure>
+<h2 id="Maven配置"><a href="#Maven配置" class="headerlink" title="Maven配置"></a>Maven配置</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.itextpdf<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>itextpdf<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.8.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.xhtmlrenderer<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flying-saucer-pdf<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>9.1.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="代码片段"><a href="#代码片段" class="headerlink" title="代码片段"></a>代码片段</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 生成pdf，添加生成pdf所使用的字符集.注：这里字符集要和模板中使用的字符集一一致。</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HtmlToPDF</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</div><div class="line"></div><div class="line">        Document document = <span class="keyword">new</span> Document(PageSize.A4.rotate()); <span class="comment">//设置为A4纸大小</span></div><div class="line"></div><div class="line">        ITextRenderer renderer = <span class="keyword">new</span> ITextRenderer();</div><div class="line">        ITextFontResolver fontResolver = renderer.getFontResolver();</div><div class="line">        fontResolver.addFont(<span class="string">"D:/simsun.ttc"</span>, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);</div><div class="line">        <span class="comment">// step 2</span></div><div class="line">        PdfWriter writer = PdfWriter.getInstance(document, <span class="keyword">new</span> FileOutputStream(<span class="string">"D:\\pdf.pdf"</span>));</div><div class="line">        <span class="comment">// step 3</span></div><div class="line">        document.open();</div><div class="line">        <span class="comment">// step 4</span></div><div class="line">        XMLWorkerHelper.getInstance().parseXHtml(writer, document,</div><div class="line">                <span class="keyword">new</span> FileInputStream(<span class="string">"D:/a.html"</span>));</div><div class="line">        <span class="comment">//step 5</span></div><div class="line">        document.close();</div><div class="line">        System.out.println( <span class="string">"PDF Created!"</span> );</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
+<li><p>.输入的HTML页面必须是标准的XHTML页面。页面的顶上必须是这样的格式：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</span>  </div><div class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">"http://www.w3.org/1999/xhtml"</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>生成PDF，添加生成PDF所使用的字符集.注：这里字符集要和模板中使用的字符集一一致。 比如:java中使用宋体 renderer.getFontResolver().addFont(“C:/Windows/Fonts/simsun.ttc”, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED); 那么HTML的body中样式必须加上 style=’font-family:SimSun’，要是使用其他字符生成pdf时候，中文就会不显示生成PDF</p>
+</li>
+<li>设置PDF的页面大小模板页面中添加该样式：@page { size: 8.5in 11in; }这时候生成PDF页面正好是A4纸大小</li>
+<li>所需的jar包，<a href="http://on937g0jc.bkt.clouddn.com/2017-8-27/HtmlToPdf/flyingsaucer.zip" target="_blank" rel="external">下载点我</a>。核心jar是修改后的</li>
+</ol>
+<h1 id="比较和总结"><a href="#比较和总结" class="headerlink" title="比较和总结"></a>比较和总结</h1><h2 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h2><p>itext</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1. java生成PDF大部分都是用itext，itext的确是java开源组件的第一选择。不过itext也有局限，就是要自己写模版，系统中的表单数量有好几百个，为每个表单做一个导出模版不现实。</div><div class="line">2. 并且itext中文适配不是很好和换行问题。</div><div class="line">3. 且对HTML格式要求严格。</div></pre></td></tr></table></figure>
+<p>wkhtmltopdf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1. 生成PDF时会自动根据你在HTML页面中H标签生成树形目录结构。</div><div class="line">2. 小巧方便，转换速度快。</div><div class="line">3. 跨平台，在Liunx下用，在win下也可以用。</div></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>​    综上比较，wkhtmltopdf是将HTML转为图片或是PDF最好的选择。</p>
 
       
     </div>
@@ -513,7 +546,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/firstday/" rel="tag"># firstday</a>
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/tips/" rel="tag"># tips</a>
           
         </div>
       
@@ -526,8 +561,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/03/21/Markdown语法/" rel="next" title="Markdown语法指南">
-                <i class="fa fa-chevron-left"></i> Markdown语法指南
+              <a href="/2017/09/01/跨页面-Tab-Window-通信的几种方法/" rel="next" title="跨页面(Tab/Window)通信的几种方法">
+                <i class="fa fa-chevron-left"></i> 跨页面(Tab/Window)通信的几种方法
               </a>
             
           </div>
@@ -535,6 +570,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/01/微信公众号网页开发/" rel="prev" title="微信公众号网页开发">
+                微信公众号网页开发 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -584,8 +623,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://on937g0jc.bkt.clouddn.com/avatar.jpg"
@@ -703,6 +751,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用wkhtmltox-推荐"><span class="nav-number">1.</span> <span class="nav-text">使用wkhtmltox(推荐)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#命令实现"><span class="nav-number">1.1.</span> <span class="nav-text">命令实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码实现"><span class="nav-number">1.2.</span> <span class="nav-text">代码实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用iText-Flying-Saucer"><span class="nav-number">2.</span> <span class="nav-text">使用iText+Flying Saucer</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Maven配置"><span class="nav-number">2.1.</span> <span class="nav-text">Maven配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码片段"><span class="nav-number">2.2.</span> <span class="nav-text">代码片段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意事项"><span class="nav-number">2.3.</span> <span class="nav-text">注意事项</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#比较和总结"><span class="nav-number">3.</span> <span class="nav-text">比较和总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#比较"><span class="nav-number">3.1.</span> <span class="nav-text">比较</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.2.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
