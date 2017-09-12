@@ -1,6 +1,6 @@
 ---
 title: Spring-AOP两种配置方式
-date: 2017-09-12 18:36:06
+date: 2017-09-12 19:44:46
 tags: [java,spring]
 categories: technology
 ---
@@ -84,13 +84,8 @@ AOP编程其实是很简单的事情，纵观AOP编程，程序员只需要参�
 注解配置AOP（使用 AspectJ 类库实现的），大致分为三步： 
 
 1. 使用注解@Aspect来定义一个切面，在切面中定义切入点(@Pointcut),通知类型(@Before, @AfterReturning,@After,@AfterThrowing,@Around). 
-
-
 2. 开发需要被拦截的类。 
-
-
 3. 将切面配置到xml中，当然，我们也可以使用自动扫描Bean的方式。这样的话，那就交由Spring AOP容器管理。 
-
 
 
 applicationContext的配置
