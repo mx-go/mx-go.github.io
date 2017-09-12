@@ -1,5 +1,5 @@
 ---
-title: spring aop两种配置方式
+title: Spring-AOP两种配置方式
 date: 2017-09-12 18:36:06
 tags: [java,spring]
 categories: technology
