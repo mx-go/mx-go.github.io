@@ -99,20 +99,22 @@ applicationContext的配置
 	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-
-	<!-- 激活组件扫描功能,在包com.spring.aop及其子包下面自动扫描通过注解配置的组件 -->
-	<context:component-scan base-package="com.spring.aop"/>
-	<!-- 激活自动代理功能 -->
+  
+  	<!-- proxy-target-class等于true是强制使用cglib代理，proxy-target-class默认是false，如果你的类实现了接口 就走JDK代理，如果没有，走cglib代理  -->
+     <!-- 对于单例模式建议使用cglib代理，虽然JDK动态代理比cglib代理速度快，但性能不如cglib -->
+	<!-- 激活自动代理功能 打开aop对@Aspectj的注解支持 ,相当于为注解提供解析功能-->
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
 	
-    <context:annotation-config /> 
-	<!-- 用户服务对象 -->
-	<bean id="userService" class="com.spring.aop.service.UserService" />
+  	<!-- 激活组件扫描功能,在包com.spring.aop及其子包下面自动扫描通过注解配置的组件 -->
+	<context:component-scan base-package="com.spring.aop"/>
+  
+	<!-- 切面 -->
+	<bean id="serviceAspect" class="com.spring.aop.aspect.ServiceAspect" />
 
 </beans>
 ```
 
-为Aspect切面类添加注解
+为Aspect`切面`类添加注解
 
 ```java
 package com.spring.aop.aspect;
@@ -197,6 +199,47 @@ public class ServiceAspect {
 		if(log.isInfoEnabled()){
 			log.info("afterThrow " + joinPoint + "\t" + ex.getMessage());
 		}
+	}
+	
+}
+```
+
+UserService.java
+
+```java
+package com.spring.aop.service;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.spring.mvc.bean.User;
+
+/**
+ * 用户服务模型
+ */
+public class UserService {
+
+	private final static Log log = LogFactory.getLog(UserService.class);
+	
+	public User get(long id){
+		if(log.isInfoEnabled()){
+			log.info("getUser method . . .");
+		}
+		return new User();
+	}
+	
+	public void save(User user){
+		if(log.isInfoEnabled()){
+			log.info("saveUser method . . .");
+		}
+	}
+	
+	public boolean delete(long id) throws Exception{
+		if(log.isInfoEnabled()){
+			log.info("delete method . . .");
+			throw new Exception("spring aop ThrowAdvice演示");
+		}
+		return false;
 	}
 	
 }

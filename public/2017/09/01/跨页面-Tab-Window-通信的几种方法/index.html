@@ -94,10 +94,12 @@
 <meta property="og:url" content="https://sunny0715.github.io/2017/09/01/跨页面-Tab-Window-通信的几种方法/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
 <meta property="og:description" content="​    今天开发一个功能遇到一个需求，在A页面点击查看详情后打开B页面进行修改或删除，删除后B页面关闭，然后刷新A页面里面的数据。相当于就是两个页面之间进行通讯，作为后端的我第一想法是利用webSocket 进行通讯，之后通过谷歌和百度找出了更为简便的方法。">
-<meta property="og:updated_time" content="2017-09-04T07:13:12.669Z">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-13/additional/html%E9%A1%B5%E9%9D%A2%E4%BC%A0%E5%80%BC.png">
+<meta property="og:updated_time" content="2017-09-13T04:32:10.385Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="跨页面(Tab/Window)通信的几种方法">
 <meta name="twitter:description" content="​    今天开发一个功能遇到一个需求，在A页面点击查看详情后打开B页面进行修改或删除，删除后B页面关闭，然后刷新A页面里面的数据。相当于就是两个页面之间进行通讯，作为后端的我第一想法是利用webSocket 进行通讯，之后通过谷歌和百度找出了更为简便的方法。">
+<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-13/additional/html%E9%A1%B5%E9%9D%A2%E4%BC%A0%E5%80%BC.png">
 
 
 
@@ -460,6 +462,8 @@
 
       
         <p>​    今天开发一个功能遇到一个需求，在A页面点击查看详情后打开B页面进行修改或删除，删除后B页面关闭，然后刷新A页面里面的数据。相当于就是两个页面之间进行通讯，作为后端的我第一想法是利用<code>webSocket</code> 进行通讯，之后通过谷歌和百度找出了更为简便的方法。</p>
+<div align="center"><img width="450" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-9-13/additional/html%E9%A1%B5%E9%9D%A2%E4%BC%A0%E5%80%BC.png" algin="center"><br><br></div>
+
 <a id="more"></a>
 <h1 id="利用webSocket进行通讯"><a href="#利用webSocket进行通讯" class="headerlink" title="利用webSocket进行通讯"></a>利用webSocket进行通讯</h1><p>​    第一想法是这个，但是这样的话工作量巨大而且还需要后端支持，太麻烦了，对于我这种懒人直接就放弃了，去寻找有没有更简便的方法。</p>
 <h1 id="定时器不断检查cookies变化"><a href="#定时器不断检查cookies变化" class="headerlink" title="定时器不断检查cookies变化"></a>定时器不断检查cookies变化</h1><p>在<a href="https://stackoverflow.com/" target="_blank" rel="external">stackoverflow</a>上看到一个方案，大致思路是：</p>
