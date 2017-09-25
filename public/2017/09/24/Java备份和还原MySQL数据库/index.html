@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java,tips," />
+  <meta name="keywords" content="java,mysql," />
 
 
 
@@ -87,17 +87,19 @@
 
 
 
-<meta name="description" content="近期在公司做了一个关于定时执行任务的功能（没有使用框架定时），查了一下资料，有Thread、Timer和Executors三种方法，之前使用的是Timer，但是详细查了资料觉得Executors更优，所以在这里比较一下它们的区别。">
-<meta name="keywords" content="java,tips">
+<meta name="description" content="前言​    在项目中经常会用到Java程序备份和还原MySQL数据库的内容，都是大同小异，但程序也会出现各种各样的问题（运行时异常，乱码等）。实现上都是用Runtime执行MySQL的命令行工具，然后读写IO流数据；也有可能是由于使用Java的Runtime来实现备份还原功能，而由于大家的运行时环境有差异才导致代码运行不成功。在这里记录一下自己使用的工具和方法。">
+<meta name="keywords" content="java,mysql">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JAVA定时调度 Timer和Executors">
-<meta property="og:url" content="https://sunny0715.github.io/2017/03/27/JAVA定时调度-Timer和Executors/index.html">
+<meta property="og:title" content="Java备份和还原MySQL数据库">
+<meta property="og:url" content="https://sunny0715.github.io/2017/09/24/Java备份和还原MySQL数据库/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
-<meta property="og:description" content="近期在公司做了一个关于定时执行任务的功能（没有使用框架定时），查了一下资料，有Thread、Timer和Executors三种方法，之前使用的是Timer，但是详细查了资料觉得Executors更优，所以在这里比较一下它们的区别。">
-<meta property="og:updated_time" content="2017-08-27T05:24:02.506Z">
+<meta property="og:description" content="前言​    在项目中经常会用到Java程序备份和还原MySQL数据库的内容，都是大同小异，但程序也会出现各种各样的问题（运行时异常，乱码等）。实现上都是用Runtime执行MySQL的命令行工具，然后读写IO流数据；也有可能是由于使用Java的Runtime来实现备份还原功能，而由于大家的运行时环境有差异才导致代码运行不成功。在这里记录一下自己使用的工具和方法。">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-21/MySQLbackUpAndRestore/mysql-index.png">
+<meta property="og:updated_time" content="2017-09-25T00:59:55.751Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JAVA定时调度 Timer和Executors">
-<meta name="twitter:description" content="近期在公司做了一个关于定时执行任务的功能（没有使用框架定时），查了一下资料，有Thread、Timer和Executors三种方法，之前使用的是Timer，但是详细查了资料觉得Executors更优，所以在这里比较一下它们的区别。">
+<meta name="twitter:title" content="Java备份和还原MySQL数据库">
+<meta name="twitter:description" content="前言​    在项目中经常会用到Java程序备份和还原MySQL数据库的内容，都是大同小异，但程序也会出现各种各样的问题（运行时异常，乱码等）。实现上都是用Runtime执行MySQL的命令行工具，然后读写IO流数据；也有可能是由于使用Java的Runtime来实现备份还原功能，而由于大家的运行时环境有差异才导致代码运行不成功。在这里记录一下自己使用的工具和方法。">
+<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-21/MySQLbackUpAndRestore/mysql-index.png">
 
 
 
@@ -125,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="https://sunny0715.github.io/2017/03/27/JAVA定时调度-Timer和Executors/"/>
+  <link rel="canonical" href="https://sunny0715.github.io/2017/09/24/Java备份和还原MySQL数据库/"/>
 
 
 
 
 
-  <title> JAVA定时调度 Timer和Executors | rainbowhorse's blog </title>
+  <title> Java备份和还原MySQL数据库 | rainbowhorse's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -314,7 +316,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/03/27/JAVA定时调度-Timer和Executors/">
+    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/09/24/Java备份和还原MySQL数据库/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rainbowhorse">
@@ -335,7 +337,7 @@
             
             
               
-                JAVA定时调度 Timer和Executors
+                Java备份和还原MySQL数据库
               
             
           </h2>
@@ -350,8 +352,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-27T17:42:49+08:00">
-                2017-03-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-24T17:43:10+08:00">
+                2017-09-24
               </time>
             
 
@@ -391,7 +393,7 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a class="cloud-tie-join-count" href="/2017/03/27/JAVA定时调度-Timer和Executors/#comments" itemprop="discussionUrl">
+                <a class="cloud-tie-join-count" href="/2017/09/24/Java备份和还原MySQL数据库/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count join-count" itemprop="commentCount"></span>
                 </a>
               </span>
@@ -400,7 +402,7 @@
 
           
           
-             <span id="/2017/03/27/JAVA定时调度-Timer和Executors/" class="leancloud_visitors" data-flag-title="JAVA定时调度 Timer和Executors">
+             <span id="/2017/09/24/Java备份和还原MySQL数据库/" class="leancloud_visitors" data-flag-title="Java备份和还原MySQL数据库">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -423,7 +425,7 @@
                    <span class="post-meta-item-text">字数统计</span>
                  
                    <span title="字数统计" }}">
-                     1,168 字
+                     1,443 字
                    </span>
              
              
@@ -437,7 +439,7 @@
                    <span class="post-meta-item-text">阅读时长</span>
                  
                    <span title="阅读时长" }}">
-                     5 分钟
+                     6 分钟
                    </span>
              
            </div>
@@ -459,51 +461,30 @@
       
 
       
-        <p>近期在公司做了一个关于定时执行任务的功能（没有使用框架定时），查了一下资料，有<strong>Thread</strong>、<strong>Timer</strong>和<strong>Executors</strong>三种方法，之前使用的是Timer，但是详细查了资料觉得<strong>Executors更优</strong>，所以在这里比较一下它们的区别。</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>​    在项目中经常会用到Java程序备份和还原MySQL数据库的内容，都是大同小异，但程序也会出现各种各样的问题（运行时异常，乱码等）。实现上都是用Runtime执行MySQL的命令行工具，然后读写IO流数据；也有可能是由于使用Java的Runtime来实现备份还原功能，而由于大家的运行时环境有差异才导致代码运行不成功。在这里记录一下自己使用的工具和方法。</p>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-21/MySQLbackUpAndRestore/mysql-index.png" algin="center"><br><br></div>
+
 <a id="more"></a>
-<h2 id="Thread类"><a href="#Thread类" class="headerlink" title="Thread类"></a>Thread类</h2><p>这是最基本的，创建一个Thread，然后让它在while循环里一直运行着，通过sleep方法来达到定时任务的效果。这样可以快速简单的实现，代码如下： </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Task1</span> </span>&#123;  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;  </div><div class="line">        <span class="comment">// run in a second  </span></div><div class="line">        <span class="keyword">final</span> <span class="keyword">long</span> timeInterval = <span class="number">1000</span>;  </div><div class="line">        Runnable runnable = <span class="keyword">new</span> Runnable() &#123;  </div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;  </div><div class="line">                <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;  </div><div class="line">                    <span class="comment">// ------- code for task to run  </span></div><div class="line">                    System.out.println(<span class="string">"Hello !!"</span>);  </div><div class="line">                    <span class="comment">// ------- ends here  </span></div><div class="line">                    <span class="keyword">try</span> &#123;  </div><div class="line">                        Thread.sleep(timeInterval);  </div><div class="line">                    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;  </div><div class="line">                        e.printStackTrace();  </div><div class="line">                    &#125;  </div><div class="line">                &#125;  </div><div class="line">            &#125;  </div><div class="line">        &#125;;  </div><div class="line">        Thread thread = <span class="keyword">new</span> Thread(runnable);  </div><div class="line">        thread.start();  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>Thread的做定时任务的几率不大，因为不可控制启动停止时间、不能指定想要的delay时间。</p>
-</blockquote>
-<h2 id="Timer类"><a href="#Timer类" class="headerlink" title="Timer类"></a>Timer类</h2><ol>
-<li><p>于第一种方式相比，优势 :</p>
-<p>(1) 当启动和去取消任务时可以控制 ;</p>
-<p>(2) 第一次执行任务时可以指定你想要的delay时间。</p>
-</li>
-<li><p>在实现时，Timer类可以调度任务，TimerTask则是通过在run()方法里实现具体任务。 Timer实例可以调度多任务，它是线程安全的。 </p>
-</li>
-<li><p>当Timer的构造器被调用时，它创建了一个线程，这个线程可以用来调度任务。</p>
-</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Task2</span> </span>&#123;  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;  </div><div class="line">        TimerTask task = <span class="keyword">new</span> TimerTask() &#123;  </div><div class="line">            <span class="meta">@Override</span>  </div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;  </div><div class="line">                <span class="comment">// task to run goes here  </span></div><div class="line">                System.out.println(<span class="string">"Hello !!!"</span>);  </div><div class="line">            &#125;  </div><div class="line">        &#125;;  </div><div class="line">        Timer timer = <span class="keyword">new</span> Timer();  </div><div class="line">        <span class="keyword">long</span> delay = <span class="number">0</span>;  </div><div class="line">        <span class="keyword">long</span> intevalPeriod = <span class="number">1</span> * <span class="number">1000</span>;  </div><div class="line">        <span class="comment">// schedules the task to be run in an interval  </span></div><div class="line">        timer.scheduleAtFixedRate(task, delay, intevalPeriod);  </div><div class="line">    &#125; <span class="comment">// end of main  </span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>缺点：如果TimerTask抛出未检查的异常，Timer将会产生无法预料的行为。Timer线程并不捕获异常，所以 TimerTask抛出的未检查的异常会终止timer线程。这种情况下，Timer也不会再重新恢复线程的执行了;它错误的认为整个Timer都被取消了。此时，已经被安排但尚未执行的TimerTask永远不会再执行了，新的任务也不能被调度了。</p>
-</blockquote>
-<h2 id="Executors"><a href="#Executors" class="headerlink" title="Executors"></a>Executors</h2><ol>
-<li><p><code>ScheduledExecutorService</code>是从Java SE5的java.util.concurrent里，做为并发工具类被引进的，这是最理想的定时任务实现方式。  </p>
-</li>
-<li><p>相比于上两个方法，它有以下好处 : </p>
-<p>(1) 相比于Timer的单线程，它是通过线程池的方式来执行任务的 ;</p>
-<p>(2) 可以很灵活的去设定第一次执行任务delay时间 ;</p>
-<p>(3) 提供了良好的约定，以便设定执行的时间间隔 。</p>
-</li>
-<li><p>下面是实现代码，我们通过ScheduledExecutorService展示这个例子，通过代码里参数的控制，首次执行加了delay时间。 </p>
-</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Task3</span> </span>&#123;  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;  </div><div class="line">        Runnable runnable = <span class="keyword">new</span> Runnable() &#123;  </div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;  </div><div class="line">                <span class="comment">// task to run goes here  </span></div><div class="line">                System.out.println(<span class="string">"Hello !!"</span>);  </div><div class="line">            &#125;  </div><div class="line">        &#125;;  </div><div class="line">        ScheduledExecutorService service = Executors  </div><div class="line">                .newSingleThreadScheduledExecutor();  </div><div class="line">        <span class="comment">// 第二个参数为首次执行的延时时间，第三个参数为定时执行的间隔时间  </span></div><div class="line">        service.scheduleAtFixedRate(runnable, <span class="number">10</span>, <span class="number">1</span>, TimeUnit.SECONDS);  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<blockquote>
-<ol>
-<li>线程池能按时间计划来执行任务，允许用户设定计划执行任务的时间。</li>
-<li>当任务较多时，线程池可能会自动创建更多的工作线程来执行任务 。</li>
-<li>支持多个任务并发执行。</li>
-</ol>
-</blockquote>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>Timer</code>是单线程的。所以task都是串行执行。假如其中一个task执行需要很长的时间，那其他的task只能干巴巴的等着。</p>
-<p><code>ScheduledThreadPoolExecutor</code>是一个可以重复执行任务的<code>线程池</code>，并且可以指定任务的间隔和延迟时间。它作为比Timer/TimerTask更加通用的替代品。因为它允许多个服务线程，接受不同的时间单位，且不需要继承TimeTask（仅仅需要实现Runnable接口）。配置ScheduledThreadPoolExecutor为单线程，则与使用Timer等效。</p>
-<p><strong>上述，基本说明了在以后的开发中尽可能使用ScheduledExecutorService(JDK1.5以后)替代Timer。</strong></p>
-<p>下面是自己做的功能，通过短信API定时查询教师回复信息并更新数据库。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 定时查询教师回复状态</div><div class="line"> * <span class="doctag">@param</span> a</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getStatusSchedule</span><span class="params">(<span class="keyword">final</span> Date replyEnd)</span></span>&#123;</div><div class="line">	</div><div class="line">	<span class="keyword">final</span> SendMessage sendMsg = <span class="keyword">new</span> SendMessage();</div><div class="line">	<span class="keyword">final</span> ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();</div><div class="line">	</div><div class="line">	service.scheduleAtFixedRate(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			<span class="keyword">try</span> &#123;</div><div class="line">				Date nowDate = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>).parse(<span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>).format(<span class="keyword">new</span> Date()));<span class="comment">//当前时间</span></div><div class="line">				<span class="comment">//若截至时间在当前时间之前执行定时任务 否则不执行</span></div><div class="line">				<span class="keyword">if</span> (!nowDate.before(replyEnd)) &#123;</div><div class="line">					service.shutdown();  <span class="comment">//停止任务</span></div><div class="line">					<span class="keyword">return</span>;</div><div class="line">				&#125;<span class="keyword">else</span> &#123;</div><div class="line">					Map&lt;String,Object&gt; map = sendMsg.getReplyMsg();  <span class="comment">//获取回复信息</span></div><div class="line">					<span class="keyword">if</span>(!map.isEmpty())&#123;		 <span class="comment">//当map不为空时执行						</span></div><div class="line">						updateMsgStatus(map);   <span class="comment">//更新数据库</span></div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">			&#125; <span class="keyword">catch</span> (ParseException e) &#123;</div><div class="line">				e.printStackTrace();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;, <span class="number">1</span>, <span class="number">1</span>, TimeUnit.MINUTES); <span class="comment">//执行后第一次查询在1分钟之后，每隔1分钟查询一次。 </span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="使用MySQL自带工具"><a href="#使用MySQL自带工具" class="headerlink" title="使用MySQL自带工具"></a>使用MySQL自带工具</h1><h2 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h2><p>备份使用MySQL的<code>mysqldump</code>命令来实现，示例代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> <span class="keyword">static</span> Logger logger = LoggerFactory.getLogger(MySQLDatabaseBackupAndRestore.class);</div><div class="line"></div><div class="line"> <span class="comment">/**</span></div><div class="line">  * Java代码实现MySQL数据库导出</div><div class="line">  *</div><div class="line">  * <span class="doctag">@param</span> hostIP       MySQL数据库所在服务器地址IP</div><div class="line">  * <span class="doctag">@param</span> userName     进入数据库所需要的用户名</div><div class="line">  * <span class="doctag">@param</span> password     进入数据库所需要的密码</div><div class="line">  * <span class="doctag">@param</span> savePath     数据库导出文件保存路径</div><div class="line">  * <span class="doctag">@param</span> fileName     数据库导出文件文件名</div><div class="line">  * <span class="doctag">@param</span> databaseName 要导出的数据库名</div><div class="line">  * <span class="doctag">@return</span> 返回true表示导出成功，否则返回false。</div><div class="line">  * <span class="doctag">@author</span> maxu</div><div class="line">  */</div><div class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">backUpDatabase</span><span class="params">(String hostIP, String userName, String password, String databaseName, String savePath, String fileName)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">     File saveFile = <span class="keyword">new</span> File(savePath);</div><div class="line">     <span class="keyword">if</span> (!saveFile.exists()) &#123;<span class="comment">// 如果目录不存在</span></div><div class="line">         saveFile.mkdirs();<span class="comment">// 创建文件夹</span></div><div class="line">     &#125;</div><div class="line">     <span class="keyword">if</span> (!savePath.endsWith(File.separator)) &#123;</div><div class="line">         savePath = savePath + File.separator;</div><div class="line">     &#125;</div><div class="line"></div><div class="line">     PrintWriter printWriter = <span class="keyword">null</span>;</div><div class="line">     BufferedReader bufferedReader = <span class="keyword">null</span>;</div><div class="line">     <span class="keyword">try</span> &#123;</div><div class="line">         printWriter = <span class="keyword">new</span> PrintWriter(<span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(savePath + fileName), <span class="string">"utf8"</span>));</div><div class="line">         Process process = Runtime.getRuntime().exec(<span class="string">" D:\\DevTools\\MySQL\\MySQL5.7\\bin\\mysqldump.exe -h"</span> + hostIP + <span class="string">" -u"</span> + userName + <span class="string">" -p"</span> + password + <span class="string">" --set-charset=UTF8 "</span> + databaseName);</div><div class="line">         InputStreamReader inputStreamReader = <span class="keyword">new</span> InputStreamReader(process.getInputStream(), <span class="string">"utf8"</span>);</div><div class="line">         bufferedReader = <span class="keyword">new</span> BufferedReader(inputStreamReader);</div><div class="line">         String line;</div><div class="line">         <span class="keyword">while</span> ((line = bufferedReader.readLine()) != <span class="keyword">null</span>) &#123;</div><div class="line">             printWriter.println(line);</div><div class="line">         &#125;</div><div class="line">         printWriter.flush();</div><div class="line">         <span class="keyword">if</span> (process.waitFor() == <span class="number">0</span>) &#123;<span class="comment">//0 表示线程正常终止。</span></div><div class="line">             logger.info(<span class="string">"数据库已备份到——&gt;&gt;"</span> + savePath);</div><div class="line">             <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">         &#125;</div><div class="line">     &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">         e.printStackTrace();</div><div class="line">     &#125; <span class="keyword">finally</span> &#123;</div><div class="line">         <span class="keyword">try</span> &#123;</div><div class="line">             <span class="keyword">if</span> (bufferedReader != <span class="keyword">null</span>) &#123;</div><div class="line">                 bufferedReader.close();</div><div class="line">             &#125;</div><div class="line">             <span class="keyword">if</span> (printWriter != <span class="keyword">null</span>) &#123;</div><div class="line">                 printWriter.close();</div><div class="line">             &#125;</div><div class="line">         &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">             e.printStackTrace();</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line">     <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<h2 id="还原"><a href="#还原" class="headerlink" title="还原"></a>还原</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line">   <span class="keyword">final</span> <span class="keyword">static</span> Logger logger = LoggerFactory.getLogger(MySQLDatabaseBackupAndRestore.class);  </div><div class="line">	</div><div class="line">   <span class="comment">/**</span></div><div class="line">     * Java代码实现MySQL数据库还原</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> hostIP       MySQL数据库所在服务器地址IP</div><div class="line">     * <span class="doctag">@param</span> userName     进入数据库所需要的用户名</div><div class="line">     * <span class="doctag">@param</span> password     进入数据库所需要的密码</div><div class="line">     * <span class="doctag">@param</span> path         需要还原数据库文件的路径</div><div class="line">     * <span class="doctag">@param</span> fileName     需要还原数据库文件的名称</div><div class="line">     * <span class="doctag">@param</span> databaseName 需要还原的数据库名称</div><div class="line">     * <span class="doctag">@return</span> 返回true表示还原成功，否则返回false。</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">restoreDatabase</span><span class="params">(String hostIP, String userName, String password, String databaseName, String path, String fileName)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line"></div><div class="line">        OutputStream out = <span class="keyword">null</span>;</div><div class="line">        BufferedReader br = <span class="keyword">null</span>;</div><div class="line">        PrintStream ps = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="comment">// 调用mysql的cmd:cmd命令在后台执行，没有命令窗口出现或者一闪而过的情况</span></div><div class="line">            Process process = Runtime.getRuntime().exec(<span class="string">"cmd /c start /b  D:\\DevTools\\MySQL\\MySQL5.7\\bin\\mysql -h"</span> + hostIP + <span class="string">" -u"</span> + userName + <span class="string">" -p"</span> + password + <span class="string">" --default-character-set=utf8 "</span> + databaseName);</div><div class="line">            out = process.getOutputStream();<span class="comment">//控制台的输入信息作为输出流</span></div><div class="line">            StringBuffer sb = <span class="keyword">new</span> StringBuffer(<span class="string">""</span>);</div><div class="line">            br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(path + fileName), <span class="string">"utf8"</span>));</div><div class="line">            String outStr;</div><div class="line">            String line;</div><div class="line">            <span class="keyword">while</span> ((line = br.readLine()) != <span class="keyword">null</span>) &#123;</div><div class="line">                sb.append(line + <span class="string">"\r\n"</span>);</div><div class="line">            &#125;</div><div class="line">            outStr = sb.toString();</div><div class="line"></div><div class="line">            ps = <span class="keyword">new</span> PrintStream(out, <span class="keyword">true</span>, <span class="string">"utf8"</span>);</div><div class="line">            ps.write(outStr.getBytes());</div><div class="line"><span class="comment">//            OutputStreamWriter writer = new OutputStreamWriter(out, "utf8");</span></div><div class="line"><span class="comment">//            writer.write(outStr);</span></div><div class="line">            <span class="comment">// 注：这里如果用缓冲方式写入文件的话，会导致中文乱码，用flush()方法则可以避免</span></div><div class="line"><span class="comment">//            writer.flush();</span></div><div class="line"><span class="comment">//            writer.close();</span></div><div class="line">            <span class="keyword">if</span> (process.waitFor() == <span class="number">0</span>) &#123;   <span class="comment">//0 表示线程正常终止。</span></div><div class="line">               <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">if</span> (ps != <span class="keyword">null</span>) &#123;</div><div class="line">                    ps.close();</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span> (br != <span class="keyword">null</span>) &#123;</div><div class="line">                    br.close();</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span> (out != <span class="keyword">null</span>)&#123;</div><div class="line">                    out.close();</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">catch</span> (IOException e1) &#123;</div><div class="line">                e1.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>测试</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line"></div><div class="line">        <span class="comment">//数据库备份</span></div><div class="line">        <span class="comment">/*try &#123;</span></div><div class="line">            if (backUpDatabase("localhost", "root", "root", "taotao", "D:/", "taotao.sql")) &#123;</div><div class="line">                logger.info("数据库成功备份！！");</div><div class="line">            &#125; else &#123;</div><div class="line">                logger.info("数据库备份失败！！");</div><div class="line">            &#125;</div><div class="line">        &#125; catch (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;*/</div><div class="line">        <span class="comment">//数据库恢复</span></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">if</span> (restoreDatabase(<span class="string">"localhost"</span>, <span class="string">"root"</span>, <span class="string">"root"</span>, <span class="string">"taotao"</span>, <span class="string">"D:/"</span>, <span class="string">"taotao.sql"</span>)) &#123;</div><div class="line">                logger.info(<span class="string">"数据库恢复成功！！"</span>);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                logger.info(<span class="string">"数据库恢复失败！！"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>代码下载点击：<a href="http://on937g0jc.bkt.clouddn.com/2017-9-21/MySQLbackUpAndRestore/MySQLDatabaseBackupAndRestore.java" target="_blank" rel="external"><em>下载</em></a></p>
+<h1 id="Windows下bat命令"><a href="#Windows下bat命令" class="headerlink" title="Windows下bat命令"></a>Windows下bat命令</h1><p>工作环境 Windows Server 2003 ，<code>MySQL</code>安装目录 D:\DevTools\MySQL ,</p>
+<p><code>WinRAR</code> 安装目录 C:\Program Files\WinRAR\WinRAR.exe </p>
+<p>备份数据存储的路径为 D:\数据备份，好了下面开始写<code>DOS批处理命令</code>了。代码如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">color <span class="number">9</span></div><div class="line">rem ---------------------数据库备份开始-----------------------</div><div class="line"><span class="meta">@echo off</span></div><div class="line"></div><div class="line">set <span class="string">"Ymd=%DATE:~0,4%%DATE:~5,2%%DATE:~8,2%%TIME:~0,2%%TIME:~3,2%%TIME:~6,2%"</span> </div><div class="line">REM 日期格式：<span class="number">20170924200727</span> </div><div class="line">md <span class="string">"D:\%ymd%"</span> </div><div class="line"><span class="string">"D:\DevTools\MySQL\MySQL5.7\bin\mysqldump.exe"</span> --opt -Q taotao -uroot -proot &gt; D:\%Ymd%\taotao.sql</div><div class="line">REM ..... 这里可以添加更多的命令，要看你有多少个数据库，其中 -Q 后面是数据库名称 -p紧跟后面是密码</div><div class="line">REM echo Winrar loading... </div><div class="line">REM  <span class="string">"C:\Program Files\WinRAR\WinRAR.exe"</span> a -ep1 -r -o+ -m5 -df <span class="string">"D:\数据备份\%Ymd%.rar"</span> <span class="string">"D:\数据备份\%Ymd%"</span> </div><div class="line"><span class="meta">@echo on</span></div><div class="line">rem ---------------------数据库备份完成-----------------------</div><div class="line"></div><div class="line">pause</div></pre></td></tr></table></figure>
+<p>把上面的命令保存为 <em>backup.bat</em> ，双击运行，就开始备份数据了。 </p>
+<p>第 一句是建立一个变量 %Ymd% ，通过 %date% 这个系统变量得到日期，%date:~,4% 表示取日期的前面4个字符就是年份，%%date:~5,2% 表示取日期第5个字符开始的2个字符就是月份，%date:~8,2% 这个就是日期号数，如 2017-09-24 这个日期最后得到的结果是 20170924 </p>
+<p>第二句就是使用变量 %Ymd% 的值建立一个空的文件夹。 </p>
+<p>第三句开始就是使用MySQL的命令对数据库mysql进行备份，并存储在 D:\数据备份\%ymd% 这个文件夹下面，这里可以有很多类似的命令，备份多个数据库。 </p>
+<p>最后就是使用 WinRAR 对备份的数据进行压缩，并存储为以 %Ymd% 变量值建立的RAR文件名，同时删除备份的 %Ymd% 目录。 </p>
+<p>如果你想让系统自动定期备份，就可以通过系统的任务计划定期执行这个命令。</p>
+<p>但是用windows下bat命令备份有一个致命缺点：<strong>备份时数据库会暂时断开。(30M断开5s左右)</strong></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>第二种方式的缺点太致命：<strong>备份时数据库会暂时断开</strong>。</p>
+<p>所以第一种方式将会是我们在开发中首选的方式，因为第二种方式的缺点对用户体验的影响太大了。</p>
+
       
     </div>
 
@@ -550,7 +531,7 @@
           
             <a href="/tags/java/" rel="tag"># java</a>
           
-            <a href="/tags/tips/" rel="tag"># tips</a>
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
           
         </div>
       
@@ -563,18 +544,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/01/JAVA实现简单爬虫/" rel="next" title="JAVA实现简单网络爬虫">
-                <i class="fa fa-chevron-left"></i> JAVA实现简单网络爬虫
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/03/24/浅谈共享单车/" rel="prev" title="浅谈共享单车">
-                浅谈共享单车 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/09/21/系统中功能点的版本控制/" rel="prev" title="系统中功能点的版本控制">
+                系统中功能点的版本控制 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -763,7 +740,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Thread类"><span class="nav-number">1.</span> <span class="nav-text">Thread类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Timer类"><span class="nav-number">2.</span> <span class="nav-text">Timer类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Executors"><span class="nav-number">3.</span> <span class="nav-text">Executors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用MySQL自带工具"><span class="nav-number">2.</span> <span class="nav-text">使用MySQL自带工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#备份"><span class="nav-number">2.1.</span> <span class="nav-text">备份</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#还原"><span class="nav-number">2.2.</span> <span class="nav-text">还原</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Windows下bat命令"><span class="nav-number">3.</span> <span class="nav-text">Windows下bat命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
