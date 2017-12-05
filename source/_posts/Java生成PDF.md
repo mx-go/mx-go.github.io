@@ -422,7 +422,7 @@ Flying Saucer是基于iText的，支持对CSS高级特性的解析。
 <title>Title</title>
 <style>
  @page {
- 		size:297mm 230mm;
+ 	size:297mm 230mm;
         @top-left{
             content:element(header-left);
         };
