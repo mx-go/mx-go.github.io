@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java,extendKW," />
+  <meta name="keywords" content="java,tips," />
 
 
 
@@ -87,16 +87,24 @@
 
 
 
-<meta name="keywords" content="java,extendKW">
+<meta name="description" content="前言String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。 intern()方法设计的初衷，就是重用String对象，以节省内存消耗。">
+<meta name="keywords" content="java,tips">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JAVA实现简单网络爬虫">
-<meta property="og:url" content="https://sunny0715.github.io/2017/04/01/JAVA实现简单爬虫/index.html">
+<meta property="og:title" content="Java String intern方法">
+<meta property="og:url" content="https://sunny0715.github.io/2017/12/01/Java-String-intern方法/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-4-1/%E7%88%AC%E8%99%AB.jpg">
-<meta property="og:updated_time" content="2017-06-04T01:41:33.000Z">
+<meta property="og:description" content="前言String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。 intern()方法设计的初衷，就是重用String对象，以节省内存消耗。">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/creating-java-strings.jpg">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/no-intern.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/use-intern.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jdk1.6.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jdk1.7.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/jdk1.7-2.png">
+<meta property="og:updated_time" content="2017-12-07T06:06:05.734Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JAVA实现简单网络爬虫">
-<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2017-4-1/%E7%88%AC%E8%99%AB.jpg">
+<meta name="twitter:title" content="Java String intern方法">
+<meta name="twitter:description" content="前言String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。 intern()方法设计的初衷，就是重用String对象，以节省内存消耗。">
+<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/creating-java-strings.jpg">
 
 
 
@@ -124,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="https://sunny0715.github.io/2017/04/01/JAVA实现简单爬虫/"/>
+  <link rel="canonical" href="https://sunny0715.github.io/2017/12/01/Java-String-intern方法/"/>
 
 
 
 
 
-  <title> JAVA实现简单网络爬虫 | rainbowhorse's blog </title>
+  <title> Java String intern方法 | rainbowhorse's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -313,7 +321,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/04/01/JAVA实现简单爬虫/">
+    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/12/01/Java-String-intern方法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rainbowhorse">
@@ -334,7 +342,7 @@
             
             
               
-                JAVA实现简单网络爬虫
+                Java String intern方法
               
             
           </h2>
@@ -349,8 +357,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-01T14:17:39+08:00">
-                2017-04-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-01T10:27:19+08:00">
+                2017-12-01
               </time>
             
 
@@ -390,7 +398,7 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a class="cloud-tie-join-count" href="/2017/04/01/JAVA实现简单爬虫/#comments" itemprop="discussionUrl">
+                <a class="cloud-tie-join-count" href="/2017/12/01/Java-String-intern方法/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count join-count" itemprop="commentCount"></span>
                 </a>
               </span>
@@ -399,7 +407,7 @@
 
           
           
-             <span id="/2017/04/01/JAVA实现简单爬虫/" class="leancloud_visitors" data-flag-title="JAVA实现简单网络爬虫">
+             <span id="/2017/12/01/Java-String-intern方法/" class="leancloud_visitors" data-flag-title="Java String intern方法">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -422,7 +430,7 @@
                    <span class="post-meta-item-text">字数统计</span>
                  
                    <span title="字数统计" }}">
-                     1,505 字
+                     1,899 字
                    </span>
              
              
@@ -436,7 +444,7 @@
                    <span class="post-meta-item-text">阅读时长</span>
                  
                    <span title="阅读时长" }}">
-                     7 分钟
+                     8 分钟
                    </span>
              
            </div>
@@ -458,47 +466,68 @@
       
 
       
-        <div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-4-1/%E7%88%AC%E8%99%AB.jpg" algin="center"></div>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。</p>
+<p>intern()方法设计的初衷，就是重用String对象，以节省内存消耗。</p>
+<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/creating-java-strings.jpg" algin="center"><br><br></div>
 
 <a id="more"></a>
-<h2 id="爬虫基本理解"><a href="#爬虫基本理解" class="headerlink" title="爬虫基本理解"></a>爬虫基本理解</h2><blockquote>
-<p>通俗一点，<code>爬虫</code>是用来快速、批量获取我们在网络需要的东西，过滤掉不需要的东西，比如我可以爬一个网站的所有图片省的一张一张去保存，也可以爬其他数据来做研究、统计、数据分析，即是：</p>
-<p>(1) 对抓取目标的描述或定义；</p>
-<p>(2) 对网页或数据的分析与过滤；</p>
-<p>(3) 对URL的搜索策略。</p>
-<p>很多语言都可以做爬虫，在这里记录JAVA做一个简单的爬虫，等以后学会其他语言了再用其他语言做爬虫，哈哈…</p>
-</blockquote>
-<h2 id="实现爬虫需要"><a href="#实现爬虫需要" class="headerlink" title="实现爬虫需要"></a>实现爬虫需要</h2><h3 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h3><ul>
-<li>简单<strong>HTML、CSS、JS</strong>等前端知识</li>
-<li><a href="http://deerchao.net/tutorials/regex/regex.htm" target="_blank" rel="external"><strong>正则表达式</strong></a>（很重要，用于过滤不需要的信息）</li>
-<li>JAVA<strong>语言知识</strong>（可换成其他语言）</li>
-</ul>
-<h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><ol>
-<li>首先你要给它一个种子链接<code>URL</code></li>
-<li>在种子链接的页面查找其他的URL，重复1步骤</li>
-<li>有链接有页面，然后你可以在页面中查找需要的内容</li>
-</ol>
-<h2 id="简单爬虫代码"><a href="#简单爬虫代码" class="headerlink" title="简单爬虫代码"></a>简单爬虫代码</h2><p>在这里做个示例：把网站<code>https://www.baidu.com/home/news/data/newspage?nid=7953839918275534&amp;n_type=0&amp;p_from=1</code>  图片全部down下来并保存到本地磁盘的操作。</p>
-<h3 id="JAVA基本方式"><a href="#JAVA基本方式" class="headerlink" title="JAVA基本方式"></a>JAVA基本方式</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line">public class Reptile &#123;</div><div class="line">	public static String doGet(String urlStr) throws Exception &#123;</div><div class="line">		URL url;</div><div class="line">		String html = "";</div><div class="line">		try &#123;</div><div class="line">			url = new URL(urlStr);</div><div class="line">			HttpURLConnection connection = (HttpURLConnection) url.openConnection();</div><div class="line">			connection.setRequestProperty("Accept", "text/html");</div><div class="line">			connection.setRequestProperty("Accept-Charset", "utf-8");</div><div class="line">			connection.setRequestProperty("Accept-Language", "en-US,en");</div><div class="line">			connection.setRequestProperty("User-Agent",</div><div class="line">                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) 					Chrome/25.0.1364.160 Safari/537.22");</div><div class="line">			connection.setRequestMethod("GET");</div><div class="line">			connection.setConnectTimeout(5000);</div><div class="line">			connection.setDoInput(true);</div><div class="line">			connection.setDoOutput(true);</div><div class="line">			if (connection.getResponseCode() == 200) &#123;</div><div class="line">				System.out.println("已连接，正在解析。。。。。。");</div><div class="line">				InputStream in = connection.getInputStream();</div><div class="line">				html = StreamTool.inToStringByByte(in);</div><div class="line">			&#125; else &#123;</div><div class="line">				System.out.println(connection.getResponseCode());</div><div class="line">			&#125;</div><div class="line">		&#125; catch (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">			throw new Exception("get请求失败");</div><div class="line">		&#125;</div><div class="line">		return html;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws Exception &#123;</div><div class="line">		Reptile reptile = new Reptile()</div><div class="line">		String htmlStr = Reptile.doGet("https://www.baidu.com/home/news/data/</div><div class="line">                                       newspagenid=7953839918275534&amp;n_type=0&amp;p_from=1");</div><div class="line"></div><div class="line">		File f = new File("E://imgs");</div><div class="line">		if (!f.exists()) &#123;</div><div class="line">			f.mkdirs();</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		Pattern pattern = Pattern.compile("&lt;img.*src=(.*?)[^&gt;]*?&gt;"); //匹配Imag标签</div><div class="line">		Matcher matcher = pattern.matcher(htmlStr); // 定义一个matcher用来做匹配</div><div class="line">      </div><div class="line">		System.out.println("正在下载");</div><div class="line">		while (matcher.find()) &#123;</div><div class="line">			String imgs = matcher.group();</div><div class="line">			Matcher srcMatcher = Pattern.compile("https:\"?(.*?)(\"|&gt;|\\s+)").matcher(imgs);</div><div class="line">			while (srcMatcher.find()) &#123;</div><div class="line">				String src = srcMatcher.group().substring(0,srcMatcher.group().length() - 1);</div><div class="line">				System.out.println(src);</div><div class="line">              	 // 获取后缀名</div><div class="line">				String imageName = src.substring(src.lastIndexOf("/") + 1,src.length());</div><div class="line">				reptile.downLoad(src, imageName);   //下载图片到本地</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	//下载图片到本地</div><div class="line">	public void downLoad(String src, String imageName) throws Exception &#123;</div><div class="line">		URL url = new URL(src);</div><div class="line">      </div><div class="line">		URLConnection uri = url.openConnection();</div><div class="line">		InputStream is = uri.getInputStream(); // 获取数据流</div><div class="line">		// 写入数据流</div><div class="line">		OutputStream os = new FileOutputStream(new File("E://imgs", imageName));</div><div class="line">		byte[] buf = new byte[1024];</div><div class="line">		int len = 0;</div><div class="line">		while ((len = is.read(buf)) != -1) &#123;</div><div class="line">			os.write(buf, 0, len);</div><div class="line">		&#125;</div><div class="line">		os.close();</div><div class="line">		is.close();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>JAVA基本方法主要是利用JAVA中的正则表达式匹配我们我需要的元素，然后再进行其他操作。简单、粗暴。</p>
-</blockquote>
-<h3 id="Jsoup方式"><a href="#Jsoup方式" class="headerlink" title="Jsoup方式"></a><a href="http://baike.baidu.com/link?url=utl_VUDcVYjjpjXYnY1NKXoTbfToHXosLWBr9qmIjSe0DuYkIUv-zgBbXbJsMPoVjp6YGRMjt_B95v4mRKCdK_" target="_blank" rel="external">Jsoup</a>方式</h3><blockquote>
-<p><code>Jsoup</code> 是一个 Java 的开源HTML解析器，可直接解析某个URL地址、HTML文本内容。同时提供了一套非常省力的API，可通过DOM，CSS以及类似于jQuery的操作方法来取出和操作数据。可以直接使用DOM或者JQuery方法和表达式取出数据。</p>
-<p>需要下载JAR包，下载地址：<a href="http://on937g0jc.bkt.clouddn.com/2017-4-1/jsoup-1.10.2.jar" target="_blank" rel="external"><em>点我</em></a></p>
-<p><code>Jsoup API</code>：详见：<em><a href="http://www.open-open.com/jsoup/" target="_blank" rel="external">http://www.open-open.com/jsoup/</a></em></p>
-</blockquote>
-<p><strong>工具类StreamTool</strong> ：将byte对象转化为String对象</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StreamTool</span> </span>&#123;</div><div class="line"><span class="comment">//  将byte对象转化为String对象</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">inToStringByByte</span><span class="params">(InputStream in)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		ByteArrayOutputStream outStr = <span class="keyword">new</span> ByteArrayOutputStream();</div><div class="line">		<span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</div><div class="line">		<span class="keyword">int</span> len = <span class="number">0</span>;</div><div class="line">		StringBuilder content = <span class="keyword">new</span> StringBuilder();</div><div class="line">		<span class="keyword">while</span> ((len = in.read(buffer)) != -<span class="number">1</span>) &#123;</div><div class="line">			content.append(<span class="keyword">new</span> String(buffer, <span class="number">0</span>, len, <span class="string">"UTF-8"</span>));</div><div class="line">		&#125;</div><div class="line">		outStr.close();</div><div class="line">		<span class="keyword">return</span> content.toString();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>基本实现类Reptile</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line">public class Reptile &#123;</div><div class="line">	public static String doGet(String urlStr) throws Exception &#123;</div><div class="line">		URL url;</div><div class="line">		String html = "";</div><div class="line">		try &#123;</div><div class="line">			url = new URL(urlStr);</div><div class="line">			HttpURLConnection connection = (HttpURLConnection) url.openConnection();</div><div class="line">			//伪装爬虫，不然会报403错误</div><div class="line">			connection.setRequestProperty("Accept", "text/html"); </div><div class="line">			connection.setRequestProperty("Accept-Charset", "utf-8");</div><div class="line">			connection.setRequestProperty("Accept-Language", "en-US,en");</div><div class="line">			connection.setRequestProperty("User-Agent","Mozilla/5.0 (X11; Linux x86_64)</div><div class="line">              AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22");</div><div class="line">			</div><div class="line">			connection.setRequestMethod("GET"); // 定义请求方式</div><div class="line">			connection.setConnectTimeout(5000);</div><div class="line">			connection.setDoInput(true); //设置是否向httpUrlConnection输出， 默认情况下是false;</div><div class="line">			connection.setDoOutput(true); // 设置是否从httpUrlConnection读入，默认情况下是true; </div><div class="line">			if (connection.getResponseCode() == 200) &#123; //连接成功</div><div class="line">				System.out.println("已连接，正在解析。。。。。。");</div><div class="line">				InputStream in = connection.getInputStream();</div><div class="line">				html = StreamTool.inToStringByByte(in);</div><div class="line">			&#125; else &#123;</div><div class="line">				System.out.println(connection.getResponseCode());</div><div class="line">			&#125;</div><div class="line">		&#125; catch (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">			throw new Exception("get请求失败");</div><div class="line">		&#125;</div><div class="line">		return html;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws Exception &#123;</div><div class="line">      	URL url ;</div><div class="line">     	InputStream is = null;</div><div class="line">		OutputStream os = null;</div><div class="line">     	String urlStr = "https://www.baidu.com/home/news/data/newspage?nid=7953839918275534&amp;n_type=0&amp;p_from=1";</div><div class="line">      </div><div class="line">		String htmlStr = Reptile.doGet(urlStr);</div><div class="line">		Document doc = Jsoup.parse(htmlStr); // 将获取的网页 HTML 源代码转化为 Document对象</div><div class="line"></div><div class="line">		File f = new File("E://imgs");  //把文件存在E://imgs</div><div class="line">		if (!f.exists()) &#123;</div><div class="line">			f.mkdirs();</div><div class="line">		&#125;</div><div class="line">		Elements pngs = doc.select("img[src]");  //获取所有图片</div><div class="line">//		Elements pngs = doc.select("img[src$=.png]");只爬取png图片</div><div class="line">		int i = 1;	 //计数</div><div class="line">		for (Element e : pngs) &#123;</div><div class="line">			String src = e.attr("src");  // 获取img中的src路径</div><div class="line">			String imageName = src.substring(src.lastIndexOf("/") + 1,</div><div class="line">             		src.length());	// 获取后缀名</div><div class="line"></div><div class="line">			System.out.println("正在下载第" + i + "张图片："+ imageName);</div><div class="line">			</div><div class="line">			URL url = new URL(src); 	// 连接url</div><div class="line">			URLConnection uri = url.openConnection();</div><div class="line">			</div><div class="line">			is = uri.getInputStream();	 // 获取数据流</div><div class="line">			os = new FileOutputStream(new File("E://imgs",imageName));// 写入数据流</div><div class="line">			byte[] buf = new byte[1024];</div><div class="line">			int len = 0;</div><div class="line">			while ((len = is.read(buf)) != -1) &#123;</div><div class="line">				os.write(buf, 0, len);</div><div class="line">			&#125;</div><div class="line">			i++;</div><div class="line">		&#125;</div><div class="line">      		os.close();</div><div class="line">      		is.close();</div><div class="line">		System.out.println("共有" + (i-1) + "张图片。");</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在这里只做个一个简单的爬虫示例，<strong>通过两种方式的比较后，发现Jsoup更佳。</strong></p>
-<p><code>JAVA</code>基本的方式能用正则表达式来匹配所需要的元素，灵活性不高。</p>
-<p><code>Jsoup</code>这个强大的工具提供了DOM和JQuery方法，可以直接操作节点，同时也支持正则表达式，更加的灵活、省力，同时选择性、可玩性和扩展性更高。Jsoup更多的方法可以查看<a href="http://www.open-open.com/jsoup/" target="_blank" rel="external"><em>Jsoup的API</em></a>。</p>
-<p>现在已经有很多开源的爬虫的框架供我们选择，比如webmagic、Heritrix等，可以适当选择。</p>
-<h2 id="附"><a href="#附" class="headerlink" title="附"></a>附</h2><p>还有一种更为简单强大的方式，在<code>Linux环境</code>下，利用<code>wget命令</code>只需要一行命令就可以实现以上功能。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget -m -H -nd -l 1 -t 1 -A .jpg,.png,.jpeg,.JPEG -e robots=off -P /opt/download --no-check-certificate https://www.baidu.com/home/news/data/newspage?nid=7953839918275534&amp;n_type=0&amp;p_from=1</div></pre></td></tr></table></figure>
-<p>在下篇博客写一下Linux的基本命令。</p>
+<h1 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String str1 = <span class="keyword">new</span> String(<span class="string">"rainbow"</span>) + <span class="keyword">new</span> String(<span class="string">"horse"</span>);</div><div class="line">System.out.println(str1.intern() == str1);</div><div class="line">System.out.println(str1 == <span class="string">"rainbowhorse"</span>);</div></pre></td></tr></table></figure>
+<p>在<strong>JDK1.7</strong>下输出结果为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">true</span></div><div class="line"><span class="keyword">true</span></div></pre></td></tr></table></figure>
+<p>再将上面的例子加上一行代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">String str2 = <span class="string">"rainbowhorse"</span>;	<span class="comment">//新加的一行代码，其余不变  </span></div><div class="line">String str1 = <span class="keyword">new</span> String(<span class="string">"rainbow"</span>) + <span class="keyword">new</span> String(<span class="string">"horse"</span>);</div><div class="line">System.out.println(str1.intern() == str1);</div><div class="line">System.out.println(str1 == <span class="string">"rainbowhorse"</span>);</div></pre></td></tr></table></figure>
+<p>再运行，结果为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">false</span></div><div class="line"><span class="keyword">false</span></div></pre></td></tr></table></figure>
+<p>在JVM运行时数据区中的方法区有一个常量池，但是发现在JDK1.6以后常量池被放置在了堆空间，因此常量池位置的不同影响到了String的intern()方法的表现。</p>
+<h1 id="为什么使用intern-方法"><a href="#为什么使用intern-方法" class="headerlink" title="为什么使用intern()方法"></a>为什么使用intern()方法</h1><p>就如引言所说的，<strong>intern()方法设计的初衷，就是重用String对象，以节省内存消耗</strong>。下面通过例子来说明：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">	<span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX = <span class="number">100000</span>;</div><div class="line">	<span class="keyword">static</span> <span class="keyword">final</span> String[] arr = <span class="keyword">new</span> String[MAX];</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		<span class="comment">// 为长度为10的Integer数组随机赋值</span></div><div class="line">		Integer[] sample = <span class="keyword">new</span> Integer[<span class="number">10</span>];</div><div class="line">		Random random = <span class="keyword">new</span> Random(<span class="number">1000</span>);</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; sample.length; i++) &#123;</div><div class="line">			sample[i] = random.nextInt();</div><div class="line">		&#125;</div><div class="line">		<span class="comment">// 记录程序开始时间</span></div><div class="line">		<span class="keyword">long</span> t = System.currentTimeMillis();</div><div class="line">		<span class="comment">// 使用/不使用intern方法为10万个String赋值，值来自于Integer数组的10个数</span></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; MAX; i++) &#123;</div><div class="line">			arr[i] = <span class="keyword">new</span> String(String.valueOf(sample[i % sample.length]));</div><div class="line">			<span class="comment">// arr[i] = new String(String.valueOf(sample[i % sample.length])).intern();</span></div><div class="line">		&#125;</div><div class="line">		System.out.println((System.currentTimeMillis() - t) + <span class="string">"ms"</span>);</div><div class="line">		System.gc();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个主要是为了证明<code>使用intern()比不使用intern()消耗的内存更少</code>。</p>
+<p>先定义一个长度为10的Integer数组，并随机为其赋值，在通过for循环为长度为10万的String对象依次赋值，这些值都来自于Integer数组。两种情况分别运行，可通过Window —&gt; Preferences –&gt; Java –&gt; Installed JREs设置JVM启动参数为-agentlib:hprof=heap=dump,format=b，将程序运行完后的hprof置于工程目录下。再通过<a href="http://download.eclipse.org/mat/" target="_blank" rel="external">MAT</a>插件查看该hprof文件。</p>
+<p>不使用intern()方法</p>
+<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/no-intern.png" algin="center"><br><br></div>
+
+<p>使用intern()方法</p>
+<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/use-intern.png" algin="center"><br><br></div>
+
+<p>从运行结果来看，不使用intern()的情况下，程序生成了101762个String对象，而使用了intern()方法时，程序仅生成了1772个String对象。证明了intern()节省内存的结论。</p>
+<p>但是会发现使用了intern()方法后程序运行时间有所增加。这是因为程序中每次都是用了new String后又进行intern()操作的耗时时间，但是不使用intern()占用内存空间导致GC的时间是要远远大于这点时间的。 </p>
+<h1 id="深入理解intern-方法"><a href="#深入理解intern-方法" class="headerlink" title="深入理解intern()方法"></a>深入理解intern()方法</h1><p><strong>JDK1.7后，常量池被放入到堆空间中，这导致intern()函数的功能不同。这点很重要。</strong></p>
+<p>看看下面代码，这个例子是网上流传较广的一个例子，我也是照抄过来的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String s = <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">s.intern();  </div><div class="line">String s2 = <span class="string">"1"</span>;  </div><div class="line">System.out.println(s == s2);  </div><div class="line">  </div><div class="line">String s3 = <span class="keyword">new</span> String(<span class="string">"1"</span>) + <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">s3.intern();  </div><div class="line">String s4 = <span class="string">"11"</span>;  </div><div class="line">System.out.println(s3 == s4);</div></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">JDK1.6以及以下：<span class="keyword">false</span> <span class="keyword">false</span>  </div><div class="line">JDK1.7以及以上：<span class="keyword">false</span> <span class="keyword">true</span></div></pre></td></tr></table></figure>
+<p>再分别调整上面代码2、3行，7、8行的顺序：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String s = <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">String s2 = <span class="string">"1"</span>;  </div><div class="line">s.intern();  </div><div class="line">System.out.println(s == s2);  </div><div class="line">  </div><div class="line">String s3 = <span class="keyword">new</span> String(<span class="string">"1"</span>) + <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">String s4 = <span class="string">"11"</span>;  </div><div class="line">s3.intern();  </div><div class="line">System.out.println(s3 == s4);</div></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">JDK1.6以及以下：<span class="keyword">false</span> <span class="keyword">false</span>  </div><div class="line">JDK1.7以及以上：<span class="keyword">false</span> <span class="keyword">false</span></div></pre></td></tr></table></figure>
+<h2 id="JDK1-6"><a href="#JDK1-6" class="headerlink" title="JDK1.6"></a><strong>JDK1.6</strong></h2><div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jdk1.6.png" algin="center"><br><br></div>
+
+<p>在JDK1.6中所有的输出结果都是 false，因为JDK1.6以及以前版本中，常量池是放在 Perm 区（属于方法区）中的，Perm区是和堆区完全分开的。</p>
+<p>使用<strong>引号声明的字符串都是会直接在字符串常量池中生成</strong>的，而<strong>new 出来的String对象是放在堆空间中</strong>的。所以两者的内存地址肯定是不相同的，即使调用了intern()方法也是不影响的。</p>
+<p>intern()方法在JDK1.6中的作用是：比如String s = new String(“rainbowhorse”)，再调用s.intern()，此时返回值还是字符串”rainbowhorse”，表面上看起来好像这个方法没什么用处。但实际上，在JDK1.6中它做了个小动作：检查字符串池里是否存在”rainbowhorse”这么一个字符串，如果存在，就返回池里的字符串；如果不存在，该方法把”rainbowhorse”添加到字符串池中，然后再返回它的引用。</p>
+<h2 id="JDK1-7"><a href="#JDK1-7" class="headerlink" title="JDK1.7"></a>JDK1.7</h2><h3 id="例一分析"><a href="#例一分析" class="headerlink" title="例一分析"></a>例一分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String s = <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">s.intern();  </div><div class="line">String s2 = <span class="string">"1"</span>;  </div><div class="line">System.out.println(s == s2);  </div><div class="line">  </div><div class="line">String s3 = <span class="keyword">new</span> String(<span class="string">"1"</span>) + <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">s3.intern();  </div><div class="line">String s4 = <span class="string">"11"</span>;  </div><div class="line">System.out.println(s3 == s4);</div></pre></td></tr></table></figure>
+<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jdk1.7.png" algin="center"><br><br></div>
+
+<p>String s = newString(“1”)，<strong>生成了常量池中的“1” 和堆空间中的字符串对象</strong>。</p>
+<p>s.intern()，这一行的作用是s对象去常量池中寻找后发现”1”<strong>已经存在于常量池中了</strong>。</p>
+<p>String s2 = “1”，这行代码是生成一个s2的引用<strong>指向常量池中的“1”对象</strong>。</p>
+<p>结果就是 s 和 s2 的引用地址明显不同。因此返回了false。</p>
+<p>String s3 = new String(“1”) + newString(“1”)，这行代码<strong>在字符串常量池中生成“1” ，并在堆空间中生成s3引用指向的对象（内容为”11”）</strong>。注意<strong>此时常量池中是没有 “11”对象</strong>的。</p>
+<p>s3.intern()，这一行代码，是将 s3中的<strong>“11”字符串放入 String 常量池中</strong>，此时常量池中不存在“11”字符串，JDK1.6的做法是直接在常量池中生成一个 “11” 的对象。</p>
+<p><strong>但是在JDK1.7中，常量池中不需要再存储一份对象了，可以直接存储堆中的引用</strong>。这份引用直接指向 s3 引用的对象，也就是说s3.intern() ==s3会返回true。</p>
+<p>String s4 = “11”， 这一行代码会<strong>直接去常量池中创建</strong>，但是发现已经有这个对象了，此时也就是<strong>指向 s3 引用对象的一个引用</strong>。因此s3 == s4返回了true。</p>
+<h3 id="例二分析"><a href="#例二分析" class="headerlink" title="例二分析"></a>例二分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String s = <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">String s2 = <span class="string">"1"</span>;  </div><div class="line">s.intern();  </div><div class="line">System.out.println(s == s2);  </div><div class="line">  </div><div class="line">String s3 = <span class="keyword">new</span> String(<span class="string">"1"</span>) + <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">String s4 = <span class="string">"11"</span>;  </div><div class="line">s3.intern();  </div><div class="line">System.out.println(s3 == s4);</div></pre></td></tr></table></figure>
+<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/jdk1.7-2.png" algin="center"><br><br></div>
+
+<p>String s = newString(“1”)，生成了<strong>常量池中的“1” 和堆空间中的字符串对象</strong>。</p>
+<p>String s2 = “1”，这行代码是生成一个s2的<strong>引用指向常量池中的“1”对象，但是发现已经存在了，那么就直接指向了它</strong>。</p>
+<p>s.intern()，这一行在这里就没什么实际作用了。因为”1”已经存在了。</p>
+<p>结果就是 s 和 s2 的引用地址明显不同。因此返回了false。</p>
+<p>String s3 = new String(“1”) + newString(“1”)，这行代码<strong>在字符串常量池中生成“1” ，并在堆空间中生成s3引用指向的对象（内容为”11”）</strong>。注意此时常量池中是没有 “11”对象的。</p>
+<p>String s4 = “11”， 这一行代码会<strong>直接去生成常量池中的”11”</strong>。</p>
+<p>s3.intern()，这一行在这里就没什么实际作用了。因为”11”已经存在了。</p>
+<p>结果就是 s3 和 s4 的引用地址明显不同。因此返回了false。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>从JDK 1.7后，HotSpot 将常量池从永久代移到了元空间，正因为如此，JDK 1.7 后的intern方法在实现上发生了比较大的改变，JDK 1.7后，intern方法还是会先去查询常量池中是否有已经存在，如果存在，则返回常量池中的引用，这一点与之前没有区别，区别在于，<strong>如果在常量池找不到对应的字符串，则不会再将字符串拷贝到常量池，而只是在常量池中生成一个对原字符串的引用</strong>。</p>
 
       
     </div>
@@ -546,7 +575,7 @@
           
             <a href="/tags/java/" rel="tag"># java</a>
           
-            <a href="/tags/extendKW/" rel="tag"># extendKW</a>
+            <a href="/tags/tips/" rel="tag"># tips</a>
           
         </div>
       
@@ -559,18 +588,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/07/Linux基本命令/" rel="next" title="Linux基本命令">
-                <i class="fa fa-chevron-left"></i> Linux基本命令
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/03/27/JAVA定时调度-Timer和Executors/" rel="prev" title="JAVA定时调度 Timer和Executors">
-                JAVA定时调度 Timer和Executors <i class="fa fa-chevron-right"></i>
+              <a href="/2017/11/20/JVM入门/" rel="prev" title="JVM入门">
+                JVM入门 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -759,7 +784,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#爬虫基本理解"><span class="nav-number">1.</span> <span class="nav-text">爬虫基本理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现爬虫需要"><span class="nav-number">2.</span> <span class="nav-text">实现爬虫需要</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#知识点"><span class="nav-number">2.1.</span> <span class="nav-text">知识点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参数"><span class="nav-number">2.2.</span> <span class="nav-text">参数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单爬虫代码"><span class="nav-number">3.</span> <span class="nav-text">简单爬虫代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JAVA基本方式"><span class="nav-number">3.1.</span> <span class="nav-text">JAVA基本方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Jsoup方式"><span class="nav-number">3.2.</span> <span class="nav-text">Jsoup方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附"><span class="nav-number">5.</span> <span class="nav-text">附</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#案例"><span class="nav-number">2.</span> <span class="nav-text">案例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么使用intern-方法"><span class="nav-number">3.</span> <span class="nav-text">为什么使用intern()方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#深入理解intern-方法"><span class="nav-number">4.</span> <span class="nav-text">深入理解intern()方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JDK1-6"><span class="nav-number">4.1.</span> <span class="nav-text">JDK1.6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JDK1-7"><span class="nav-number">4.2.</span> <span class="nav-text">JDK1.7</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#例一分析"><span class="nav-number">4.2.1.</span> <span class="nav-text">例一分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例二分析"><span class="nav-number">4.2.2.</span> <span class="nav-text">例二分析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
