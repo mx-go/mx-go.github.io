@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java,tips," />
+  <meta name="keywords" content="mysql,tool," />
 
 
 
@@ -87,24 +87,39 @@
 
 
 
-<meta name="description" content="前言String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。 intern()方法设计的初衷，就是重用String对象，以节省内存消耗。">
-<meta name="keywords" content="java,tips">
+<meta name="description" content="引言在数据库的开发设计中，PowerDesiger（PD）是一个较为常用的UML工具。PowerDesiger为各类数据模型提供了直观的符号表示，不仅使设计人员能更方便、更快捷地使非计算机专业技术人员展示数据库设计和应用系统设计，使系统设计人员与使用系统的业务人员更易于相互理解和交流，同时也使项目组内的交流更为直观、准确，更便于协调工作，从而加速系统的设计和开发过程。PowerDesiger设计完">
+<meta name="keywords" content="mysql,tool">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java String intern方法">
-<meta property="og:url" content="https://sunny0715.github.io/2017/12/01/Java-String-intern方法/index.html">
+<meta property="og:title" content="UML工具-PowerDesigner设计数据库">
+<meta property="og:url" content="https://sunny0715.github.io/2017/12/06/UML工具-PowerDesigner设计数据库/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
-<meta property="og:description" content="前言String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。 intern()方法设计的初衷，就是重用String对象，以节省内存消耗。">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/creating-java-strings.jpg">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/no-intern.png">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/use-intern.png">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jdk1.6.png">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jdk1.7.png">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/jdk1.7-2.png">
-<meta property="og:updated_time" content="2017-12-07T06:06:05.734Z">
+<meta property="og:description" content="引言在数据库的开发设计中，PowerDesiger（PD）是一个较为常用的UML工具。PowerDesiger为各类数据模型提供了直观的符号表示，不仅使设计人员能更方便、更快捷地使非计算机专业技术人员展示数据库设计和应用系统设计，使系统设计人员与使用系统的业务人员更易于相互理解和交流，同时也使项目组内的交流更为直观、准确，更便于协调工作，从而加速系统的设计和开发过程。PowerDesiger设计完">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/logo-powerdesigner.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/3.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/4.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/5.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/6.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/7.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/8.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/9.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/10.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/12.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/13.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/14.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/15.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-1.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-2.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-3.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-4.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-6.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-7.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-8.png">
+<meta property="og:updated_time" content="2017-12-11T10:10:49.998Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java String intern方法">
-<meta name="twitter:description" content="前言String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。 intern()方法设计的初衷，就是重用String对象，以节省内存消耗。">
-<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/creating-java-strings.jpg">
+<meta name="twitter:title" content="UML工具-PowerDesigner设计数据库">
+<meta name="twitter:description" content="引言在数据库的开发设计中，PowerDesiger（PD）是一个较为常用的UML工具。PowerDesiger为各类数据模型提供了直观的符号表示，不仅使设计人员能更方便、更快捷地使非计算机专业技术人员展示数据库设计和应用系统设计，使系统设计人员与使用系统的业务人员更易于相互理解和交流，同时也使项目组内的交流更为直观、准确，更便于协调工作，从而加速系统的设计和开发过程。PowerDesiger设计完">
+<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/logo-powerdesigner.png">
 
 
 
@@ -132,13 +147,13 @@
 
 
 
-  <link rel="canonical" href="https://sunny0715.github.io/2017/12/01/Java-String-intern方法/"/>
+  <link rel="canonical" href="https://sunny0715.github.io/2017/12/06/UML工具-PowerDesigner设计数据库/"/>
 
 
 
 
 
-  <title> Java String intern方法 | rainbowhorse's blog </title>
+  <title> UML工具-PowerDesigner设计数据库 | rainbowhorse's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -321,7 +336,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/12/01/Java-String-intern方法/">
+    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/12/06/UML工具-PowerDesigner设计数据库/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rainbowhorse">
@@ -342,7 +357,7 @@
             
             
               
-                Java String intern方法
+                UML工具-PowerDesigner设计数据库
               
             
           </h2>
@@ -357,8 +372,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-01T10:27:19+08:00">
-                2017-12-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-06T15:47:06+08:00">
+                2017-12-06
               </time>
             
 
@@ -398,7 +413,7 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a class="cloud-tie-join-count" href="/2017/12/01/Java-String-intern方法/#comments" itemprop="discussionUrl">
+                <a class="cloud-tie-join-count" href="/2017/12/06/UML工具-PowerDesigner设计数据库/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count join-count" itemprop="commentCount"></span>
                 </a>
               </span>
@@ -407,7 +422,7 @@
 
           
           
-             <span id="/2017/12/01/Java-String-intern方法/" class="leancloud_visitors" data-flag-title="Java String intern方法">
+             <span id="/2017/12/06/UML工具-PowerDesigner设计数据库/" class="leancloud_visitors" data-flag-title="UML工具-PowerDesigner设计数据库">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -430,7 +445,7 @@
                    <span class="post-meta-item-text">字数统计</span>
                  
                    <span title="字数统计" }}">
-                     1,899 字
+                     1,076 字
                    </span>
              
              
@@ -444,7 +459,7 @@
                    <span class="post-meta-item-text">阅读时长</span>
                  
                    <span title="阅读时长" }}">
-                     8 分钟
+                     4 分钟
                    </span>
              
            </div>
@@ -466,68 +481,79 @@
       
 
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。</p>
-<p>intern()方法设计的初衷，就是重用String对象，以节省内存消耗。</p>
-<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/creating-java-strings.jpg" algin="center"><br><br></div>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在数据库的开发设计中，PowerDesiger（PD）是一个较为常用的UML工具。PowerDesiger为各类数据模型提供了直观的符号表示，不仅使设计人员能更方便、更快捷地使非计算机专业技术人员展示数据库设计和应用系统设计，使系统设计人员与使用系统的业务人员更易于相互理解和交流，同时也使项目组内的交流更为直观、准确，更便于协调工作，从而加速系统的设计和开发过程。PowerDesiger设计完成后的数据库可直接生成SQL语句。</p>
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/logo-powerdesigner.png" algin="center"><br><br></div>
 
 <a id="more"></a>
-<h1 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String str1 = <span class="keyword">new</span> String(<span class="string">"rainbow"</span>) + <span class="keyword">new</span> String(<span class="string">"horse"</span>);</div><div class="line">System.out.println(str1.intern() == str1);</div><div class="line">System.out.println(str1 == <span class="string">"rainbowhorse"</span>);</div></pre></td></tr></table></figure>
-<p>在<strong>JDK1.7</strong>下输出结果为：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">true</span></div><div class="line"><span class="keyword">true</span></div></pre></td></tr></table></figure>
-<p>再将上面的例子加上一行代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">String str2 = <span class="string">"rainbowhorse"</span>;	<span class="comment">//新加的一行代码，其余不变  </span></div><div class="line">String str1 = <span class="keyword">new</span> String(<span class="string">"rainbow"</span>) + <span class="keyword">new</span> String(<span class="string">"horse"</span>);</div><div class="line">System.out.println(str1.intern() == str1);</div><div class="line">System.out.println(str1 == <span class="string">"rainbowhorse"</span>);</div></pre></td></tr></table></figure>
-<p>再运行，结果为：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">false</span></div><div class="line"><span class="keyword">false</span></div></pre></td></tr></table></figure>
-<p>在JVM运行时数据区中的方法区有一个常量池，但是发现在JDK1.6以后常量池被放置在了堆空间，因此常量池位置的不同影响到了String的intern()方法的表现。</p>
-<h1 id="为什么使用intern-方法"><a href="#为什么使用intern-方法" class="headerlink" title="为什么使用intern()方法"></a>为什么使用intern()方法</h1><p>就如引言所说的，<strong>intern()方法设计的初衷，就是重用String对象，以节省内存消耗</strong>。下面通过例子来说明：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">	<span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX = <span class="number">100000</span>;</div><div class="line">	<span class="keyword">static</span> <span class="keyword">final</span> String[] arr = <span class="keyword">new</span> String[MAX];</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		<span class="comment">// 为长度为10的Integer数组随机赋值</span></div><div class="line">		Integer[] sample = <span class="keyword">new</span> Integer[<span class="number">10</span>];</div><div class="line">		Random random = <span class="keyword">new</span> Random(<span class="number">1000</span>);</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; sample.length; i++) &#123;</div><div class="line">			sample[i] = random.nextInt();</div><div class="line">		&#125;</div><div class="line">		<span class="comment">// 记录程序开始时间</span></div><div class="line">		<span class="keyword">long</span> t = System.currentTimeMillis();</div><div class="line">		<span class="comment">// 使用/不使用intern方法为10万个String赋值，值来自于Integer数组的10个数</span></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; MAX; i++) &#123;</div><div class="line">			arr[i] = <span class="keyword">new</span> String(String.valueOf(sample[i % sample.length]));</div><div class="line">			<span class="comment">// arr[i] = new String(String.valueOf(sample[i % sample.length])).intern();</span></div><div class="line">		&#125;</div><div class="line">		System.out.println((System.currentTimeMillis() - t) + <span class="string">"ms"</span>);</div><div class="line">		System.gc();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这个主要是为了证明<code>使用intern()比不使用intern()消耗的内存更少</code>。</p>
-<p>先定义一个长度为10的Integer数组，并随机为其赋值，在通过for循环为长度为10万的String对象依次赋值，这些值都来自于Integer数组。两种情况分别运行，可通过Window —&gt; Preferences –&gt; Java –&gt; Installed JREs设置JVM启动参数为-agentlib:hprof=heap=dump,format=b，将程序运行完后的hprof置于工程目录下。再通过<a href="http://download.eclipse.org/mat/" target="_blank" rel="external">MAT</a>插件查看该hprof文件。</p>
-<p>不使用intern()方法</p>
-<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/no-intern.png" algin="center"><br><br></div>
+<h1 id="使用ODBC连接MySQL"><a href="#使用ODBC连接MySQL" class="headerlink" title="使用ODBC连接MySQL"></a>使用ODBC连接MySQL</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p><strong>PowerDesigner本身是32位的程序（特别重要），故不管在32位或者64位操作系统中，都需要安装32位的MySQL Connector /ODBC。</strong></p>
+<p>MySQL Connector /ODBC下载地址：<em><a href="https://dev.mysql.com/downloads/connector/odbc/" target="_blank" rel="external">https://dev.mysql.com/downloads/connector/odbc/</a></em></p>
+<h2 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h2><ol>
+<li>安装完ODBC之后，打开PowerDesigner，新建一个Model，File—&gt;New Model</li>
+</ol>
+<div align="center"><img width="500" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2.png" algin="center"><br><br></div>
 
-<p>使用intern()方法</p>
-<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/use-intern.png" algin="center"><br><br></div>
+<ol>
+<li>选择工具栏中的Database—&gt; Update Model from Database，如下图</li>
+</ol>
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/3.png" algin="center"><br><br></div>
 
-<p>从运行结果来看，不使用intern()的情况下，程序生成了101762个String对象，而使用了intern()方法时，程序仅生成了1772个String对象。证明了intern()节省内存的结论。</p>
-<p>但是会发现使用了intern()方法后程序运行时间有所增加。这是因为程序中每次都是用了new String后又进行intern()操作的耗时时间，但是不使用intern()占用内存空间导致GC的时间是要远远大于这点时间的。 </p>
-<h1 id="深入理解intern-方法"><a href="#深入理解intern-方法" class="headerlink" title="深入理解intern()方法"></a>深入理解intern()方法</h1><p><strong>JDK1.7后，常量池被放入到堆空间中，这导致intern()函数的功能不同。这点很重要。</strong></p>
-<p>看看下面代码，这个例子是网上流传较广的一个例子，我也是照抄过来的。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String s = <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">s.intern();  </div><div class="line">String s2 = <span class="string">"1"</span>;  </div><div class="line">System.out.println(s == s2);  </div><div class="line">  </div><div class="line">String s3 = <span class="keyword">new</span> String(<span class="string">"1"</span>) + <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">s3.intern();  </div><div class="line">String s4 = <span class="string">"11"</span>;  </div><div class="line">System.out.println(s3 == s4);</div></pre></td></tr></table></figure>
-<p>输出结果为：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">JDK1.6以及以下：<span class="keyword">false</span> <span class="keyword">false</span>  </div><div class="line">JDK1.7以及以上：<span class="keyword">false</span> <span class="keyword">true</span></div></pre></td></tr></table></figure>
-<p>再分别调整上面代码2、3行，7、8行的顺序：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String s = <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">String s2 = <span class="string">"1"</span>;  </div><div class="line">s.intern();  </div><div class="line">System.out.println(s == s2);  </div><div class="line">  </div><div class="line">String s3 = <span class="keyword">new</span> String(<span class="string">"1"</span>) + <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">String s4 = <span class="string">"11"</span>;  </div><div class="line">s3.intern();  </div><div class="line">System.out.println(s3 == s4);</div></pre></td></tr></table></figure>
-<p>输出结果为：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">JDK1.6以及以下：<span class="keyword">false</span> <span class="keyword">false</span>  </div><div class="line">JDK1.7以及以上：<span class="keyword">false</span> <span class="keyword">false</span></div></pre></td></tr></table></figure>
-<h2 id="JDK1-6"><a href="#JDK1-6" class="headerlink" title="JDK1.6"></a><strong>JDK1.6</strong></h2><div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jdk1.6.png" algin="center"><br><br></div>
+<ol>
+<li>打开配置对话框，选择[Using a data source]，点击输入框后的图标</li>
+</ol>
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/4.png" algin="center"><br><br></div>
 
-<p>在JDK1.6中所有的输出结果都是 false，因为JDK1.6以及以前版本中，常量池是放在 Perm 区（属于方法区）中的，Perm区是和堆区完全分开的。</p>
-<p>使用<strong>引号声明的字符串都是会直接在字符串常量池中生成</strong>的，而<strong>new 出来的String对象是放在堆空间中</strong>的。所以两者的内存地址肯定是不相同的，即使调用了intern()方法也是不影响的。</p>
-<p>intern()方法在JDK1.6中的作用是：比如String s = new String(“rainbowhorse”)，再调用s.intern()，此时返回值还是字符串”rainbowhorse”，表面上看起来好像这个方法没什么用处。但实际上，在JDK1.6中它做了个小动作：检查字符串池里是否存在”rainbowhorse”这么一个字符串，如果存在，就返回池里的字符串；如果不存在，该方法把”rainbowhorse”添加到字符串池中，然后再返回它的引用。</p>
-<h2 id="JDK1-7"><a href="#JDK1-7" class="headerlink" title="JDK1.7"></a>JDK1.7</h2><h3 id="例一分析"><a href="#例一分析" class="headerlink" title="例一分析"></a>例一分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String s = <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">s.intern();  </div><div class="line">String s2 = <span class="string">"1"</span>;  </div><div class="line">System.out.println(s == s2);  </div><div class="line">  </div><div class="line">String s3 = <span class="keyword">new</span> String(<span class="string">"1"</span>) + <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">s3.intern();  </div><div class="line">String s4 = <span class="string">"11"</span>;  </div><div class="line">System.out.println(s3 == s4);</div></pre></td></tr></table></figure>
-<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jdk1.7.png" algin="center"><br><br></div>
+<ol>
+<li>配置ODBC数据源</li>
+</ol>
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/5.png" algin="center"></div>
 
-<p>String s = newString(“1”)，<strong>生成了常量池中的“1” 和堆空间中的字符串对象</strong>。</p>
-<p>s.intern()，这一行的作用是s对象去常量池中寻找后发现”1”<strong>已经存在于常量池中了</strong>。</p>
-<p>String s2 = “1”，这行代码是生成一个s2的引用<strong>指向常量池中的“1”对象</strong>。</p>
-<p>结果就是 s 和 s2 的引用地址明显不同。因此返回了false。</p>
-<p>String s3 = new String(“1”) + newString(“1”)，这行代码<strong>在字符串常量池中生成“1” ，并在堆空间中生成s3引用指向的对象（内容为”11”）</strong>。注意<strong>此时常量池中是没有 “11”对象</strong>的。</p>
-<p>s3.intern()，这一行代码，是将 s3中的<strong>“11”字符串放入 String 常量池中</strong>，此时常量池中不存在“11”字符串，JDK1.6的做法是直接在常量池中生成一个 “11” 的对象。</p>
-<p><strong>但是在JDK1.7中，常量池中不需要再存储一份对象了，可以直接存储堆中的引用</strong>。这份引用直接指向 s3 引用的对象，也就是说s3.intern() ==s3会返回true。</p>
-<p>String s4 = “11”， 这一行代码会<strong>直接去常量池中创建</strong>，但是发现已经有这个对象了，此时也就是<strong>指向 s3 引用对象的一个引用</strong>。因此s3 == s4返回了true。</p>
-<h3 id="例二分析"><a href="#例二分析" class="headerlink" title="例二分析"></a>例二分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String s = <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">String s2 = <span class="string">"1"</span>;  </div><div class="line">s.intern();  </div><div class="line">System.out.println(s == s2);  </div><div class="line">  </div><div class="line">String s3 = <span class="keyword">new</span> String(<span class="string">"1"</span>) + <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">String s4 = <span class="string">"11"</span>;  </div><div class="line">s3.intern();  </div><div class="line">System.out.println(s3 == s4);</div></pre></td></tr></table></figure>
-<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/jdk1.7-2.png" algin="center"><br><br></div>
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/6.png" algin="center"></div>
 
-<p>String s = newString(“1”)，生成了<strong>常量池中的“1” 和堆空间中的字符串对象</strong>。</p>
-<p>String s2 = “1”，这行代码是生成一个s2的<strong>引用指向常量池中的“1”对象，但是发现已经存在了，那么就直接指向了它</strong>。</p>
-<p>s.intern()，这一行在这里就没什么实际作用了。因为”1”已经存在了。</p>
-<p>结果就是 s 和 s2 的引用地址明显不同。因此返回了false。</p>
-<p>String s3 = new String(“1”) + newString(“1”)，这行代码<strong>在字符串常量池中生成“1” ，并在堆空间中生成s3引用指向的对象（内容为”11”）</strong>。注意此时常量池中是没有 “11”对象的。</p>
-<p>String s4 = “11”， 这一行代码会<strong>直接去生成常量池中的”11”</strong>。</p>
-<p>s3.intern()，这一行在这里就没什么实际作用了。因为”11”已经存在了。</p>
-<p>结果就是 s3 和 s4 的引用地址明显不同。因此返回了false。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>从JDK 1.7后，HotSpot 将常量池从永久代移到了元空间，正因为如此，JDK 1.7 后的intern方法在实现上发生了比较大的改变，JDK 1.7后，intern方法还是会先去查询常量池中是否有已经存在，如果存在，则返回常量池中的引用，这一点与之前没有区别，区别在于，<strong>如果在常量池找不到对应的字符串，则不会再将字符串拷贝到常量池，而只是在常量池中生成一个对原字符串的引用</strong>。</p>
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/7.png" algin="center"></div>
+
+<p>说明：这里提供了ANSI和Unicode两种字符集版本的Driver，<strong>Unicode提供更丰富的字符集，一般推荐使用Unicode</strong>。</p>
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/8.png" algin="center"></div>
+
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/9.png" algin="center"></div>
+
+<p>点击完成，配置连接信息。</p>
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/10.png" algin="center"></div>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">说明：</div><div class="line">Data Source Name：指定当前配置的ODBC数据源名称，可随意填写。</div><div class="line">Description：指定ODBC数据源的描述信息，可根据用途随意填写。</div><div class="line">TCP/IP Server：采用TCP/IP协议连接服务器，如果是本地填写localhost或者127.0.0.1（根据实际MySQL用户情况选择），如果是远程服务器则填写相应IP地址即可。</div><div class="line">Port：默认3306，根据实际MySQL的端口设置填写。</div><div class="line">lNamed Pipe：命名管道方式连接，只适用于widows下的本地连接。连接性能比TCP/IP方式更高，更安全。请按照MySQL的配置文件my.ini中的socket参数指定的值填写，如果没有设置则默认为MySQL（但是目前为止这种方式我还没有测试成功）。</div><div class="line">User：数据库用户名。</div><div class="line">Password：数据库密码。</div><div class="line">Database：数据库中的database。</div></pre></td></tr></table></figure>
+<p>信息输入完之后可以选择Test测试配置是否正确，点击OK就结束了配置。</p>
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/12.png" algin="center"></div>
+
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/13.png" algin="center"></div>
+
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/14.png" algin="center"></div>
+
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/15.png" algin="center"></div>
+
+<p>到这里已经可以连接数据库了。</p>
+<h1 id="设计数据库"><a href="#设计数据库" class="headerlink" title="设计数据库"></a>设计数据库</h1><p>如果在已有的数据库上需要设计和修改，先取消所有表，再选择需要设计或修改的数据库，选择表，点击ok。</p>
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-1.png" algin="center"></div>
+
+<p>连接后的UML如下，可以新建和修改表</p>
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-2.png" algin="center"></div>
+
+<p>同时可对表进行主外键设计，现在主外键已经很少用到了。</p>
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-3.png" algin="center"></div>
+
+<p>双击表之间的连接线，点击Joins</p>
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-4.png" algin="center"></div>
+
+<p>点击【确定】按钮，即可如我们所愿： </p>
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-6.png" algin="center"></div>
+
+<h1 id="生成建表语句"><a href="#生成建表语句" class="headerlink" title="生成建表语句"></a>生成建表语句</h1><p>点击Database—&gt;Generate Database</p>
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-7.png" algin="center"></div>
+
+<div align="center"><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-8.png" algin="center"></div>
+
+<p>点击【确定】按钮之后，可以在桌面上找到shiro.sql这样的一个文件，打开，即可看到建表语句： </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*==============================================================*/</span></div><div class="line"><span class="comment">/* DBMS name:      MySQL 5.0                                    */</span></div><div class="line"><span class="comment">/* Created on:     2017.12.6 17:22:25                          */</span></div><div class="line"><span class="comment">/*==============================================================*/</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">drop</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">exists</span> shiro.u_permission;</div><div class="line"></div><div class="line"><span class="keyword">drop</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">exists</span> shiro.u_role;</div><div class="line"></div><div class="line"><span class="keyword">drop</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">exists</span> shiro.u_role_permission;</div><div class="line"></div><div class="line"><span class="keyword">drop</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">exists</span> shiro.u_user;</div><div class="line"></div><div class="line"><span class="keyword">drop</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">exists</span> shiro.u_user_role;</div><div class="line"></div><div class="line"><span class="comment">/*==============================================================*/</span></div><div class="line"><span class="comment">/* User: shiro                                                  */</span></div><div class="line"><span class="comment">/*==============================================================*/</span></div><div class="line"><span class="keyword">create</span> <span class="keyword">user</span> shiro;</div><div class="line"></div><div class="line"><span class="comment">/*==============================================================*/</span></div><div class="line"><span class="comment">/* Table: u_permission                                          */</span></div><div class="line"><span class="comment">/*==============================================================*/</span></div><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> shiro.u_permission</div><div class="line">(</div><div class="line">   <span class="keyword">id</span>                   <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="literal">null</span> auto_increment,</div><div class="line">   <span class="keyword">url</span>                  <span class="keyword">national</span> <span class="built_in">varchar</span>(<span class="number">256</span>) <span class="keyword">comment</span> <span class="string">'url地址'</span>,</div><div class="line">   <span class="keyword">name</span>                 <span class="keyword">national</span> <span class="built_in">varchar</span>(<span class="number">64</span>) <span class="keyword">comment</span> <span class="string">'url描述'</span>,</div><div class="line">   primary <span class="keyword">key</span> (<span class="keyword">id</span>)</div><div class="line">);</div><div class="line"></div><div class="line"><span class="comment">/*==============================================================*/</span></div><div class="line"><span class="comment">/* Table: u_role                                                */</span></div><div class="line"><span class="comment">/*==============================================================*/</span></div><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> shiro.u_role</div><div class="line">(</div><div class="line">   <span class="keyword">id</span>                   <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="literal">null</span> auto_increment,</div><div class="line">   <span class="keyword">name</span>                 <span class="keyword">national</span> <span class="built_in">varchar</span>(<span class="number">32</span>) <span class="keyword">comment</span> <span class="string">'角色名称'</span>,</div><div class="line">   <span class="keyword">type</span>                 <span class="keyword">national</span> <span class="built_in">varchar</span>(<span class="number">10</span>) <span class="keyword">comment</span> <span class="string">'角色类型'</span>,</div><div class="line">   primary <span class="keyword">key</span> (<span class="keyword">id</span>)</div><div class="line">);</div><div class="line"></div><div class="line"><span class="comment">/*==============================================================*/</span></div><div class="line"><span class="comment">/* Table: u_role_permission                                     */</span></div><div class="line"><span class="comment">/*==============================================================*/</span></div><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> shiro.u_role_permission</div><div class="line">(</div><div class="line">   rid                  <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">comment</span> <span class="string">'角色ID'</span>,</div><div class="line">   pid                  <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">comment</span> <span class="string">'权限ID'</span></div><div class="line">);</div><div class="line"></div><div class="line"><span class="comment">/*==============================================================*/</span></div><div class="line"><span class="comment">/* Table: u_user                                                */</span></div><div class="line"><span class="comment">/*==============================================================*/</span></div><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> shiro.u_user</div><div class="line">(</div><div class="line">   <span class="keyword">id</span>                   <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="literal">null</span> auto_increment,</div><div class="line">   nickname             <span class="keyword">national</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">comment</span> <span class="string">'用户昵称'</span>,</div><div class="line">   email                <span class="keyword">national</span> <span class="built_in">varchar</span>(<span class="number">128</span>) <span class="keyword">comment</span> <span class="string">'邮箱|登录帐号'</span>,</div><div class="line">   pswd                 <span class="keyword">national</span> <span class="built_in">varchar</span>(<span class="number">32</span>) <span class="keyword">comment</span> <span class="string">'密码'</span>,</div><div class="line">   create_time          datetime <span class="keyword">comment</span> <span class="string">'创建时间'</span>,</div><div class="line">   last_login_time      datetime <span class="keyword">comment</span> <span class="string">'最后登录时间'</span>,</div><div class="line">   <span class="keyword">status</span>               <span class="built_in">bigint</span>(<span class="number">1</span>) <span class="keyword">default</span> <span class="number">1</span> <span class="keyword">comment</span> <span class="string">'1:有效，0:禁止登录'</span>,</div><div class="line">   primary <span class="keyword">key</span> (<span class="keyword">id</span>)</div><div class="line">);</div><div class="line"></div><div class="line"><span class="comment">/*==============================================================*/</span></div><div class="line"><span class="comment">/* Table: u_user_role                                           */</span></div><div class="line"><span class="comment">/*==============================================================*/</span></div><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> shiro.u_user_role</div><div class="line">(</div><div class="line">   uid                  <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">comment</span> <span class="string">'用户ID'</span>,</div><div class="line">   rid                  <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">comment</span> <span class="string">'角色ID'</span></div><div class="line">);</div><div class="line"></div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> shiro.u_user_role <span class="keyword">add</span> <span class="keyword">constraint</span> FK_Reference_1 foreign <span class="keyword">key</span> (uid)</div><div class="line">      <span class="keyword">references</span> shiro.u_user (<span class="keyword">id</span>) <span class="keyword">on</span> <span class="keyword">delete</span> restrict <span class="keyword">on</span> <span class="keyword">update</span> restrict;</div></pre></td></tr></table></figure>
+<p>得到SQL语句后可直接导入到数据库。由此我们设计数据库已经完成。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这里只是简单介绍了PowerDesigner进行数据库模型设计，自动生成SQL语句等功能。PowerDesigner还有很多技巧和功能在摸索中。</p>
 
       
     </div>
@@ -573,9 +599,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
           
-            <a href="/tags/tips/" rel="tag"># tips</a>
+            <a href="/tags/tool/" rel="tag"># tool</a>
           
         </div>
       
@@ -588,18 +614,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/06/UML工具-PowerDesigner设计数据库/" rel="next" title="UML工具-PowerDesigner设计数据库">
-                <i class="fa fa-chevron-left"></i> UML工具-PowerDesigner设计数据库
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/11/20/JVM入门/" rel="prev" title="JVM入门">
-                JVM入门 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/12/01/Java-String-intern方法/" rel="prev" title="Java String intern方法">
+                Java String intern方法 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -788,7 +810,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#案例"><span class="nav-number">2.</span> <span class="nav-text">案例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么使用intern-方法"><span class="nav-number">3.</span> <span class="nav-text">为什么使用intern()方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#深入理解intern-方法"><span class="nav-number">4.</span> <span class="nav-text">深入理解intern()方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JDK1-6"><span class="nav-number">4.1.</span> <span class="nav-text">JDK1.6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JDK1-7"><span class="nav-number">4.2.</span> <span class="nav-text">JDK1.7</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#例一分析"><span class="nav-number">4.2.1.</span> <span class="nav-text">例一分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例二分析"><span class="nav-number">4.2.2.</span> <span class="nav-text">例二分析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用ODBC连接MySQL"><span class="nav-number">2.</span> <span class="nav-text">使用ODBC连接MySQL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备工作"><span class="nav-number">2.1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连接数据库"><span class="nav-number">2.2.</span> <span class="nav-text">连接数据库</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设计数据库"><span class="nav-number">3.</span> <span class="nav-text">设计数据库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生成建表语句"><span class="nav-number">4.</span> <span class="nav-text">生成建表语句</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
