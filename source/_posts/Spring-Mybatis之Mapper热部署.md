@@ -5,7 +5,7 @@ tags: [java,tips]
 categories: technology
 ---
 
-# 前言
+# 引言
 
 ​	Spring+Mybatis经常用，在项目中最痛苦的就是修改mapper文件的时候需要重启一下项目，每修改一次就需要重启一次项目。项目小还好，如果项目大，重启一次项目简直是要命。所以，去网上查资料看有没有办法让mybatis热部署，每次更新mapper文件不需要重启项目。
 

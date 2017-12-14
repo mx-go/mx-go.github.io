@@ -5,7 +5,7 @@ tags: [java, tips]
 categories: technology
 ---
 
-# 前言
+# 引言
 
 之前的公司有用过Linux，自己也学习了一段时间，但是很久没有用了，最近又在腾讯云租了个空间把系统装成Centos系统了，所以又把Linux系统重新捡起来，重温下Linux的基本知识。
 

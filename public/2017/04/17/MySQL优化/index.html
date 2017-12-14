@@ -87,19 +87,19 @@
 
 
 
-<meta name="description" content="前言数据库在每个项目中都会用到，现在又分为两个门派，一种关系型数据库，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是非关系型数据库，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。">
+<meta name="description" content="引言数据库在每个项目中都会用到，现在又分为两个门派，一种关系型数据库，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是非关系型数据库，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。">
 <meta name="keywords" content="sql">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySQL优化">
 <meta property="og:url" content="https://sunny0715.github.io/2017/04/17/MySQL优化/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
-<meta property="og:description" content="前言数据库在每个项目中都会用到，现在又分为两个门派，一种关系型数据库，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是非关系型数据库，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。">
+<meta property="og:description" content="引言数据库在每个项目中都会用到，现在又分为两个门派，一种关系型数据库，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是非关系型数据库，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-4-17/MYSQL.jpg">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-4-17/redis.png">
-<meta property="og:updated_time" content="2017-08-27T05:17:42.660Z">
+<meta property="og:updated_time" content="2017-12-13T06:24:57.858Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL优化">
-<meta name="twitter:description" content="前言数据库在每个项目中都会用到，现在又分为两个门派，一种关系型数据库，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是非关系型数据库，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。">
+<meta name="twitter:description" content="引言数据库在每个项目中都会用到，现在又分为两个门派，一种关系型数据库，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是非关系型数据库，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。">
 <meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2017-4-17/MYSQL.jpg">
 
 
@@ -462,7 +462,7 @@
       
 
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>数据库在每个项目中都会用到，现在又分为两个门派，一种<em><a href="http://baike.baidu.com/link?url=F1B2ducJyF3-AS6F8RbkCx-1y10TqUb0tcFlxpySya025ev87isg4GprakGLkp0RvhYLO6qbgzGBTskhi-iLVM9R6yI9MtAqhHq6qy7VPj6HTfW01Y2bIhIR5O7g1xOYdZ6Zsm_qzvnKGVw5oFSzkK" target="_blank" rel="external">关系型数据库</a></em>，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是<em>非关系型数据库</em>，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。</p>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>数据库在每个项目中都会用到，现在又分为两个门派，一种<em><a href="http://baike.baidu.com/link?url=F1B2ducJyF3-AS6F8RbkCx-1y10TqUb0tcFlxpySya025ev87isg4GprakGLkp0RvhYLO6qbgzGBTskhi-iLVM9R6yI9MtAqhHq6qy7VPj6HTfW01Y2bIhIR5O7g1xOYdZ6Zsm_qzvnKGVw5oFSzkK" target="_blank" rel="external">关系型数据库</a></em>，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是<em>非关系型数据库</em>，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。</p>
 <div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-4-17/MYSQL.jpg" algin="center"><br><br></div>
 
 <a id="more"></a>
@@ -653,7 +653,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -766,7 +766,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于MySQL"><span class="nav-number">2.</span> <span class="nav-text">关于MySQL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MySQL的优化"><span class="nav-number">3.</span> <span class="nav-text">MySQL的优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#存储引擎"><span class="nav-number">3.1.</span> <span class="nav-text">存储引擎</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#命名规则"><span class="nav-number">3.2.</span> <span class="nav-text">命名规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语句-索引"><span class="nav-number">3.3.</span> <span class="nav-text">语句+索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存"><span class="nav-number">3.4.</span> <span class="nav-text">缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复制及读写分离"><span class="nav-number">3.5.</span> <span class="nav-text">复制及读写分离</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切分"><span class="nav-number">3.6.</span> <span class="nav-text">切分</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于MySQL"><span class="nav-number">2.</span> <span class="nav-text">关于MySQL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MySQL的优化"><span class="nav-number">3.</span> <span class="nav-text">MySQL的优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#存储引擎"><span class="nav-number">3.1.</span> <span class="nav-text">存储引擎</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#命名规则"><span class="nav-number">3.2.</span> <span class="nav-text">命名规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语句-索引"><span class="nav-number">3.3.</span> <span class="nav-text">语句+索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存"><span class="nav-number">3.4.</span> <span class="nav-text">缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复制及读写分离"><span class="nav-number">3.5.</span> <span class="nav-text">复制及读写分离</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切分"><span class="nav-number">3.6.</span> <span class="nav-text">切分</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>

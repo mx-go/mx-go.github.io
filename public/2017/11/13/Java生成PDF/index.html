@@ -87,13 +87,13 @@
 
 
 
-<meta name="description" content="前言在某些业务场景中，需要提供相关的电子凭证，比如网银/支付宝中转账的电子回单，签约的电子合同、证书等。方便用户查看，下载，打印。目前常用的解决方案是，把相关数据信息，生成对应的PDF文件返回给用户。之前有写过一篇博客关于JAVA实现HTML转PDF，不同场景下的业务不同，现在需要使用PDF生成证书，这篇博客主要介绍iText的使用。 本博客项目地址：https://github.com/Sunn">
+<meta name="description" content="引言在某些业务场景中，需要提供相关的电子凭证，比如网银/支付宝中转账的电子回单，签约的电子合同、证书等。方便用户查看，下载，打印。目前常用的解决方案是，把相关数据信息，生成对应的PDF文件返回给用户。之前有写过一篇博客关于JAVA实现HTML转PDF，不同场景下的业务不同，现在需要使用PDF生成证书，这篇博客主要介绍iText的使用。 本博客项目地址：https://github.com/Sunn">
 <meta name="keywords" content="java,tips">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java生成PDF">
 <meta property="og:url" content="https://sunny0715.github.io/2017/11/13/Java生成PDF/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
-<meta property="og:description" content="前言在某些业务场景中，需要提供相关的电子凭证，比如网银/支付宝中转账的电子回单，签约的电子合同、证书等。方便用户查看，下载，打印。目前常用的解决方案是，把相关数据信息，生成对应的PDF文件返回给用户。之前有写过一篇博客关于JAVA实现HTML转PDF，不同场景下的业务不同，现在需要使用PDF生成证书，这篇博客主要介绍iText的使用。 本博客项目地址：https://github.com/Sunn">
+<meta property="og:description" content="引言在某些业务场景中，需要提供相关的电子凭证，比如网银/支付宝中转账的电子回单，签约的电子合同、证书等。方便用户查看，下载，打印。目前常用的解决方案是，把相关数据信息，生成对应的PDF文件返回给用户。之前有写过一篇博客关于JAVA实现HTML转PDF，不同场景下的业务不同，现在需要使用PDF生成证书，这篇博客主要介绍iText的使用。 本博客项目地址：https://github.com/Sunn">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-11-13/iText/0.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-11-13/iText/1.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-11-13/iText/2.png">
@@ -101,10 +101,10 @@
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-11-13/iText/4.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-11-13/iText/5.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-11-13/iText/6.png">
-<meta property="og:updated_time" content="2017-11-14T03:15:41.506Z">
+<meta property="og:updated_time" content="2017-12-13T06:23:58.667Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java生成PDF">
-<meta name="twitter:description" content="前言在某些业务场景中，需要提供相关的电子凭证，比如网银/支付宝中转账的电子回单，签约的电子合同、证书等。方便用户查看，下载，打印。目前常用的解决方案是，把相关数据信息，生成对应的PDF文件返回给用户。之前有写过一篇博客关于JAVA实现HTML转PDF，不同场景下的业务不同，现在需要使用PDF生成证书，这篇博客主要介绍iText的使用。 本博客项目地址：https://github.com/Sunn">
+<meta name="twitter:description" content="引言在某些业务场景中，需要提供相关的电子凭证，比如网银/支付宝中转账的电子回单，签约的电子合同、证书等。方便用户查看，下载，打印。目前常用的解决方案是，把相关数据信息，生成对应的PDF文件返回给用户。之前有写过一篇博客关于JAVA实现HTML转PDF，不同场景下的业务不同，现在需要使用PDF生成证书，这篇博客主要介绍iText的使用。 本博客项目地址：https://github.com/Sunn">
 <meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2017-11-13/iText/0.png">
 
 
@@ -467,7 +467,7 @@
       
 
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在某些业务场景中，需要提供相关的电子凭证，比如网银/支付宝中转账的电子回单，签约的电子合同、证书等。方便用户查看，下载，打印。目前常用的解决方案是，把相关数据信息，生成对应的PDF文件返回给用户。之前有写过一篇博客关于<strong>JAVA实现HTML转PDF</strong>，不同场景下的业务不同，现在需要使用PDF生成证书，这篇博客主要介绍iText的使用。</p>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在某些业务场景中，需要提供相关的电子凭证，比如网银/支付宝中转账的电子回单，签约的电子合同、证书等。方便用户查看，下载，打印。目前常用的解决方案是，把相关数据信息，生成对应的PDF文件返回给用户。之前有写过一篇博客关于<strong>JAVA实现HTML转PDF</strong>，不同场景下的业务不同，现在需要使用PDF生成证书，这篇博客主要介绍iText的使用。</p>
 <p>本博客项目地址：<a href="https://github.com/Sunny0715/java_pdf_demo" target="_blank" rel="external">https://github.com/Sunny0715/java_pdf_demo</a></p>
 <div align="center"><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-11-13/iText/0.png"><br><br></div>
 
@@ -692,7 +692,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -805,7 +805,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iText介绍"><span class="nav-number">2.</span> <span class="nav-text">iText介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iText简单使用"><span class="nav-number">3.</span> <span class="nav-text">iText简单使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iText中文支持"><span class="nav-number">4.</span> <span class="nav-text">iText中文支持</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iText-HTML渲染"><span class="nav-number">5.</span> <span class="nav-text">iText-HTML渲染</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iText-HTML-Freemarker渲染"><span class="nav-number">6.</span> <span class="nav-text">iText-HTML-Freemarker渲染</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Flying-Saucer-CSS高级特性支持"><span class="nav-number">7.</span> <span class="nav-text">Flying Saucer-CSS高级特性支持</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PDF转图片"><span class="nav-number">8.</span> <span class="nav-text">PDF转图片</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">9.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iText介绍"><span class="nav-number">2.</span> <span class="nav-text">iText介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iText简单使用"><span class="nav-number">3.</span> <span class="nav-text">iText简单使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iText中文支持"><span class="nav-number">4.</span> <span class="nav-text">iText中文支持</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iText-HTML渲染"><span class="nav-number">5.</span> <span class="nav-text">iText-HTML渲染</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iText-HTML-Freemarker渲染"><span class="nav-number">6.</span> <span class="nav-text">iText-HTML-Freemarker渲染</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Flying-Saucer-CSS高级特性支持"><span class="nav-number">7.</span> <span class="nav-text">Flying Saucer-CSS高级特性支持</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PDF转图片"><span class="nav-number">8.</span> <span class="nav-text">PDF转图片</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">9.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>

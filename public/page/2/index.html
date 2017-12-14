@@ -314,6 +314,195 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/10/30/分布式下ID生成算法-SnowFlake/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rainbowhorse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://on937g0jc.bkt.clouddn.com/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rainbowhorse's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/10/30/分布式下ID生成算法-SnowFlake/" itemprop="url">
+                  分布式下ID生成算法 SnowFlake
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-30T14:26:21+08:00">
+                2017-10-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/technology/" itemprop="url" rel="index">
+                    <span itemprop="name">technology</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/10/30/分布式下ID生成算法-SnowFlake/" class="leancloud_visitors" data-flag-title="分布式下ID生成算法 SnowFlake">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+		  
+		  
+           <div class="post-wordcount">
+             
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-edit"></i>
+               </span>
+                 
+                   <span class="post-meta-item-text">字数统计</span>
+                 
+                   <span title="字数统计" }}">
+                     2,664 字
+                   </span>
+             
+             
+               <span class="post-meta-divider">|</span>
+             
+             
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-clock-o"></i>
+               </span>
+                 
+                   <span class="post-meta-item-text">阅读时长</span>
+                 
+                   <span title="阅读时长" }}">
+                     11 分钟
+                   </span>
+             
+           </div>
+         
+		  
+		  
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在做系统开发时，系统唯一ID是我们在设计一个系统的时候经常遇到的问题，也常常为这个问题纠结。生成ID的方法有很多，适应不同的场景、需求及性能要求。所以有些比较复杂的系统会有多个ID生成策略。在这里总结一下常用到的ID生成策略。</p>
+<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-21/%E8%87%AA%E5%A2%9EID/index.png" algin="center"/><br><br></div>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/30/分布式下ID生成算法-SnowFlake/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/09/24/Java备份和还原MySQL数据库/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -453,7 +642,7 @@
 
       
         
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>​    在项目中经常会用到Java程序备份和还原MySQL数据库的内容，都是大同小异，但程序也会出现各种各样的问题（运行时异常，乱码等）。实现上都是用Runtime执行MySQL的命令行工具，然后读写IO流数据；也有可能是由于使用Java的Runtime来实现备份还原功能，而由于大家的运行时环境有差异才导致代码运行不成功。在这里记录一下自己使用的工具和方法。</p>
+          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>​    在项目中经常会用到Java程序备份和还原MySQL数据库的内容，都是大同小异，但程序也会出现各种各样的问题（运行时异常，乱码等）。实现上都是用Runtime执行MySQL的命令行工具，然后读写IO流数据；也有可能是由于使用Java的Runtime来实现备份还原功能，而由于大家的运行时环境有差异才导致代码运行不成功。在这里记录一下自己使用的工具和方法。</p>
 <div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-21/MySQLbackUpAndRestore/mysql-index.png" algin="center"/><br><br></div>
           <!--noindex-->
           <div class="post-button text-center">
@@ -642,7 +831,7 @@
 
       
         
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>​    开发过程中我们会使用<code>版本控制工具</code>，如SVN、Git等。但是我们一样会遇到一种情形：在一套试题系统中，有新建题目、编辑题目、删除题目等功能，且题目可以被多个人修改，每人修改一次即是一个版本。现在的需求就是需要<code>记录每一次修改的详细信息</code>，<code>每次版本之间的差异</code>，甚至还可以<code>版本回滚</code>。</p>
+          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>​    开发过程中我们会使用<code>版本控制工具</code>，如SVN、Git等。但是我们一样会遇到一种情形：在一套试题系统中，有新建题目、编辑题目、删除题目等功能，且题目可以被多个人修改，每人修改一次即是一个版本。现在的需求就是需要<code>记录每一次修改的详细信息</code>，<code>每次版本之间的差异</code>，甚至还可以<code>版本回滚</code>。</p>
 <p>​    例如题目编号为<em>20170919170800000061</em>的题目被<em>A</em>创建，依次被<em>B</em>、<em>C</em>、<em>D</em>各修改了一次，此时需要比较<em>B</em>和<em>A</em>间的差异、<em>C</em>和<em>B</em>间的差异、<em>D</em>和<em>C</em>间的差异，到最后审核阶段如果<em>B</em> 的版本比较符合，则需要把试题版本内容回滚到<em>B</em>版本作为最后的版本。</p>
 <div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-21/versionControl/v1.jpg" algin="center"/><br><br></div>
           <!--noindex-->
@@ -832,7 +1021,7 @@
 
       
         
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>​    Spring+Mybatis经常用，在项目中最痛苦的就是修改mapper文件的时候需要重启一下项目，每修改一次就需要重启一次项目。项目小还好，如果项目大，重启一次项目简直是要命。所以，去网上查资料看有没有办法让mybatis热部署，每次更新mapper文件不需要重启项目。</p>
+          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>​    Spring+Mybatis经常用，在项目中最痛苦的就是修改mapper文件的时候需要重启一下项目，每修改一次就需要重启一次项目。项目小还好，如果项目大，重启一次项目简直是要命。所以，去网上查资料看有没有办法让mybatis热部署，每次更新mapper文件不需要重启项目。</p>
 <p>​    功夫不负有心人，终于找到了，这玩意只要发现mapper文件被修改，就会重新加载被修改的mapper文件。且<strong>只加载被修改的mapper文件</strong>！这个可省事了，效率又高，简直爽到爆。</p>
 <div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/relationship-with-mybatis.png" algin="center"/><br><br></div>
           <!--noindex-->
@@ -1022,7 +1211,7 @@
 
       
         
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><h2 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h2><p>AOP（Aspect Oriented Programming），即面向切面编程，可以说是OOP（Object Oriented Programming，面向对象编程）的补充和完善。OOP引入封装、继承、多态等概念来建立一种对象层次结构，用于模拟公共行为的一个集合。不过OOP允许开发者定义纵向的关系，但并不适合定义横向的关系，例如日志功能。日志代码往往横向地散布在所有对象层次中，而与它对应的对象的核心功能毫无关系对于其他类型的代码，如安全性、异常处理和透明的持续性也都是如此，这种散布在各处的无关的代码被称为横切（cross cutting），在OOP设计中，它导致了大量代码的重复，而不利于各个模块的重用。</p>
+          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><h2 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h2><p>AOP（Aspect Oriented Programming），即面向切面编程，可以说是OOP（Object Oriented Programming，面向对象编程）的补充和完善。OOP引入封装、继承、多态等概念来建立一种对象层次结构，用于模拟公共行为的一个集合。不过OOP允许开发者定义纵向的关系，但并不适合定义横向的关系，例如日志功能。日志代码往往横向地散布在所有对象层次中，而与它对应的对象的核心功能毫无关系对于其他类型的代码，如安全性、异常处理和透明的持续性也都是如此，这种散布在各处的无关的代码被称为横切（cross cutting），在OOP设计中，它导致了大量代码的重复，而不利于各个模块的重用。</p>
 <div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-9-12/SpringAOP/spring.png" algin="center"/><br><br></div>
           <!--noindex-->
           <div class="post-button text-center">
@@ -1063,200 +1252,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/09/01/跨页面-Tab-Window-通信的几种方法/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rainbowhorse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://on937g0jc.bkt.clouddn.com/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="rainbowhorse's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/09/01/跨页面-Tab-Window-通信的几种方法/" itemprop="url">
-                  跨页面(Tab/Window)通信的几种方法
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-01T10:32:43+08:00">
-                2017-09-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/technology/" itemprop="url" rel="index">
-                    <span itemprop="name">technology</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/09/01/跨页面-Tab-Window-通信的几种方法/" class="leancloud_visitors" data-flag-title="跨页面(Tab/Window)通信的几种方法">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-		  
-		  
-           <div class="post-wordcount">
-             
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-edit"></i>
-               </span>
-                 
-                   <span class="post-meta-item-text">字数统计</span>
-                 
-                   <span title="字数统计" }}">
-                     748 字
-                   </span>
-             
-             
-               <span class="post-meta-divider">|</span>
-             
-             
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-clock-o"></i>
-               </span>
-                 
-                   <span class="post-meta-item-text">阅读时长</span>
-                 
-                   <span title="阅读时长" }}">
-                     3 分钟
-                   </span>
-             
-           </div>
-         
-		  
-		  
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>​    今天开发一个功能遇到一个需求，在A页面点击查看详情后打开B页面进行修改或删除，删除后B页面关闭，然后刷新A页面里面的数据。相当于就是两个页面之间进行通讯，作为后端的我第一想法是利用<code>webSocket</code> 进行通讯，之后通过谷歌和百度找出了更为简便的方法。</p>
-<div align=center><img width="450" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-9-13/additional/html%E9%A1%B5%E9%9D%A2%E4%BC%A0%E5%80%BC.png" algin="center"/><br><br></div>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/09/01/跨页面-Tab-Window-通信的几种方法/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1302,7 +1302,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

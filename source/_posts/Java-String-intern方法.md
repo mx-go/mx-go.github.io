@@ -5,7 +5,7 @@ tags: [java,tips]
 categories: technology
 ---
 
-# 前言
+# 引言
 
 String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。
 

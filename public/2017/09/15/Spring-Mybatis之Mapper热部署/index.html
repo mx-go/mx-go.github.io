@@ -87,13 +87,13 @@
 
 
 
-<meta name="description" content="前言​    Spring+Mybatis经常用，在项目中最痛苦的就是修改mapper文件的时候需要重启一下项目，每修改一次就需要重启一次项目。项目小还好，如果项目大，重启一次项目简直是要命。所以，去网上查资料看有没有办法让mybatis热部署，每次更新mapper文件不需要重启项目。 ​    功夫不负有心人，终于找到了，这玩意只要发现mapper文件被修改，就会重新加载被修改的mapper文件">
+<meta name="description" content="引言​    Spring+Mybatis经常用，在项目中最痛苦的就是修改mapper文件的时候需要重启一下项目，每修改一次就需要重启一次项目。项目小还好，如果项目大，重启一次项目简直是要命。所以，去网上查资料看有没有办法让mybatis热部署，每次更新mapper文件不需要重启项目。 ​    功夫不负有心人，终于找到了，这玩意只要发现mapper文件被修改，就会重新加载被修改的mapper文件">
 <meta name="keywords" content="java,tips">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring+Mybatis之Mapper热部署">
 <meta property="og:url" content="https://sunny0715.github.io/2017/09/15/Spring-Mybatis之Mapper热部署/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
-<meta property="og:description" content="前言​    Spring+Mybatis经常用，在项目中最痛苦的就是修改mapper文件的时候需要重启一下项目，每修改一次就需要重启一次项目。项目小还好，如果项目大，重启一次项目简直是要命。所以，去网上查资料看有没有办法让mybatis热部署，每次更新mapper文件不需要重启项目。 ​    功夫不负有心人，终于找到了，这玩意只要发现mapper文件被修改，就会重新加载被修改的mapper文件">
+<meta property="og:description" content="引言​    Spring+Mybatis经常用，在项目中最痛苦的就是修改mapper文件的时候需要重启一下项目，每修改一次就需要重启一次项目。项目小还好，如果项目大，重启一次项目简直是要命。所以，去网上查资料看有没有办法让mybatis热部署，每次更新mapper文件不需要重启项目。 ​    功夫不负有心人，终于找到了，这玩意只要发现mapper文件被修改，就会重新加载被修改的mapper文件">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/relationship-with-mybatis.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/refresh.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/sqlSessionfactory-java.png">
@@ -101,10 +101,10 @@
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/%E6%9B%BF%E6%8D%A2class%E6%96%87%E4%BB%B6.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/properties%E6%96%87%E4%BB%B6.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/success.png">
-<meta property="og:updated_time" content="2017-09-22T01:57:43.704Z">
+<meta property="og:updated_time" content="2017-12-13T06:25:17.163Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring+Mybatis之Mapper热部署">
-<meta name="twitter:description" content="前言​    Spring+Mybatis经常用，在项目中最痛苦的就是修改mapper文件的时候需要重启一下项目，每修改一次就需要重启一次项目。项目小还好，如果项目大，重启一次项目简直是要命。所以，去网上查资料看有没有办法让mybatis热部署，每次更新mapper文件不需要重启项目。 ​    功夫不负有心人，终于找到了，这玩意只要发现mapper文件被修改，就会重新加载被修改的mapper文件">
+<meta name="twitter:description" content="引言​    Spring+Mybatis经常用，在项目中最痛苦的就是修改mapper文件的时候需要重启一下项目，每修改一次就需要重启一次项目。项目小还好，如果项目大，重启一次项目简直是要命。所以，去网上查资料看有没有办法让mybatis热部署，每次更新mapper文件不需要重启项目。 ​    功夫不负有心人，终于找到了，这玩意只要发现mapper文件被修改，就会重新加载被修改的mapper文件">
 <meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/relationship-with-mybatis.png">
 
 
@@ -467,7 +467,7 @@
       
 
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>​    Spring+Mybatis经常用，在项目中最痛苦的就是修改mapper文件的时候需要重启一下项目，每修改一次就需要重启一次项目。项目小还好，如果项目大，重启一次项目简直是要命。所以，去网上查资料看有没有办法让mybatis热部署，每次更新mapper文件不需要重启项目。</p>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>​    Spring+Mybatis经常用，在项目中最痛苦的就是修改mapper文件的时候需要重启一下项目，每修改一次就需要重启一次项目。项目小还好，如果项目大，重启一次项目简直是要命。所以，去网上查资料看有没有办法让mybatis热部署，每次更新mapper文件不需要重启项目。</p>
 <p>​    功夫不负有心人，终于找到了，这玩意只要发现mapper文件被修改，就会重新加载被修改的mapper文件。且<strong>只加载被修改的mapper文件</strong>！这个可省事了，效率又高，简直爽到爆。</p>
 <div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/relationship-with-mybatis.png" algin="center"><br><br></div>
 
@@ -666,7 +666,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -779,7 +779,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建MapperRefresh刷新类"><span class="nav-number">2.</span> <span class="nav-text">创建MapperRefresh刷新类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重写SqlSessionFactoryBean"><span class="nav-number">3.</span> <span class="nav-text">重写SqlSessionFactoryBean</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建mybatis-refresh-properties文件"><span class="nav-number">4.</span> <span class="nav-text">创建mybatis-refresh.properties文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试"><span class="nav-number">5.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注意"><span class="nav-number">6.</span> <span class="nav-text">注意</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建MapperRefresh刷新类"><span class="nav-number">2.</span> <span class="nav-text">创建MapperRefresh刷新类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重写SqlSessionFactoryBean"><span class="nav-number">3.</span> <span class="nav-text">重写SqlSessionFactoryBean</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建mybatis-refresh-properties文件"><span class="nav-number">4.</span> <span class="nav-text">创建mybatis-refresh.properties文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试"><span class="nav-number">5.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注意"><span class="nav-number">6.</span> <span class="nav-text">注意</span></a></li></ol></div>
             
 
           </div>

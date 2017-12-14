@@ -5,7 +5,7 @@ tags: [sql]
 categories: technology
 ---
 
-# 前言
+# 引言
 
 数据库在每个项目中都会用到，现在又分为两个门派，一种*[关系型数据库](http://baike.baidu.com/link?url=F1B2ducJyF3-AS6F8RbkCx-1y10TqUb0tcFlxpySya025ev87isg4GprakGLkp0RvhYLO6qbgzGBTskhi-iLVM9R6yI9MtAqhHq6qy7VPj6HTfW01Y2bIhIR5O7g1xOYdZ6Zsm_qzvnKGVw5oFSzkK)*，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是*非关系型数据库*，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。
 
