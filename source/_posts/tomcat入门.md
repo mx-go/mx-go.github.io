@@ -1,6 +1,6 @@
 ---
 title: Tomcat入门
-date: 2017-12-27 14:35:32
+date: 2017-12-20 14:35:32
 tags: [tomcat,tips]
 categories: technology
 ---
@@ -98,11 +98,11 @@ server.xml的整体结构如下：
 ```xml
 <Server>
     <Service>
-        <Connector />
-        <Connector />
+        <Connector/>
+        <Connector/>
         <Engine>
             <Host>
-                <Context /><!-- 现在常常使用自动部署，不推荐配置Context元素，Context小节有详细说明 -->
+                <Context/><!-- 现在常常使用自动部署，不推荐配置Context元素，Context小节有详细说明 -->
             </Host>
         </Engine>
     </Service>
@@ -485,7 +485,7 @@ pattern的配置中，除了上述各项，还有一个非常常用的选项是%
 
 开发人员可以充分利用访问日志，来分析问题、优化应用。例如，分析访问日志中各个接口被访问的比例，不仅可以为需求和运营人员提供数据支持，还可以使自己的优化有的放矢；分析访问日志中各个请求的响应状态码，可以知道服务器请求的成功率，并找出有问题的请求；分析访问日志中各个请求的响应时间，可以找出慢请求，并根据需要进行响应时间的优化。
 
-# 参考文档
+## 参考文档
 
 - Tomcat官方文档
 - 《How Tomcat Works》
