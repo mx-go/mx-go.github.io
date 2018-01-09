@@ -1,7 +1,7 @@
 ---
 title: JAVA实现简单网络爬虫
 date: 2017-04-01 14:17:39
-tags: [java, extendKW]
+tags: [java, tool]
 categories: technology
 ---
 

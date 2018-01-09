@@ -1,7 +1,7 @@
 ---
 title: Linux基本命令
 date: 2017-04-07 15:59:22
-tags: [java, tips]
+tags: [java, tips, linux]
 categories: technology
 ---
 

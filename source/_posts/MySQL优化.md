@@ -1,7 +1,7 @@
 ---
 title: MySQL优化
 date: 2017-04-17 12:31:55
-tags: [sql]
+tags: [mysql]
 categories: technology
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: 跨页面(Tab/Window)通信的几种方法
 date: 2017-09-01 10:32:43
-tags: [前端,tips,js]
+tags: [前端,tips]
 categories: technology
 ---
 
