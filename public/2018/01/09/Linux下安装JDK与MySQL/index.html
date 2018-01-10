@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="tips,前端," />
+  <meta name="keywords" content="mysql,linux,jdk," />
 
 
 
@@ -87,19 +87,29 @@
 
 
 
-<meta name="description" content="​    今天开发一个功能遇到一个需求，在A页面点击查看详情后打开B页面进行修改或删除，删除后B页面关闭，然后刷新A页面里面的数据。相当于就是两个页面之间进行通讯，作为后端的我第一想法是利用webSocket 进行通讯，之后通过谷歌和百度找出了更为简便的方法。">
-<meta name="keywords" content="tips,前端">
+<meta name="description" content="引言重温记录下Linux环境下JDK和MySQL的安装。">
+<meta name="keywords" content="mysql,linux,jdk">
 <meta property="og:type" content="article">
-<meta property="og:title" content="跨页面(Tab/Window)通信的几种方法">
-<meta property="og:url" content="https://sunny0715.github.io/2017/09/01/跨页面-Tab-Window-通信的几种方法/index.html">
+<meta property="og:title" content="Linux下安装JDK与MySQL">
+<meta property="og:url" content="https://sunny0715.github.io/2018/01/09/Linux下安装JDK与MySQL/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
-<meta property="og:description" content="​    今天开发一个功能遇到一个需求，在A页面点击查看详情后打开B页面进行修改或删除，删除后B页面关闭，然后刷新A页面里面的数据。相当于就是两个页面之间进行通讯，作为后端的我第一想法是利用webSocket 进行通讯，之后通过谷歌和百度找出了更为简便的方法。">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-13/additional/html%E9%A1%B5%E9%9D%A2%E4%BC%A0%E5%80%BC.png">
-<meta property="og:updated_time" content="2018-01-05T01:20:23.909Z">
+<meta property="og:description" content="引言重温记录下Linux环境下JDK和MySQL的安装。">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/installing-mysql-on-linux.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/config-f.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/config-s1.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/1.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/2.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/3.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/download.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/tar.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/scripts.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/start.jpg">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/ok.png">
+<meta property="og:updated_time" content="2018-01-10T11:48:11.663Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="跨页面(Tab/Window)通信的几种方法">
-<meta name="twitter:description" content="​    今天开发一个功能遇到一个需求，在A页面点击查看详情后打开B页面进行修改或删除，删除后B页面关闭，然后刷新A页面里面的数据。相当于就是两个页面之间进行通讯，作为后端的我第一想法是利用webSocket 进行通讯，之后通过谷歌和百度找出了更为简便的方法。">
-<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-13/additional/html%E9%A1%B5%E9%9D%A2%E4%BC%A0%E5%80%BC.png">
+<meta name="twitter:title" content="Linux下安装JDK与MySQL">
+<meta name="twitter:description" content="引言重温记录下Linux环境下JDK和MySQL的安装。">
+<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/installing-mysql-on-linux.png">
 
 
 
@@ -127,13 +137,13 @@
 
 
 
-  <link rel="canonical" href="https://sunny0715.github.io/2017/09/01/跨页面-Tab-Window-通信的几种方法/"/>
+  <link rel="canonical" href="https://sunny0715.github.io/2018/01/09/Linux下安装JDK与MySQL/"/>
 
 
 
 
 
-  <title> 跨页面(Tab/Window)通信的几种方法 | rainbowhorse's blog </title>
+  <title> Linux下安装JDK与MySQL | rainbowhorse's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -316,7 +326,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/09/01/跨页面-Tab-Window-通信的几种方法/">
+    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2018/01/09/Linux下安装JDK与MySQL/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rainbowhorse">
@@ -337,7 +347,7 @@
             
             
               
-                跨页面(Tab/Window)通信的几种方法
+                Linux下安装JDK与MySQL
               
             
           </h2>
@@ -352,8 +362,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-01T10:32:43+08:00">
-                2017-09-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-09T19:53:24+08:00">
+                2018-01-09
               </time>
             
 
@@ -393,7 +403,7 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a class="cloud-tie-join-count" href="/2017/09/01/跨页面-Tab-Window-通信的几种方法/#comments" itemprop="discussionUrl">
+                <a class="cloud-tie-join-count" href="/2018/01/09/Linux下安装JDK与MySQL/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count join-count" itemprop="commentCount"></span>
                 </a>
               </span>
@@ -402,7 +412,7 @@
 
           
           
-             <span id="/2017/09/01/跨页面-Tab-Window-通信的几种方法/" class="leancloud_visitors" data-flag-title="跨页面(Tab/Window)通信的几种方法">
+             <span id="/2018/01/09/Linux下安装JDK与MySQL/" class="leancloud_visitors" data-flag-title="Linux下安装JDK与MySQL">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -425,7 +435,7 @@
                    <span class="post-meta-item-text">字数统计</span>
                  
                    <span title="字数统计" }}">
-                     748 字
+                     869 字
                    </span>
              
              
@@ -439,7 +449,7 @@
                    <span class="post-meta-item-text">阅读时长</span>
                  
                    <span title="阅读时长" }}">
-                     3 分钟
+                     4 分钟
                    </span>
              
            </div>
@@ -461,53 +471,82 @@
       
 
       
-        <p>​    今天开发一个功能遇到一个需求，在A页面点击查看详情后打开B页面进行修改或删除，删除后B页面关闭，然后刷新A页面里面的数据。相当于就是两个页面之间进行通讯，作为后端的我第一想法是利用<code>webSocket</code> 进行通讯，之后通过谷歌和百度找出了更为简便的方法。</p>
-<div align="center"><img width="450" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-9-13/additional/html%E9%A1%B5%E9%9D%A2%E4%BC%A0%E5%80%BC.png" algin="center"><br><br></div>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>重温记录下Linux环境下JDK和MySQL的安装。</p>
+<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/installing-mysql-on-linux.png" algin="center"><br><br></div>
 
 <a id="more"></a>
-<h1 id="利用webSocket进行通讯"><a href="#利用webSocket进行通讯" class="headerlink" title="利用webSocket进行通讯"></a>利用webSocket进行通讯</h1><p>​    第一想法是这个，但是这样的话工作量巨大而且还需要后端支持，太麻烦了，对于我这种懒人直接就放弃了，去寻找有没有更简便的方法。</p>
-<h1 id="定时器不断检查cookies变化"><a href="#定时器不断检查cookies变化" class="headerlink" title="定时器不断检查cookies变化"></a>定时器不断检查cookies变化</h1><p>在<a href="https://stackoverflow.com/" target="_blank" rel="external">stackoverflow</a>上看到一个方案，大致思路是：</p>
-<ol>
-<li>在页面A设置一个使用 <code>setInterval</code> 定时器不断刷新，检查 <code>Cookies</code> 的值是否发生变化，如果变化就进行刷新的操作。</li>
-<li>由于 <code>Cookies</code> 是在同域可读的，所以在页面 B 审核的时候改变 <code>Cookies</code> 的值，页面 A 自然是可以拿到的。<br>这样做确实可以实现我想要的功能，但是这样的方法相当浪费资源。虽然在这个性能过盛的时代，浪费不浪费也感觉不出来，但是这种实现方案，确实不够优(zhuāng)雅（bī）。</li>
-</ol>
-<h1 id="localStorage的事件"><a href="#localStorage的事件" class="headerlink" title="localStorage的事件"></a>localStorage的事件</h1><p>功夫不负有心人，后来发现 window 有一个 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/StorageEvent" target="_blank" rel="external">StorageEvent</a> ，每当 <code>localStorage</code> 改变的时候可以触发这个事件。（这个原理就像你给一个<code>DOM</code> 绑定了 <code>click</code> 事件，当你点击它的时候，就会自动触发。）也就是说，我给 <code>window</code> 绑定这个事件后，每当我改变 <code>localStorage</code> 的时候，他都会触发这个事件。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">window.addEventListener(&apos;storage&apos;, function (event) &#123;</div><div class="line">  console.log(event);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>这个回调中的<code>event</code>与普通的<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Event#Properties" target="_blank" rel="external">EVNET</a>,基本差不多，但是它比其他的<code>event</code>多了如下几个属性:</p>
-<table>
-<thead>
-<tr>
-<th>属性</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>key</td>
-<td>受影响的 <code>localStorage</code> 的 <code>key</code></td>
-</tr>
-<tr>
-<td>newValue</td>
-<td>新的值</td>
-</tr>
-<tr>
-<td>oldValue</td>
-<td>旧的值</td>
-</tr>
-<tr>
-<td>url</td>
-<td>触发此事件的url</td>
-</tr>
-</tbody>
-</table>
-<p>每当一个页面改变了 <code>localStorage</code> 的值，都会触发这个事件。也就是说可以很容易的通过改变 <code>localStorage</code> 的值，来实现浏览器中跨页面( tab / window )之间的通讯。记住这个事件只有在 <code>localStorage</code> 发生<strong>改变</strong>的时候才会被触发，如果没改变则<strong>不会触发</strong>此事件。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">localStorage.setItem(&apos;delete&apos;,1); //触发</div><div class="line">localStorage.setItem(&apos;delete&apos;,1); //不触发</div><div class="line">localStorage.setItem(&apos;delete&apos;,2); //触发</div></pre></td></tr></table></figure>
-<p>在使用的时候务必注意这一点。<br>最终实现代码:</p>
-<p><strong>页面A：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//页面 A</div><div class="line">window.addEventListener(&apos;storage&apos;, function (event) &#123;</div><div class="line">    if(event.key === &apos;delete_verify_list&apos;)&#123;</div><div class="line">        //页面操作</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p><strong>页面B：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">//页面 B</div><div class="line">/**</div><div class="line"> *  获取一个随机id</div><div class="line"> * @return &#123;String&#125; - 返回一个5位的随机字符串</div><div class="line"> */</div><div class="line">function randomId() &#123;</div><div class="line">    return (Math.random() * 1E18).toString(36).slice(0, 5).toUpperCase();</div><div class="line">&#125;</div><div class="line"></div><div class="line">//每当需要页面A更新时 执行此方法</div><div class="line">if (localStorage) &#123;</div><div class="line">	//为保证每次页面A都执行，此处我设置里一个随机字符串</div><div class="line">    localStorage.setItem(&apos;delete_verify_list&apos;, randomId());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>参考：<a href="https://ponyfoo.com/articles/cross-tab-communication" target="_blank" rel="external">https://ponyfoo.com/articles/cross-tab-communication</a></p>
+<h1 id="JDK的安装"><a href="#JDK的安装" class="headerlink" title="JDK的安装"></a>JDK的安装</h1><h2 id="下载解压"><a href="#下载解压" class="headerlink" title="下载解压"></a>下载解压</h2><p>下载JDK压缩包，下载目录：<em><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="external">http://www.oracle.com/technetwork/java/javase/downloads/index.html</a></em></p>
+<p>解压</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar -xvzf jdk-8u152-linux-x64.tar.gz</div></pre></td></tr></table></figure>
+<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p>以<code>root</code>用户使用以下命令进入配置环境变量的profile文件。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim /etc/profile</div></pre></td></tr></table></figure>
+<p>在文件末尾加入以下内容并保存（注意修改JDK路径）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># set java environment </div><div class="line">export JAVA_HOME=/usr/soft/jdk1.8.0_152</div><div class="line">export PATH=$PATH:$JAVA_HOME/bin</div><div class="line">export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</div></pre></td></tr></table></figure>
+<p>在命令行使用以下命令使环境变量生效。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">source /etc/profile</div></pre></td></tr></table></figure>
+<h2 id="切换JDK版本"><a href="#切换JDK版本" class="headerlink" title="切换JDK版本"></a>切换JDK版本</h2><p>当Linux中安装多个JDK时切换进行版本切换。</p>
+<p>查看选择所有JDK。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alternatives --config java</div></pre></td></tr></table></figure>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/config-f.png" algin="center"><br><br></div>
+
+<p>给jdk1.8.0_152设置序列号，输入以下命令（注意修改JDK目录）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alternatives --install /usr/bin/java java /usr/soft/jdk1.8.0_152 4</div></pre></td></tr></table></figure>
+<p>输入以下命令，选择JDK对应的数字，切换JDK版本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alternatives --config java</div></pre></td></tr></table></figure>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/config-s1.png" algin="center"><br><br></div>
+
+<h1 id="MySQL的安装与卸载"><a href="#MySQL的安装与卸载" class="headerlink" title="MySQL的安装与卸载"></a>MySQL的安装与卸载</h1><h2 id="yum安装"><a href="#yum安装" class="headerlink" title="yum安装"></a>yum安装</h2><p>从Oracle官方网站下载Linux系统对应的MySQL的yum源包。地址：<em><a href="https://dev.mysql.com/downloads/repo/yum/" target="_blank" rel="external">https://dev.mysql.com/downloads/repo/yum/</a></em></p>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/1.png" algin="center"><br><br></div>
+
+<p>把yum源包上传到linux，依次执行以下命令进行安装。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yum localinstall mysql-community-release-el6-5.noarch.rpm</div><div class="line">yum install mysql-server</div></pre></td></tr></table></figure>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/2.png" algin="center"><br><br></div>
+
+<p>安装完成后启动MySQL</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">service mysqld start</div></pre></td></tr></table></figure>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/3.png" algin="center"><br><br></div>
+
+<p>给root用户设置密码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/usr/bin/mysqladmin -u root password &apos;root&apos;</div></pre></td></tr></table></figure>
+<p>进入MySQL后进行远程连接授权</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">GRANT ALL PRIVILEGES ON *.* TO &apos;root&apos;@&apos;%&apos; IDENTIFIED BY &apos;root&apos; WITH GRANT OPTION;</div></pre></td></tr></table></figure>
+<h3 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h3><p>查看MySQL的安装路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">whereis mysql</div></pre></td></tr></table></figure>
+<p>查看mysql的安装包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rpm -qa|grep mysql</div></pre></td></tr></table></figure>
+<p>卸载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum remove mysql</div></pre></td></tr></table></figure>
+<p>若卸载不完全，则要逐个卸载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">rpm -qa|grep mysql</div><div class="line">yum remove mysql-community-release-el6-5.noarch</div><div class="line">yum remove mysql-community-common-5.6.38-2.el6.x86_64</div><div class="line">yum remove mysql-community-libs-5.6.38-2.el6.x86_64</div></pre></td></tr></table></figure>
+<p>删除mysql的数据库文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rm -rf /var/lib/mysql/</div></pre></td></tr></table></figure>
+<h2 id="安装包离线安装"><a href="#安装包离线安装" class="headerlink" title="安装包离线安装"></a>安装包离线安装</h2><p>下载MySQL离线安装包：<em><a href="https://dev.mysql.com/downloads/mysql/" target="_blank" rel="external">https://dev.mysql.com/downloads/mysql/</a></em></p>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/download.png" algin="center"><br><br></div>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mv mysql-<span class="number">5.6</span>.38-linux-glibc2.12-x86_64.tar.gz /usr/local/</div><div class="line">cd /usr/local/</div><div class="line"><span class="comment">// 解压MySQL安装包</span></div><div class="line">tar -zxvf  mysql-<span class="number">5.6</span>.38-linux-glibc2.12-x86_64.tar.gz</div><div class="line"><span class="comment">// 重命名</span></div><div class="line">mv mysql-<span class="number">5.6</span>.38-linux-glibc2.12-x86_64 mysql</div></pre></td></tr></table></figure>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/tar.png" algin="center"><br><br></div>
+
+<p>检查MySQL组和用户是否存在，如无创建</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">cat /etc/group | grep mysql</div><div class="line">cat /etc/passwd | grep mysql</div><div class="line"><span class="comment">// 如果没有则创建。useradd -r参数表示mysql用户是系统用户，不可用于登录系统</span></div><div class="line">groupadd mysql</div><div class="line">useradd -r -g mysql mysql</div></pre></td></tr></table></figure>
+<p>分配用户和组</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">cd mysql</div><div class="line"><span class="comment">// 更改mysql目录所属的用户(用户为mysql)</span></div><div class="line">chown -R mysql ../mysql/</div><div class="line"><span class="comment">// -R是递归的意思，就是把mysql目录下的全部文件和子目录都设置为mysql用户和mysql组。</span></div><div class="line">chgrp -R mysql ../mysql/</div><div class="line"><span class="comment">// 上面的做法是为了把mysql降权，以限定只能访问属于mysql用户的文件。</span></div></pre></td></tr></table></figure>
+<p> 安装及初始化数据库（创建系统数据库的表）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./scripts/mysql_install_db --user=mysql --basedir=/usr/local/mysql/ --datadir=/usr/local/mysql/data/</div></pre></td></tr></table></figure>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/scripts.png" algin="center"><br><br></div>
+
+<p>配置MySQL数据库</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// 复制配置文件</div><div class="line">cp -a ./support-files/my-default.cnf /etc/my.cnf</div><div class="line">// 更改配置文件信息</div><div class="line">vi /etc/my.cnf</div><div class="line">// 加入以下内容</div><div class="line"># These are commonly set, remove the # and set as required.</div><div class="line">basedir = /usr/local/mysql</div><div class="line">datadir = /usr/local/mysql/data</div></pre></td></tr></table></figure>
+<p>修改MySQL密码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 启动MySQL</span></div><div class="line">./support-files/mysql.server start</div><div class="line"><span class="comment">// 修改密码</span></div><div class="line">./bin/mysqladmin -u root -h localhost.localdomain password <span class="string">'root'</span></div><div class="line"><span class="comment">// 进入MySQL</span></div><div class="line">./bin/mysql -h127.0.0.1 -uroot -proot</div></pre></td></tr></table></figure>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/start.jpg" algin="center"><br><br></div>
+
+<p>增加远程登录权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">grant all privileges on *.* to root@&apos;%&apos; identified by &apos;root&apos;;</div><div class="line">flush privileges;</div></pre></td></tr></table></figure>
+<p>将MySQL加入Service系统服务</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 先退出MySQL</span></div><div class="line">cp support-files/mysql.server /etc/init.d/mysqld</div><div class="line">chkconfig --add mysqld</div><div class="line">chkconfig mysqld on</div><div class="line">service mysqld restart</div><div class="line">service mysqld status</div></pre></td></tr></table></figure>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/ok.png" algin="center"><br><br></div>
+
+<p>到这里MySQL就配置完成了，剩下的就是优化MySQL，配置/etc/my.cnf啦！</p>
 
       
     </div>
@@ -553,9 +592,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/tips/" rel="tag"># tips</a>
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
           
-            <a href="/tags/前端/" rel="tag"># 前端</a>
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/jdk/" rel="tag"># jdk</a>
           
         </div>
       
@@ -568,18 +609,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/09/Spring-AOP两种配置方式/" rel="next" title="Spring-AOP两种配置方式">
-                <i class="fa fa-chevron-left"></i> Spring-AOP两种配置方式
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/07/27/JAVA实现HTML转PDF/" rel="prev" title="JAVA实现HTML转PDF">
-                JAVA实现HTML转PDF <i class="fa fa-chevron-right"></i>
+              <a href="/2018/01/05/Linux下Tomcat的安装与优化/" rel="prev" title="Linux下Tomcat的安装与优化">
+                Linux下Tomcat的安装与优化 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -768,7 +805,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#利用webSocket进行通讯"><span class="nav-number">1.</span> <span class="nav-text">利用webSocket进行通讯</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#定时器不断检查cookies变化"><span class="nav-number">2.</span> <span class="nav-text">定时器不断检查cookies变化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#localStorage的事件"><span class="nav-number">3.</span> <span class="nav-text">localStorage的事件</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JDK的安装"><span class="nav-number">2.</span> <span class="nav-text">JDK的安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#下载解压"><span class="nav-number">2.1.</span> <span class="nav-text">下载解压</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置环境变量"><span class="nav-number">2.2.</span> <span class="nav-text">配置环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切换JDK版本"><span class="nav-number">2.3.</span> <span class="nav-text">切换JDK版本</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MySQL的安装与卸载"><span class="nav-number">3.</span> <span class="nav-text">MySQL的安装与卸载</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#yum安装"><span class="nav-number">3.1.</span> <span class="nav-text">yum安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#卸载"><span class="nav-number">3.1.1.</span> <span class="nav-text">卸载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装包离线安装"><span class="nav-number">3.2.</span> <span class="nav-text">安装包离线安装</span></a></li></ol></li></ol></div>
             
 
           </div>
