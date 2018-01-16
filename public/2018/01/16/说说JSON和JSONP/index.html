@@ -1,0 +1,1225 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tips,前端," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="前言说到AJAX就会不可避免的面临两个问题，第一个是AJAX以何种格式来交换数据？第二个是跨域的需求如何解决？这两个问题目前都有不同的解决方案，比如数据可以用自定义字符串或者用XML来描述，跨域可以通过服务器端代理来解决。 JSON和JSONP虽然只有一个字母的差别，但其实他们根本不是一回事：JSON是一种数据交换格式，而JSONP是一种依靠开发人员的聪明才智创造出的一种非官方跨域数据交互协议。我">
+<meta name="keywords" content="tips,前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="说说JSON和JSONP">
+<meta property="og:url" content="https://sunny0715.github.io/2018/01/16/说说JSON和JSONP/index.html">
+<meta property="og:site_name" content="rainbowhorse's blog">
+<meta property="og:description" content="前言说到AJAX就会不可避免的面临两个问题，第一个是AJAX以何种格式来交换数据？第二个是跨域的需求如何解决？这两个问题目前都有不同的解决方案，比如数据可以用自定义字符串或者用XML来描述，跨域可以通过服务器端代理来解决。 JSON和JSONP虽然只有一个字母的差别，但其实他们根本不是一回事：JSON是一种数据交换格式，而JSONP是一种依靠开发人员的聪明才智创造出的一种非官方跨域数据交互协议。我">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/JSON_JSONP/jsonp-json-with-padding.gif">
+<meta property="og:updated_time" content="2018-01-16T07:13:55.959Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="说说JSON和JSONP">
+<meta name="twitter:description" content="前言说到AJAX就会不可避免的面临两个问题，第一个是AJAX以何种格式来交换数据？第二个是跨域的需求如何解决？这两个问题目前都有不同的解决方案，比如数据可以用自定义字符串或者用XML来描述，跨域可以通过服务器端代理来解决。 JSON和JSONP虽然只有一个字母的差别，但其实他们根本不是一回事：JSON是一种数据交换格式，而JSONP是一种依靠开发人员的聪明才智创造出的一种非官方跨域数据交互协议。我">
+<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/JSON_JSONP/jsonp-json-with-padding.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":true},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '3891674546',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sunny0715.github.io/2018/01/16/说说JSON和JSONP/"/>
+
+
+
+
+
+  <title> 说说JSON和JSONP | rainbowhorse's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?84a33ad5473913bd89d3c06ab19ae7fc";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rainbowhorse's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">不忘初心 方得始终</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2018/01/16/说说JSON和JSONP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rainbowhorse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://on937g0jc.bkt.clouddn.com/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rainbowhorse's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                说说JSON和JSONP
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-16T14:41:09+08:00">
+                2018-01-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/technology/" itemprop="url" rel="index">
+                    <span itemprop="name">technology</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a class="cloud-tie-join-count" href="/2018/01/16/说说JSON和JSONP/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/01/16/说说JSON和JSONP/" class="leancloud_visitors" data-flag-title="说说JSON和JSONP">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+		  
+		  
+           <div class="post-wordcount">
+             
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-edit"></i>
+               </span>
+                 
+                   <span class="post-meta-item-text">字数统计</span>
+                 
+                   <span title="字数统计" }}">
+                     3,333 字
+                   </span>
+             
+             
+               <span class="post-meta-divider">|</span>
+             
+             
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-clock-o"></i>
+               </span>
+                 
+                   <span class="post-meta-item-text">阅读时长</span>
+                 
+                   <span title="阅读时长" }}">
+                     13 分钟
+                   </span>
+             
+           </div>
+         
+		  
+		  
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>说到AJAX就会不可避免的面临两个问题，<strong>第一个是AJAX以何种格式来交换数据？第二个是跨域的需求如何解决？</strong>这两个问题目前都有不同的解决方案，比如数据可以用自定义字符串或者用XML来描述，跨域可以通过服务器端代理来解决。</p>
+<p>JSON和JSONP虽然只有一个字母的差别，但其实他们根本不是一回事：JSON是一种数据交换格式，而JSONP是一种依靠开发人员的聪明才智创造出的一种<code>非官方跨域数据交互协议</code>。我们拿最近比较火的谍战片来打个比方，JSON是地下党们用来书写和交换情报的“暗号”，而JSONP则是把用暗号书写的情报传递给自己同志时使用的接头方式。看到没？一个是描述信息的格式，一个是信息传递双方约定的方法。</p>
+<div align="center"><img width="450" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/JSON_JSONP/jsonp-json-with-padding.gif" algin="center"><br><br></div>
+
+<a id="more"></a>
+<h1 id="什么是JSON"><a href="#什么是JSON" class="headerlink" title="什么是JSON"></a>什么是JSON</h1><p>前面简单说了一下，JSON是一种基于文本的数据交换方式，或者叫做数据描述格式，你是否该选用他首先肯定要关注它所拥有的优点。</p>
+<h2 id="JSON的优点"><a href="#JSON的优点" class="headerlink" title="JSON的优点"></a>JSON的优点</h2><ol>
+<li>基于纯文本，跨平台传递极其简单；</li>
+<li>JavaScript原生支持，后台语言几乎全部支持；</li>
+<li>轻量级数据格式，占用字符数量极少，特别适合互联网传递；</li>
+<li>可读性较强，虽然比不上XML那么一目了然，但在合理的依次缩进之后还是很容易识别的；</li>
+<li>容易编写和解析，当然前提是你要知道数据结构；</li>
+</ol>
+<p>JSON的缺点当然也有，但在作者看来实在是无关紧要的东西，所以不再单独说明。</p>
+<h2 id="JSON的格式或者叫规则"><a href="#JSON的格式或者叫规则" class="headerlink" title="JSON的格式或者叫规则"></a>JSON的格式或者叫规则</h2><p>JSON能够以非常简单的方式来描述数据结构，XML能做的它都能做，因此在跨平台方面两者完全不分伯仲。</p>
+<ol>
+<li>JSON只有两种数据类型描述符，大括号{}和方括号[]，其余英文冒号:是映射符，英文逗号,是分隔符，英文双引号””是定义符。</li>
+<li>大括号{}用来描述一组“不同类型的无序键值对集合”（每个键值对可以理解为OOP的属性描述），方括号[]用来描述一组“相同类型的有序数据集合”（可对应OOP的数组）。</li>
+<li>上述两种集合中若有多个子项，则通过英文逗号,进行分隔。</li>
+<li>键值对以英文冒号:进行分隔，并且建议键名都加上英文双引号””，以便于不同语言的解析。</li>
+<li>JSON内部常用数据类型无非就是字符串、数字、布尔、日期、null 这么几个，字符串必须用双引号引起来，其余的都不用，日期类型比较特殊，这里就不展开讲述了，只是建议如果客户端没有按日期排序功能需求的话，那么把日期时间直接作为字符串传递就好，可以省去很多麻烦。</li>
+</ol>
+<h2 id="JSON的实例"><a href="#JSON的实例" class="headerlink" title="JSON的实例"></a>JSON的实例</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 描述一个人</span></div><div class="line"><span class="keyword">var</span> person = &#123;</div><div class="line">    <span class="string">"Name"</span>: <span class="string">"Bob"</span>,</div><div class="line">    <span class="string">"Age"</span>: <span class="number">32</span>,</div><div class="line">    <span class="string">"Company"</span>: <span class="string">"IBM"</span>,</div><div class="line">    <span class="string">"Engineer"</span>: <span class="literal">true</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 获取这个人的信息</span></div><div class="line"><span class="keyword">var</span> personAge = person.Age;</div><div class="line"></div><div class="line"><span class="comment">// 描述几个人</span></div><div class="line"><span class="keyword">var</span> members = [</div><div class="line">    &#123;</div><div class="line">        <span class="string">"Name"</span>: <span class="string">"Bob"</span>,</div><div class="line">        <span class="string">"Age"</span>: <span class="number">32</span>,</div><div class="line">        <span class="string">"Company"</span>: <span class="string">"IBM"</span>,</div><div class="line">        <span class="string">"Engineer"</span>: <span class="literal">true</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        <span class="string">"Name"</span>: <span class="string">"John"</span>,</div><div class="line">        <span class="string">"Age"</span>: <span class="number">20</span>,</div><div class="line">        <span class="string">"Company"</span>: <span class="string">"Oracle"</span>,</div><div class="line">        <span class="string">"Engineer"</span>: <span class="literal">false</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        <span class="string">"Name"</span>: <span class="string">"Henry"</span>,</div><div class="line">        <span class="string">"Age"</span>: <span class="number">45</span>,</div><div class="line">        <span class="string">"Company"</span>: <span class="string">"Microsoft"</span>,</div><div class="line">        <span class="string">"Engineer"</span>: <span class="literal">false</span></div><div class="line">    &#125;</div><div class="line">]</div><div class="line"></div><div class="line"><span class="comment">// 读取其中John的公司名称</span></div><div class="line"><span class="keyword">var</span> johnsCompany = members[<span class="number">1</span>].Company;</div><div class="line"></div><div class="line"><span class="comment">// 描述一次会议</span></div><div class="line"><span class="keyword">var</span> conference = &#123;</div><div class="line">    <span class="string">"Conference"</span>: <span class="string">"Future Marketing"</span>,</div><div class="line">    <span class="string">"Date"</span>: <span class="string">"2012-6-1"</span>,</div><div class="line">    <span class="string">"Address"</span>: <span class="string">"Beijing"</span>,</div><div class="line">    <span class="string">"Members"</span>: </div><div class="line">    [</div><div class="line">        &#123;</div><div class="line">            <span class="string">"Name"</span>: <span class="string">"Bob"</span>,</div><div class="line">            <span class="string">"Age"</span>: <span class="number">32</span>,</div><div class="line">            <span class="string">"Company"</span>: <span class="string">"IBM"</span>,</div><div class="line">            <span class="string">"Engineer"</span>: <span class="literal">true</span></div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">            <span class="string">"Name"</span>: <span class="string">"John"</span>,</div><div class="line">            <span class="string">"Age"</span>: <span class="number">20</span>,</div><div class="line">            <span class="string">"Company"</span>: <span class="string">"Oracle"</span>,</div><div class="line">            <span class="string">"Engineer"</span>: <span class="literal">false</span></div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">            <span class="string">"Name"</span>: <span class="string">"Henry"</span>,</div><div class="line">            <span class="string">"Age"</span>: <span class="number">45</span>,</div><div class="line">            <span class="string">"Company"</span>: <span class="string">"Microsoft"</span>,</div><div class="line">            <span class="string">"Engineer"</span>: <span class="literal">false</span></div><div class="line">        &#125;</div><div class="line">    ]</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 读取参会者Henry是否工程师</span></div><div class="line"><span class="keyword">var</span> henryIsAnEngineer = conference.Members[<span class="number">2</span>].Engineer;</div></pre></td></tr></table></figure>
+<p>关于JSON，就说这么多，更多细节请在开发过程中查阅资料深入学习。</p>
+<h1 id="什么是JSONP"><a href="#什么是JSONP" class="headerlink" title="什么是JSONP"></a>什么是JSONP</h1><h2 id="JSONP的产生"><a href="#JSONP的产生" class="headerlink" title="JSONP的产生"></a>JSONP的产生</h2><p>其实网上关于JSONP的讲解有很多，但却千篇一律，而且云里雾里，对于很多刚接触的人来讲理解起来有些困难，，试着用自己的方式来阐释一下这个问题。</p>
+<p>1、一个众所周知的问题，Ajax直接请求普通文件存在跨域无权限访问的问题，甭管你是静态页面、动态网页、web服务、WCF，只要是跨域请求，一律不准；</p>
+<p>2、不过我们又发现，Web页面上<code>调用js文件时则不受是否跨域的影响</code>（不仅如此，我们还发现凡是拥有”src”这个属性的标签都拥有跨域的能力，比如<code>&lt;script&gt;</code>、<code>&lt;img&gt;</code>、<code>&lt;iframe&gt;</code>）；</p>
+<p>3、于是可以判断，当前阶段如果想通过纯web端（ActiveX控件、服务端代理、属于未来的HTML5之Websocket等方式不算）跨域访问数据就只有一种可能，那就是在远程服务器上设法把数据装进js格式的文件里，供客户端调用和进一步处理；</p>
+<p>4、恰巧我们已经知道有一种叫做JSON的纯字符数据格式可以简洁的描述复杂数据，更妙的是JSON还被js原生支持，所以在客户端几乎可以随心所欲的处理这种格式的数据；</p>
+<p>5、这样子解决方案就呼之欲出了，web客户端通过与调用脚本一模一样的方式，来调用跨域服务器上动态生成的js格式文件（一般以JSON为后缀），显而易见，服务器之所以要动态生成JSON文件，目的就在于把客户端需要的数据装入进去。</p>
+<p>6、客户端在对JSON文件调用成功之后，也就获得了自己所需的数据，剩下的就是按照自己需求进行处理和展现了，这种获取远程数据的方式看起来非常像AJAX，但其实并不一样。</p>
+<p>7、为了便于客户端使用数据，逐渐形成了一种非正式传输协议，人们把它称作JSONP，该协议的一个要点就是允许用户传递一个callback参数给服务端，然后服务端返回数据时会将这个callback参数作为函数名来包裹住JSON数据，这样客户端就可以随意定制自己的函数来自动处理返回数据了。</p>
+<h2 id="JSONP的客户端具体实现"><a href="#JSONP的客户端具体实现" class="headerlink" title="JSONP的客户端具体实现"></a>JSONP的客户端具体实现</h2><p>不管jQuery也好，extjs也罢，又或者是其他支持jsonp的框架，他们幕后所做的工作都是一样的，下面我来循序渐进的说明一下jsonp在客户端的实现：</p>
+<p>1、我们知道，哪怕跨域js文件中的代码（当然指符合web脚本安全策略的），web页面也是可以无条件执行的。</p>
+<p>远程服务器remoteserver.com根目录下有个remote.js文件代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alert(<span class="string">'我是远程文件'</span>);</div></pre></td></tr></table></figure>
+<p>本地服务器localserver.com下有个jsonp.html页面代码如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">"http://www.w3.org/1999/xhtml"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"http://remoteserver.com/remote.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>毫无疑问，页面将会弹出一个提示窗体，显示跨域调用成功。</p>
+<p>2、现在我们在jsonp.html页面定义一个函数，然后在远程remote.js中传入数据进行调用。</p>
+<p>jsonp.html页面代码如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">"http://www.w3.org/1999/xhtml"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="javascript"></span></div><div class="line">    <span class="keyword">var</span> localHandler = <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</div><div class="line">        alert(<span class="string">'我是本地函数，可以被跨域的remote.js文件调用，远程js带来的数据是：'</span> + data.result);</div><div class="line">    &#125;;</div><div class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"http://remoteserver.com/remote.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>remote.js文件代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">localHandler(&#123;<span class="string">"result"</span>:<span class="string">"我是远程js带来的数据"</span>&#125;);</div></pre></td></tr></table></figure>
+<p>运行之后查看结果，页面成功弹出提示窗口，显示本地函数被跨域的远程js调用成功，并且还接收到了远程js带来的数据。很欣喜，跨域远程获取数据的目的基本实现了，但是又一个问题出现了，我怎么让远程js知道它应该调用的本地函数叫什么名字呢？毕竟是jsonp的服务者都要面对很多服务对象，而这些服务对象各自的本地函数都不相同啊？我们接着往下看。</p>
+<p>3、聪明的开发者很容易想到，只要服务端提供的js脚本是动态生成的就行了呗，这样调用者可以传一个参数过去告诉服务端“我想要一段调用XXX函数的js代码，请你返回给我”，于是服务器就可以按照客户端的需求来生成js脚本并响应了。</p>
+<p>看jsonp.html页面的代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">"http://www.w3.org/1999/xhtml"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="javascript"></span></div><div class="line">    <span class="comment">// 得到航班信息查询结果后的回调函数</span></div><div class="line">    <span class="keyword">var</span> flightHandler = <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</div><div class="line">        alert(<span class="string">'你查询的航班结果是：票价 '</span> + data.price + <span class="string">' 元，'</span> + <span class="string">'余票 '</span> + data.tickets + <span class="string">' 张。'</span>);</div><div class="line">    &#125;;</div><div class="line">    <span class="comment">// 提供jsonp服务的url地址（不管是什么类型的地址，最终生成的返回值都是一段javascript代码）</span></div><div class="line">    <span class="keyword">var</span> url = <span class="string">"http://flightQuery.com/jsonp/flightResult.aspx?code=CA1998&amp;callback=flightHandler"</span>;</div><div class="line">    <span class="comment">// 创建script标签，设置其属性</span></div><div class="line">    <span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>);</div><div class="line">    script.setAttribute(<span class="string">'src'</span>, url);</div><div class="line">    <span class="comment">// 把script标签加入head，此时调用开始</span></div><div class="line">    <span class="built_in">document</span>.getElementsByTagName(<span class="string">'head'</span>)[<span class="number">0</span>].appendChild(script); </div><div class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>这次的代码变化比较大，不再直接把远程js文件写死，而是编码实现动态查询，而这也正是jsonp客户端实现的核心部分，本例中的重点也就在于如何完成jsonp调用的全过程。</p>
+<p>我们看到调用的url中传递了一个code参数，告诉服务器我要查的是CA1998次航班的信息，而callback参数则告诉服务器，我的本地回调函数叫做flightHandler，所以请把查询结果传入这个函数中进行调用。</p>
+<p>OK，服务器很聪明，这个叫做flightResult.aspx的页面生成了一段这样的代码提供给jsonp.html（服务端的实现这里就不演示了，与你选用的语言无关，说到底就是拼接字符串）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">flightHandler(&#123;</div><div class="line">    <span class="string">"code"</span>: <span class="string">"CA1998"</span>,</div><div class="line">    <span class="string">"price"</span>: <span class="number">1780</span>,</div><div class="line">    <span class="string">"tickets"</span>: <span class="number">5</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>我们看到，传递给flightHandler函数的是一个json，它描述了航班的基本信息。运行一下页面，成功弹出提示窗口，jsonp的执行全过程顺利完成！</p>
+<p>4、到这里为止的话，相信你已经能够理解jsonp的客户端实现原理了吧？剩下的就是如何把代码封装一下，以便于与用户界面交互，从而实现多次和重复调用。</p>
+<p>什么？你用的是jQuery，想知道jQuery如何实现jsonp调用？好吧，那我就好人做到底，再给你一段jQuery使用jsonp的代码（我们依然沿用上面那个航班信息查询的例子，假定返回jsonp结果不变）：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</span></div><div class="line"> <span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">"http://www.w3.org/1999/xhtml"</span> &gt;</span></div><div class="line"> <span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">title</span>&gt;</span>Untitled Page<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">jquery.min.js</span>"&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="javascript"></span></div><div class="line">     jQuery(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123; </div><div class="line">        $.ajax(&#123;</div><div class="line">             <span class="attr">type</span>: <span class="string">"get"</span>,</div><div class="line">             <span class="attr">async</span>: <span class="literal">false</span>,</div><div class="line">             <span class="attr">url</span>: <span class="string">"http://flightQuery.com/jsonp/flightResult.aspx?code=CA1998"</span>,</div><div class="line">             <span class="attr">dataType</span>: <span class="string">"jsonp"</span>,</div><div class="line">             <span class="attr">jsonp</span>: <span class="string">"callback"</span>,<span class="comment">//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(一般默认为:callback)</span></div><div class="line">             jsonpCallback:<span class="string">"flightHandler"</span>,<span class="comment">//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名，也可以写"?"，jQuery会自动为你处理数据</span></div><div class="line">             success: <span class="function"><span class="keyword">function</span>(<span class="params">json</span>)</span>&#123;</div><div class="line">                 alert(<span class="string">'您查询到航班信息：票价： '</span> + json.price + <span class="string">' 元，余票： '</span> + json.tickets + <span class="string">' 张。'</span>);</div><div class="line">             &#125;,</div><div class="line">             <span class="attr">error</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">                 alert(<span class="string">'fail'</span>);</div><div class="line">             &#125;</div><div class="line">         &#125;);</div><div class="line">     &#125;);</div><div class="line">     <span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">     <span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"> <span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>是不是有点奇怪？为什么我这次没有写flightHandler这个函数呢？而且竟然也运行成功了！哈哈，这就是jQuery的功劳了，jquery在处理jsonp类型的ajax时（还是忍不住吐槽，虽然jquery也把jsonp归入了ajax，但其实它们真的不是一回事儿），自动帮你生成回调函数并把数据取出来供success属性方法来调用，是不是很爽呀？</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>1、ajax和jsonp这两种技术在调用方式上“看起来”很像，目的也一样，都是请求一个url，然后把服务器返回的数据进行处理，因此jquery和ext等框架都把jsonp作为ajax的一种形式进行了封装；</p>
+<p>2、但ajax和jsonp其实本质上是不同的东西。ajax的核心是通过XmlHttpRequest获取非本页内容，而<strong>jsonp的核心则是动态添加<code>&lt;script&gt;</code>标签来调用服务器提供的js脚本</strong>。</p>
+<p>3、所以说，其实ajax与jsonp的区别不在于是否跨域，ajax通过服务端代理一样可以实现跨域，jsonp本身也不排斥同域的数据的获取。</p>
+<p>4、还有就是，jsonp是一种方式或者说非强制性协议，如同ajax一样，它也不一定非要用json格式来传递数据，如果你愿意，字符串都行，只不过这样不利于用jsonp提供公开服务。</p>
+<p>总而言之，jsonp不是ajax的一个特例，哪怕jquery等巨头把jsonp封装进了ajax，也不能改变着一点！</p>
+<p>转自：<a href="http://www.cnblogs.com/dowinning/archive/2012/04/19/json-jsonp-jquery.html" target="_blank" rel="external"><em>说说JSON和JSONP，也许你会豁然开朗，含jQuery用例</em></a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>谢谢你请我吃糖果</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/uploads/weixinPay.jpg" alt="rainbowhorse WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tips/" rel="tag"># tips</a>
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/11/Linux下安装Nginx/" rel="prev" title="Linux下安装Nginx">
+                Linux下安装Nginx <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://on937g0jc.bkt.clouddn.com/avatar.jpg"
+               alt="rainbowhorse" />
+          <p class="site-author-name" itemprop="name">rainbowhorse</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Sunny0715" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/%E6%97%AD-%E9%A9%AC-77a826105" target="_blank" title="linkedin">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  linkedin
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:mx_sunny@sina.com" target="_blank" title="mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.importnew.com/" title="爪哇ImportNew" target="_blank">爪哇ImportNew</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.open-open.com" title="深度开源open-open" target="_blank">深度开源open-open</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.bizhongbio.com/" title="双鱼bizhongbio" target="_blank">双鱼bizhongbio</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.pythontab.com/" title="Python中文社区" target="_blank">Python中文社区</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+		<br><br>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是JSON"><span class="nav-number">2.</span> <span class="nav-text">什么是JSON</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON的优点"><span class="nav-number">2.1.</span> <span class="nav-text">JSON的优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON的格式或者叫规则"><span class="nav-number">2.2.</span> <span class="nav-text">JSON的格式或者叫规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON的实例"><span class="nav-number">2.3.</span> <span class="nav-text">JSON的实例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是JSONP"><span class="nav-number">3.</span> <span class="nav-text">什么是JSONP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JSONP的产生"><span class="nav-number">3.1.</span> <span class="nav-text">JSONP的产生</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSONP的客户端具体实现"><span class="nav-number">3.2.</span> <span class="nav-text">JSONP的客户端具体实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" style="color:red">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rainbowhorse</span>
+</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "2097cd3d0f7d4127bb4229f3352012fd",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("8rKac39CM1EjFl9q7i97aDSu-gzGzoHsz", "5wiSIVcjJCXPwgEwOqK8GaoJ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+</body>
+</html>
