@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://sunny0715.github.io/2018/01/20/HttpClient%E5%90%8E%E5%8F%B0%E8%B7%A8%E5%9F%9F/</loc>
+    
+    <lastmod>2018-01-20T02:48:46.262Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://sunny0715.github.io/2018/01/16/%E8%AF%B4%E8%AF%B4JSON%E5%92%8CJSONP/</loc>
     
-    <lastmod>2018-01-16T07:13:55.959Z</lastmod>
+    <lastmod>2018-01-19T01:46:51.177Z</lastmod>
     
   </url>
   
@@ -212,14 +219,14 @@
   </url>
   
   <url>
-    <loc>https://sunny0715.github.io/tags/index.html</loc>
+    <loc>https://sunny0715.github.io/categories/index.html</loc>
     
     <lastmod>2017-06-04T01:41:33.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://sunny0715.github.io/categories/index.html</loc>
+    <loc>https://sunny0715.github.io/tags/index.html</loc>
     
     <lastmod>2017-06-04T01:41:33.000Z</lastmod>
     
