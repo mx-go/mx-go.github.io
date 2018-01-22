@@ -87,18 +87,18 @@
 
 
 
-<meta name="description" content="引言跨域可以说是一个经常遇到的问题，最近在联调一个身份证识别接口，服务端是python编写，客户端是Java编写，采用了CORS（Cross-Origin Resource Sharing）跨域，在IE8上一直出现兼容性问题，固定的思维容易出现错误，自己一直想着前端Ajax跨域而忽略了后台HttpClient的跨域，最后还是用HttpClient顺利解决问题，避免了浏览器跨域带来的兼容性问题。">
+<meta name="description" content="引言跨域可以说是一个经常遇到的问题，最近在联调一个身份证识别接口，该接口由python语言编写，Java语言调用，刚开始采用了CORS（Cross-Origin Resource Sharing）跨域，在IE8上一直出现兼容性问题，固定的思维容易出现错误，自己一直想着前端Ajax跨域而忽略了后台HttpClient的跨域，最后还是用HttpClient顺利解决问题，避免了浏览器跨域带来的兼容性问题">
 <meta name="keywords" content="java,tips">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HttpClient后台跨域">
 <meta property="og:url" content="https://sunny0715.github.io/2018/01/20/HttpClient后台跨域/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
-<meta property="og:description" content="引言跨域可以说是一个经常遇到的问题，最近在联调一个身份证识别接口，服务端是python编写，客户端是Java编写，采用了CORS（Cross-Origin Resource Sharing）跨域，在IE8上一直出现兼容性问题，固定的思维容易出现错误，自己一直想着前端Ajax跨域而忽略了后台HttpClient的跨域，最后还是用HttpClient顺利解决问题，避免了浏览器跨域带来的兼容性问题。">
+<meta property="og:description" content="引言跨域可以说是一个经常遇到的问题，最近在联调一个身份证识别接口，该接口由python语言编写，Java语言调用，刚开始采用了CORS（Cross-Origin Resource Sharing）跨域，在IE8上一直出现兼容性问题，固定的思维容易出现错误，自己一直想着前端Ajax跨域而忽略了后台HttpClient的跨域，最后还是用HttpClient顺利解决问题，避免了浏览器跨域带来的兼容性问题">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-01-20/HTTPClient.png">
-<meta property="og:updated_time" content="2018-01-20T02:48:46.262Z">
+<meta property="og:updated_time" content="2018-01-22T00:59:13.239Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HttpClient后台跨域">
-<meta name="twitter:description" content="引言跨域可以说是一个经常遇到的问题，最近在联调一个身份证识别接口，服务端是python编写，客户端是Java编写，采用了CORS（Cross-Origin Resource Sharing）跨域，在IE8上一直出现兼容性问题，固定的思维容易出现错误，自己一直想着前端Ajax跨域而忽略了后台HttpClient的跨域，最后还是用HttpClient顺利解决问题，避免了浏览器跨域带来的兼容性问题。">
+<meta name="twitter:description" content="引言跨域可以说是一个经常遇到的问题，最近在联调一个身份证识别接口，该接口由python语言编写，Java语言调用，刚开始采用了CORS（Cross-Origin Resource Sharing）跨域，在IE8上一直出现兼容性问题，固定的思维容易出现错误，自己一直想着前端Ajax跨域而忽略了后台HttpClient的跨域，最后还是用HttpClient顺利解决问题，避免了浏览器跨域带来的兼容性问题">
 <meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2018-01-20/HTTPClient.png">
 
 
@@ -425,7 +425,7 @@
                    <span class="post-meta-item-text">字数统计</span>
                  
                    <span title="字数统计" }}">
-                     1,237 字
+                     1,240 字
                    </span>
              
              
@@ -461,7 +461,7 @@
       
 
       
-        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>跨域可以说是一个经常遇到的问题，最近在联调一个身份证识别接口，服务端是python编写，客户端是Java编写，采用了CORS（Cross-Origin Resource Sharing）跨域，在IE8上一直出现兼容性问题，固定的思维容易出现错误，自己一直想着前端Ajax跨域而忽略了后台HttpClient的跨域，最后还是用HttpClient顺利解决问题，避免了浏览器跨域带来的兼容性问题。</p>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>跨域可以说是一个经常遇到的问题，最近在联调一个身份证识别接口，该接口由python语言编写，Java语言调用，刚开始采用了CORS（Cross-Origin Resource Sharing）跨域，在IE8上一直出现兼容性问题，固定的思维容易出现错误，自己一直想着前端Ajax跨域而忽略了后台HttpClient的跨域，最后还是用HttpClient顺利解决问题，避免了浏览器跨域带来的兼容性问题。</p>
 <div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01-20/HTTPClient.png" algin="center"><br><br></div>
 
 <a id="more"></a>

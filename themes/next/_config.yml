@@ -3,10 +3,10 @@
 # ---------------------------------------------------------------
 
 # Put your favicon.ico into `hexo-site/source/` directory.
-favicon: /favicon.ico
+favicon: favicon.ico
 
 # Set default keywords (Use a comma to separate)
-keywords: "开发,java,技巧,技术,rainbowhorse,http://rainbowhorse.tech"
+keywords: "开发,java,技巧,技术,rainbowhorse,http://rainbowhorse.site"
 
 # Set rss to false to disable feed link.
 # Leave rss as empty to use site's feed link.
