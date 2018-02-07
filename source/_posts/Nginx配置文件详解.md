@@ -224,12 +224,33 @@ HTTP错误(Bad Request)。
   	#开启限制IP连接数的时候需要使用
     #limit_zone crawler $binary_remote_addr 10m;
 
-        upstream img_relay {
-        	server 127.0.0.1:8027;
-       	 	server 127.0.0.1:8028;
-        	server 127.0.0.1:8029;
-        	hash $request_uri;
-        }
+    upstream img_relay {
+       server 127.0.0.1:8027;
+       server 127.0.0.1:8028;
+       server 127.0.0.1:8029;
+       hash $request_uri;
+    }
+  
+ 	#如果请求为img_relay:80,则交给名称为img_relay的Nginx集群来处理
+	server{
+         listen  80;
+         server_name  img_relay;
+#		 limit_req   zone=req_one  burst=5 nodelay;
+
+		  location ~ .*.jsp$  {
+				   proxy_ignore_client_abort   on;
+				   proxy_pass		http://img_relay;	#http:// + upstream名称
+				   proxy_set_header   Host             $host;
+				   proxy_set_header   X-Real-IP        $remote_addr;
+				   proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+				   proxy_connect_timeout       60; 	 #nginx跟后端服务器连接超时时间(代理连接超时)
+				   proxy_read_timeout          600;  #连接成功后，后端服务器响应时间(代理接收超时)
+				   proxy_send_timeout          60;	 #后端服务器数据回传时间(代理发送超时)
+				   proxy_buffer_size 128k;          #设置代理服务器（nginx）保存用户头信息的缓冲区大小
+				   proxy_buffers   32 128k;           #proxy_buffers缓冲区，网页平均在32k以下的话，这样设置
+				   proxy_busy_buffers_size 128k;   #高负荷下缓冲大小（proxy_buffers*2）
+		  }
+      }
 
 nginx的upstream目前支持4种方式的分配
 1、轮询（默认）

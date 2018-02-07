@@ -97,7 +97,7 @@
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-28/tomcat%E8%BF%9E%E6%8E%A5%E6%B1%A0/Nio.jpg">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-28/tomcat%E8%BF%9E%E6%8E%A5%E6%B1%A0/jconsole.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-28/tomcat%E8%BF%9E%E6%8E%A5%E6%B1%A0/net.png">
-<meta property="og:updated_time" content="2018-01-03T10:50:11.410Z">
+<meta property="og:updated_time" content="2018-01-25T01:38:09.385Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="详解Tomcat连接池与连接数">
 <meta name="twitter:description" content="引言在使用Tomcat时，经常会遇到连接数、线程数之类的配置，然后自己就去谷歌、百度，没有真正理解Tomcat配置的作用及当前业务环境、服务器配置等情况下Tomcat最优配置。 12345&amp;lt;Connector port=&quot;8080&quot; protocol=&quot;org.apache.coyote.http11.Http11AprProtocol&quot;              connectionTim">
@@ -493,7 +493,7 @@
 <h1 id="acceptCount、maxConnections、maxThreads参数"><a href="#acceptCount、maxConnections、maxThreads参数" class="headerlink" title="acceptCount、maxConnections、maxThreads参数"></a>acceptCount、maxConnections、maxThreads参数</h1><p>Tomcat处理请求的过程：在accept队列中接收连接（当客户端向服务器发送请求时，如果客户端与OS完成三次握手建立了连接，则OS将该连接放入accept队列）；在连接中获取请求的数据，生成request；调用servlet容器处理请求；返回response。</p>
 <p>相对应的，Connector中的几个参数功能如下：</p>
 <h2 id="acceptCount"><a href="#acceptCount" class="headerlink" title="acceptCount"></a>acceptCount</h2><p>accept队列的长度；当accept队列中连接的个数达到acceptCount时，队列满，进来的请求一律被拒绝。<em>默认值是100</em>。</p>
-<h2 id="maxConnections"><a href="#maxConnections" class="headerlink" title="maxConnections"></a>maxConnections</h2><p>omcat在任意时刻接收和处理的最大连接数。当Tomcat接收的连接数达到maxConnections时，Acceptor线程不会读取accept队列中的连接；这时accept队列中的线程会一直阻塞着，直到Tomcat接收的连接数小于maxConnections。如果设置为-1，则连接数不受限制。</p>
+<h2 id="maxConnections"><a href="#maxConnections" class="headerlink" title="maxConnections"></a>maxConnections</h2><p>Tomcat在任意时刻接收和处理的最大连接数。当Tomcat接收的连接数达到maxConnections时，Acceptor线程不会读取accept队列中的连接；这时accept队列中的线程会一直阻塞着，直到Tomcat接收的连接数小于maxConnections。如果设置为-1，则连接数不受限制。</p>
 <p><em>默认值与连接器使用的协议有关：NIO的默认值是10000，APR/native的默认值是8192，而BIO的默认值为maxThreads（如果配置了Executor，则默认值是Executor的maxThreads）。</em></p>
 <p><em>在windows下，APR/native的maxConnections值会自动调整为设置值以下最大的1024的整数倍；如设置为2000，则最大值实际是1024。</em></p>
 <h2 id="maxThreads"><a href="#maxThreads" class="headerlink" title="maxThreads"></a>maxThreads</h2><p>请求处理线程的最大数量。<em>默认值是200（Tomcat7和8都是的）</em>。如果该Connector绑定了Executor，这个值会被忽略，因为该Connector将使用绑定的Executor，而不是内置的线程池来执行任务。</p>
@@ -677,7 +677,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-count">31</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -699,7 +699,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

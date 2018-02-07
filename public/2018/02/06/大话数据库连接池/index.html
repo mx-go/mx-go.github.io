@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java,mysql," />
+  <meta name="keywords" content="sql," />
 
 
 
@@ -87,19 +87,24 @@
 
 
 
-<meta name="description" content="引言​    在项目中经常会用到Java程序备份和还原MySQL数据库的内容，都是大同小异，但程序也会出现各种各样的问题（运行时异常，乱码等）。实现上都是用Runtime执行MySQL的命令行工具，然后读写IO流数据；也有可能是由于使用Java的Runtime来实现备份还原功能，而由于大家的运行时环境有差异才导致代码运行不成功。在这里记录一下自己使用的工具和方法。">
-<meta name="keywords" content="java,mysql">
+<meta name="description" content="引言数据库连接池在Java数据库相关中间件产品群中，应该算是最底层最基础的一类产品，作为企业应用开发必不可少的组件，无数开发者们贡献了一个又一个的优秀产品，它们有的随着时代发展，功成身退，有的还在不断迭代，老而弥坚，更有新生代产品，或性能无敌、或功能全面。接下来就聊一聊  “那些年，我们用过的数据库连接池。”">
+<meta name="keywords" content="sql">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java备份和还原MySQL数据库">
-<meta property="og:url" content="https://sunny0715.github.io/2017/09/24/Java备份和还原MySQL数据库/index.html">
+<meta property="og:title" content="大话数据库连接池">
+<meta property="og:url" content="https://sunny0715.github.io/2018/02/06/大话数据库连接池/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
-<meta property="og:description" content="引言​    在项目中经常会用到Java程序备份和还原MySQL数据库的内容，都是大同小异，但程序也会出现各种各样的问题（运行时异常，乱码等）。实现上都是用Runtime执行MySQL的命令行工具，然后读写IO流数据；也有可能是由于使用Java的Runtime来实现备份还原功能，而由于大家的运行时环境有差异才导致代码运行不成功。在这里记录一下自己使用的工具和方法。">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-21/MySQLbackUpAndRestore/mysql-index.png">
-<meta property="og:updated_time" content="2017-12-13T06:23:34.830Z">
+<meta property="og:description" content="引言数据库连接池在Java数据库相关中间件产品群中，应该算是最底层最基础的一类产品，作为企业应用开发必不可少的组件，无数开发者们贡献了一个又一个的优秀产品，它们有的随着时代发展，功成身退，有的还在不断迭代，老而弥坚，更有新生代产品，或性能无敌、或功能全面。接下来就聊一聊  “那些年，我们用过的数据库连接池。”">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/index.jpg">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/1.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/3.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/4.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/5.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/6.png">
+<meta property="og:updated_time" content="2018-02-07T01:43:50.482Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java备份和还原MySQL数据库">
-<meta name="twitter:description" content="引言​    在项目中经常会用到Java程序备份和还原MySQL数据库的内容，都是大同小异，但程序也会出现各种各样的问题（运行时异常，乱码等）。实现上都是用Runtime执行MySQL的命令行工具，然后读写IO流数据；也有可能是由于使用Java的Runtime来实现备份还原功能，而由于大家的运行时环境有差异才导致代码运行不成功。在这里记录一下自己使用的工具和方法。">
-<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-21/MySQLbackUpAndRestore/mysql-index.png">
+<meta name="twitter:title" content="大话数据库连接池">
+<meta name="twitter:description" content="引言数据库连接池在Java数据库相关中间件产品群中，应该算是最底层最基础的一类产品，作为企业应用开发必不可少的组件，无数开发者们贡献了一个又一个的优秀产品，它们有的随着时代发展，功成身退，有的还在不断迭代，老而弥坚，更有新生代产品，或性能无敌、或功能全面。接下来就聊一聊  “那些年，我们用过的数据库连接池。”">
+<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/index.jpg">
 
 
 
@@ -127,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="https://sunny0715.github.io/2017/09/24/Java备份和还原MySQL数据库/"/>
+  <link rel="canonical" href="https://sunny0715.github.io/2018/02/06/大话数据库连接池/"/>
 
 
 
 
 
-  <title> Java备份和还原MySQL数据库 | rainbowhorse's blog </title>
+  <title> 大话数据库连接池 | rainbowhorse's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -316,7 +321,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/09/24/Java备份和还原MySQL数据库/">
+    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2018/02/06/大话数据库连接池/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rainbowhorse">
@@ -337,7 +342,7 @@
             
             
               
-                Java备份和还原MySQL数据库
+                大话数据库连接池
               
             
           </h2>
@@ -352,8 +357,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-24T17:43:10+08:00">
-                2017-09-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-06T17:50:49+08:00">
+                2018-02-06
               </time>
             
 
@@ -393,7 +398,7 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a class="cloud-tie-join-count" href="/2017/09/24/Java备份和还原MySQL数据库/#comments" itemprop="discussionUrl">
+                <a class="cloud-tie-join-count" href="/2018/02/06/大话数据库连接池/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count join-count" itemprop="commentCount"></span>
                 </a>
               </span>
@@ -402,7 +407,7 @@
 
           
           
-             <span id="/2017/09/24/Java备份和还原MySQL数据库/" class="leancloud_visitors" data-flag-title="Java备份和还原MySQL数据库">
+             <span id="/2018/02/06/大话数据库连接池/" class="leancloud_visitors" data-flag-title="大话数据库连接池">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -425,7 +430,7 @@
                    <span class="post-meta-item-text">字数统计</span>
                  
                    <span title="字数统计" }}">
-                     1,443 字
+                     2,546 字
                    </span>
              
              
@@ -439,7 +444,7 @@
                    <span class="post-meta-item-text">阅读时长</span>
                  
                    <span title="阅读时长" }}">
-                     6 分钟
+                     9 分钟
                    </span>
              
            </div>
@@ -461,29 +466,130 @@
       
 
       
-        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>​    在项目中经常会用到Java程序备份和还原MySQL数据库的内容，都是大同小异，但程序也会出现各种各样的问题（运行时异常，乱码等）。实现上都是用Runtime执行MySQL的命令行工具，然后读写IO流数据；也有可能是由于使用Java的Runtime来实现备份还原功能，而由于大家的运行时环境有差异才导致代码运行不成功。在这里记录一下自己使用的工具和方法。</p>
-<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-21/MySQLbackUpAndRestore/mysql-index.png" algin="center"><br><br></div>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>数据库连接池在Java数据库相关中间件产品群中，应该算是最底层最基础的一类产品，作为企业应用开发必不可少的组件，无数开发者们贡献了一个又一个的优秀产品，它们有的随着时代发展，功成身退，有的还在不断迭代，老而弥坚，更有新生代产品，或性能无敌、或功能全面。接下来就聊一聊  “那些年，我们用过的数据库连接池。”</p>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/index.jpg" algin="center"><br><br></div>
 
 <a id="more"></a>
-<h1 id="使用MySQL自带工具"><a href="#使用MySQL自带工具" class="headerlink" title="使用MySQL自带工具"></a>使用MySQL自带工具</h1><h2 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h2><p>备份使用MySQL的<code>mysqldump</code>命令来实现，示例代码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> <span class="keyword">static</span> Logger logger = LoggerFactory.getLogger(MySQLDatabaseBackupAndRestore.class);</div><div class="line"></div><div class="line"> <span class="comment">/**</span></div><div class="line">  * Java代码实现MySQL数据库导出</div><div class="line">  *</div><div class="line">  * <span class="doctag">@param</span> hostIP       MySQL数据库所在服务器地址IP</div><div class="line">  * <span class="doctag">@param</span> userName     进入数据库所需要的用户名</div><div class="line">  * <span class="doctag">@param</span> password     进入数据库所需要的密码</div><div class="line">  * <span class="doctag">@param</span> savePath     数据库导出文件保存路径</div><div class="line">  * <span class="doctag">@param</span> fileName     数据库导出文件文件名</div><div class="line">  * <span class="doctag">@param</span> databaseName 要导出的数据库名</div><div class="line">  * <span class="doctag">@return</span> 返回true表示导出成功，否则返回false。</div><div class="line">  * <span class="doctag">@author</span> maxu</div><div class="line">  */</div><div class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">backUpDatabase</span><span class="params">(String hostIP, String userName, String password, String databaseName, String savePath, String fileName)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">     File saveFile = <span class="keyword">new</span> File(savePath);</div><div class="line">     <span class="keyword">if</span> (!saveFile.exists()) &#123;<span class="comment">// 如果目录不存在</span></div><div class="line">         saveFile.mkdirs();<span class="comment">// 创建文件夹</span></div><div class="line">     &#125;</div><div class="line">     <span class="keyword">if</span> (!savePath.endsWith(File.separator)) &#123;</div><div class="line">         savePath = savePath + File.separator;</div><div class="line">     &#125;</div><div class="line"></div><div class="line">     PrintWriter printWriter = <span class="keyword">null</span>;</div><div class="line">     BufferedReader bufferedReader = <span class="keyword">null</span>;</div><div class="line">     <span class="keyword">try</span> &#123;</div><div class="line">         printWriter = <span class="keyword">new</span> PrintWriter(<span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(savePath + fileName), <span class="string">"utf8"</span>));</div><div class="line">         Process process = Runtime.getRuntime().exec(<span class="string">" D:\\DevTools\\MySQL\\MySQL5.7\\bin\\mysqldump.exe -h"</span> + hostIP + <span class="string">" -u"</span> + userName + <span class="string">" -p"</span> + password + <span class="string">" --set-charset=UTF8 "</span> + databaseName);</div><div class="line">         InputStreamReader inputStreamReader = <span class="keyword">new</span> InputStreamReader(process.getInputStream(), <span class="string">"utf8"</span>);</div><div class="line">         bufferedReader = <span class="keyword">new</span> BufferedReader(inputStreamReader);</div><div class="line">         String line;</div><div class="line">         <span class="keyword">while</span> ((line = bufferedReader.readLine()) != <span class="keyword">null</span>) &#123;</div><div class="line">             printWriter.println(line);</div><div class="line">         &#125;</div><div class="line">         printWriter.flush();</div><div class="line">         <span class="keyword">if</span> (process.waitFor() == <span class="number">0</span>) &#123;<span class="comment">//0 表示线程正常终止。</span></div><div class="line">             logger.info(<span class="string">"数据库已备份到——&gt;&gt;"</span> + savePath);</div><div class="line">             <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">         &#125;</div><div class="line">     &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">         e.printStackTrace();</div><div class="line">     &#125; <span class="keyword">finally</span> &#123;</div><div class="line">         <span class="keyword">try</span> &#123;</div><div class="line">             <span class="keyword">if</span> (bufferedReader != <span class="keyword">null</span>) &#123;</div><div class="line">                 bufferedReader.close();</div><div class="line">             &#125;</div><div class="line">             <span class="keyword">if</span> (printWriter != <span class="keyword">null</span>) &#123;</div><div class="line">                 printWriter.close();</div><div class="line">             &#125;</div><div class="line">         &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">             e.printStackTrace();</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line">     <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<h2 id="还原"><a href="#还原" class="headerlink" title="还原"></a>还原</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line">   <span class="keyword">final</span> <span class="keyword">static</span> Logger logger = LoggerFactory.getLogger(MySQLDatabaseBackupAndRestore.class);  </div><div class="line">	</div><div class="line">   <span class="comment">/**</span></div><div class="line">     * Java代码实现MySQL数据库还原</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> hostIP       MySQL数据库所在服务器地址IP</div><div class="line">     * <span class="doctag">@param</span> userName     进入数据库所需要的用户名</div><div class="line">     * <span class="doctag">@param</span> password     进入数据库所需要的密码</div><div class="line">     * <span class="doctag">@param</span> path         需要还原数据库文件的路径</div><div class="line">     * <span class="doctag">@param</span> fileName     需要还原数据库文件的名称</div><div class="line">     * <span class="doctag">@param</span> databaseName 需要还原的数据库名称</div><div class="line">     * <span class="doctag">@return</span> 返回true表示还原成功，否则返回false。</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">restoreDatabase</span><span class="params">(String hostIP, String userName, String password, String databaseName, String path, String fileName)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line"></div><div class="line">        OutputStream out = <span class="keyword">null</span>;</div><div class="line">        BufferedReader br = <span class="keyword">null</span>;</div><div class="line">        PrintStream ps = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="comment">// 调用mysql的cmd:cmd命令在后台执行，没有命令窗口出现或者一闪而过的情况</span></div><div class="line">            Process process = Runtime.getRuntime().exec(<span class="string">"cmd /c start /b  D:\\DevTools\\MySQL\\MySQL5.7\\bin\\mysql -h"</span> + hostIP + <span class="string">" -u"</span> + userName + <span class="string">" -p"</span> + password + <span class="string">" --default-character-set=utf8 "</span> + databaseName);</div><div class="line">            out = process.getOutputStream();<span class="comment">//控制台的输入信息作为输出流</span></div><div class="line">            StringBuffer sb = <span class="keyword">new</span> StringBuffer(<span class="string">""</span>);</div><div class="line">            br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(path + fileName), <span class="string">"utf8"</span>));</div><div class="line">            String outStr;</div><div class="line">            String line;</div><div class="line">            <span class="keyword">while</span> ((line = br.readLine()) != <span class="keyword">null</span>) &#123;</div><div class="line">                sb.append(line + <span class="string">"\r\n"</span>);</div><div class="line">            &#125;</div><div class="line">            outStr = sb.toString();</div><div class="line"></div><div class="line">            ps = <span class="keyword">new</span> PrintStream(out, <span class="keyword">true</span>, <span class="string">"utf8"</span>);</div><div class="line">            ps.write(outStr.getBytes());</div><div class="line"><span class="comment">//            OutputStreamWriter writer = new OutputStreamWriter(out, "utf8");</span></div><div class="line"><span class="comment">//            writer.write(outStr);</span></div><div class="line">            <span class="comment">// 注：这里如果用缓冲方式写入文件的话，会导致中文乱码，用flush()方法则可以避免</span></div><div class="line"><span class="comment">//            writer.flush();</span></div><div class="line"><span class="comment">//            writer.close();</span></div><div class="line">            <span class="keyword">if</span> (process.waitFor() == <span class="number">0</span>) &#123;   <span class="comment">//0 表示线程正常终止。</span></div><div class="line">               <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">if</span> (ps != <span class="keyword">null</span>) &#123;</div><div class="line">                    ps.close();</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span> (br != <span class="keyword">null</span>) &#123;</div><div class="line">                    br.close();</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span> (out != <span class="keyword">null</span>)&#123;</div><div class="line">                    out.close();</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">catch</span> (IOException e1) &#123;</div><div class="line">                e1.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>测试</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line"></div><div class="line">        <span class="comment">//数据库备份</span></div><div class="line">        <span class="comment">/*try &#123;</span></div><div class="line">            if (backUpDatabase("localhost", "root", "root", "taotao", "D:/", "taotao.sql")) &#123;</div><div class="line">                logger.info("数据库成功备份！！");</div><div class="line">            &#125; else &#123;</div><div class="line">                logger.info("数据库备份失败！！");</div><div class="line">            &#125;</div><div class="line">        &#125; catch (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;*/</div><div class="line">        <span class="comment">//数据库恢复</span></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">if</span> (restoreDatabase(<span class="string">"localhost"</span>, <span class="string">"root"</span>, <span class="string">"root"</span>, <span class="string">"taotao"</span>, <span class="string">"D:/"</span>, <span class="string">"taotao.sql"</span>)) &#123;</div><div class="line">                logger.info(<span class="string">"数据库恢复成功！！"</span>);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                logger.info(<span class="string">"数据库恢复失败！！"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>代码下载点击：<a href="http://on937g0jc.bkt.clouddn.com/2017-9-21/MySQLbackUpAndRestore/MySQLDatabaseBackupAndRestore.java" target="_blank" rel="external"><em>下载</em></a></p>
-<h1 id="Windows下bat命令"><a href="#Windows下bat命令" class="headerlink" title="Windows下bat命令"></a>Windows下bat命令</h1><p>工作环境 Windows Server 2003 ，<code>MySQL</code>安装目录 D:\DevTools\MySQL ,</p>
-<p><code>WinRAR</code> 安装目录 C:\Program Files\WinRAR\WinRAR.exe </p>
-<p>备份数据存储的路径为 D:\数据备份，好了下面开始写<code>DOS批处理命令</code>了。代码如下:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">color <span class="number">9</span></div><div class="line">rem ---------------------数据库备份开始-----------------------</div><div class="line"><span class="meta">@echo off</span></div><div class="line"></div><div class="line">set <span class="string">"Ymd=%DATE:~0,4%%DATE:~5,2%%DATE:~8,2%%TIME:~0,2%%TIME:~3,2%%TIME:~6,2%"</span> </div><div class="line">REM 日期格式：<span class="number">20170924200727</span> </div><div class="line">md <span class="string">"D:\%ymd%"</span> </div><div class="line"><span class="string">"D:\DevTools\MySQL\MySQL5.7\bin\mysqldump.exe"</span> --opt -Q taotao -uroot -proot &gt; D:\%Ymd%\taotao.sql</div><div class="line">REM ..... 这里可以添加更多的命令，要看你有多少个数据库，其中 -Q 后面是数据库名称 -p紧跟后面是密码</div><div class="line">REM echo Winrar loading... </div><div class="line">REM  <span class="string">"C:\Program Files\WinRAR\WinRAR.exe"</span> a -ep1 -r -o+ -m5 -df <span class="string">"D:\数据备份\%Ymd%.rar"</span> <span class="string">"D:\数据备份\%Ymd%"</span> </div><div class="line"><span class="meta">@echo on</span></div><div class="line">rem ---------------------数据库备份完成-----------------------</div><div class="line"></div><div class="line">pause</div></pre></td></tr></table></figure>
-<p>把上面的命令保存为 <em>backup.bat</em> ，双击运行，就开始备份数据了。 </p>
-<p>第 一句是建立一个变量 %Ymd% ，通过 %date% 这个系统变量得到日期，%date:~,4% 表示取日期的前面4个字符就是年份，%%date:~5,2% 表示取日期第5个字符开始的2个字符就是月份，%date:~8,2% 这个就是日期号数，如 2017-09-24 这个日期最后得到的结果是 20170924 </p>
-<p>第二句就是使用变量 %Ymd% 的值建立一个空的文件夹。 </p>
-<p>第三句开始就是使用MySQL的命令对数据库mysql进行备份，并存储在 D:\数据备份\%ymd% 这个文件夹下面，这里可以有很多类似的命令，备份多个数据库。 </p>
-<p>最后就是使用 WinRAR 对备份的数据进行压缩，并存储为以 %Ymd% 变量值建立的RAR文件名，同时删除备份的 %Ymd% 目录。 </p>
-<p>如果你想让系统自动定期备份，就可以通过系统的任务计划定期执行这个命令。</p>
-<p>但是用windows下bat命令备份有一个致命缺点：<strong>备份时数据库会暂时断开。(30M断开5s左右)</strong></p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>第二种方式的缺点太致命：<strong>备份时数据库会暂时断开</strong>。</p>
-<p>所以第一种方式将会是我们在开发中首选的方式，因为第二种方式的缺点对用户体验的影响太大了。</p>
+<h1 id="第一、二代连接池"><a href="#第一、二代连接池" class="headerlink" title="第一、二代连接池"></a>第一、二代连接池</h1><p>区分一个数据库连接池是属于第一代产品还是代二代产品有一个最重要的特征就是看它在架构和设计时采用的线程模型，因为这直接影响的是并发环境下存取数据库连接的性能。</p>
+<p>一般来讲采用单线程同步的架构设计都属于第一代连接池，二采用多线程异步架构的则属于第二代。比较有代表性的就是Apache Commons DBCP，在1.x版本中，一直延续着单线程设计模式，到2.x才采用多线程模型。</p>
+<p>用版本发布时间来辨别区分两代产品，则一个偷懒的好方法。以下是这些常见数据库连接池最新版本的发布时间：</p>
+<table>
+<thead>
+<tr>
+<th>数据库连接池</th>
+<th>最新版本</th>
+<th>发布时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C3P0</td>
+<td>c3p0-0.9.5.2</td>
+<td>on 9 Dec 2015</td>
+</tr>
+<tr>
+<td>DBCP</td>
+<td>2.2.0</td>
+<td>27 December 2017</td>
+</tr>
+<tr>
+<td>Druid</td>
+<td>0.11.0</td>
+<td>Dec 4 2017</td>
+</tr>
+<tr>
+<td>HikariCP</td>
+<td>2.7.6</td>
+<td>2018-01-14</td>
+</tr>
+</tbody>
+</table>
+<p>从表中可以看出，C3P0已经很久没有更新了。DBCP更新速度很慢，基本处于不活跃状态，而Druid和HikariCP处于活跃状态的更新中，这就是我们说的二代产品了。</p>
+<p>二代产品对一代产品的超越是颠覆性的，除了一些“历史原因”，你很难再找到第二条理由说服自己不选择二代产品，但任何成功都不是偶然的，二代产品的成功很大程度上得益于前代产品们打下的基础，站在巨人的肩膀上，新一代的连接池的设计师们将这一项“工具化”的产品，推向了极致。其中，最具代表性的两款产品是：</p>
+<ul>
+<li>HikariCP</li>
+<li>Druid</li>
+</ul>
+<h1 id="彻底死掉的C3P0"><a href="#彻底死掉的C3P0" class="headerlink" title="彻底死掉的C3P0"></a>彻底死掉的C3P0</h1><p>C3P0是我使用的第一款数据库连接池，在很长一段时间内，它一直是Java领域内数据库连接池的代名词，当年盛极一时的Hibernate都将其作为内置的数据库连接池，可以业内对它的稳定性还是认可的。C3P0功能简单易用，稳定性好这是它的优点，但是性能上的缺点却让它彻底被打入冷宫。C3P0的性能很差，差到即便是同时代的产品相比它也是垫底的，更不用和Druid、HikariCP等相比了。正常来讲，有问题很正常，改就是了，但c3p0最致命的问题就是架构设计过于复杂，让重构变成了一项不可能完成的任务。随着国内互联网大潮的涌起，性能有硬伤的c3p0彻底的退出了历史舞台。</p>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/1.png" algin="center"><br><br></div>
+
+<h1 id="咸鱼翻身的DBCP"><a href="#咸鱼翻身的DBCP" class="headerlink" title="咸鱼翻身的DBCP"></a>咸鱼翻身的DBCP</h1><p>DBCP（DataBase Connection Pool）属于Apache顶级项目Commons中的核心子项目（最早在Jakarta Commons里就有）,在Apache的生态圈中的影响里十分广泛，比如最为大家所熟知的Tomcat就在内部集成了DBCP，实现JPA规范的OpenJPA，也是默认集成DBCP的。但DBCP并不是独立实现连接池功能的，它内部依赖于Commons中的另一个子项目Pool，连接池最核心的“池”，就是由Pool组件提供的，因此，DBCP的性能实际上就是Pool的性能，DBCP和Pool的依赖关系如下表：</p>
+<table>
+<thead>
+<tr>
+<th>Apache Commons DBCP</th>
+<th>Apache Commons Pool</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.2.2</td>
+<td>v1.3</td>
+</tr>
+<tr>
+<td>v1.3</td>
+<td>v1.5.4</td>
+</tr>
+<tr>
+<td>v1.4</td>
+<td>v1.5.4</td>
+</tr>
+<tr>
+<td>v2.0.x</td>
+<td>v2.2</td>
+</tr>
+<tr>
+<td>v2.1.x</td>
+<td>v2.4.2</td>
+</tr>
+<tr>
+<td>v2.2.x</td>
+<td>v2.5.0</td>
+</tr>
+</tbody>
+</table>
+<p>可以看到，因为核心功能依赖于Pool，所以DBCP本身只能做小版本的更新，真正大版本的更迭则完全依托于pool。有很长一段时间，pool都还是停留在1.x版本，这直接导致DBCP也更新乏力。很多依赖DBCP的应用在遇到性能瓶颈之后，别无选择，只能将其替换掉，DBCP忠实的拥趸tomcat就在其tomcat 7.0版本中，自己重新设计开发出了一套连接池（Tomcat JDBC Pool）。好在，在2013年事情终于迎来转机，13年9月Commons-Pool 2.0版本发布，14年2月份，DBCP也终于迎来了自己的2.0版本，基于新的线程模型全新设计的“池”让DBCP重焕青春，虽然和新一代的连接池相比仍有一定差距，但差距并不大，DBCP2.x版本已经稳稳达到了和新一代产品同级别的性能指标（见下图）。</p>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/3.png" algin="center"><br><br></div>
+
+<p>DBCP终于靠Pool咸鱼翻身，打了一个漂亮的翻身仗，但长时间的等待已经完全消磨了用户的耐心，与新一代的产品项目相比，DBCP没有任何优势，试问，谁会在有选择的前提下，去选择那个并不优秀的呢？也许，现在还选择DBCP2的唯一理由，就是情怀吧。</p>
+<h1 id="性能无敌的HikariCP"><a href="#性能无敌的HikariCP" class="headerlink" title="性能无敌的HikariCP"></a>性能无敌的HikariCP</h1><p>HikariCP号称“性能杀手”（It’s Faster），它的表现究竟如何呢，先来看下官网提供的数据：</p>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/4.png" algin="center"><br><br></div>
+
+<p>不光性能强劲，稳定性也不差：</p>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/5.png" algin="center"><br><br></div>
+
+<p>那它是怎么做到如此强劲的呢？官网给出的说明如下：</p>
+<ul>
+<li>字节码精简：优化代码，直到编译后的字节码最少，这样，CPU缓存可以加载更多的程序代码；</li>
+<li>优化代理和拦截器：减少代码，例如HikariCP的Statement proxy只有100行代码；</li>
+<li>自定义数组类型（FastStatementList）代替ArrayList：避免每次get()调用都要进行range check，避免调用remove()时的从头到尾的扫描；</li>
+<li>自定义集合类型（ConcurrentBag）：提高并发读写的效率；</li>
+<li>其他缺陷的优化，比如对于耗时超过一个CPU时间片的方法调用的研究（但没说具体怎么优化）。</li>
+</ul>
+<p>可以看到，上述这几点优化，和现在能找到的资料来看，HakariCP在性能上的优势应该是得到共识的，再加上它自身小巧的身形，在当前的“云时代、微服务”的背景下，HakariCP一定会得到更多人的青睐。</p>
+<h1 id="功能全面的Druid"><a href="#功能全面的Druid" class="headerlink" title="功能全面的Druid"></a>功能全面的Druid</h1><p>近几年，阿里在开源项目上动作频频，除了有像fastJson、dubbo这类项目，更有像AliSQL这类的大型软件，今天说的Druid，就是阿里众多优秀开源项目中的一个。它除了提供性能卓越的连接池功能外，还集成了SQL监控，黑名单拦截等功能，用它自己的话说，Druid是“为监控而生”。借助于阿里这个平台的号召力，产品一经发布就赢得了大批用户的拥趸，从用户使用的反馈来看，Druid也确实没让用户失望。</p>
+<p>相较于其他产品，Druid另一个比较大的优势，就是中文文档比较全面（毕竟是国人的项目么），在github的<a href="https://github.com/alibaba/druid/wiki/%E9%A6%96%E9%A1%B5" target="_blank" rel="external"><em>wiki页面</em></a>，列举了日常使用中可能遇到的问题，对一个新用户来讲，上面提供的内容已经足够指导它完成产品的配置和使用了。</p>
+<p>下图为Druid自己提供的性能测试数据：</p>
+<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/6.png" algin="center"><br><br></div>
+
+<p>现在项目开发中，我还是比较倾向于使用Durid，它不仅仅是一个数据库连接池，它还包含一个ProxyDriver，一系列内置的JDBC组件库，一个SQL Parser。</p>
+<h2 id="Druid-相对于其他数据库连接池的优点"><a href="#Druid-相对于其他数据库连接池的优点" class="headerlink" title="Druid 相对于其他数据库连接池的优点"></a>Druid 相对于其他数据库连接池的优点</h2><ol>
+<li><p>强大的监控特性，通过Druid提供的监控功能，可以清楚知道连接池和SQL的工作情况。</p>
+<p>a. 监控SQL的执行时间、ResultSet持有时间、返回行数、更新行数、错误次数、错误堆栈信息；</p>
+<p>b. SQL执行的耗时区间分布。什么是耗时区间分布呢？比如说，某个SQL执行了1000次，其中0~1毫秒区间50次，1~10毫秒800次，10~100毫秒100次，100~1000毫秒30次，1~10秒15次，10秒以上5次。通过耗时区间分布，能够非常清楚知道SQL的执行耗时情况；</p>
+<p>c.  监控连接池的物理连接创建和销毁次数、逻辑连接的申请和关闭次数、非空等待次数、PSCache命中率等。</p>
+</li>
+<li><p>方便扩展。Druid提供了Filter-Chain模式的扩展API，可以自己编写Filter拦截JDBC中的任何方法，可以在上面做任何事情，比如说性能监控、SQL审计、用户名密码加密、日志等等。</p>
+</li>
+<li>Druid集合了开源和商业数据库连接池的优秀特性，并结合阿里巴巴大规模苛刻生产环境的使用经验进行优化。</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>时至今日，虽然每个应用（需要RDBMS的）都离不开连接池，但在实际使用的时候，连接池已经可以做到“隐形”了。也就是说在通常情况下，连接池完成项目初始化配置之后，就再不需要再做任何改动了。不论你是选择Druid或是HikariCP，甚至是DBCP，它们都足够稳定且高效！之前讨论了很多关于连接池的性能的问题，但这些性能上的差异，是相较于其他连接池而言的，对整个系统应用来说，第二代连接池在使用过程中体会到的差别是微乎其微的，基本上不存在因为连接池的自身的配饰和使用导致系统性能下降的情况，除非是在单点应用的数据库负载足够高的时候（压力测试的时候），但即便是如此，通用的优化的方式也是单点改集群，而不是在单点的连接池上死扣。</p>
+<p><strong>参考</strong></p>
+<ul>
+<li><a href="https://link.jianshu.com/?t=http://blog.csdn.net/hetaohappy/article/details/50462486" target="_blank" rel="external"><em>数据库连接池性能比对</em></a></li>
+<li><a href="https://www.jianshu.com/p/53de4b76f98c" target="_blank" rel="external"><em>大话数据库连接池</em></a></li>
+<li><a href="https://link.jianshu.com/?t=http://blog.csdn.net/whzhaochao/article/details/49559931" target="_blank" rel="external"><em>c3p0,Druid,Tomcat Jdbc Pool,dbcp2,proxool数据源性能比较</em></a></li>
+</ul>
 
       
     </div>
@@ -529,9 +635,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
-          
-            <a href="/tags/mysql/" rel="tag"># mysql</a>
+            <a href="/tags/sql/" rel="tag"># sql</a>
           
         </div>
       
@@ -544,18 +648,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/10/30/分布式下ID生成算法-SnowFlake/" rel="next" title="分布式下ID生成算法 SnowFlake">
-                <i class="fa fa-chevron-left"></i> 分布式下ID生成算法 SnowFlake
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/09/21/系统中功能点的版本控制/" rel="prev" title="系统中功能点的版本控制">
-                系统中功能点的版本控制 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/01/24/Nginx配置文件详解/" rel="prev" title="Nginx配置文件详解">
+                Nginx配置文件详解 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -744,7 +844,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用MySQL自带工具"><span class="nav-number">2.</span> <span class="nav-text">使用MySQL自带工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#备份"><span class="nav-number">2.1.</span> <span class="nav-text">备份</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#还原"><span class="nav-number">2.2.</span> <span class="nav-text">还原</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Windows下bat命令"><span class="nav-number">3.</span> <span class="nav-text">Windows下bat命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第一、二代连接池"><span class="nav-number">2.</span> <span class="nav-text">第一、二代连接池</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#彻底死掉的C3P0"><span class="nav-number">3.</span> <span class="nav-text">彻底死掉的C3P0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#咸鱼翻身的DBCP"><span class="nav-number">4.</span> <span class="nav-text">咸鱼翻身的DBCP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#性能无敌的HikariCP"><span class="nav-number">5.</span> <span class="nav-text">性能无敌的HikariCP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#功能全面的Druid"><span class="nav-number">6.</span> <span class="nav-text">功能全面的Druid</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Druid-相对于其他数据库连接池的优点"><span class="nav-number">6.1.</span> <span class="nav-text">Druid 相对于其他数据库连接池的优点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
