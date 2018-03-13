@@ -9,13 +9,9 @@ categories: technology
 
 之前的博客说了Java虚拟机的运行时数据区域、GC算法、垃圾回收器等知识。距离深入了解还有一段距离，包括虚拟机的类加载机制、性能调优、线程并发等等还都没有涉及到，一直在看周志明的《深入理解Java虚拟机》，越深入去读发现这本书写的真的是经典，解决了自己很多的疑惑。
 
-JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内存中，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。
+JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内存中，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/ClassLoader/0.png" algin="center"/>
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/ClassLoader/0.png" algin="center"/>
-
-</div>
-
-<!-- more -->
+</div><!-- more -->
 
 # 类加载过程
 

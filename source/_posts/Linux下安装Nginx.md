@@ -5,11 +5,7 @@ tags: [nginx, linux]
 categories: technology
 ---
 
-<div align=center><img width="400" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_nginx/index.jpg" algin="center"/>
-
-</div>
-
-<!-- more -->
+<div align=center><img width="400" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_nginx/index.jpg" algin="center"/></div><!-- more -->
 
 # Nginx安装环境
 

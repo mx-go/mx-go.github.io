@@ -7,13 +7,7 @@ categories: technology
 
 # 引言
 
-在数据库的开发设计中，PowerDesiger（PD）是一个较为常用的UML工具。PowerDesiger为各类数据模型提供了直观的符号表示，不仅使设计人员能更方便、更快捷地使非计算机专业技术人员展示数据库设计和应用系统设计，使系统设计人员与使用系统的业务人员更易于相互理解和交流，同时也使项目组内的交流更为直观、准确，更便于协调工作，从而加速系统的设计和开发过程。PowerDesiger设计完成后的数据库可直接生成SQL语句。
-
-<div align=center><img width="200" height="100" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/logo-powerdesigner.png" algin="center"/>
-
-</div>
-
-<!-- more -->
+在数据库的开发设计中，PowerDesiger（PD）是一个较为常用的UML工具。PowerDesiger为各类数据模型提供了直观的符号表示，不仅使设计人员能更方便、更快捷地使非计算机专业技术人员展示数据库设计和应用系统设计，使系统设计人员与使用系统的业务人员更易于相互理解和交流，同时也使项目组内的交流更为直观、准确，更便于协调工作，从而加速系统的设计和开发过程。PowerDesiger设计完成后的数据库可直接生成SQL语句。<div align=center><img width="200" height="100" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/logo-powerdesigner.png" algin="center"/></div><!-- more -->
 
 # 使用ODBC连接MySQL
 

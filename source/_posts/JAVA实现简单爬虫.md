@@ -5,9 +5,7 @@ tags: [java, tool]
 categories: technology
 ---
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-4-1/%E7%88%AC%E8%99%AB.jpg" algin="center"/></div>
-
-<!-- more -->
+<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-4-1/%E7%88%AC%E8%99%AB.jpg" algin="center"/></div><!-- more -->
 
 ## 爬虫基本理解
 

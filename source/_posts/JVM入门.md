@@ -7,13 +7,9 @@ categories: technology
 
 # 引言
 
-JVM（Java Virtual Machine）Java 虚拟机是整个 Java 平台的基石，是 Java 系统实现硬件无关与操作系统无关的关键部分，是保障用户机器免于恶意代码损害的屏障。Java开发人员不需要了解JVM是如何工作的，但是，了解 JVM 有助于我们更好的开发java 程序。近些天一直在看周志明的《深入理解Java虚拟机》这本书，这本书写的堪称经典，对于JVM的学习非常有帮助。
+JVM（Java Virtual Machine）Java 虚拟机是整个 Java 平台的基石，是 Java 系统实现硬件无关与操作系统无关的关键部分，是保障用户机器免于恶意代码损害的屏障。Java开发人员不需要了解JVM是如何工作的，但是，了解 JVM 有助于我们更好的开发java 程序。近些天一直在看周志明的《深入理解Java虚拟机》这本书，这本书写的堪称经典，对于JVM的学习非常有帮助。<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jvm.png" algin="center"/>
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jvm.png" algin="center"/>
-
-</div>
-
-<!-- more -->
+</div><!-- more -->
 
 # 运行时数据区域
 

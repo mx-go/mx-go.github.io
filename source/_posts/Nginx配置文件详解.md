@@ -7,13 +7,11 @@ categories: technology
 
 # 引言
 
-之前介绍了Linux下安装Nginx，Nginx 专为性能优化而开发，性能是其最重要的考量,实现上非常注重效率 。它支持内核 Poll 模型，能经受高负载的考验,有报告表明能支持高达 50,000 个并发连接数。
+之前介绍了Linux下安装Nginx，Nginx 专为性能优化而开发，性能是其最重要的考量,实现上非常注重效率 。它支持内核 Poll 模型，能经受高负载的考验,有报告表明能支持高达 50,000 个并发连接数。<div align=center>
 
-<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/nginx/index.png" algin="center"/>
+<img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/nginx/index.png" algin="center"/>
 
-</div>
-
-<!-- more -->
+</div><!-- more -->
 
 # Nginx特点
 

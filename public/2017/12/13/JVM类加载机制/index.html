@@ -98,7 +98,7 @@
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/ClassLoader/2.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/ClassLoader/defaultValue.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017/12/ClassLoader/3.jpg">
-<meta property="og:updated_time" content="2017-12-13T06:21:08.536Z">
+<meta property="og:updated_time" content="2018-03-13T05:50:04.484Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM类加载机制">
 <meta name="twitter:description" content="引言之前的博客说了Java虚拟机的运行时数据区域、GC算法、垃圾回收器等知识。距离深入了解还有一段距离，包括虚拟机的类加载机制、性能调优、线程并发等等还都没有涉及到，一直在看周志明的《深入理解Java虚拟机》，越深入去读发现这本书写的真的是经典，解决了自己很多的疑惑。 JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内存中，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接">
@@ -391,16 +391,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a class="cloud-tie-join-count" href="/2017/12/13/JVM类加载机制/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -465,10 +455,8 @@
 
       
         <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>之前的博客说了Java虚拟机的运行时数据区域、GC算法、垃圾回收器等知识。距离深入了解还有一段距离，包括虚拟机的类加载机制、性能调优、线程并发等等还都没有涉及到，一直在看周志明的《深入理解Java虚拟机》，越深入去读发现这本书写的真的是经典，解决了自己很多的疑惑。</p>
-<p>JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内存中，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。</p>
-<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/ClassLoader/0.png" algin="center"><br><br></div>
-
-<a id="more"></a>
+<p>JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内存中，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/ClassLoader/0.png" algin="center"></div></p>
+<p><a id="more"></a></p>
 <h1 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h1><p>类被加载到虚拟机内存中开始，到卸载出内存为止。它的生命周期分7个阶段，加载（Loading）、验证（Verification）、准备（Preparation）、解析（Resolution）、初始化（Initialization）、使用（Using）、卸载（Unloading）。其中验证、准备、解析三个部分统称为连接（Linking）。</p>
 <div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/ClassLoader/2.png" algin="center"><br><br></div>
 
@@ -547,6 +535,16 @@
 
       
     </div>
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	</div>
 
     <div>
       
@@ -589,9 +587,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
           
-            <a href="/tags/jvm/" rel="tag"># jvm</a>
+            <a href="/tags/jvm/" rel="tag"><i class="fa fa-tag"></i> jvm</a>
           
         </div>
       
@@ -643,7 +641,7 @@
           
   <div class="comments" id="comments">
     
-      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDc4MS8xMTMxOA=="></div>
     
   </div>
 
@@ -962,21 +960,29 @@
 
 
   
-    
-    <script>
-      var cloudTieConfig = {
-        url: document.location.href, 
-        sourceId: "",
-        productKey: "2097cd3d0f7d4127bb4229f3352012fd",
-        target: "cloud-tie-wrapper"
-      };
-    </script>
-    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+
+
+
+
+
   
 
 
 
 
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
 
 
 
@@ -1245,5 +1251,8 @@
 
   
 
+  
+  <!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
 </body>
 </html>

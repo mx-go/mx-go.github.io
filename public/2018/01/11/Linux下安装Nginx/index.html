@@ -96,7 +96,7 @@
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/linux_nginx/install.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/linux_nginx/start.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/linux_nginx/ok.png">
-<meta property="og:updated_time" content="2018-01-11T10:22:05.370Z">
+<meta property="og:updated_time" content="2018-03-13T05:51:21.886Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux下安装Nginx">
 <meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2018-01/linux_nginx/index.jpg">
@@ -388,16 +388,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a class="cloud-tie-join-count" href="/2018/01/11/Linux下安装Nginx/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -461,43 +451,7 @@
       
 
       
-        <div align="center"><img width="400" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_nginx/index.jpg" algin="center"><br><br></div>
-
-<a id="more"></a>
-<h1 id="Nginx安装环境"><a href="#Nginx安装环境" class="headerlink" title="Nginx安装环境"></a>Nginx安装环境</h1><p>Nginx是C语言开发，建议在Linxu上运行，下面操作实在Centos6.5上的安装环境。</p>
-<ol>
-<li><strong>gcc</strong></li>
-</ol>
-<p>安装nginx需要先将官网下载的源码进行编译，编译依赖gcc环境，如果没有gcc环境，需要安装gcc。</p>
-<p>安装命令：<strong>yum install gcc-c++</strong> </p>
-<ol>
-<li><strong>PCRE</strong></li>
-</ol>
-<p>PCRE(Perl Compatible Regular Expressions)是一个Perl库，包括 perl 兼容的正则表达式库。nginx的http模块使用pcre来解析正则表达式，所以需要在linux上安装pcre库。</p>
-<p>安装命令：<strong>yum install -y pcre pcre-devel</strong></p>
-<ol>
-<li>zlib</li>
-</ol>
-<p>zlib库提供了很多种压缩和解压缩的方式，nginx使用zlib对http包的内容进行gzip，所以需要在linux上安装zlib库。</p>
-<p>安装命令：<strong>yum install -y zlib zlib-devel</strong></p>
-<ol>
-<li>openssl</li>
-</ol>
-<p>OpenSSL 是一个强大的安全套接字层密码库，囊括主要的密码算法、常用的密钥和证书封装管理功能及SSL协议，并提供丰富的应用程序供测试或其它目的使用。nginx不仅支持http协议，还支持https（即在ssl协议上传输http），所以需要在linux安装openssl库。</p>
-<p>安装命令：<strong>yum install -y openssl openssl-devel</strong></p>
-<h1 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h1><p>将nginx-1.8.0.tar.gz拷贝至Linux服务器后解压。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">tar -zxvf nginx-<span class="number">1.8</span>.0.tar.gz</div><div class="line">cd nginx-<span class="number">1.8</span>.0</div></pre></td></tr></table></figure>
-<ol>
-<li>configure</li>
-</ol>
-<p>./configure –help查询详细参数。参数设置如下：</p>
-<p><strong>注意：下边将临时文件目录指定为/var/temp/nginx，需要在/var下创建temp及nginx目录</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">./configure \</div><div class="line">--prefix=/usr/local/nginx \</div><div class="line">--pid-path=/var/run/nginx/nginx.pid \</div><div class="line">--lock-path=/var/lock/nginx.lock \</div><div class="line">--error-log-path=/var/log/nginx/error.log \</div><div class="line">--http-log-path=/var/log/nginx/access.log \</div><div class="line">--with-http_gzip_static_module \</div><div class="line">--http-client-body-temp-path=/var/temp/nginx/client \</div><div class="line">--http-proxy-temp-path=/var/temp/nginx/proxy \</div><div class="line">--http-fastcgi-temp-path=/var/temp/nginx/fastcgi \</div><div class="line">--http-uwsgi-temp-path=/var/temp/nginx/uwsgi \</div><div class="line">--http-scgi-temp-path=/var/temp/nginx/scgi</div></pre></td></tr></table></figure>
-<ol>
-<li>编译安装</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">make</div><div class="line">make  install</div></pre></td></tr></table></figure>
-<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_nginx/install.png" algin="center"><br><br></div>
+        <div align="center"><img width="400" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_nginx/index.jpg" algin="center"></div><a id="more"></a><br><br># Nginx安装环境<br><br>Nginx是C语言开发，建议在Linxu上运行，下面操作实在Centos6.5上的安装环境。<br><br>1. <strong>gcc</strong><br><br>安装nginx需要先将官网下载的源码进行编译，编译依赖gcc环境，如果没有gcc环境，需要安装gcc。<br><br>安装命令：<strong>yum install gcc-c++</strong><br><br>2. <strong>PCRE</strong><br><br>PCRE(Perl Compatible Regular Expressions)是一个Perl库，包括 perl 兼容的正则表达式库。nginx的http模块使用pcre来解析正则表达式，所以需要在linux上安装pcre库。<br><br>安装命令：<strong>yum install -y pcre pcre-devel</strong><br><br>3. zlib<br><br>zlib库提供了很多种压缩和解压缩的方式，nginx使用zlib对http包的内容进行gzip，所以需要在linux上安装zlib库。<br><br>安装命令：<strong>yum install -y zlib zlib-devel</strong><br><br>4. openssl<br><br>OpenSSL 是一个强大的安全套接字层密码库，囊括主要的密码算法、常用的密钥和证书封装管理功能及SSL协议，并提供丰富的应用程序供测试或其它目的使用。nginx不仅支持http协议，还支持https（即在ssl协议上传输http），所以需要在linux安装openssl库。<br><br>安装命令：<strong>yum install -y openssl openssl-devel</strong><br><br># 编译安装<br><br>将nginx-1.8.0.tar.gz拷贝至Linux服务器后解压。<br><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">tar -zxvf nginx-<span class="number">1.8</span>.0.tar.gz</div><div class="line">cd nginx-<span class="number">1.8</span>.0</div></pre></td></tr></table></figure><br><br>1. configure<br><br>./configure –help查询详细参数。参数设置如下：<br><br><strong>注意：下边将临时文件目录指定为/var/temp/nginx，需要在/var下创建temp及nginx目录</strong><br><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">./configure \</div><div class="line">--prefix=/usr/local/nginx \</div><div class="line">--pid-path=/var/run/nginx/nginx.pid \</div><div class="line">--lock-path=/var/lock/nginx.lock \</div><div class="line">--error-log-path=/var/log/nginx/error.log \</div><div class="line">--http-log-path=/var/log/nginx/access.log \</div><div class="line">--with-http_gzip_static_module \</div><div class="line">--http-client-body-temp-path=/var/temp/nginx/client \</div><div class="line">--http-proxy-temp-path=/var/temp/nginx/proxy \</div><div class="line">--http-fastcgi-temp-path=/var/temp/nginx/fastcgi \</div><div class="line">--http-uwsgi-temp-path=/var/temp/nginx/uwsgi \</div><div class="line">--http-scgi-temp-path=/var/temp/nginx/scgi</div></pre></td></tr></table></figure><br><br>2. 编译安装<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">make</div><div class="line">make  install</div></pre></td></tr></table></figure><br><br><div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_nginx/install.png" algin="center"><br><br></div>
 
 <h1 id="启动Nginx"><a href="#启动Nginx" class="headerlink" title="启动Nginx"></a>启动Nginx</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cd /usr/local/nginx/sbin/</div><div class="line">./nginx</div><div class="line"><span class="comment">// 查询nginx进程命令</span></div><div class="line">ps aux|grep nginx</div></pre></td></tr></table></figure>
 <p><strong>注意：执行./nginx启动nginx，这里可以-c指定加载的nginx配置文件，如下：</strong></p>
@@ -524,6 +478,16 @@
 
       
     </div>
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	</div>
 
     <div>
       
@@ -566,9 +530,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/linux/" rel="tag"># linux</a>
+            <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
           
-            <a href="/tags/nginx/" rel="tag"># nginx</a>
+            <a href="/tags/nginx/" rel="tag"><i class="fa fa-tag"></i> nginx</a>
           
         </div>
       
@@ -620,7 +584,7 @@
           
   <div class="comments" id="comments">
     
-      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDc4MS8xMTMxOA=="></div>
     
   </div>
 
@@ -781,7 +745,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Nginx安装环境"><span class="nav-number">1.</span> <span class="nav-text">Nginx安装环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编译安装"><span class="nav-number">2.</span> <span class="nav-text">编译安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动Nginx"><span class="nav-number">3.</span> <span class="nav-text">启动Nginx</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重启Nginx"><span class="nav-number">4.</span> <span class="nav-text">重启Nginx</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试"><span class="nav-number">5.</span> <span class="nav-text">测试</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#启动Nginx"><span class="nav-number">1.</span> <span class="nav-text">启动Nginx</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重启Nginx"><span class="nav-number">2.</span> <span class="nav-text">重启Nginx</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试"><span class="nav-number">3.</span> <span class="nav-text">测试</span></a></li></ol></div>
             
 
           </div>
@@ -939,21 +903,29 @@
 
 
   
-    
-    <script>
-      var cloudTieConfig = {
-        url: document.location.href, 
-        sourceId: "",
-        productKey: "2097cd3d0f7d4127bb4229f3352012fd",
-        target: "cloud-tie-wrapper"
-      };
-    </script>
-    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+
+
+
+
+
   
 
 
 
 
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
 
 
 
@@ -1222,5 +1194,8 @@
 
   
 
+  
+  <!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
 </body>
 </html>

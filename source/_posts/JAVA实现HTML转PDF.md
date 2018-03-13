@@ -10,13 +10,7 @@ categories: technology
 1. 使用`wkhtmltox`
 2. 使用`iText+Flying Saucer`
 
-但是还是强烈推荐用第一种方法。
-
-<div align=center><img width="450" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-9-13/additional/html_to_pdf.png" algin="center"/>
-
-</div>
-
-<!-- more -->
+但是还是强烈推荐用第一种方法。<div align=center><img width="450" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-9-13/additional/html_to_pdf.png" algin="center"/></div><!-- more -->
 
 # 使用wkhtmltox(推荐)
 

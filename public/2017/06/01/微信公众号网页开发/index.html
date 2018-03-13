@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="rainbowhorse's blog">
 <meta property="og:description" content="引言最近一直参与公司开发公众号，关于项目实施平台PC端简化为微信公众号，主要架构为前台H5，使用时的微信的WeUI的SDK，后台就是现在流行的SpringMVC+Mybaties，参与了全程开发，开发过程中也遇到了不少的问题，现在记录下来，希望以后能够用得到。">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-6-1/%E5%BE%AE%E4%BF%A1.jpg">
-<meta property="og:updated_time" content="2018-01-05T01:12:30.969Z">
+<meta property="og:updated_time" content="2018-03-13T05:54:42.015Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="微信公众号网页开发">
 <meta name="twitter:description" content="引言最近一直参与公司开发公众号，关于项目实施平台PC端简化为微信公众号，主要架构为前台H5，使用时的微信的WeUI的SDK，后台就是现在流行的SpringMVC+Mybaties，参与了全程开发，开发过程中也遇到了不少的问题，现在记录下来，希望以后能够用得到。">
@@ -388,16 +388,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a class="cloud-tie-join-count" href="/2017/06/01/微信公众号网页开发/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -461,10 +451,7 @@
       
 
       
-        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>最近一直参与公司开发公众号，关于项目实施平台PC端简化为微信公众号，主要架构为前台H5，使用时的微信的WeUI的SDK，后台就是现在流行的SpringMVC+Mybaties，参与了全程开发，开发过程中也遇到了不少的问题，现在记录下来，希望以后能够用得到。</p>
-<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-6-1/%E5%BE%AE%E4%BF%A1.jpg" algin="center"><br><br></div>
-
-<a id="more"></a>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>最近一直参与公司开发公众号，关于项目实施平台PC端简化为微信公众号，主要架构为前台H5，使用时的微信的WeUI的SDK，后台就是现在流行的SpringMVC+Mybaties，参与了全程开发，开发过程中也遇到了不少的问题，现在记录下来，希望以后能够用得到。<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-6-1/%E5%BE%AE%E4%BF%A1.jpg" algin="center"></div><a id="more"></a></p>
 <h1 id="HTML页面之间传值"><a href="#HTML页面之间传值" class="headerlink" title="HTML页面之间传值"></a>HTML页面之间传值</h1><p>JSP之间传值已经很熟悉，HTML之间传值是通过<code>解析URL</code>获取所需参数。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//URL传值</span></div><div class="line">URL + <span class="string">"?logId="</span> + logId;</div></pre></td></tr></table></figure>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//获取所需参数</span></div><div class="line"><span class="keyword">var</span> hrefInfo = getUrlVars(<span class="built_in">window</span>.location.href);</div><div class="line">	<span class="keyword">if</span> (hrefInfo.logId &amp;&amp; hrefInfo.logId != <span class="string">"undefined"</span>) &#123;</div><div class="line">		fillData(hrefInfo.logId);</div><div class="line">		logId = hrefInfo.logId;</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 得到url中的参数</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getUrlVars</span>(<span class="params">hrf</span>) </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">var</span> vars = [], hash;</div><div class="line">	<span class="keyword">var</span> locationHref = !hrf ? <span class="built_in">window</span>.location.href : hrf;</div><div class="line">	locationHref = locationHref.replace(<span class="regexp">/#/g</span>, <span class="string">""</span>);</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (locationHref.indexOf(<span class="string">'%'</span>) &gt; <span class="number">0</span>) &#123;</div><div class="line">		locationHref = <span class="built_in">unescape</span>(locationHref);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="keyword">var</span> hashes = locationHref.slice(locationHref.indexOf(<span class="string">'?'</span>) + <span class="number">1</span>).split(<span class="string">'&amp;'</span>);</div><div class="line">	<span class="keyword">for</span> ( <span class="keyword">var</span> i = <span class="number">0</span>; i &lt; hashes.length; i++) &#123;</div><div class="line">		hash = hashes[i].split(<span class="string">'='</span>);</div><div class="line">		vars.push(hash[<span class="number">0</span>]);</div><div class="line">		vars[hash[<span class="number">0</span>]] = hash[<span class="number">1</span>];</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> vars;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -500,6 +487,16 @@
 
       
     </div>
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	</div>
 
     <div>
       
@@ -542,9 +539,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/移动端/" rel="tag"># 移动端</a>
+            <a href="/tags/移动端/" rel="tag"><i class="fa fa-tag"></i> 移动端</a>
           
-            <a href="/tags/前端/" rel="tag"># 前端</a>
+            <a href="/tags/前端/" rel="tag"><i class="fa fa-tag"></i> 前端</a>
           
         </div>
       
@@ -596,7 +593,7 @@
           
   <div class="comments" id="comments">
     
-      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDc4MS8xMTMxOA=="></div>
     
   </div>
 
@@ -915,21 +912,29 @@
 
 
   
-    
-    <script>
-      var cloudTieConfig = {
-        url: document.location.href, 
-        sourceId: "",
-        productKey: "2097cd3d0f7d4127bb4229f3352012fd",
-        target: "cloud-tie-wrapper"
-      };
-    </script>
-    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+
+
+
+
+
   
 
 
 
 
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
 
 
 
@@ -1198,5 +1203,8 @@
 
   
 
+  
+  <!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
 </body>
 </html>

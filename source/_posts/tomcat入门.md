@@ -7,13 +7,7 @@ categories: technology
 
 # 引言
 
-Tomcat 服务器是一个免费的开放源代码的Web 应用服务器，属于轻量级应用服务器。说是经常用到，也只是熟悉，还没没有真正达到了解其中的原理和其中配置的意义，最近也找了一些书籍来看，先入门。
-
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-27/tomcat%E5%85%A5%E9%97%A8/tomcat.jpg"/>
-
-</div>
-
-<!-- more -->
+Tomcat 服务器是一个免费的开放源代码的Web 应用服务器，属于轻量级应用服务器。说是经常用到，也只是熟悉，还没没有真正达到了解其中的原理和其中配置的意义，最近也找了一些书籍来看，先入门。<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-27/tomcat%E5%85%A5%E9%97%A8/tomcat.jpg"/></div><!-- more -->
 
 # Tomcat简介
 

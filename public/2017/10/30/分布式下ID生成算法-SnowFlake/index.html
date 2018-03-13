@@ -96,7 +96,7 @@
 <meta property="og:description" content="引言在做系统开发时，系统唯一ID是我们在设计一个系统的时候经常遇到的问题，也常常为这个问题纠结。生成ID的方法有很多，适应不同的场景、需求及性能要求。所以有些比较复杂的系统会有多个ID生成策略。在这里总结一下常用到的ID生成策略。">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-21/%E8%87%AA%E5%A2%9EID/index.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-21/%E8%87%AA%E5%A2%9EID/snowflake.png">
-<meta property="og:updated_time" content="2017-12-13T06:25:40.565Z">
+<meta property="og:updated_time" content="2018-03-13T05:53:41.330Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分布式下ID生成算法 SnowFlake">
 <meta name="twitter:description" content="引言在做系统开发时，系统唯一ID是我们在设计一个系统的时候经常遇到的问题，也常常为这个问题纠结。生成ID的方法有很多，适应不同的场景、需求及性能要求。所以有些比较复杂的系统会有多个ID生成策略。在这里总结一下常用到的ID生成策略。">
@@ -389,16 +389,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a class="cloud-tie-join-count" href="/2017/10/30/分布式下ID生成算法-SnowFlake/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -462,10 +452,7 @@
       
 
       
-        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在做系统开发时，系统唯一ID是我们在设计一个系统的时候经常遇到的问题，也常常为这个问题纠结。生成ID的方法有很多，适应不同的场景、需求及性能要求。所以有些比较复杂的系统会有多个ID生成策略。在这里总结一下常用到的ID生成策略。</p>
-<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-21/%E8%87%AA%E5%A2%9EID/index.png" algin="center"><br><br></div>
-
-<a id="more"></a>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在做系统开发时，系统唯一ID是我们在设计一个系统的时候经常遇到的问题，也常常为这个问题纠结。生成ID的方法有很多，适应不同的场景、需求及性能要求。所以有些比较复杂的系统会有多个ID生成策略。在这里总结一下常用到的ID生成策略。<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-21/%E8%87%AA%E5%A2%9EID/index.png" algin="center"></div><a id="more"></a></p>
 <h1 id="数据库自增长序列或字段"><a href="#数据库自增长序列或字段" class="headerlink" title="数据库自增长序列或字段"></a>数据库自增长序列或字段</h1><p>最常见的方式，利用数据库，全表中唯一。如MySQL的<code>AUTO_INCREMENT</code>。</p>
 <h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
 <li>简单，代码方便，性能可以接受。</li>
@@ -512,6 +499,16 @@
 
       
     </div>
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	</div>
 
     <div>
       
@@ -554,9 +551,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
           
-            <a href="/tags/mysql/" rel="tag"># mysql</a>
+            <a href="/tags/mysql/" rel="tag"><i class="fa fa-tag"></i> mysql</a>
           
         </div>
       
@@ -608,7 +605,7 @@
           
   <div class="comments" id="comments">
     
-      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDc4MS8xMTMxOA=="></div>
     
   </div>
 
@@ -927,21 +924,29 @@
 
 
   
-    
-    <script>
-      var cloudTieConfig = {
-        url: document.location.href, 
-        sourceId: "",
-        productKey: "2097cd3d0f7d4127bb4229f3352012fd",
-        target: "cloud-tie-wrapper"
-      };
-    </script>
-    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+
+
+
+
+
   
 
 
 
 
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
 
 
 
@@ -1210,5 +1215,8 @@
 
   
 
+  
+  <!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
 </body>
 </html>

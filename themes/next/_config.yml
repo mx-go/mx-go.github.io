@@ -277,7 +277,7 @@ highlight_theme: night eighties
 # ---------------------------------------------------------------
 # Third Party Services Settings
 # ---------------------------------------------------------------
-
+pace: true
 # MathJax Support
 mathjax:
   enable: false
@@ -301,7 +301,7 @@ duoshuo_shortname:
 #hypercomments_id:
 
 # Gentie productKey
-gentie_productKey: 2097cd3d0f7d4127bb4229f3352012fd
+#gentie_productKey: 2097cd3d0f7d4127bb4229f3352012fd
 
 # changyan
 changyan:
@@ -315,7 +315,7 @@ changyan:
 
 # Support for LiveRe comments system.
 # You can get your uid from https://livere.com/insight/myCode (General web site)
-#livere_uid: your uid
+livere_uid: MTAyMC8zNDc4MS8xMTMxOA==
 
 # Baidu Share
 # Available value:
@@ -527,7 +527,9 @@ vendors:
   # https://github.com/hustcc/canvas-nest.js
   canvas_nest:
 
-
+# 文章末尾添加“本文结束”标记
+passage_end_tag:
+  enabled: true
 
 # Assets
 css: css

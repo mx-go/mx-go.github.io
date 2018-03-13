@@ -96,7 +96,7 @@
 <meta property="og:description" content="引言​    开发过程中我们会使用版本控制工具，如SVN、Git等。但是我们一样会遇到一种情形：在一套试题系统中，有新建题目、编辑题目、删除题目等功能，且题目可以被多个人修改，每人修改一次即是一个版本。现在的需求就是需要记录每一次修改的详细信息，每次版本之间的差异，甚至还可以版本回滚。 ​    例如题目编号为20170919170800000061的题目被A创建，依次被B、C、D各修改了一次，此">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-21/versionControl/v1.jpg">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-21/versionControlitem_mysql.png">
-<meta property="og:updated_time" content="2017-12-13T06:26:34.454Z">
+<meta property="og:updated_time" content="2018-03-13T05:55:03.365Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="系统中功能点的版本控制">
 <meta name="twitter:description" content="引言​    开发过程中我们会使用版本控制工具，如SVN、Git等。但是我们一样会遇到一种情形：在一套试题系统中，有新建题目、编辑题目、删除题目等功能，且题目可以被多个人修改，每人修改一次即是一个版本。现在的需求就是需要记录每一次修改的详细信息，每次版本之间的差异，甚至还可以版本回滚。 ​    例如题目编号为20170919170800000061的题目被A创建，依次被B、C、D各修改了一次，此">
@@ -389,16 +389,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a class="cloud-tie-join-count" href="/2017/09/21/系统中功能点的版本控制/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -463,10 +453,7 @@
 
       
         <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>​    开发过程中我们会使用<code>版本控制工具</code>，如SVN、Git等。但是我们一样会遇到一种情形：在一套试题系统中，有新建题目、编辑题目、删除题目等功能，且题目可以被多个人修改，每人修改一次即是一个版本。现在的需求就是需要<code>记录每一次修改的详细信息</code>，<code>每次版本之间的差异</code>，甚至还可以<code>版本回滚</code>。</p>
-<p>​    例如题目编号为<em>20170919170800000061</em>的题目被<em>A</em>创建，依次被<em>B</em>、<em>C</em>、<em>D</em>各修改了一次，此时需要比较<em>B</em>和<em>A</em>间的差异、<em>C</em>和<em>B</em>间的差异、<em>D</em>和<em>C</em>间的差异，到最后审核阶段如果<em>B</em> 的版本比较符合，则需要把试题版本内容回滚到<em>B</em>版本作为最后的版本。</p>
-<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-21/versionControl/v1.jpg" algin="center"><br><br></div>
-
-<a id="more"></a>
+<p>​    例如题目编号为<em>20170919170800000061</em>的题目被<em>A</em>创建，依次被<em>B</em>、<em>C</em>、<em>D</em>各修改了一次，此时需要比较<em>B</em>和<em>A</em>间的差异、<em>C</em>和<em>B</em>间的差异、<em>D</em>和<em>C</em>间的差异，到最后审核阶段如果<em>B</em> 的版本比较符合，则需要把试题版本内容回滚到<em>B</em>版本作为最后的版本。<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-21/versionControl/v1.jpg" algin="center"></div><a id="more"></a></p>
 <p>仔细分析一下题干，我们的需求是<em>1.比较版本的差异，2.版本的回滚</em>。之前有考虑过两种方案：</p>
 <ol>
 <li>修改时在前端进行比较，只记录版本的差异，后台只需要进行存取即可。</li>
@@ -514,6 +501,16 @@
 
       
     </div>
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	</div>
 
     <div>
       
@@ -556,9 +553,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
           
-            <a href="/tags/tips/" rel="tag"># tips</a>
+            <a href="/tags/tips/" rel="tag"><i class="fa fa-tag"></i> tips</a>
           
         </div>
       
@@ -610,7 +607,7 @@
           
   <div class="comments" id="comments">
     
-      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDc4MS8xMTMxOA=="></div>
     
   </div>
 
@@ -929,21 +926,29 @@
 
 
   
-    
-    <script>
-      var cloudTieConfig = {
-        url: document.location.href, 
-        sourceId: "",
-        productKey: "2097cd3d0f7d4127bb4229f3352012fd",
-        target: "cloud-tie-wrapper"
-      };
-    </script>
-    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+
+
+
+
+
   
 
 
 
 
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
 
 
 
@@ -1212,5 +1217,8 @@
 
   
 
+  
+  <!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
 </body>
 </html>

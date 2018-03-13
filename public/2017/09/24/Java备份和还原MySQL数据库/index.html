@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="rainbowhorse's blog">
 <meta property="og:description" content="引言​    在项目中经常会用到Java程序备份和还原MySQL数据库的内容，都是大同小异，但程序也会出现各种各样的问题（运行时异常，乱码等）。实现上都是用Runtime执行MySQL的命令行工具，然后读写IO流数据；也有可能是由于使用Java的Runtime来实现备份还原功能，而由于大家的运行时环境有差异才导致代码运行不成功。在这里记录一下自己使用的工具和方法。">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-21/MySQLbackUpAndRestore/mysql-index.png">
-<meta property="og:updated_time" content="2017-12-13T06:23:34.830Z">
+<meta property="og:updated_time" content="2018-03-13T05:48:49.262Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java备份和还原MySQL数据库">
 <meta name="twitter:description" content="引言​    在项目中经常会用到Java程序备份和还原MySQL数据库的内容，都是大同小异，但程序也会出现各种各样的问题（运行时异常，乱码等）。实现上都是用Runtime执行MySQL的命令行工具，然后读写IO流数据；也有可能是由于使用Java的Runtime来实现备份还原功能，而由于大家的运行时环境有差异才导致代码运行不成功。在这里记录一下自己使用的工具和方法。">
@@ -388,16 +388,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a class="cloud-tie-join-count" href="/2017/09/24/Java备份和还原MySQL数据库/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -461,10 +451,8 @@
       
 
       
-        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>​    在项目中经常会用到Java程序备份和还原MySQL数据库的内容，都是大同小异，但程序也会出现各种各样的问题（运行时异常，乱码等）。实现上都是用Runtime执行MySQL的命令行工具，然后读写IO流数据；也有可能是由于使用Java的Runtime来实现备份还原功能，而由于大家的运行时环境有差异才导致代码运行不成功。在这里记录一下自己使用的工具和方法。</p>
-<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-21/MySQLbackUpAndRestore/mysql-index.png" algin="center"><br><br></div>
-
-<a id="more"></a>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>​    在项目中经常会用到Java程序备份和还原MySQL数据库的内容，都是大同小异，但程序也会出现各种各样的问题（运行时异常，乱码等）。实现上都是用Runtime执行MySQL的命令行工具，然后读写IO流数据；也有可能是由于使用Java的Runtime来实现备份还原功能，而由于大家的运行时环境有差异才导致代码运行不成功。在这里记录一下自己使用的工具和方法。<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-21/MySQLbackUpAndRestore/mysql-index.png" algin="center"></div></p>
+<p><a id="more"></a></p>
 <h1 id="使用MySQL自带工具"><a href="#使用MySQL自带工具" class="headerlink" title="使用MySQL自带工具"></a>使用MySQL自带工具</h1><h2 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h2><p>备份使用MySQL的<code>mysqldump</code>命令来实现，示例代码</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> <span class="keyword">static</span> Logger logger = LoggerFactory.getLogger(MySQLDatabaseBackupAndRestore.class);</div><div class="line"></div><div class="line"> <span class="comment">/**</span></div><div class="line">  * Java代码实现MySQL数据库导出</div><div class="line">  *</div><div class="line">  * <span class="doctag">@param</span> hostIP       MySQL数据库所在服务器地址IP</div><div class="line">  * <span class="doctag">@param</span> userName     进入数据库所需要的用户名</div><div class="line">  * <span class="doctag">@param</span> password     进入数据库所需要的密码</div><div class="line">  * <span class="doctag">@param</span> savePath     数据库导出文件保存路径</div><div class="line">  * <span class="doctag">@param</span> fileName     数据库导出文件文件名</div><div class="line">  * <span class="doctag">@param</span> databaseName 要导出的数据库名</div><div class="line">  * <span class="doctag">@return</span> 返回true表示导出成功，否则返回false。</div><div class="line">  * <span class="doctag">@author</span> maxu</div><div class="line">  */</div><div class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">backUpDatabase</span><span class="params">(String hostIP, String userName, String password, String databaseName, String savePath, String fileName)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">     File saveFile = <span class="keyword">new</span> File(savePath);</div><div class="line">     <span class="keyword">if</span> (!saveFile.exists()) &#123;<span class="comment">// 如果目录不存在</span></div><div class="line">         saveFile.mkdirs();<span class="comment">// 创建文件夹</span></div><div class="line">     &#125;</div><div class="line">     <span class="keyword">if</span> (!savePath.endsWith(File.separator)) &#123;</div><div class="line">         savePath = savePath + File.separator;</div><div class="line">     &#125;</div><div class="line"></div><div class="line">     PrintWriter printWriter = <span class="keyword">null</span>;</div><div class="line">     BufferedReader bufferedReader = <span class="keyword">null</span>;</div><div class="line">     <span class="keyword">try</span> &#123;</div><div class="line">         printWriter = <span class="keyword">new</span> PrintWriter(<span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(savePath + fileName), <span class="string">"utf8"</span>));</div><div class="line">         Process process = Runtime.getRuntime().exec(<span class="string">" D:\\DevTools\\MySQL\\MySQL5.7\\bin\\mysqldump.exe -h"</span> + hostIP + <span class="string">" -u"</span> + userName + <span class="string">" -p"</span> + password + <span class="string">" --set-charset=UTF8 "</span> + databaseName);</div><div class="line">         InputStreamReader inputStreamReader = <span class="keyword">new</span> InputStreamReader(process.getInputStream(), <span class="string">"utf8"</span>);</div><div class="line">         bufferedReader = <span class="keyword">new</span> BufferedReader(inputStreamReader);</div><div class="line">         String line;</div><div class="line">         <span class="keyword">while</span> ((line = bufferedReader.readLine()) != <span class="keyword">null</span>) &#123;</div><div class="line">             printWriter.println(line);</div><div class="line">         &#125;</div><div class="line">         printWriter.flush();</div><div class="line">         <span class="keyword">if</span> (process.waitFor() == <span class="number">0</span>) &#123;<span class="comment">//0 表示线程正常终止。</span></div><div class="line">             logger.info(<span class="string">"数据库已备份到——&gt;&gt;"</span> + savePath);</div><div class="line">             <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">         &#125;</div><div class="line">     &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">         e.printStackTrace();</div><div class="line">     &#125; <span class="keyword">finally</span> &#123;</div><div class="line">         <span class="keyword">try</span> &#123;</div><div class="line">             <span class="keyword">if</span> (bufferedReader != <span class="keyword">null</span>) &#123;</div><div class="line">                 bufferedReader.close();</div><div class="line">             &#125;</div><div class="line">             <span class="keyword">if</span> (printWriter != <span class="keyword">null</span>) &#123;</div><div class="line">                 printWriter.close();</div><div class="line">             &#125;</div><div class="line">         &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">             e.printStackTrace();</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line">     <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
 <h2 id="还原"><a href="#还原" class="headerlink" title="还原"></a>还原</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line">   <span class="keyword">final</span> <span class="keyword">static</span> Logger logger = LoggerFactory.getLogger(MySQLDatabaseBackupAndRestore.class);  </div><div class="line">	</div><div class="line">   <span class="comment">/**</span></div><div class="line">     * Java代码实现MySQL数据库还原</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> hostIP       MySQL数据库所在服务器地址IP</div><div class="line">     * <span class="doctag">@param</span> userName     进入数据库所需要的用户名</div><div class="line">     * <span class="doctag">@param</span> password     进入数据库所需要的密码</div><div class="line">     * <span class="doctag">@param</span> path         需要还原数据库文件的路径</div><div class="line">     * <span class="doctag">@param</span> fileName     需要还原数据库文件的名称</div><div class="line">     * <span class="doctag">@param</span> databaseName 需要还原的数据库名称</div><div class="line">     * <span class="doctag">@return</span> 返回true表示还原成功，否则返回false。</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">restoreDatabase</span><span class="params">(String hostIP, String userName, String password, String databaseName, String path, String fileName)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line"></div><div class="line">        OutputStream out = <span class="keyword">null</span>;</div><div class="line">        BufferedReader br = <span class="keyword">null</span>;</div><div class="line">        PrintStream ps = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="comment">// 调用mysql的cmd:cmd命令在后台执行，没有命令窗口出现或者一闪而过的情况</span></div><div class="line">            Process process = Runtime.getRuntime().exec(<span class="string">"cmd /c start /b  D:\\DevTools\\MySQL\\MySQL5.7\\bin\\mysql -h"</span> + hostIP + <span class="string">" -u"</span> + userName + <span class="string">" -p"</span> + password + <span class="string">" --default-character-set=utf8 "</span> + databaseName);</div><div class="line">            out = process.getOutputStream();<span class="comment">//控制台的输入信息作为输出流</span></div><div class="line">            StringBuffer sb = <span class="keyword">new</span> StringBuffer(<span class="string">""</span>);</div><div class="line">            br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(path + fileName), <span class="string">"utf8"</span>));</div><div class="line">            String outStr;</div><div class="line">            String line;</div><div class="line">            <span class="keyword">while</span> ((line = br.readLine()) != <span class="keyword">null</span>) &#123;</div><div class="line">                sb.append(line + <span class="string">"\r\n"</span>);</div><div class="line">            &#125;</div><div class="line">            outStr = sb.toString();</div><div class="line"></div><div class="line">            ps = <span class="keyword">new</span> PrintStream(out, <span class="keyword">true</span>, <span class="string">"utf8"</span>);</div><div class="line">            ps.write(outStr.getBytes());</div><div class="line"><span class="comment">//            OutputStreamWriter writer = new OutputStreamWriter(out, "utf8");</span></div><div class="line"><span class="comment">//            writer.write(outStr);</span></div><div class="line">            <span class="comment">// 注：这里如果用缓冲方式写入文件的话，会导致中文乱码，用flush()方法则可以避免</span></div><div class="line"><span class="comment">//            writer.flush();</span></div><div class="line"><span class="comment">//            writer.close();</span></div><div class="line">            <span class="keyword">if</span> (process.waitFor() == <span class="number">0</span>) &#123;   <span class="comment">//0 表示线程正常终止。</span></div><div class="line">               <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">if</span> (ps != <span class="keyword">null</span>) &#123;</div><div class="line">                    ps.close();</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span> (br != <span class="keyword">null</span>) &#123;</div><div class="line">                    br.close();</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span> (out != <span class="keyword">null</span>)&#123;</div><div class="line">                    out.close();</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">catch</span> (IOException e1) &#123;</div><div class="line">                e1.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -487,6 +475,16 @@
 
       
     </div>
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	</div>
 
     <div>
       
@@ -529,9 +527,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
           
-            <a href="/tags/mysql/" rel="tag"># mysql</a>
+            <a href="/tags/mysql/" rel="tag"><i class="fa fa-tag"></i> mysql</a>
           
         </div>
       
@@ -583,7 +581,7 @@
           
   <div class="comments" id="comments">
     
-      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDc4MS8xMTMxOA=="></div>
     
   </div>
 
@@ -902,21 +900,29 @@
 
 
   
-    
-    <script>
-      var cloudTieConfig = {
-        url: document.location.href, 
-        sourceId: "",
-        productKey: "2097cd3d0f7d4127bb4229f3352012fd",
-        target: "cloud-tie-wrapper"
-      };
-    </script>
-    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+
+
+
+
+
   
 
 
 
 
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
 
 
 
@@ -1185,5 +1191,8 @@
 
   
 
+  
+  <!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
 </body>
 </html>

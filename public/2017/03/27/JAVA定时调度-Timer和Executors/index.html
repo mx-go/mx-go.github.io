@@ -94,7 +94,7 @@
 <meta property="og:url" content="https://sunny0715.github.io/2017/03/27/JAVA定时调度-Timer和Executors/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
 <meta property="og:description" content="近期在公司做了一个关于定时执行任务的功能（没有使用框架定时），查了一下资料，有Thread、Timer和Executors三种方法，之前使用的是Timer，但是详细查了资料觉得Executors更优，所以在这里比较一下它们的区别。">
-<meta property="og:updated_time" content="2017-08-27T05:24:02.507Z">
+<meta property="og:updated_time" content="2018-03-13T05:49:02.851Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JAVA定时调度 Timer和Executors">
 <meta name="twitter:description" content="近期在公司做了一个关于定时执行任务的功能（没有使用框架定时），查了一下资料，有Thread、Timer和Executors三种方法，之前使用的是Timer，但是详细查了资料觉得Executors更优，所以在这里比较一下它们的区别。">
@@ -386,16 +386,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a class="cloud-tie-join-count" href="/2017/03/27/JAVA定时调度-Timer和Executors/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -459,8 +449,7 @@
       
 
       
-        <p>近期在公司做了一个关于定时执行任务的功能（没有使用框架定时），查了一下资料，有<strong>Thread</strong>、<strong>Timer</strong>和<strong>Executors</strong>三种方法，之前使用的是Timer，但是详细查了资料觉得<strong>Executors更优</strong>，所以在这里比较一下它们的区别。</p>
-<a id="more"></a>
+        <p>近期在公司做了一个关于定时执行任务的功能（没有使用框架定时），查了一下资料，有<strong>Thread</strong>、<strong>Timer</strong>和<strong>Executors</strong>三种方法，之前使用的是Timer，但是详细查了资料觉得<strong>Executors更优</strong>，所以在这里比较一下它们的区别。<a id="more"></a></p>
 <h2 id="Thread类"><a href="#Thread类" class="headerlink" title="Thread类"></a>Thread类</h2><p>这是最基本的，创建一个Thread，然后让它在while循环里一直运行着，通过sleep方法来达到定时任务的效果。这样可以快速简单的实现，代码如下： </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Task1</span> </span>&#123;  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;  </div><div class="line">        <span class="comment">// run in a second  </span></div><div class="line">        <span class="keyword">final</span> <span class="keyword">long</span> timeInterval = <span class="number">1000</span>;  </div><div class="line">        Runnable runnable = <span class="keyword">new</span> Runnable() &#123;  </div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;  </div><div class="line">                <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;  </div><div class="line">                    <span class="comment">// ------- code for task to run  </span></div><div class="line">                    System.out.println(<span class="string">"Hello !!"</span>);  </div><div class="line">                    <span class="comment">// ------- ends here  </span></div><div class="line">                    <span class="keyword">try</span> &#123;  </div><div class="line">                        Thread.sleep(timeInterval);  </div><div class="line">                    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;  </div><div class="line">                        e.printStackTrace();  </div><div class="line">                    &#125;  </div><div class="line">                &#125;  </div><div class="line">            &#125;  </div><div class="line">        &#125;;  </div><div class="line">        Thread thread = <span class="keyword">new</span> Thread(runnable);  </div><div class="line">        thread.start();  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <blockquote>
@@ -506,6 +495,16 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 定时查询教师回复状态</div><div class="line"> * <span class="doctag">@param</span> a</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getStatusSchedule</span><span class="params">(<span class="keyword">final</span> Date replyEnd)</span></span>&#123;</div><div class="line">	</div><div class="line">	<span class="keyword">final</span> SendMessage sendMsg = <span class="keyword">new</span> SendMessage();</div><div class="line">	<span class="keyword">final</span> ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();</div><div class="line">	</div><div class="line">	service.scheduleAtFixedRate(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			<span class="keyword">try</span> &#123;</div><div class="line">				Date nowDate = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>).parse(<span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>).format(<span class="keyword">new</span> Date()));<span class="comment">//当前时间</span></div><div class="line">				<span class="comment">//若截至时间在当前时间之前执行定时任务 否则不执行</span></div><div class="line">				<span class="keyword">if</span> (!nowDate.before(replyEnd)) &#123;</div><div class="line">					service.shutdown();  <span class="comment">//停止任务</span></div><div class="line">					<span class="keyword">return</span>;</div><div class="line">				&#125;<span class="keyword">else</span> &#123;</div><div class="line">					Map&lt;String,Object&gt; map = sendMsg.getReplyMsg();  <span class="comment">//获取回复信息</span></div><div class="line">					<span class="keyword">if</span>(!map.isEmpty())&#123;		 <span class="comment">//当map不为空时执行						</span></div><div class="line">						updateMsgStatus(map);   <span class="comment">//更新数据库</span></div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">			&#125; <span class="keyword">catch</span> (ParseException e) &#123;</div><div class="line">				e.printStackTrace();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;, <span class="number">1</span>, <span class="number">1</span>, TimeUnit.MINUTES); <span class="comment">//执行后第一次查询在1分钟之后，每隔1分钟查询一次。 </span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
       
     </div>
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	</div>
 
     <div>
       
@@ -548,9 +547,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
           
-            <a href="/tags/tips/" rel="tag"># tips</a>
+            <a href="/tags/tips/" rel="tag"><i class="fa fa-tag"></i> tips</a>
           
         </div>
       
@@ -602,7 +601,7 @@
           
   <div class="comments" id="comments">
     
-      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDc4MS8xMTMxOA=="></div>
     
   </div>
 
@@ -921,21 +920,29 @@
 
 
   
-    
-    <script>
-      var cloudTieConfig = {
-        url: document.location.href, 
-        sourceId: "",
-        productKey: "2097cd3d0f7d4127bb4229f3352012fd",
-        target: "cloud-tie-wrapper"
-      };
-    </script>
-    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+
+
+
+
+
   
 
 
 
 
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
 
 
 
@@ -1204,5 +1211,8 @@
 
   
 
+  
+  <!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
 </body>
 </html>

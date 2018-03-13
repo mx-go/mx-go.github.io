@@ -7,13 +7,7 @@ categories: technology
 
 # 引言
 
-Linux系统已经搁置很久了，之前有在Ubuntu系统上开发过，但是Linux已经很久没有用了。现在公司把项目部署在Linux系统上，又要把Linux相关知识温习一下。这篇博客温习一下Linux下Tomcat的部署与优化，大部分的操作与在windows上相同。
-
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_tomcat/tomcat_linux.png" algin="center"/>
-
-</div>
-
-<!-- more -->
+Linux系统已经搁置很久了，之前有在Ubuntu系统上开发过，但是Linux已经很久没有用了。现在公司把项目部署在Linux系统上，又要把Linux相关知识温习一下。这篇博客温习一下Linux下Tomcat的部署与优化，大部分的操作与在windows上相同。<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_tomcat/tomcat_linux.png" algin="center"/></div><!-- more -->
 
 # Tomcat的安装
 

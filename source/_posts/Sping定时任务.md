@@ -7,13 +7,11 @@ categories: technology
 
 # 引言
 
-在企业开发中，经常会遇到时间任务调度的需求，比如每天凌晨生成前天报表、数据汇总等动态配置是否开启定时的任务。在Java领域中，定时任务的开源工具也非常多，小到一个Timer类，大到Quartz框架。在Spring中最常见的定时任务方式属**Spring schedule注解的方式**和利用**Quartz动态管理定时任务**。总体来说，个人比较喜欢的还是Quartz，功能强大而且使用方便。
+在企业开发中，经常会遇到时间任务调度的需求，比如每天凌晨生成前天报表、数据汇总等动态配置是否开启定时的任务。在Java领域中，定时任务的开源工具也非常多，小到一个Timer类，大到Quartz框架。在Spring中最常见的定时任务方式属**Spring schedule注解的方式**和利用**Quartz动态管理定时任务**。总体来说，个人比较喜欢的还是Quartz，功能强大而且使用方便。<div align=center>
 
-<div align=center><img width="800" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-03/quartz/index.png" algin="center"/>
+> <img width="800" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-03/quartz/index.png"/>
 
-</div>
-
-<!-- more -->
+</div><!-- more -->
 
 # Spring-@scheduled 
 

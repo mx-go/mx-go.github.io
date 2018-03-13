@@ -7,11 +7,7 @@ categories: technology
 
 ​	今天开发一个功能遇到一个需求，在A页面点击查看详情后打开B页面进行修改或删除，删除后B页面关闭，然后刷新A页面里面的数据。相当于就是两个页面之间进行通讯，作为后端的我第一想法是利用`webSocket` 进行通讯，之后通过谷歌和百度找出了更为简便的方法。
 
-<div align=center><img width="450" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-9-13/additional/html%E9%A1%B5%E9%9D%A2%E4%BC%A0%E5%80%BC.png" algin="center"/>
-
-</div>
-
-<!-- more -->
+<div align=center><img width="450" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-9-13/additional/html%E9%A1%B5%E9%9D%A2%E4%BC%A0%E5%80%BC.png" algin="center"/></div><!-- more -->
 
 # 利用webSocket进行通讯
 

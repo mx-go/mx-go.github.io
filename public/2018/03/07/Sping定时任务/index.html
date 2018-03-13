@@ -97,7 +97,7 @@
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-03/quartz/index.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-03/quartz/taskCode.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-03/quartz/quartzResult.png">
-<meta property="og:updated_time" content="2018-03-08T03:12:35.569Z">
+<meta property="og:updated_time" content="2018-03-13T05:46:53.196Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Sping定时任务">
 <meta name="twitter:description" content="引言在企业开发中，经常会遇到时间任务调度的需求，比如每天凌晨生成前天报表、数据汇总等动态配置是否开启定时的任务。在Java领域中，定时任务的开源工具也非常多，小到一个Timer类，大到Quartz框架。在Spring中最常见的定时任务方式属Spring schedule注解的方式和利用Quartz动态管理定时任务。总体来说，个人比较喜欢的还是Quartz，功能强大而且使用方便。">
@@ -390,16 +390,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a class="cloud-tie-join-count" href="/2018/03/07/Sping定时任务/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -463,10 +453,11 @@
       
 
       
-        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在企业开发中，经常会遇到时间任务调度的需求，比如每天凌晨生成前天报表、数据汇总等动态配置是否开启定时的任务。在Java领域中，定时任务的开源工具也非常多，小到一个Timer类，大到Quartz框架。在Spring中最常见的定时任务方式属<strong>Spring schedule注解的方式</strong>和利用<strong>Quartz动态管理定时任务</strong>。总体来说，个人比较喜欢的还是Quartz，功能强大而且使用方便。</p>
-<div align="center"><img width="800" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-03/quartz/index.png" algin="center"><br><br></div>
-
-<a id="more"></a>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在企业开发中，经常会遇到时间任务调度的需求，比如每天凌晨生成前天报表、数据汇总等动态配置是否开启定时的任务。在Java领域中，定时任务的开源工具也非常多，小到一个Timer类，大到Quartz框架。在Spring中最常见的定时任务方式属<strong>Spring schedule注解的方式</strong>和利用<strong>Quartz动态管理定时任务</strong>。总体来说，个人比较喜欢的还是Quartz，功能强大而且使用方便。<div align="center"></div></p>
+<blockquote>
+<p><img width="800" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-03/quartz/index.png"></p>
+</blockquote>
+<p><a id="more"></a></p>
 <h1 id="Spring-scheduled"><a href="#Spring-scheduled" class="headerlink" title="Spring-@scheduled"></a>Spring-@scheduled</h1><p>对于较简单的任务可以使用Spring内置的定时任务方法@scheduled注解进行配置达到自己的需求。</p>
 <h2 id="spring配置文件"><a href="#spring配置文件" class="headerlink" title="spring配置文件"></a>spring配置文件</h2><p>配置spring项目的基础文件spring.xml</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;  </div><div class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns:task</span>=<span class="string">"http://www.springframework.org/schema/task"</span>  </span></div><div class="line">    <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span>  </div><div class="line">    <span class="attr">xmlns:context</span>=<span class="string">"http://www.springframework.org/schema/context"</span>  </div><div class="line">    <span class="attr">xsi:schemaLocation</span>=<span class="string">"  </span></div><div class="line">http://www.springframework.org/schema/beans  </div><div class="line">http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  </div><div class="line">http://www.springframework.org/schema/context  </div><div class="line">http://www.springframework.org/schema/context/spring-context-3.0.xsd  </div><div class="line">http://www.springframework.org/schema/task  </div><div class="line">http://www.springframework.org/schema/task/spring-task-3.1.xsd"&gt;  </div><div class="line">  </div><div class="line">  	<span class="comment">&lt;!-- 开启定时任务 spring的定时任务默认是单线程，多个任务执行起来时间会有问题，所以这里配置了线程池--&gt;</span> </div><div class="line">    <span class="tag">&lt;<span class="name">task:executor</span> <span class="attr">id</span>=<span class="string">"executor"</span> <span class="attr">pool-size</span>=<span class="string">"5"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">task:scheduler</span> <span class="attr">id</span>=<span class="string">"scheduler"</span> <span class="attr">pool-size</span>=<span class="string">"10"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">task:annotation-driven</span> <span class="attr">executor</span>=<span class="string">"executor"</span> <span class="attr">scheduler</span>=<span class="string">"scheduler"</span> /&gt;</span>  </div><div class="line">  </div><div class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></div></pre></td></tr></table></figure>
@@ -489,6 +480,16 @@
 
       
     </div>
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	</div>
 
     <div>
       
@@ -531,9 +532,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
           
-            <a href="/tags/spring/" rel="tag"># spring</a>
+            <a href="/tags/spring/" rel="tag"><i class="fa fa-tag"></i> spring</a>
           
         </div>
       
@@ -581,7 +582,7 @@
           
   <div class="comments" id="comments">
     
-      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDc4MS8xMTMxOA=="></div>
     
   </div>
 
@@ -900,21 +901,29 @@
 
 
   
-    
-    <script>
-      var cloudTieConfig = {
-        url: document.location.href, 
-        sourceId: "",
-        productKey: "2097cd3d0f7d4127bb4229f3352012fd",
-        target: "cloud-tie-wrapper"
-      };
-    </script>
-    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+
+
+
+
+
   
 
 
 
 
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
 
 
 
@@ -1183,5 +1192,8 @@
 
   
 
+  
+  <!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
 </body>
 </html>

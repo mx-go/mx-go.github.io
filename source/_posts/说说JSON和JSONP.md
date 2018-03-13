@@ -9,13 +9,7 @@ categories: technology
 
 说到AJAX就会不可避免的面临两个问题，**第一个是AJAX以何种格式来交换数据？第二个是跨域的需求如何解决？**这两个问题目前都有不同的解决方案，比如数据可以用自定义字符串或者用XML来描述，跨域可以通过服务器端代理来解决。
 
-JSON和JSONP虽然只有一个字母的差别，但其实他们根本不是一回事：JSON是一种数据交换格式，而JSONP是一种依靠开发人员的聪明才智创造出的一种`非官方跨域数据交互协议`。我们拿最近比较火的谍战片来打个比方，JSON是地下党们用来书写和交换情报的“暗号”，而JSONP则是把用暗号书写的情报传递给自己同志时使用的接头方式。看到没？一个是描述信息的格式，一个是信息传递双方约定的方法。
-
-<div align=center><img width="450" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/JSON_JSONP/jsonp-json-with-padding.gif" algin="center"/>
-
-</div>
-
-<!-- more -->
+JSON和JSONP虽然只有一个字母的差别，但其实他们根本不是一回事：JSON是一种数据交换格式，而JSONP是一种依靠开发人员的聪明才智创造出的一种`非官方跨域数据交互协议`。我们拿最近比较火的谍战片来打个比方，JSON是地下党们用来书写和交换情报的“暗号”，而JSONP则是把用暗号书写的情报传递给自己同志时使用的接头方式。看到没？一个是描述信息的格式，一个是信息传递双方约定的方法。<div align=center><img width="450" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/JSON_JSONP/jsonp-json-with-padding.gif" algin="center"/></div><!-- more -->
 
 # 什么是JSON
 

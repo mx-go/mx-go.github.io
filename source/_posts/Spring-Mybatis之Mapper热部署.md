@@ -9,13 +9,7 @@ categories: technology
 
 ​	Spring+Mybatis经常用，在项目中最痛苦的就是修改mapper文件的时候需要重启一下项目，每修改一次就需要重启一次项目。项目小还好，如果项目大，重启一次项目简直是要命。所以，去网上查资料看有没有办法让mybatis热部署，每次更新mapper文件不需要重启项目。
 
-​	功夫不负有心人，终于找到了，这玩意只要发现mapper文件被修改，就会重新加载被修改的mapper文件。且**只加载被修改的mapper文件**！这个可省事了，效率又高，简直爽到爆。
-
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/relationship-with-mybatis.png" algin="center"/>
-
-</div>
-
-<!-- more -->
+​	功夫不负有心人，终于找到了，这玩意只要发现mapper文件被修改，就会重新加载被修改的mapper文件。且**只加载被修改的mapper文件**！这个可省事了，效率又高，简直爽到爆。<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/relationship-with-mybatis.png" algin="center"/></div><!-- more -->
 
 # 创建MapperRefresh刷新类
 

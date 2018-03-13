@@ -7,13 +7,7 @@ categories: technology
 
 # 引言
 
-重温记录下Linux环境下JDK和MySQL的安装。
-
-<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/installing-mysql-on-linux.png" algin="center"/>
-
-</div>
-
-<!-- more -->
+重温记录下Linux环境下JDK和MySQL的安装。<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/installing-mysql-on-linux.png" algin="center"/></div><!-- more -->
 
 # JDK的安装
 

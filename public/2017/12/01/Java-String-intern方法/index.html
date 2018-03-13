@@ -100,7 +100,7 @@
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jdk1.6.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jdk1.7.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/jdk1.7-2.png">
-<meta property="og:updated_time" content="2017-12-20T10:48:45.447Z">
+<meta property="og:updated_time" content="2018-03-13T05:48:34.428Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java String intern方法">
 <meta name="twitter:description" content="引言String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。 intern()方法设计的初衷，就是重用String对象，以节省内存消耗。">
@@ -393,16 +393,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a class="cloud-tie-join-count" href="/2017/12/01/Java-String-intern方法/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -467,10 +457,8 @@
 
       
         <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。</p>
-<p>intern()方法设计的初衷，就是重用String对象，以节省内存消耗。</p>
-<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/creating-java-strings.jpg" algin="center"><br><br></div>
-
-<a id="more"></a>
+<p>intern()方法设计的初衷，就是重用String对象，以节省内存消耗。<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/creating-java-strings.jpg" algin="center"></div></p>
+<p><a id="more"></a></p>
 <h1 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String str1 = <span class="keyword">new</span> String(<span class="string">"rainbow"</span>) + <span class="keyword">new</span> String(<span class="string">"horse"</span>);</div><div class="line">System.out.println(str1.intern() == str1);</div><div class="line">System.out.println(str1 == <span class="string">"rainbowhorse"</span>);</div></pre></td></tr></table></figure>
 <p>在<strong>JDK1.7</strong>下输出结果为：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">true</span></div><div class="line"><span class="keyword">true</span></div></pre></td></tr></table></figure>
@@ -531,6 +519,16 @@
 
       
     </div>
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	</div>
 
     <div>
       
@@ -573,9 +571,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
           
-            <a href="/tags/tips/" rel="tag"># tips</a>
+            <a href="/tags/tips/" rel="tag"><i class="fa fa-tag"></i> tips</a>
           
         </div>
       
@@ -627,7 +625,7 @@
           
   <div class="comments" id="comments">
     
-      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDc4MS8xMTMxOA=="></div>
     
   </div>
 
@@ -946,21 +944,29 @@
 
 
   
-    
-    <script>
-      var cloudTieConfig = {
-        url: document.location.href, 
-        sourceId: "",
-        productKey: "2097cd3d0f7d4127bb4229f3352012fd",
-        target: "cloud-tie-wrapper"
-      };
-    </script>
-    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+
+
+
+
+
   
 
 
 
 
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
 
 
 
@@ -1229,5 +1235,8 @@
 
   
 
+  
+  <!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
 </body>
 </html>

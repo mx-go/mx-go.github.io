@@ -102,7 +102,7 @@
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-13/%E5%89%8D%E7%AB%AF%E6%8A%80%E5%B7%A7/%E5%A4%8D%E6%9D%82html.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-13/%E5%89%8D%E7%AB%AF%E6%8A%80%E5%B7%A7/%E5%A4%8D%E6%9D%82-163.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-9-13/%E5%89%8D%E7%AB%AF%E6%8A%80%E5%B7%A7/tips.png">
-<meta property="og:updated_time" content="2018-01-05T01:21:07.871Z">
+<meta property="og:updated_time" content="2018-03-13T05:54:03.361Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="静态服务器搭建及前端知识点">
 <meta name="twitter:description" content="引言​    虽然是做后台开发，但是很多时候自己也兼顾了前台，并不是所有的项目都是前后台分离开发，所以在开发期间自己也总结和学习了前端了一些小知识，在这里进行总结，以便自己温习。">
@@ -395,16 +395,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a class="cloud-tie-join-count" href="/2017/06/13/静态服务器搭建及前端知识点/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -469,19 +459,7 @@
 
       
         <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>​    虽然是做后台开发，但是很多时候自己也兼顾了前台，并不是所有的项目都是前后台分离开发，所以在开发期间自己也总结和学习了前端了一些小知识，在这里进行总结，以便自己温习。</p>
-<div align="center"><img width="450" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-9-13/%E5%89%8D%E7%AB%AF%E6%8A%80%E5%B7%A7/%E5%89%8D%E7%AB%AF.jpg" algin="center"><br><br></div>
-
-<a id="more"></a>
-<h1 id="NodeJS搭建静态资源服务器"><a href="#NodeJS搭建静态资源服务器" class="headerlink" title="NodeJS搭建静态资源服务器"></a>NodeJS搭建静态资源服务器</h1><p>对<code>Node.js</code>只有浅显的认识，但是有时候又要自己搭建静态服务器进行测试。搭建静态服务器需要以下几个步骤：</p>
-<ol>
-<li>下载node.js，进入node.js官网<a href="http://nodejs.cn下载对应的版本。" target="_blank" rel="external">http://nodejs.cn下载对应的版本。</a></li>
-<li>安装node.js。</li>
-<li>启动node.js，在命令行输入命令安装需要的模块，依次执行命令。</li>
-</ol>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">npm install express</div><div class="line">npm install request</div><div class="line">npm install http-server</div></pre></td></tr></table></figure>
-<h2 id="简单的静态服务器"><a href="#简单的静态服务器" class="headerlink" title="简单的静态服务器"></a>简单的静态服务器</h2><p>新建server.js，内容为</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</div><div class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">"http"</span>);</div><div class="line"><span class="keyword">var</span> request = <span class="built_in">require</span>(<span class="string">'request'</span>);</div><div class="line"><span class="keyword">var</span> app = express();</div><div class="line"><span class="comment">//启动端口为81</span></div><div class="line"><span class="keyword">var</span> port = process.env.PORT||<span class="number">81</span>;</div><div class="line"> </div><div class="line"><span class="comment">//静态资源存放的路径</span></div><div class="line"> app.use(express.static(<span class="string">'E:/SmallTools/StaticServer'</span>));</div><div class="line">http.createServer(app).listen(port);</div><div class="line"><span class="built_in">console</span>.log(<span class="string">"服务启动成功"</span>);</div></pre></td></tr></table></figure>
-<div align="center"><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-9-13/%E5%89%8D%E7%AB%AF%E6%8A%80%E5%B7%A7/file.png" algin="center"><br><br></div>
+<div align="center"><img width="450" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-9-13/%E5%89%8D%E7%AB%AF%E6%8A%80%E5%B7%A7/%E5%89%8D%E7%AB%AF.jpg" algin="center"></div><a id="more"></a><br><br># NodeJS搭建静态资源服务器<br><br>对<code>Node.js</code>只有浅显的认识，但是有时候又要自己搭建静态服务器进行测试。搭建静态服务器需要以下几个步骤：<br><br>1. 下载node.js，进入node.js官网<a href="http://nodejs.cn下载对应的版本。" target="_blank" rel="external">http://nodejs.cn下载对应的版本。</a><br>2. 安装node.js。<br>3. 启动node.js，在命令行输入命令安装需要的模块，依次执行命令。<br><br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">npm install express</div><div class="line">npm install request</div><div class="line">npm install http-server</div></pre></td></tr></table></figure><br><br>## 简单的静态服务器<br><br>新建server.js，内容为<br><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</div><div class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">"http"</span>);</div><div class="line"><span class="keyword">var</span> request = <span class="built_in">require</span>(<span class="string">'request'</span>);</div><div class="line"><span class="keyword">var</span> app = express();</div><div class="line"><span class="comment">//启动端口为81</span></div><div class="line"><span class="keyword">var</span> port = process.env.PORT||<span class="number">81</span>;</div><div class="line"> </div><div class="line"><span class="comment">//静态资源存放的路径</span></div><div class="line"> app.use(express.static(<span class="string">'E:/SmallTools/StaticServer'</span>));</div><div class="line">http.createServer(app).listen(port);</div><div class="line"><span class="built_in">console</span>.log(<span class="string">"服务启动成功"</span>);</div></pre></td></tr></table></figure><br><br><div align="center"><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-9-13/%E5%89%8D%E7%AB%AF%E6%8A%80%E5%B7%A7/file.png" algin="center"><br><br></div>
 
 <p>启动server.js</p>
 <div align="center"><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-9-13/%E5%89%8D%E7%AB%AF%E6%8A%80%E5%B7%A7/cmd%E7%AE%80%E5%8D%95.png" algin="center"><br><br></div>
@@ -525,6 +503,16 @@
 
       
     </div>
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	</div>
 
     <div>
       
@@ -567,9 +555,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/tips/" rel="tag"># tips</a>
+            <a href="/tags/tips/" rel="tag"><i class="fa fa-tag"></i> tips</a>
           
-            <a href="/tags/前端/" rel="tag"># 前端</a>
+            <a href="/tags/前端/" rel="tag"><i class="fa fa-tag"></i> 前端</a>
           
         </div>
       
@@ -621,7 +609,7 @@
           
   <div class="comments" id="comments">
     
-      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDc4MS8xMTMxOA=="></div>
     
   </div>
 
@@ -782,7 +770,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NodeJS搭建静态资源服务器"><span class="nav-number">2.</span> <span class="nav-text">NodeJS搭建静态资源服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单的静态服务器"><span class="nav-number">2.1.</span> <span class="nav-text">简单的静态服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#带反向代理静态服务器搭建"><span class="nav-number">2.2.</span> <span class="nav-text">带反向代理静态服务器搭建</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#前端知识点"><span class="nav-number">3.</span> <span class="nav-text">前端知识点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JS字符串截取空白trim-的原型实现"><span class="nav-number">3.1.</span> <span class="nav-text">JS字符串截取空白trim()的原型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JS屏蔽键盘按键"><span class="nav-number">3.2.</span> <span class="nav-text">JS屏蔽键盘按键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTML之间传值-通过解析url"><span class="nav-number">3.3.</span> <span class="nav-text">HTML之间传值(通过解析url)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jquery获取radio-checkbox"><span class="nav-number">3.4.</span> <span class="nav-text">Jquery获取radio,checkbox</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jquery页面查询-数据量大时禁用"><span class="nav-number">3.5.</span> <span class="nav-text">Jquery页面查询(数据量大时禁用)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jquery-回车-Enter-移到下一个输入框"><span class="nav-number">3.6.</span> <span class="nav-text">Jquery 回车(Enter)移到下一个输入框</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JS-Jquery获取各种屏幕的宽度和高度"><span class="nav-number">3.7.</span> <span class="nav-text">JS,Jquery获取各种屏幕的宽度和高度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ajax-Get时请求异步缓存问题"><span class="nav-number">3.8.</span> <span class="nav-text">Ajax,Get时请求异步缓存问题</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#带反向代理静态服务器搭建"><span class="nav-number">1.1.</span> <span class="nav-text">带反向代理静态服务器搭建</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#前端知识点"><span class="nav-number">2.</span> <span class="nav-text">前端知识点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JS字符串截取空白trim-的原型实现"><span class="nav-number">2.1.</span> <span class="nav-text">JS字符串截取空白trim()的原型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JS屏蔽键盘按键"><span class="nav-number">2.2.</span> <span class="nav-text">JS屏蔽键盘按键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTML之间传值-通过解析url"><span class="nav-number">2.3.</span> <span class="nav-text">HTML之间传值(通过解析url)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jquery获取radio-checkbox"><span class="nav-number">2.4.</span> <span class="nav-text">Jquery获取radio,checkbox</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jquery页面查询-数据量大时禁用"><span class="nav-number">2.5.</span> <span class="nav-text">Jquery页面查询(数据量大时禁用)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jquery-回车-Enter-移到下一个输入框"><span class="nav-number">2.6.</span> <span class="nav-text">Jquery 回车(Enter)移到下一个输入框</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JS-Jquery获取各种屏幕的宽度和高度"><span class="nav-number">2.7.</span> <span class="nav-text">JS,Jquery获取各种屏幕的宽度和高度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ajax-Get时请求异步缓存问题"><span class="nav-number">2.8.</span> <span class="nav-text">Ajax,Get时请求异步缓存问题</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -940,21 +928,29 @@
 
 
   
-    
-    <script>
-      var cloudTieConfig = {
-        url: document.location.href, 
-        sourceId: "",
-        productKey: "2097cd3d0f7d4127bb4229f3352012fd",
-        target: "cloud-tie-wrapper"
-      };
-    </script>
-    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+
+
+
+
+
   
 
 
 
 
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
 
 
 
@@ -1223,5 +1219,8 @@
 
   
 
+  
+  <!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
 </body>
 </html>
