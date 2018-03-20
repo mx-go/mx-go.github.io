@@ -166,6 +166,8 @@ public class WebsocketController {
 
 参考：
 
+[***Spring Framework Reference Documentation***](https://docs.spring.io/spring/docs/4.3.14.RELEASE/spring-framework-reference/htmlsingle/#websocket)
+
 [***websocket+spring***](http://tech.lede.com/2017/03/08/qa/websocket+spring/)
 
 [***spring websocket + stomp 实现广播通信和一对一通信***](http://www.cnblogs.com/winkey4986/p/5622758.html)
