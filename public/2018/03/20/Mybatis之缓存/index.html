@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="tips,tool," />
+  <meta name="keywords" content="java,mybatis," />
 
 
 
@@ -87,24 +87,24 @@
 
 
 
-<meta name="description" content="引言数据库连接池在Java数据库相关中间件产品群中，应该算是最底层最基础的一类产品，作为企业应用开发必不可少的组件，无数开发者们贡献了一个又一个的优秀产品，它们有的随着时代发展，功成身退，有的还在不断迭代，老而弥坚，更有新生代产品，或性能无敌、或功能全面。接下来就聊一聊  “那些年，我们用过的数据库连接池。”">
-<meta name="keywords" content="tips,tool">
+<meta name="description" content="引言Mybatis中有一级缓存和二级缓存，默认情况下一级缓存是开启的，而且是不能关闭的。一级缓存是指SqlSession级别的缓存，当在同一个SqlSession中进行相同的SQL语句查询时，第二次以后的查询不会从数据库查询，而是直接从缓存中获取，一级缓存最多缓存1024条SQL。二级缓存是指可以跨SqlSession的缓存。">
+<meta name="keywords" content="java,mybatis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="大话数据库连接池">
-<meta property="og:url" content="https://sunny0715.github.io/2018/02/06/大话数据库连接池/index.html">
+<meta property="og:title" content="Mybatis之缓存">
+<meta property="og:url" content="https://sunny0715.github.io/2018/03/20/Mybatis之缓存/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
-<meta property="og:description" content="引言数据库连接池在Java数据库相关中间件产品群中，应该算是最底层最基础的一类产品，作为企业应用开发必不可少的组件，无数开发者们贡献了一个又一个的优秀产品，它们有的随着时代发展，功成身退，有的还在不断迭代，老而弥坚，更有新生代产品，或性能无敌、或功能全面。接下来就聊一聊  “那些年，我们用过的数据库连接池。”">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/index.jpg">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/1.png">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/3.png">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/4.png">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/5.png">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/6.png">
-<meta property="og:updated_time" content="2018-03-20T06:22:26.399Z">
+<meta property="og:description" content="引言Mybatis中有一级缓存和二级缓存，默认情况下一级缓存是开启的，而且是不能关闭的。一级缓存是指SqlSession级别的缓存，当在同一个SqlSession中进行相同的SQL语句查询时，第二次以后的查询不会从数据库查询，而是直接从缓存中获取，一级缓存最多缓存1024条SQL。二级缓存是指可以跨SqlSession的缓存。">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/cache.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/cache-index.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/cache-first.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/cache-2.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/ehcache.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/ehcachecache.png">
+<meta property="og:updated_time" content="2018-03-20T06:17:57.946Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="大话数据库连接池">
-<meta name="twitter:description" content="引言数据库连接池在Java数据库相关中间件产品群中，应该算是最底层最基础的一类产品，作为企业应用开发必不可少的组件，无数开发者们贡献了一个又一个的优秀产品，它们有的随着时代发展，功成身退，有的还在不断迭代，老而弥坚，更有新生代产品，或性能无敌、或功能全面。接下来就聊一聊  “那些年，我们用过的数据库连接池。”">
-<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/index.jpg">
+<meta name="twitter:title" content="Mybatis之缓存">
+<meta name="twitter:description" content="引言Mybatis中有一级缓存和二级缓存，默认情况下一级缓存是开启的，而且是不能关闭的。一级缓存是指SqlSession级别的缓存，当在同一个SqlSession中进行相同的SQL语句查询时，第二次以后的查询不会从数据库查询，而是直接从缓存中获取，一级缓存最多缓存1024条SQL。二级缓存是指可以跨SqlSession的缓存。">
+<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/cache.png">
 
 
 
@@ -132,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="https://sunny0715.github.io/2018/02/06/大话数据库连接池/"/>
+  <link rel="canonical" href="https://sunny0715.github.io/2018/03/20/Mybatis之缓存/"/>
 
 
 
 
 
-  <title> 大话数据库连接池 | rainbowhorse's blog </title>
+  <title> Mybatis之缓存 | rainbowhorse's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -321,7 +321,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2018/02/06/大话数据库连接池/">
+    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2018/03/20/Mybatis之缓存/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rainbowhorse">
@@ -342,7 +342,7 @@
             
             
               
-                大话数据库连接池
+                Mybatis之缓存
               
             
           </h2>
@@ -357,8 +357,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-06T17:50:49+08:00">
-                2018-02-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-20T10:43:53+08:00">
+                2018-03-20
               </time>
             
 
@@ -397,7 +397,7 @@
 
           
           
-             <span id="/2018/02/06/大话数据库连接池/" class="leancloud_visitors" data-flag-title="大话数据库连接池">
+             <span id="/2018/03/20/Mybatis之缓存/" class="leancloud_visitors" data-flag-title="Mybatis之缓存">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -420,7 +420,7 @@
                    <span class="post-meta-item-text">字数统计</span>
                  
                    <span title="字数统计" }}">
-                     2,546 字
+                     2,185 字
                    </span>
              
              
@@ -434,7 +434,7 @@
                    <span class="post-meta-item-text">阅读时长</span>
                  
                    <span title="阅读时长" }}">
-                     9 分钟
+                     8 分钟
                    </span>
              
            </div>
@@ -456,128 +456,92 @@
       
 
       
-        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>数据库连接池在Java数据库相关中间件产品群中，应该算是最底层最基础的一类产品，作为企业应用开发必不可少的组件，无数开发者们贡献了一个又一个的优秀产品，它们有的随着时代发展，功成身退，有的还在不断迭代，老而弥坚，更有新生代产品，或性能无敌、或功能全面。接下来就聊一聊  “那些年，我们用过的数据库连接池。”<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/index.jpg" algin="center"></div></p>
-<p><a id="more"></a></p>
-<h1 id="第一、二代连接池"><a href="#第一、二代连接池" class="headerlink" title="第一、二代连接池"></a>第一、二代连接池</h1><p>区分一个数据库连接池是属于第一代产品还是代二代产品有一个最重要的特征就是看它在架构和设计时采用的线程模型，因为这直接影响的是并发环境下存取数据库连接的性能。</p>
-<p>一般来讲采用单线程同步的架构设计都属于第一代连接池，二采用多线程异步架构的则属于第二代。比较有代表性的就是Apache Commons DBCP，在1.x版本中，一直延续着单线程设计模式，到2.x才采用多线程模型。</p>
-<p>用版本发布时间来辨别区分两代产品，则一个偷懒的好方法。以下是这些常见数据库连接池最新版本的发布时间：</p>
-<table>
-<thead>
-<tr>
-<th>数据库连接池</th>
-<th>最新版本</th>
-<th>发布时间</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>C3P0</td>
-<td>c3p0-0.9.5.2</td>
-<td>on 9 Dec 2015</td>
-</tr>
-<tr>
-<td>DBCP</td>
-<td>2.2.0</td>
-<td>27 December 2017</td>
-</tr>
-<tr>
-<td>Druid</td>
-<td>0.11.0</td>
-<td>Dec 4 2017</td>
-</tr>
-<tr>
-<td>HikariCP</td>
-<td>2.7.6</td>
-<td>2018-01-14</td>
-</tr>
-</tbody>
-</table>
-<p>从表中可以看出，C3P0已经很久没有更新了。DBCP更新速度很慢，基本处于不活跃状态，而Druid和HikariCP处于活跃状态的更新中，这就是我们说的二代产品了。</p>
-<p>二代产品对一代产品的超越是颠覆性的，除了一些“历史原因”，你很难再找到第二条理由说服自己不选择二代产品，但任何成功都不是偶然的，二代产品的成功很大程度上得益于前代产品们打下的基础，站在巨人的肩膀上，新一代的连接池的设计师们将这一项“工具化”的产品，推向了极致。其中，最具代表性的两款产品是：</p>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>Mybatis中有一级缓存和二级缓存，默认情况下一级缓存是开启的，而且是不能关闭的。一级缓存是指SqlSession级别的缓存，当在同一个SqlSession中进行相同的SQL语句查询时，第二次以后的查询不会从数据库查询，而是直接从缓存中获取，一级缓存最多缓存1024条SQL。二级缓存是指可以跨SqlSession的缓存。<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/cache.png" algin="center"></div><a id="more"></a></p>
+<h1 id="Mybatis缓存"><a href="#Mybatis缓存" class="headerlink" title="Mybatis缓存"></a>Mybatis缓存</h1><p>缓存的意义：将用户经常<strong>查询的数据放在缓存（内存）中</strong>，用户去查询数据就不用从磁盘上(关系型数据库数据文件)查询，从缓存中查询，从而提高查询效率，解决了高并发系统的性能问题。</p>
+<p><strong>Mybatis提供一级缓存和二级缓存</strong></p>
 <ul>
-<li>HikariCP</li>
-<li>Druid</li>
+<li>mybatis一级缓存是一个SqlSession级别，sqlsession只能访问自己的一级缓存的数据。</li>
+<li>二级缓存是跨sqlSession，是mapper级别的缓存，对于mapper级别的缓存不同的sqlsession是可以共享的。</li>
 </ul>
-<h1 id="彻底死掉的C3P0"><a href="#彻底死掉的C3P0" class="headerlink" title="彻底死掉的C3P0"></a>彻底死掉的C3P0</h1><p>C3P0是我使用的第一款数据库连接池，在很长一段时间内，它一直是Java领域内数据库连接池的代名词，当年盛极一时的Hibernate都将其作为内置的数据库连接池，可以业内对它的稳定性还是认可的。C3P0功能简单易用，稳定性好这是它的优点，但是性能上的缺点却让它彻底被打入冷宫。C3P0的性能很差，差到即便是同时代的产品相比它也是垫底的，更不用和Druid、HikariCP等相比了。正常来讲，有问题很正常，改就是了，但c3p0最致命的问题就是架构设计过于复杂，让重构变成了一项不可能完成的任务。随着国内互联网大潮的涌起，性能有硬伤的c3p0彻底的退出了历史舞台。</p>
-<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/1.png" algin="center"><br><br></div>
+<div align="center"><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/cache-index.png" algin="center"></div>
 
-<h1 id="咸鱼翻身的DBCP"><a href="#咸鱼翻身的DBCP" class="headerlink" title="咸鱼翻身的DBCP"></a>咸鱼翻身的DBCP</h1><p>DBCP（DataBase Connection Pool）属于Apache顶级项目Commons中的核心子项目（最早在Jakarta Commons里就有）,在Apache的生态圈中的影响里十分广泛，比如最为大家所熟知的Tomcat就在内部集成了DBCP，实现JPA规范的OpenJPA，也是默认集成DBCP的。但DBCP并不是独立实现连接池功能的，它内部依赖于Commons中的另一个子项目Pool，连接池最核心的“池”，就是由Pool组件提供的，因此，DBCP的性能实际上就是Pool的性能，DBCP和Pool的依赖关系如下表：</p>
-<table>
-<thead>
-<tr>
-<th>Apache Commons DBCP</th>
-<th>Apache Commons Pool</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>v1.2.2</td>
-<td>v1.3</td>
-</tr>
-<tr>
-<td>v1.3</td>
-<td>v1.5.4</td>
-</tr>
-<tr>
-<td>v1.4</td>
-<td>v1.5.4</td>
-</tr>
-<tr>
-<td>v2.0.x</td>
-<td>v2.2</td>
-</tr>
-<tr>
-<td>v2.1.x</td>
-<td>v2.4.2</td>
-</tr>
-<tr>
-<td>v2.2.x</td>
-<td>v2.5.0</td>
-</tr>
-</tbody>
-</table>
-<p>可以看到，因为核心功能依赖于Pool，所以DBCP本身只能做小版本的更新，真正大版本的更迭则完全依托于pool。有很长一段时间，pool都还是停留在1.x版本，这直接导致DBCP也更新乏力。很多依赖DBCP的应用在遇到性能瓶颈之后，别无选择，只能将其替换掉，DBCP忠实的拥趸tomcat就在其tomcat 7.0版本中，自己重新设计开发出了一套连接池（Tomcat JDBC Pool）。好在，在2013年事情终于迎来转机，13年9月Commons-Pool 2.0版本发布，14年2月份，DBCP也终于迎来了自己的2.0版本，基于新的线程模型全新设计的“池”让DBCP重焕青春，虽然和新一代的连接池相比仍有一定差距，但差距并不大，DBCP2.x版本已经稳稳达到了和新一代产品同级别的性能指标（见下图）。</p>
-<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/3.png" algin="center"><br><br></div>
+<h2 id="Mybatis一级缓存"><a href="#Mybatis一级缓存" class="headerlink" title="Mybatis一级缓存"></a>Mybatis一级缓存</h2><p>Mybatis的一级缓存原理：</p>
+<div align="center"><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/cache-first.png" algin="center"></div>
 
-<p>DBCP终于靠Pool咸鱼翻身，打了一个漂亮的翻身仗，但长时间的等待已经完全消磨了用户的耐心，与新一代的产品项目相比，DBCP没有任何优势，试问，谁会在有选择的前提下，去选择那个并不优秀的呢？也许，现在还选择DBCP2的唯一理由，就是情怀吧。</p>
-<h1 id="性能无敌的HikariCP"><a href="#性能无敌的HikariCP" class="headerlink" title="性能无敌的HikariCP"></a>性能无敌的HikariCP</h1><p>HikariCP号称“性能杀手”（It’s Faster），它的表现究竟如何呢，先来看下官网提供的数据：</p>
-<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/4.png" algin="center"><br><br></div>
-
-<p>不光性能强劲，稳定性也不差：</p>
-<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/5.png" algin="center"><br><br></div>
-
-<p>那它是怎么做到如此强劲的呢？官网给出的说明如下：</p>
-<ul>
-<li>字节码精简：优化代码，直到编译后的字节码最少，这样，CPU缓存可以加载更多的程序代码；</li>
-<li>优化代理和拦截器：减少代码，例如HikariCP的Statement proxy只有100行代码；</li>
-<li>自定义数组类型（FastStatementList）代替ArrayList：避免每次get()调用都要进行range check，避免调用remove()时的从头到尾的扫描；</li>
-<li>自定义集合类型（ConcurrentBag）：提高并发读写的效率；</li>
-<li>其他缺陷的优化，比如对于耗时超过一个CPU时间片的方法调用的研究（但没说具体怎么优化）。</li>
-</ul>
-<p>可以看到，上述这几点优化，和现在能找到的资料来看，HakariCP在性能上的优势应该是得到共识的，再加上它自身小巧的身形，在当前的“云时代、微服务”的背景下，HakariCP一定会得到更多人的青睐。</p>
-<h1 id="功能全面的Druid"><a href="#功能全面的Druid" class="headerlink" title="功能全面的Druid"></a>功能全面的Druid</h1><p>近几年，阿里在开源项目上动作频频，除了有像fastJson、dubbo这类项目，更有像AliSQL这类的大型软件，今天说的Druid，就是阿里众多优秀开源项目中的一个。它除了提供性能卓越的连接池功能外，还集成了SQL监控，黑名单拦截等功能，用它自己的话说，Druid是“为监控而生”。借助于阿里这个平台的号召力，产品一经发布就赢得了大批用户的拥趸，从用户使用的反馈来看，Druid也确实没让用户失望。</p>
-<p>相较于其他产品，Druid另一个比较大的优势，就是中文文档比较全面（毕竟是国人的项目么），在github的<a href="https://github.com/alibaba/druid/wiki/%E9%A6%96%E9%A1%B5" target="_blank" rel="external"><em>wiki页面</em></a>，列举了日常使用中可能遇到的问题，对一个新用户来讲，上面提供的内容已经足够指导它完成产品的配置和使用了。</p>
-<p>下图为Druid自己提供的性能测试数据：</p>
-<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-02/dataSource/6.png" algin="center"><br><br></div>
-
-<p>现在项目开发中，我还是比较倾向于使用Durid，它不仅仅是一个数据库连接池，它还包含一个ProxyDriver，一系列内置的JDBC组件库，一个SQL Parser。</p>
-<h2 id="Druid-相对于其他数据库连接池的优点"><a href="#Druid-相对于其他数据库连接池的优点" class="headerlink" title="Druid 相对于其他数据库连接池的优点"></a>Druid 相对于其他数据库连接池的优点</h2><ol>
-<li><p>强大的监控特性，通过Druid提供的监控功能，可以清楚知道连接池和SQL的工作情况。</p>
-<p>a. 监控SQL的执行时间、ResultSet持有时间、返回行数、更新行数、错误次数、错误堆栈信息；</p>
-<p>b. SQL执行的耗时区间分布。什么是耗时区间分布呢？比如说，某个SQL执行了1000次，其中0~1毫秒区间50次，1~10毫秒800次，10~100毫秒100次，100~1000毫秒30次，1~10秒15次，10秒以上5次。通过耗时区间分布，能够非常清楚知道SQL的执行耗时情况；</p>
-<p>c.  监控连接池的物理连接创建和销毁次数、逻辑连接的申请和关闭次数、非空等待次数、PSCache命中率等。</p>
-</li>
-<li><p>方便扩展。Druid提供了Filter-Chain模式的扩展API，可以自己编写Filter拦截JDBC中的任何方法，可以在上面做任何事情，比如说性能监控、SQL审计、用户名密码加密、日志等等。</p>
-</li>
-<li>Druid集合了开源和商业数据库连接池的优秀特性，并结合阿里巴巴大规模苛刻生产环境的使用经验进行优化。</li>
+<p>第一次发出一个查询sql，sql查询结果写入sqlsession的一级缓存中，缓存使用的数据结构是一个map<code>&lt;key,value&gt;</code></p>
+<blockquote>
+<p>key：hashcode + sql + sql输入参数 + 输出参数（sql的唯一标识）</p>
+<p>value：用户信息</p>
+</blockquote>
+<p>同一个sqlsession再次发出相同的sql，就从缓存中取不走数据库。如果两次中间出现commit操作（修改、添加、删除），本sqlsession中的一级缓存区域全部清空，下次再去缓存中查询不到所以要从数据库查询，从数据库查询到再写入缓存。</p>
+<p>Mybatis一级缓存值得注意的地方：</p>
+<ol>
+<li><em>Mybatis默认就是支持一级缓存的，并不需要我们配置。</em></li>
+<li><strong>mybatis和spring整合后进行mapper代理开发，不支持一级缓存，mybatis和spring整合，spring按照mapper的模板去生成mapper代理对象，模板中在最后统一关闭sqlsession</strong>。</li>
 </ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>时至今日，虽然每个应用（需要RDBMS的）都离不开连接池，但在实际使用的时候，连接池已经可以做到“隐形”了。也就是说在通常情况下，连接池完成项目初始化配置之后，就再不需要再做任何改动了。不论你是选择Druid或是HikariCP，甚至是DBCP，它们都足够稳定且高效！之前讨论了很多关于连接池的性能的问题，但这些性能上的差异，是相较于其他连接池而言的，对整个系统应用来说，第二代连接池在使用过程中体会到的差别是微乎其微的，基本上不存在因为连接池的自身的配饰和使用导致系统性能下降的情况，除非是在单点应用的数据库负载足够高的时候（压力测试的时候），但即便是如此，通用的优化的方式也是单点改集群，而不是在单点的连接池上死扣。</p>
-<p><strong>参考</strong></p>
-<ul>
-<li><a href="https://link.jianshu.com/?t=http://blog.csdn.net/hetaohappy/article/details/50462486" target="_blank" rel="external"><em>数据库连接池性能比对</em></a></li>
-<li><a href="https://www.jianshu.com/p/53de4b76f98c" target="_blank" rel="external"><em>大话数据库连接池</em></a></li>
-<li><a href="https://link.jianshu.com/?t=http://blog.csdn.net/whzhaochao/article/details/49559931" target="_blank" rel="external"><em>c3p0,Druid,Tomcat Jdbc Pool,dbcp2,proxool数据源性能比较</em></a></li>
+<h2 id="Mybatis二级缓存"><a href="#Mybatis二级缓存" class="headerlink" title="Mybatis二级缓存"></a>Mybatis二级缓存</h2><p>二级缓存原理：</p>
+<div align="center"><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/cache-2.png" algin="center"></div>
+
+<p><strong>二级缓存的范围是mapper级别（mapper同一个命名空间）</strong>，mapper以命名空间为单位创建缓存数据结构，结构是map<code>&lt;key、value&gt;</code>。</p>
+<h3 id="二级缓存配置"><a href="#二级缓存配置" class="headerlink" title="二级缓存配置"></a>二级缓存配置</h3><p>Mybatis二级缓存需要手动开启，需要在Mybatis的配置文件中配置二级缓存</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 全局配置参数 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></div><div class="line">	<span class="comment">&lt;!-- 开启二级缓存 --&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"cacheEnabled"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>上面已经说了，二级缓存的范围是mapper级别的，因此Mapper如果要使用二级缓存，还需要在对应的映射文件中配置。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">"com.rainbowhorse.test.dao.TestDataDao"</span>&gt;</span></div><div class="line"><span class="comment">&lt;!-- 在mapper中开启二级缓存 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">cache</span>/&gt;</span></div></pre></td></tr></table></figure>
+<p>查询结果映射的pojo序列化</p>
+<p>mybatis二级缓存需要将查询结果映射的pojo实现 java.io.serializable接口，如果不实现则抛出异常：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">org.apache.ibatis.cache.CacheException: Error serializing object.  Cause: java.io.NotSerializableException: com.rainbowhorse.test.po.User</div></pre></td></tr></table></figure>
+<p>二级缓存可以将内存的数据写到磁盘，存在对象的序列化和反序列化，所以要实现java.io.serializable接口。 如果结果映射的pojo中还包括了pojo，都要实现java.io.serializable接口。</p>
+<h3 id="禁用二级缓存"><a href="#禁用二级缓存" class="headerlink" title="禁用二级缓存"></a>禁用二级缓存</h3><p>对于变化频率较高的sql，需要禁用二级缓存：</p>
+<p>在statement中设置useCache=false可以禁用当前select语句的二级缓存，即每次查询都会发出sql去查询，默认情况是true，即该sql使用二级缓存。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"findOrderListResultMap"</span> <span class="attr">resultMap</span>=<span class="string">"ordersUserMap"</span> <span class="attr">useCache</span>=<span class="string">"false"</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="刷新缓存"><a href="#刷新缓存" class="headerlink" title="刷新缓存"></a>刷新缓存</h3><p>我们的缓存都是在查询语句中配置，而使用增删改的时候，缓存默认就会被清空【刷新了】。缓存其实就是为我们的查询服务的，对于增删改而言，如果我们的缓存保存了增删改后的数据，那么再次读取时就会读到脏数据了！</p>
+<p>我们在特定的情况下，还可以单独配置刷新缓存【但不建议使用】flushCache，默认是的true。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">update</span> <span class="attr">id</span>=<span class="string">"updateUser"</span> <span class="attr">parameterType</span>=<span class="string">"cn.itcast.mybatis.po.User"</span> <span class="attr">flushCache</span>=<span class="string">"false"</span>&gt;</span></div><div class="line">		update user set username=#&#123;username&#125;,birthday=#&#123;birthday&#125;,sex=#&#123;sex&#125;,address=#&#123;address&#125; where id=#&#123;id&#125;</div><div class="line">	<span class="tag">&lt;/<span class="name">update</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="缓存参数"><a href="#缓存参数" class="headerlink" title="缓存参数"></a>缓存参数</h3><p><strong>mybatis的cache参数只适用于mybatis维护缓存。</strong></p>
+<blockquote>
+<p>flushInterval（刷新间隔）可以被设置为任意的正整数，而且它们代表一个合理的毫秒形式的时间段。默认情况是不设置，也就是没有刷新间隔，缓存仅仅调用语句时刷新。<br>size（引用数目）可以被设置为任意正整数，要记住你缓存的对象数目和你运行环境的可用内存资源数目。默认值是1024。<br>readOnly（只读）属性可以被设置为true或false。只读的缓存会给所有调用者返回缓存对象的相同实例。因此这些对象不能被修改。这提供了很重要的性能优势。可读写的缓存会返回缓存对象的拷贝（通过序列化）。这会慢一些，但是安全，因此默认是false。</p>
+</blockquote>
+<p>如下例子：<br><code>&lt;cache  eviction=&quot;FIFO&quot;  flushInterval=&quot;60000&quot;  size=&quot;512&quot;  readOnly=&quot;true&quot;/&gt;</code><br>这个更高级的配置创建了一个 FIFO 缓存,并每隔 60 秒刷新,存数结果对象或列表的 512 个引用,而且返回的对象被认为是只读的,因此在不同线程中的调用者之间修改它们会导致冲突。可用的收回策略有, 默认的是 LRU:</p>
+<ol>
+<li>LRU – 最近最少使用的:移除最长时间不被使用的对象。</li>
+<li>FIFO – 先进先出:按对象进入缓存的顺序来移除它们。</li>
+<li>SOFT – 软引用:移除基于垃圾回收器状态和软引用规则的对象。</li>
+<li>WEAK – 弱引用:更积极地移除基于垃圾收集器状态和弱引用规则的对象。</li>
+</ol>
+<h1 id="Mybatis和Ehcache整合"><a href="#Mybatis和Ehcache整合" class="headerlink" title="Mybatis和Ehcache整合"></a>Mybatis和Ehcache整合</h1><p><strong>Ehcache是专门用于管理缓存的，Mybatis的缓存交由ehcache管理会更加得当。在mybatis中提供一个cache接口，只要实现cache接口就可以把缓存数据灵活的管理起来</strong>。</p>
+<div align="center"><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/ehcache.png" algin="center"></div>
+
+<h2 id="整合jar包"><a href="#整合jar包" class="headerlink" title="整合jar包"></a>整合jar包</h2><ul>
+<li>mybatis-ehcache-1.0.2.jar</li>
+<li>ehcache-core-2.6.5.jar</li>
 </ul>
+<p>Ehcache对cache接口的实现类：</p>
+<div align="center"><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/ehcachecache.png" algin="center"></div>
+
+<h2 id="ehcache-xml配置信息"><a href="#ehcache-xml配置信息" class="headerlink" title="ehcache.xml配置信息"></a>ehcache.xml配置信息</h2><p>这个xml配置文件是配置<strong>全局的缓存管理方案</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">ehcache</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></div><div class="line">	<span class="attr">xsi:noNamespaceSchemaLocation</span>=<span class="string">"../config/ehcache.xsd"</span>&gt;</div><div class="line">	<span class="comment">&lt;!--diskStore：缓存数据持久化的目录 地址  --&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">diskStore</span> <span class="attr">path</span>=<span class="string">"F:\develop\ehcache"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">defaultCache</span> </span></div><div class="line">		<span class="attr">maxElementsInMemory</span>=<span class="string">"1000"</span> </div><div class="line">		<span class="attr">maxElementsOnDisk</span>=<span class="string">"10000000"</span></div><div class="line">		<span class="attr">eternal</span>=<span class="string">"false"</span> </div><div class="line">		<span class="attr">overflowToDisk</span>=<span class="string">"false"</span> </div><div class="line">		<span class="attr">diskPersistent</span>=<span class="string">"true"</span></div><div class="line">		<span class="attr">timeToIdleSeconds</span>=<span class="string">"120"</span></div><div class="line">		<span class="attr">timeToLiveSeconds</span>=<span class="string">"120"</span> </div><div class="line">		<span class="attr">diskExpiryThreadIntervalSeconds</span>=<span class="string">"120"</span></div><div class="line">		<span class="attr">memoryStoreEvictionPolicy</span>=<span class="string">"LRU"</span>&gt;</div><div class="line">	<span class="tag">&lt;/<span class="name">defaultCache</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">ehcache</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>如果我们Mapper想单独拥有一些特性，需要在mapper.xml中单独配置</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 单位：毫秒 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">cache</span> <span class="attr">type</span>=<span class="string">"org.mybatis.caches.ehcache.EhcacheCache"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"timeToIdleSeconds"</span> <span class="attr">value</span>=<span class="string">"12000"</span>/&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"timeToLiveSeconds"</span> <span class="attr">value</span>=<span class="string">"3600"</span>/&gt;</span></div><div class="line">	<span class="comment">&lt;!-- 同ehcache参数maxElementsInMemory --&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"maxEntriesLocalHeap"</span> <span class="attr">value</span>=<span class="string">"1000"</span>/&gt;</span></div><div class="line">	<span class="comment">&lt;!-- 同ehcache参数maxElementsOnDisk --&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"maxEntriesLocalDisk"</span> <span class="attr">value</span>=<span class="string">"10000000"</span>/&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"memoryStoreEvictionPolicy"</span> <span class="attr">value</span>=<span class="string">"LRU"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">cache</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="应用场景与局限性"><a href="#应用场景与局限性" class="headerlink" title="应用场景与局限性"></a>应用场景与局限性</h2><h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><ul>
+<li><strong>对查询频率高，变化频率低的数据建议使用二级缓存。</strong></li>
+</ul>
+<ul>
+<li>对于<strong>访问多的查询请求且用户对查询结果实时性要求不高</strong>，此时可采用mybatis二级缓存技术降低数据库访问量，提高访问速度。</li>
+</ul>
+<p>业务场景比如：</p>
+<ul>
+<li>耗时较高的统计分析sql</li>
+<li>电话账单查询sql等。</li>
+</ul>
+<p>实现方法如下：<strong>通过设置刷新间隔时间，由mybatis每隔一段时间自动清空缓存，根据数据变化频率设置缓存刷新间隔flushInterval</strong>，比如设置为30分钟、60分钟、24小时等，根据需求而定。</p>
+<h3 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h3><p>mybatis二级缓存对细粒度的数据级别的缓存实现不好，比如如下需求：对商品信息进行缓存，由于商品信息查询访问量大，但是要求用户每次都能查询最新的商品信息，此时如果使用mybatis的二级缓存就无法实现当一个商品变化时只刷新该商品的缓存信息而不刷新其它商品的信息，<strong>因为mybaits的二级缓存区域以mapper为单位划分，当一个商品信息变化会将所有商品信息的缓存数据全部清空</strong>。解决此类问题需要在业务层根据需求对数据有针对性缓存。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li>Mybatis的一级缓存是SqlSession级别的。只能访问自己的sqlSession内的缓存。如果Mybatis与Spring整合了，Spring会自动关闭sqlSession的。所以一级缓存会失效。</li>
+<li>一级缓存的原理是map集合，Mybatis默认就支持一级缓存。</li>
+<li><strong>二级缓存是Mapper级别的。只要在Mapper namespace下都可以使用二级缓存。需要自己手动去配置二级缓存。</strong></li>
+<li>Mybatis的缓存我们可以使用Ehcache框架来进行管理，Ehcache实现Cache接口就代表使用Ehcache来环境Mybatis缓存。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://juejin.im/post/5aa655d6518825556020924e#comment" target="_blank" rel="external"><strong><em>Mybatis【逆向工程，缓存，代理】知识要点</em></strong></a></p>
 
       
     </div>
@@ -633,9 +597,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/tips/" rel="tag"><i class="fa fa-tag"></i> tips</a>
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
           
-            <a href="/tags/tool/" rel="tag"><i class="fa fa-tag"></i> tool</a>
+            <a href="/tags/mybatis/" rel="tag"><i class="fa fa-tag"></i> mybatis</a>
           
         </div>
       
@@ -648,18 +612,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/03/07/Sping定时任务/" rel="next" title="Sping定时任务">
-                <i class="fa fa-chevron-left"></i> Sping定时任务
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/01/24/Nginx配置文件详解/" rel="prev" title="Nginx配置文件详解">
-                Nginx配置文件详解 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/03/17/线程池之ThreadPoolExecutor/" rel="prev" title="线程池之ThreadPoolExecutor">
+                线程池之ThreadPoolExecutor <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -848,7 +808,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第一、二代连接池"><span class="nav-number">2.</span> <span class="nav-text">第一、二代连接池</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#彻底死掉的C3P0"><span class="nav-number">3.</span> <span class="nav-text">彻底死掉的C3P0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#咸鱼翻身的DBCP"><span class="nav-number">4.</span> <span class="nav-text">咸鱼翻身的DBCP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#性能无敌的HikariCP"><span class="nav-number">5.</span> <span class="nav-text">性能无敌的HikariCP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#功能全面的Druid"><span class="nav-number">6.</span> <span class="nav-text">功能全面的Druid</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Druid-相对于其他数据库连接池的优点"><span class="nav-number">6.1.</span> <span class="nav-text">Druid 相对于其他数据库连接池的优点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mybatis缓存"><span class="nav-number">2.</span> <span class="nav-text">Mybatis缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Mybatis一级缓存"><span class="nav-number">2.1.</span> <span class="nav-text">Mybatis一级缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mybatis二级缓存"><span class="nav-number">2.2.</span> <span class="nav-text">Mybatis二级缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二级缓存配置"><span class="nav-number">2.2.1.</span> <span class="nav-text">二级缓存配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#禁用二级缓存"><span class="nav-number">2.2.2.</span> <span class="nav-text">禁用二级缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#刷新缓存"><span class="nav-number">2.2.3.</span> <span class="nav-text">刷新缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存参数"><span class="nav-number">2.2.4.</span> <span class="nav-text">缓存参数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mybatis和Ehcache整合"><span class="nav-number">3.</span> <span class="nav-text">Mybatis和Ehcache整合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#整合jar包"><span class="nav-number">3.1.</span> <span class="nav-text">整合jar包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ehcache-xml配置信息"><span class="nav-number">3.2.</span> <span class="nav-text">ehcache.xml配置信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用场景与局限性"><span class="nav-number">3.3.</span> <span class="nav-text">应用场景与局限性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#应用场景"><span class="nav-number">3.3.1.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#局限性"><span class="nav-number">3.3.2.</span> <span class="nav-text">局限性</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.1.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
             
 
           </div>
