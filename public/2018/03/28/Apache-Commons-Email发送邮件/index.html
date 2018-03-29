@@ -1,0 +1,1214 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java,tips," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引言使用Apache-Commons-Email发送邮件">
+<meta name="keywords" content="java,tips">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache-Commons-Email发送邮件">
+<meta property="og:url" content="https://sunny0715.github.io/2018/03/28/Apache-Commons-Email发送邮件/index.html">
+<meta property="og:site_name" content="rainbowhorse's blog">
+<meta property="og:description" content="引言使用Apache-Commons-Email发送邮件">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-3/java-email/index.jpg">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-3/java-email/QQ-1.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-3/java-email/QQ-2.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-3/java-email/QQ-Exception.png">
+<meta property="og:updated_time" content="2018-03-28T11:30:19.408Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Apache-Commons-Email发送邮件">
+<meta name="twitter:description" content="引言使用Apache-Commons-Email发送邮件">
+<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2018-3/java-email/index.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":true},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '3891674546',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sunny0715.github.io/2018/03/28/Apache-Commons-Email发送邮件/"/>
+
+
+
+
+
+  <title> Apache-Commons-Email发送邮件 | rainbowhorse's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?84a33ad5473913bd89d3c06ab19ae7fc";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rainbowhorse's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">不忘初心 方得始终</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2018/03/28/Apache-Commons-Email发送邮件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rainbowhorse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://on937g0jc.bkt.clouddn.com/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rainbowhorse's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Apache-Commons-Email发送邮件
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-28T18:18:13+08:00">
+                2018-03-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/technology/" itemprop="url" rel="index">
+                    <span itemprop="name">technology</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/03/28/Apache-Commons-Email发送邮件/" class="leancloud_visitors" data-flag-title="Apache-Commons-Email发送邮件">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+		  
+		  
+           <div class="post-wordcount">
+             
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-edit"></i>
+               </span>
+                 
+                   <span class="post-meta-item-text">字数统计</span>
+                 
+                   <span title="字数统计" }}">
+                     2,454 字
+                   </span>
+             
+             
+               <span class="post-meta-divider">|</span>
+             
+             
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-clock-o"></i>
+               </span>
+                 
+                   <span class="post-meta-item-text">阅读时长</span>
+                 
+                   <span title="阅读时长" }}">
+                     11 分钟
+                   </span>
+             
+           </div>
+         
+		  
+		  
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>使用Apache-Commons-Email发送邮件</p>
+<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-3/java-email/index.jpg" algin="center"></div>
+
+<a id="more"></a>
+<h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><p>Maven的pom.xml 文件中引入依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.commons<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-email<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+<h1 id="一个简单的纯文本邮件"><a href="#一个简单的纯文本邮件" class="headerlink" title="一个简单的纯文本邮件"></a>一个简单的纯文本邮件</h1><h2 id="HTTP模式下"><a href="#HTTP模式下" class="headerlink" title="HTTP模式下"></a>HTTP模式下</h2><p>第一个例子是创建一个简单的email。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.apache.commons.mail.EmailException;</div><div class="line"><span class="keyword">import</span> org.apache.commons.mail.SimpleEmail;</div><div class="line"><span class="comment">/**</span></div><div class="line">* 类名: TestSimpleEmail.java &lt;br/&gt;</div><div class="line">* 详细描述: 一个简单的纯文本邮件   &lt;br/&gt;</div><div class="line">* 发布版本： V1.0  &lt;br/&gt;</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestSimpleEmail</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">		   SimpleEmail email = <span class="keyword">new</span> SimpleEmail();</div><div class="line">	        <span class="comment">//设置发送主机的服务器地址(如果不设置，默认是"mail.host")</span></div><div class="line">	        email.setHostName (<span class="string">"smtp.163.com"</span>);</div><div class="line">        	<span class="comment">// 开启debug模式</span></div><div class="line">        	email.setDebug(<span class="keyword">true</span>);</div><div class="line">	        <span class="comment">//设置端口号</span></div><div class="line">	        email.setSmtpPort(<span class="number">25</span>);<span class="comment">//默认也是25</span></div><div class="line">	        <span class="comment">//如果要求身份验证，设置用户名、密码，分别为发件人在邮件服务器上注册的用户名和密码</span></div><div class="line">	        email.setAuthentication ( <span class="string">"from@163.com"</span>, <span class="string">"password"</span> );</div><div class="line">	        <span class="keyword">try</span> &#123;</div><div class="line">	        	<span class="comment">//设置收件人邮箱以及名称</span></div><div class="line">	        	email.addTo (<span class="string">"to@qq.com"</span>, <span class="string">"收件人名称"</span>);</div><div class="line">	        	<span class="comment">//发件人邮箱以及名称</span></div><div class="line">		        <span class="comment">//email.setFrom ("from@163.com", "发件人名称");</span></div><div class="line">	        	<span class="comment">//发件人邮箱以及名称，邮件编码格式</span></div><div class="line">		        email.setFrom(<span class="string">"from@163.com"</span>, <span class="string">"发件人名称"</span>, <span class="string">"UTF-8"</span>);</div><div class="line">		        <span class="comment">//设置邮件的主题</span></div><div class="line">		        email.setSubject (<span class="string">"这是邮件主题内容"</span>);</div><div class="line">		        <span class="comment">//邮件正文消息</span></div><div class="line">		        email.setMsg (<span class="string">"这是邮件内容！"</span>);</div><div class="line">		        <span class="comment">// 发送</span></div><div class="line">		        email.send ();</div><div class="line">		        System.out.println (<span class="string">"Send email successful!"</span>);</div><div class="line">			&#125; <span class="keyword">catch</span> (EmailException e) &#123;</div><div class="line">				e.printStackTrace();</div><div class="line">			&#125;       </div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果遇到乱码情况可以通过以下方案解决：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//设置主题的字符集为UTF-8</span></div><div class="line">email.setCharset(<span class="string">"UTF-8"</span>);</div><div class="line"><span class="comment">//设置内容的字符集为UTF-8,先buildMimeMessage才能设置内容文本</span></div><div class="line">email.getMimeMessage().setText(<span class="string">"测试邮件内容"</span>,<span class="string">"UTF-8"</span>);</div></pre></td></tr></table></figure>
+<h2 id="开启了HTTPS"><a href="#开启了HTTPS" class="headerlink" title="开启了HTTPS"></a>开启了HTTPS</h2><p>需要添加ssl端口，以及开启SSLOnConnect。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.apache.commons.mail.EmailException;</div><div class="line"><span class="keyword">import</span> org.apache.commons.mail.SimpleEmail;</div><div class="line"><span class="comment">/**</span></div><div class="line">* 类名: TestSimpleSSLEmail.java &lt;br/&gt;</div><div class="line">* 详细描述: 一个简单的纯文本邮件 --开启了https的情况下   &lt;br/&gt;</div><div class="line">* 发布版本： V1.0  &lt;br/&gt;</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestSimpleSSLEmail</span> </span>&#123;</div><div class="line"> </div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"> </div><div class="line">		    SimpleEmail email = <span class="keyword">new</span> SimpleEmail ();</div><div class="line">	        <span class="comment">// smtp host</span></div><div class="line">	        email.setHostName (<span class="string">"smtp.qq.com"</span>);</div><div class="line">	        <span class="comment">//端口号</span></div><div class="line">	        email.setSslSmtpPort(<span class="string">"465"</span>);</div><div class="line">	        <span class="comment">// 登陆邮件服务器的用户名和密码</span></div><div class="line">	        email.setAuthentication (<span class="string">"from@qq.com"</span>, <span class="string">"password"</span>);<span class="comment">//注意qq邮箱需要授权，在设置那里生成一个随机码，然后填写到密码框。</span></div><div class="line">	        <span class="comment">// 接收人</span></div><div class="line">	        email.setSSLOnConnect(<span class="keyword">true</span>);</div><div class="line">	        <span class="keyword">try</span> &#123;</div><div class="line">	        	<span class="comment">//设置收件人邮箱以及名称</span></div><div class="line">				email.addTo (<span class="string">"to@qq.com"</span>, <span class="string">"to"</span>);</div><div class="line">				<span class="comment">// 发送人</span></div><div class="line">		        <span class="comment">//email.setFrom ("from@163.com", "from");</span></div><div class="line">		        email.setFrom(<span class="string">"from@qq.com"</span>, <span class="string">"from"</span>, <span class="string">"UTF-8"</span>);</div><div class="line">		        <span class="comment">//设置邮件的主题</span></div><div class="line">		        email.setSubject (<span class="string">"这是邮件主题内容"</span>);</div><div class="line">		        <span class="comment">//邮件正文消息</span></div><div class="line">		        email.setMsg (<span class="string">"这是邮件内容！--一个简单的纯文本邮件 --开启了https的情况下  "</span>);</div><div class="line">		        <span class="comment">// 发送</span></div><div class="line">		        email.send ();</div><div class="line">		        System.out.println (<span class="string">"Send email successful!"</span>);</div><div class="line">			&#125; <span class="keyword">catch</span> (EmailException e) &#123;</div><div class="line">				e.printStackTrace();</div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>特别要注意的是qq邮箱进行了加密，所以需要到qq账户设置里面拿到开启stmp发信客户端的密码。</p>
+<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-3/java-email/QQ-1.png" algin="center"></div>
+
+<div align="center"><img width="500" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-3/java-email/QQ-2.png" algin="center"></div>
+
+<p>取到一串字符串，然后填写到密码处。不然会报以下的错误。而不是填写QQ账号密码到密码认证处。详细也可以参照<a href="http://service.mail.qq.com/cgi-bin/help?subtype=1&amp;&amp;id=28&amp;&amp;no=331" target="_blank" rel="external"><strong><em>QQ客户端说明文档</em></strong></a>。</p>
+<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-3/java-email/QQ-Exception.png" algin="center"></div>
+
+<h1 id="发送带附件的邮件"><a href="#发送带附件的邮件" class="headerlink" title="发送带附件的邮件"></a>发送带附件的邮件</h1><p>发送带附件的邮件得用MultiPartEmail 类来给邮件添加附件。除过覆盖attach()方法来给邮件添加附件外，这个类就和SimpleEmail类差不多。对于内联或是加入附件的个数是没有限制的。但附件必须是MIME编码。最简单的添加附件的方式是用 EmailAttachment类。</p>
+<h2 id="本地附件"><a href="#本地附件" class="headerlink" title="本地附件"></a>本地附件</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.apache.commons.mail.EmailAttachment;</div><div class="line"><span class="keyword">import</span> org.apache.commons.mail.EmailException;</div><div class="line"><span class="keyword">import</span> org.apache.commons.mail.MultiPartEmail;</div><div class="line"><span class="comment">/**</span></div><div class="line">* 类名: TestEmailAttachment.java &lt;br/&gt;</div><div class="line">* 详细描述:发送带附件的邮件--读取本地路径的文件  &lt;br/&gt;</div><div class="line">* 发布版本： V1.0  &lt;br/&gt;</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestEmailAttachment</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		</div><div class="line">		  <span class="comment">// 创建一个Email附件</span></div><div class="line">		  EmailAttachment attachment = <span class="keyword">new</span> EmailAttachment();</div><div class="line">           <span class="comment">// 本地资源需要存在</span></div><div class="line">		  attachment.setPath(<span class="string">"E:\\qrcode.jpg"</span>);</div><div class="line">		  attachment.setDisposition(EmailAttachment.ATTACHMENT);</div><div class="line">		  attachment.setDescription(<span class="string">"图片"</span>);</div><div class="line">           <span class="comment">// 自定义文件名，并且格式要一致，不然附近收到的话，有可能读不出来。</span></div><div class="line">		  attachment.setName(<span class="string">"qrcode.jpg"</span>);</div><div class="line">		 </div><div class="line">		  <span class="comment">// Create the email message</span></div><div class="line">		  MultiPartEmail email = <span class="keyword">new</span> MultiPartEmail();</div><div class="line">		  <span class="comment">// smtp host</span></div><div class="line">	      email.setHostName (<span class="string">"smtp.163.com"</span>);</div><div class="line">	      <span class="comment">//设置端口号</span></div><div class="line">	      email.setSmtpPort(<span class="number">25</span>);<span class="comment">//默认也是25</span></div><div class="line">	      <span class="comment">// 登陆邮件服务器的用户名和密码</span></div><div class="line">	      email.setAuthentication (<span class="string">"from@163.com"</span>,<span class="string">"password"</span>);</div><div class="line">		  <span class="keyword">try</span> &#123;</div><div class="line">                <span class="comment">//设置收件人邮箱以及名称</span></div><div class="line">                email.addTo (<span class="string">"to@qq.com"</span>, <span class="string">"收件人名称"</span>);</div><div class="line">                <span class="comment">//发件人邮箱以及名称</span></div><div class="line">                <span class="comment">//email.setFrom ("from@163.com", "发件人名称");</span></div><div class="line">                <span class="comment">//发件人邮箱以及名称，邮件编码格式</span></div><div class="line">                email.setFrom(<span class="string">"from@163.com"</span>, <span class="string">"发件人名称"</span>, <span class="string">"UTF-8"</span>);</div><div class="line">                <span class="comment">//设置邮件的主题</span></div><div class="line">                email.setSubject (<span class="string">"这是邮件主题内容"</span>);</div><div class="line">                <span class="comment">//邮件正文消息</span></div><div class="line">                email.setMsg (<span class="string">"这是邮件内容！"</span>);</div><div class="line"></div><div class="line">                <span class="comment">// add the attachment</span></div><div class="line">                email.attach(attachment);</div><div class="line">                <span class="comment">// send the email</span></div><div class="line">                email.send();</div><div class="line">                System.out.println (<span class="string">"Send email successful!"</span>);</div><div class="line">		&#125; <span class="keyword">catch</span> (EmailException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;	  </div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="远程附件"><a href="#远程附件" class="headerlink" title="远程附件"></a>远程附件</h2><p>如果没有本地文件，可以用 EmailAttachment 添加任何可用的URL。当邮件发送后，文件会自动加载并加入到邮件内容。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.net.MalformedURLException;</div><div class="line"><span class="keyword">import</span> java.net.URL;</div><div class="line"> </div><div class="line"><span class="keyword">import</span> org.apache.commons.mail.EmailAttachment;</div><div class="line"><span class="keyword">import</span> org.apache.commons.mail.EmailException;</div><div class="line"><span class="keyword">import</span> org.apache.commons.mail.MultiPartEmail;</div><div class="line"><span class="comment">/**</span></div><div class="line">* 类名: TestEmailAttachment.java &lt;br/&gt;</div><div class="line">* 详细描述:发送带附件的邮件--读取本地路径的文件  &lt;br/&gt;</div><div class="line">* 发布版本： V1.0  &lt;br/&gt;</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestEmailAttachment2</span> </span>&#123;</div><div class="line"> </div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> MalformedURLException </span>&#123;</div><div class="line">		</div><div class="line">		  <span class="comment">// 创建一个Email附件</span></div><div class="line">		  EmailAttachment attachment = <span class="keyword">new</span> EmailAttachment();</div><div class="line">		  attachment.setURL(<span class="keyword">new</span> URL(<span class="string">"http://www.apache.org/images/asf_logo_wide.gif"</span>));</div><div class="line">		  attachment.setDisposition(EmailAttachment.ATTACHMENT);</div><div class="line">		  attachment.setDescription(<span class="string">"Apache logo"</span>);</div><div class="line">           <span class="comment">// 自定义文件名，并且格式要一致，不然附近收到的话，有可能读不出来</span></div><div class="line">		  attachment.setName(<span class="string">"asf_logo_wide.gif"</span>);</div><div class="line">		 </div><div class="line">		  <span class="comment">// Create the email message</span></div><div class="line">		  MultiPartEmail email = <span class="keyword">new</span> MultiPartEmail();</div><div class="line">		  <span class="comment">// smtp host</span></div><div class="line">	      email.setHostName (<span class="string">"smtp.163.com"</span>);</div><div class="line">	      <span class="comment">//设置端口号(默认25)</span></div><div class="line">	      email.setSmtpPort(<span class="number">25</span>);</div><div class="line">	      <span class="comment">// 登陆邮件服务器的用户名和密码</span></div><div class="line">	      email.setAuthentication (<span class="string">"from@163.com"</span>,<span class="string">"password"</span>);</div><div class="line">		  </div><div class="line">		  <span class="keyword">try</span> &#123;</div><div class="line">                <span class="comment">// 设置收件人邮箱以及名称</span></div><div class="line">                email.addTo (<span class="string">"to@qq.com"</span>, <span class="string">"收件人名称"</span>);</div><div class="line">                <span class="comment">// 发件人邮箱以及名称</span></div><div class="line">                <span class="comment">// email.setFrom ("from@163.com", "发件人名称");</span></div><div class="line">                <span class="comment">// 发件人邮箱以及名称，邮件编码格式</span></div><div class="line">                email.setFrom(<span class="string">"from@163.com"</span>, <span class="string">"发件人名称"</span>, <span class="string">"UTF-8"</span>);</div><div class="line">                <span class="comment">// 设置邮件的主题</span></div><div class="line">                email.setSubject (<span class="string">"这是邮件主题内容"</span>);</div><div class="line">                <span class="comment">// 邮件正文消息</span></div><div class="line">                email.setMsg (<span class="string">"这是邮件内容！"</span>);</div><div class="line"></div><div class="line">                <span class="comment">// 添加附件</span></div><div class="line">                email.attach(attachment);</div><div class="line">                <span class="comment">// 发送邮件</span></div><div class="line">                email.send();</div><div class="line">                System.out.println (<span class="string">"Send email successful!"</span>);</div><div class="line">		&#125; <span class="keyword">catch</span> (EmailException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;	  </div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="发送带HTML格式的邮件"><a href="#发送带HTML格式的邮件" class="headerlink" title="发送带HTML格式的邮件"></a>发送带HTML格式的邮件</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.net.MalformedURLException;</div><div class="line"><span class="keyword">import</span> java.net.URL;</div><div class="line"> </div><div class="line"><span class="keyword">import</span> org.apache.commons.mail.EmailException;</div><div class="line"><span class="keyword">import</span> org.apache.commons.mail.HtmlEmail;</div><div class="line"><span class="comment">/**</span></div><div class="line">* 类名: TestHtmlEmail.java &lt;br/&gt;</div><div class="line">* 详细描述: 发送带HTML格式的邮件&lt;br/&gt;</div><div class="line">* 发布版本： V1.0  &lt;br/&gt;</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestHtmlEmail</span> </span>&#123;</div><div class="line"> </div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="comment">// 创建HTML邮件</span></div><div class="line">		HtmlEmail email = <span class="keyword">new</span> HtmlEmail();</div><div class="line">	    <span class="comment">// 设置发送主机的服务器地址</span></div><div class="line">        email.setHostName (<span class="string">"smtp.163.com"</span>);</div><div class="line">        <span class="comment">// 设置端口号(默认25)</span></div><div class="line">        email.setSmtpPort(<span class="number">25</span>);</div><div class="line">        <span class="comment">// 如果要求身份验证，设置用户名、密码，分别为发件人在邮件服务器上注册的用户名和密码</span></div><div class="line">        email.setAuthentication (<span class="string">"from@163.com"</span>, <span class="string">"password"</span> );</div><div class="line">		  <span class="keyword">try</span> &#123;</div><div class="line">			  URL url = <span class="keyword">new</span> URL(<span class="string">"http://www.apache.org/images/asf_logo_wide.gif"</span>);</div><div class="line">			  String cid = email.embed(url, <span class="string">"Apache logo"</span>);</div><div class="line">			  </div><div class="line">			  <span class="comment">//设置收件人邮箱以及名称</span></div><div class="line">	          email.addTo (<span class="string">"to@qq.com"</span>, <span class="string">"收件人名称"</span>);</div><div class="line">	          <span class="comment">//发件人邮箱以及名称</span></div><div class="line">		      <span class="comment">//email.setFrom ("from@163.com", "发件人名称");</span></div><div class="line">	          <span class="comment">//发件人邮箱以及名称，邮件编码格式</span></div><div class="line">		      email.setFrom(<span class="string">"from@163.com"</span>, <span class="string">"发件人名称"</span>, <span class="string">"UTF-8"</span>);</div><div class="line">		      <span class="comment">//设置邮件的主题</span></div><div class="line">		      email.setSubject (<span class="string">"这是邮件主题内容-发送带HTML格式的邮件"</span>);</div><div class="line">			 </div><div class="line">		      <span class="comment">// HTML信息</span></div><div class="line">			  email.setHtmlMsg(<span class="string">"&lt;html&gt;The apache logo - &lt;img src=\"cid:"</span> + cid + <span class="string">"\"&gt;&lt;/html&gt;"</span>);</div><div class="line">			  <span class="comment">// set the alternative message</span></div><div class="line">			  email.setTextMsg(<span class="string">"Your email client does not support HTML messages"</span>);</div><div class="line">			  <span class="comment">// 发送邮件</span></div><div class="line">			  email.send();</div><div class="line">			  System.out.println (<span class="string">"Send email successful!"</span>);</div><div class="line">		&#125; <span class="keyword">catch</span> (EmailException | MalformedURLException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注意：</p>
+<ul>
+<li>embed()方法返回一个字符串。该字符串是一个随机生成的标识符，必须在图像标记中引用图像的图像。</li>
+<li>没有调用setmsg()这个例子。因为如果HTML内容里有内联图片的话，这个方法是不能用的。这样我们可以用setHtmlMsg和setTextMsg方法。</li>
+</ul>
+<h1 id="发送带嵌入图片的HTML文本"><a href="#发送带嵌入图片的HTML文本" class="headerlink" title="发送带嵌入图片的HTML文本"></a>发送带嵌入图片的HTML文本</h1><p>前面说的是创建带嵌入图片的HTML邮件，但是用HTML邮件模板来处理图片是很麻烦的。ImageHtmlEmail类能解决这个问题，它能很方便的将所有外部图片转化为内联图片。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.net.MalformedURLException;</div><div class="line"><span class="keyword">import</span> java.net.URL;</div><div class="line"><span class="keyword">import</span> org.apache.commons.mail.EmailException;</div><div class="line"><span class="keyword">import</span> org.apache.commons.mail.ImageHtmlEmail;</div><div class="line"><span class="keyword">import</span> org.apache.commons.mail.resolver.DataSourceUrlResolver;</div><div class="line"> </div><div class="line"><span class="comment">/**</span></div><div class="line">* 类名: TestHtmlEmail.java &lt;br/&gt;</div><div class="line">* 详细描述: 发送带HTML格式的邮件--嵌入图片的HTML文本 &lt;br/&gt;</div><div class="line">* 发布版本： V1.0  &lt;br/&gt;</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestHtmlEmail2</span> </span>&#123;</div><div class="line"> </div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"> </div><div class="line">		<span class="comment">// create the email message</span></div><div class="line">	    ImageHtmlEmail email = <span class="keyword">new</span> ImageHtmlEmail();</div><div class="line">		<span class="comment">// 设置发送主机的服务器地址</span></div><div class="line">	    email.setHostName (<span class="string">"smtp.163.com"</span>);</div><div class="line">	    <span class="comment">// 设置端口号(默认25)</span></div><div class="line">        email.setSmtpPort(<span class="number">25</span>);</div><div class="line">        <span class="comment">// 如果要求身份验证，设置用户名、密码，分别为发件人在邮件服务器上注册的用户名和密码</span></div><div class="line">        email.setAuthentication ( <span class="string">"from@163.com"</span>, <span class="string">"password"</span> );</div><div class="line">		<span class="comment">// load your HTML email template</span></div><div class="line">		 String htmlEmailTemplate = <span class="string">"嵌入图片的HTML文本:&lt;img src=\"http://www.apache.org/images/feather.gif\"&gt; ...."</span>;</div><div class="line"> </div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			URL url = <span class="keyword">new</span> URL(<span class="string">"http://www.apache.org"</span>);</div><div class="line">			email.setDataSourceResolver(<span class="keyword">new</span> DataSourceUrlResolver(url));</div><div class="line">			<span class="comment">// 设置收件人邮箱以及名称</span></div><div class="line">			email.addTo(<span class="string">"to@sina.com"</span>, <span class="string">"收件人名称"</span>);</div><div class="line">			<span class="comment">// 发件人邮箱以及名称</span></div><div class="line">			<span class="comment">// 发件人邮箱以及名称，邮件编码格式</span></div><div class="line">			email.setFrom(<span class="string">"from@qq.com"</span>, <span class="string">"发件人名称"</span>, <span class="string">"UTF-8"</span>);</div><div class="line">			<span class="comment">// 设置邮件的主题</span></div><div class="line">			email.setSubject(<span class="string">"这是邮件主题内容"</span>);</div><div class="line"></div><div class="line">			<span class="comment">// set the html message</span></div><div class="line">			email.setHtmlMsg(htmlEmailTemplate);</div><div class="line">			email.setCharset(<span class="string">"UTF-8"</span>);</div><div class="line"></div><div class="line">			<span class="comment">// set the alternative message</span></div><div class="line">			email.setTextMsg(<span class="string">"Your email client does not support HTML messages"</span>);</div><div class="line"></div><div class="line">			<span class="comment">// 发送邮件</span></div><div class="line">			email.send();</div><div class="line">			System.out.println(<span class="string">"Send email successful!"</span>);</div><div class="line">		&#125; <span class="keyword">catch</span> (MalformedURLException | EmailException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h1><p>JavaMail API支持调试选项，通过调用setDebug(true)来开启调试。调试信息会通过System.out打印出来。</p>
+<p>commons-email的安全设置的特性。可以用EmailLiveTest和EmailConfiguration类在真正的SMTP服务器上测试commons-email。</p>
+<h1 id="认证"><a href="#认证" class="headerlink" title="认证"></a>认证</h1><p>如果要对SMTP服务器进行认证，可以在发邮件前调用setAuthentication(userName,password)方法测试。这将会在JavaMail API发送邮件时创建DefaultAuthenticator实例，要支持此方法得让你的服务器支持RFC255协议。</p>
+<p>可以用javax.mail.Authenticator的子类来完成更加复杂的认证，如弹出个对话框等。当想收集并处理用户信息时，必须覆盖getPasswordAuthentication()方法。用Email.setAuthenticator方法可以创建新的Authenticator类。</p>
+<h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><p><strong><em><a href="http://commons.apache.org/proper/commons-email/userguide.html" target="_blank" rel="external">http://commons.apache.org/proper/commons-email/userguide.html</a></em></strong></p>
+<p><a href="http://www.souvc.com/?p=499" target="_blank" rel="external"><strong><em>Apache Commons Email 发送邮件的用法介绍以及实战练习</em></strong> </a></p>
+
+      
+    </div>
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	</div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>谢谢你请我吃糖果</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/uploads/weixinPay.jpg" alt="rainbowhorse WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
+          
+            <a href="/tags/tips/" rel="tag"><i class="fa fa-tag"></i> tips</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/20/Mybatis之缓存/" rel="prev" title="Mybatis之缓存">
+                Mybatis之缓存 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDc4MS8xMTMxOA=="></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://on937g0jc.bkt.clouddn.com/avatar.jpg"
+               alt="rainbowhorse" />
+          <p class="site-author-name" itemprop="name">rainbowhorse</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Sunny0715" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/%E6%97%AD-%E9%A9%AC-77a826105" target="_blank" title="linkedin">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  linkedin
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:mx_sunny@sina.com" target="_blank" title="mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.importnew.com/" title="爪哇ImportNew" target="_blank">爪哇ImportNew</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.open-open.com" title="深度开源open-open" target="_blank">深度开源open-open</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://tool.oschina.net/" title="在线工具" target="_blank">在线工具</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.pythontab.com/" title="Python中文社区" target="_blank">Python中文社区</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+		<br><br>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#环境准备"><span class="nav-number">2.</span> <span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一个简单的纯文本邮件"><span class="nav-number">3.</span> <span class="nav-text">一个简单的纯文本邮件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP模式下"><span class="nav-number">3.1.</span> <span class="nav-text">HTTP模式下</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开启了HTTPS"><span class="nav-number">3.2.</span> <span class="nav-text">开启了HTTPS</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#发送带附件的邮件"><span class="nav-number">4.</span> <span class="nav-text">发送带附件的邮件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#本地附件"><span class="nav-number">4.1.</span> <span class="nav-text">本地附件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远程附件"><span class="nav-number">4.2.</span> <span class="nav-text">远程附件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#发送带HTML格式的邮件"><span class="nav-number">5.</span> <span class="nav-text">发送带HTML格式的邮件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#发送带嵌入图片的HTML文本"><span class="nav-number">6.</span> <span class="nav-text">发送带嵌入图片的HTML文本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#调试"><span class="nav-number">7.</span> <span class="nav-text">调试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#认证"><span class="nav-number">8.</span> <span class="nav-text">认证</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文章"><span class="nav-number">9.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" style="color:red">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rainbowhorse</span>
+</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("8rKac39CM1EjFl9q7i97aDSu-gzGzoHsz", "5wiSIVcjJCXPwgEwOqK8GaoJ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+  <!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>
