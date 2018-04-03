@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>https://sunny0715.github.io/2018/04/02/Spring%E4%B9%8B%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</loc>
+    <lastmod>2018-04-03T01:29:56.827Z</lastmod>
+    <data>
+        <display>
+        <title>Spring之动态代理</title>
+        <pubTime>2018-04-02T01:55:03.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>spring</tag>
+         
+         
+           
+             
+              <breadCrumb title="technology" url="https://sunny0715.github.io/categories/technology/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://sunny0715.github.io/2018/03/28/Apache-Commons-Email%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/</loc>
     <lastmod>2018-03-28T11:30:19.408Z</lastmod>
     <data>
@@ -512,9 +534,9 @@
         
         <tag>tips</tag>
          
-        <tag>linux</tag>
-         
         <tag>tomcat</tag>
+         
+        <tag>linux</tag>
          
          
            
