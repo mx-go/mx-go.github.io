@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="rainbowhorse's blog">
 <meta property="og:description" content="引言之前的公司有用过Linux，自己也学习了一段时间，但是很久没有用了，最近又在腾讯云租了个空间把系统装成Centos系统了，所以又把Linux系统重新捡起来，重温下Linux的基本知识。">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-4-6/Linux.jpg">
-<meta property="og:updated_time" content="2018-03-13T05:50:31.591Z">
+<meta property="og:updated_time" content="2018-04-04T07:10:25.121Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux基本命令">
 <meta name="twitter:description" content="引言之前的公司有用过Linux，自己也学习了一段时间，但是很久没有用了，最近又在腾讯云租了个空间把系统装成Centos系统了，所以又把Linux系统重新捡起来，重温下Linux的基本知识。">
@@ -415,7 +415,7 @@
                    <span class="post-meta-item-text">字数统计</span>
                  
                    <span title="字数统计" }}">
-                     858 字
+                     1,501 字
                    </span>
              
              
@@ -429,7 +429,7 @@
                    <span class="post-meta-item-text">阅读时长</span>
                  
                    <span title="阅读时长" }}">
-                     3 分钟
+                     6 分钟
                    </span>
              
            </div>
@@ -457,7 +457,7 @@
 <h2 id="常用版本"><a href="#常用版本" class="headerlink" title="常用版本"></a>常用版本</h2><p>我常用的Linux版本有两个<code>Centos</code>和<code>Ubuntu</code>，全都是开源免费的,其中Ubuntu属于桌面版。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Centos是免费的企业版Linux操作系统。是RedHat企业版的优化操作系统。具体可以参照百科：http://baike.baidu.com/view/26404.htm。里面有详解。</div><div class="line">另附其官网:http://www.centos.org/。</div><div class="line">另外，它适合作为服务器用。</div></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Ubuntu之前有在环境中开发过项目，虽然时间不久，但还是有所体会。免费、无毒、免折腾、比较接近底层。</div></pre></td></tr></table></figure>
-<h1 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h1><blockquote>
+<h1 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h1><h2 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h2><blockquote>
 <p>Linux 操作系统位数识别: <code>uname -a（uname -p）</code></p>
 <p>Linux 32位操作系统：Linux x86  <a href="http://download.oracle.com/otn-pub/java/jdk/7u45-b18/jdk-7u45-linux-i586.rpm" target="_blank" rel="external">i586  i386  i686 i…</a></p>
 <p>Linux 64位操作系统：Linux x64x86_64  X64 …</p>
@@ -521,9 +521,49 @@
 </blockquote>
 </li>
 </ol>
+<h2 id="crontab定时任务"><a href="#crontab定时任务" class="headerlink" title="crontab定时任务"></a>crontab定时任务</h2><h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h3><p>通过crontab 命令，可以在固定的间隔时间执行指定的系统指令或 shell script脚本。时间间隔的单位可以是分钟、小时、日、月、周及以上的任意组合。这个命令非常适合周期性的日志分析或数据备份等工作。</p>
+<ol>
+<li><p>crontab文件格式</p>
+<p>分 时 日 月 星期 要运行的命令</p>
+</li>
+</ol>
+<ul>
+<li>第1列分钟0～59</li>
+<li>第2列小时0～23（0表示子夜）</li>
+<li>第3列日1～31</li>
+<li>第4列月1～12</li>
+<li>第5列星期0～7（0和7表示星期天）</li>
+<li>第6列要运行的命令</li>
+</ul>
+<ol>
+<li>命令</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">#列出crontab文件</div><div class="line">$ crontab -l</div><div class="line"></div><div class="line">#编辑crontab文件</div><div class="line">$ crontab -e</div><div class="line"></div><div class="line">#删除crontab文件</div><div class="line">$ crontab -r</div></pre></td></tr></table></figure>
+<ol>
+<li>使用实例</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"># 每1分钟执行一次myCommand</div><div class="line">$ * * * * * myCommand</div><div class="line"></div><div class="line"># 每小时的第3和第15分钟执行</div><div class="line">$ 3,15 * * * * myCommand</div><div class="line"></div><div class="line"># 每晚的21:30重启smb</div><div class="line">$ 30 21 * * * /etc/init.d/smb restart</div><div class="line"></div><div class="line"># 每周六、周日的1 : 10重启smb</div><div class="line">$ 10 1 * * 6,0 /etc/init.d/smb restart</div><div class="line"></div><div class="line"># 每一小时重启smb</div><div class="line">$ * */1 * * * /etc/init.d/smb restart</div></pre></td></tr></table></figure>
+<h3 id="使用实例-定时备份MySQL"><a href="#使用实例-定时备份MySQL" class="headerlink" title="使用实例(定时备份MySQL)"></a>使用实例(定时备份MySQL)</h3><ol>
+<li>在/usr/soft下新建脚本<strong>mysqlbak.sh</strong></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#备份路径</div><div class="line">BACKUP=/usr/soft/sql</div><div class="line">#当前时间</div><div class="line">DATETIME=$(date +%Y-%m-%d_%H%M%S)</div><div class="line">echo &quot;==备份开始==&quot;</div><div class="line">echo &quot;备份文件存放于$&#123;BACKUP&#125;/$DATETIME.tar.gz&quot;</div><div class="line">#数据库地址</div><div class="line">HOST=localhost</div><div class="line">#数据库用户名</div><div class="line">DB_USER=root</div><div class="line">#数据库密码</div><div class="line">DB_PW=root</div><div class="line">#创建备份目录</div><div class="line">[ ! -d &quot;$&#123;BACKUP&#125;/$DATETIME&quot; ] &amp;&amp; mkdir -p &quot;$&#123;BACKUP&#125;/$DATETIME&quot;</div><div class="line">#后台系统数据库</div><div class="line">DATABASE=test</div><div class="line">/usr/bin/mysqldump -u$&#123;DB_USER&#125; -p$&#123;DB_PW&#125; --host=$HOST -q -R --databases $DATABASE | gzip &gt; $&#123;BACKUP&#125;/$DATETIME/$DATABASE.sql.gz</div><div class="line"></div><div class="line">#压缩成tar.gz包</div><div class="line">cd $BACKUP</div><div class="line">tar -zcvf $DATETIME.tar.gz $DATETIME</div><div class="line">#删除备份目录</div><div class="line">rm -rf $&#123;BACKUP&#125;/$DATETIME</div><div class="line">#删除10天前备份的数据</div><div class="line">find $BACKUP -mtime +10 -name &quot;*.tar.gz&quot; -exec rm -rf &#123;&#125; \;</div><div class="line">echo &quot;===备份成功===&quot;</div></pre></td></tr></table></figure>
+<ol>
+<li>赋予权限</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ chmod 777 mysqlbak.sh</div></pre></td></tr></table></figure>
+<ol>
+<li>添加至定时任务</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// 编辑定时任务列表</div><div class="line">$ crontab -e</div><div class="line"></div><div class="line">// 加入以下内容</div><div class="line">#每隔一个小时执行一次</div><div class="line">00 */1 * * * /usr/soft/mysqlbak.sh</div></pre></td></tr></table></figure>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><ul>
+<li>新创建的cron job，不会马上执行，至少要过2分钟才执行。如果重启cron则马上执行。</li>
+<li>当crontab失效时，可以尝试<strong>service crond restart</strong>解决问题。或者查看日志看某个job有没有执行/报错<strong>tail -f /var/log/cron</strong>。</li>
+<li>千万别乱运行<strong>crontab -r</strong>。它从Crontab目录（/var/spool/cron）中删除用户的Crontab文件。删除了该用户的所有crontab都没了。</li>
+<li>在crontab中%是有特殊含义的，表示换行的意思。如果要用的话必须进行转义%，如经常用的date ‘+%Y%m%d’在crontab里是不会执行的，应该换成date ‘+%Y%m%d’。</li>
+</ul>
 <p>……………</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>Linux博大精深，有很多的命令自己使用的比较少也没有用到，用到的时候再去查资料。</p>
-<p>更多的命令可以查看<code>http://www.cnblogs.com/skillup/articles/1877812.html</code></p>
+<p>更多的命令可以查看<a href="http://www.cnblogs.com/skillup/articles/1877812.html" target="_blank" rel="external"><strong><em>http://www.cnblogs.com/skillup/articles/1877812.html</em></strong></a></p>
 
       
     </div>
@@ -683,7 +723,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">39</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -705,7 +745,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -796,7 +836,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux简介"><span class="nav-number">2.</span> <span class="nav-text">Linux简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">2.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用版本"><span class="nav-number">2.2.</span> <span class="nav-text">常用版本</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本命令"><span class="nav-number">3.</span> <span class="nav-text">基本命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux简介"><span class="nav-number">2.</span> <span class="nav-text">Linux简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">2.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用版本"><span class="nav-number">2.2.</span> <span class="nav-text">常用版本</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本命令"><span class="nav-number">3.</span> <span class="nav-text">基本命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础命令"><span class="nav-number">3.1.</span> <span class="nav-text">基础命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#crontab定时任务"><span class="nav-number">3.2.</span> <span class="nav-text">crontab定时任务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本使用"><span class="nav-number">3.2.1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用实例-定时备份MySQL"><span class="nav-number">3.2.2.</span> <span class="nav-text">使用实例(定时备份MySQL)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number">3.2.3.</span> <span class="nav-text">注意</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>

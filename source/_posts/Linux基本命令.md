@@ -33,6 +33,8 @@ Ubuntu之前有在环境中开发过项目，虽然时间不久，但还是有�
 
 # 基本命令
 
+## 基础命令
+
 > Linux 操作系统位数识别: `uname -a（uname -p）`
 >
 > Linux 32位操作系统：Linux x86  [i586  i386  i686 i...](http://download.oracle.com/otn-pub/java/jdk/7u45-b18/jdk-7u45-linux-i586.rpm)
@@ -98,10 +100,117 @@ Ubuntu之前有在环境中开发过项目，虽然时间不久，但还是有�
 
    > wget http://example.com/file.iso    从网上下载单个文件
 
+## crontab定时任务
+
+### 基本使用
+
+通过crontab 命令，可以在固定的间隔时间执行指定的系统指令或 shell script脚本。时间间隔的单位可以是分钟、小时、日、月、周及以上的任意组合。这个命令非常适合周期性的日志分析或数据备份等工作。
+
+1. crontab文件格式
+
+   分 时 日 月 星期 要运行的命令
+
+- 第1列分钟0～59
+- 第2列小时0～23（0表示子夜）
+- 第3列日1～31
+- 第4列月1～12
+- 第5列星期0～7（0和7表示星期天）
+- 第6列要运行的命令
+
+2. 命令
+
+```shell
+#列出crontab文件
+$ crontab -l
+
+#编辑crontab文件
+$ crontab -e
+
+#删除crontab文件
+$ crontab -r
+```
+
+3. 使用实例
+
+```shell
+# 每1分钟执行一次myCommand
+$ * * * * * myCommand
+
+# 每小时的第3和第15分钟执行
+$ 3,15 * * * * myCommand
+
+# 每晚的21:30重启smb
+$ 30 21 * * * /etc/init.d/smb restart
+
+# 每周六、周日的1 : 10重启smb
+$ 10 1 * * 6,0 /etc/init.d/smb restart
+
+# 每一小时重启smb
+$ * */1 * * * /etc/init.d/smb restart
+```
+
+### 使用实例(定时备份MySQL)
+
+1. 在/usr/soft下新建脚本**mysqlbak.sh**
+
+```shell
+#!/bin/bash
+#备份路径
+BACKUP=/usr/soft/sql
+#当前时间
+DATETIME=$(date +%Y-%m-%d_%H%M%S)
+echo "==备份开始=="
+echo "备份文件存放于${BACKUP}/$DATETIME.tar.gz"
+#数据库地址
+HOST=localhost
+#数据库用户名
+DB_USER=root
+#数据库密码
+DB_PW=root
+#创建备份目录
+[ ! -d "${BACKUP}/$DATETIME" ] && mkdir -p "${BACKUP}/$DATETIME"
+#后台系统数据库
+DATABASE=test
+/usr/bin/mysqldump -u${DB_USER} -p${DB_PW} --host=$HOST -q -R --databases $DATABASE | gzip > ${BACKUP}/$DATETIME/$DATABASE.sql.gz
+
+#压缩成tar.gz包
+cd $BACKUP
+tar -zcvf $DATETIME.tar.gz $DATETIME
+#删除备份目录
+rm -rf ${BACKUP}/$DATETIME
+#删除10天前备份的数据
+find $BACKUP -mtime +10 -name "*.tar.gz" -exec rm -rf {} \;
+echo "===备份成功==="
+```
+
+2. 赋予权限
+
+```shell
+$ chmod 777 mysqlbak.sh
+```
+
+3. 添加至定时任务
+
+```shell
+// 编辑定时任务列表
+$ crontab -e
+
+// 加入以下内容
+#每隔一个小时执行一次
+00 */1 * * * /usr/soft/mysqlbak.sh
+```
+
+### 注意
+
+- 新创建的cron job，不会马上执行，至少要过2分钟才执行。如果重启cron则马上执行。
+- 当crontab失效时，可以尝试**service crond restart**解决问题。或者查看日志看某个job有没有执行/报错**tail -f /var/log/cron**。
+- 千万别乱运行**crontab -r**。它从Crontab目录（/var/spool/cron）中删除用户的Crontab文件。删除了该用户的所有crontab都没了。
+- 在crontab中%是有特殊含义的，表示换行的意思。如果要用的话必须进行转义%，如经常用的date ‘+%Y%m%d’在crontab里是不会执行的，应该换成date ‘+%Y%m%d’。
+
 ...............
 
 # 总结
 
 Linux博大精深，有很多的命令自己使用的比较少也没有用到，用到的时候再去查资料。
 
-更多的命令可以查看`http://www.cnblogs.com/skillup/articles/1877812.html`
+更多的命令可以查看[***http://www.cnblogs.com/skillup/articles/1877812.html***](http://www.cnblogs.com/skillup/articles/1877812.html)

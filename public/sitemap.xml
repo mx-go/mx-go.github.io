@@ -2,9 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://sunny0715.github.io/2018/04/09/Redis%E6%95%B0%E6%8D%AE%E8%BF%87%E6%9C%9F%E7%AD%96%E7%95%A5/</loc>
+    
+    <lastmod>2018-04-10T10:12:39.340Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://sunny0715.github.io/2017/04/07/Linux%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/</loc>
+    
+    <lastmod>2018-04-04T07:10:25.121Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://sunny0715.github.io/2018/04/02/Spring%E4%B9%8B%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</loc>
     
-    <lastmod>2018-04-03T01:29:56.827Z</lastmod>
+    <lastmod>2018-04-03T01:46:16.918Z</lastmod>
     
   </url>
   
@@ -177,13 +191,6 @@
   </url>
   
   <url>
-    <loc>https://sunny0715.github.io/2017/04/07/Linux%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/</loc>
-    
-    <lastmod>2018-03-13T05:50:31.591Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://sunny0715.github.io/2017/11/20/JVM%E5%85%A5%E9%97%A8/</loc>
     
     <lastmod>2018-03-13T05:50:16.365Z</lastmod>
@@ -282,14 +289,14 @@
   </url>
   
   <url>
-    <loc>https://sunny0715.github.io/tags/index.html</loc>
+    <loc>https://sunny0715.github.io/categories/index.html</loc>
     
     <lastmod>2017-06-04T01:41:33.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://sunny0715.github.io/categories/index.html</loc>
+    <loc>https://sunny0715.github.io/tags/index.html</loc>
     
     <lastmod>2017-06-04T01:41:33.000Z</lastmod>
     

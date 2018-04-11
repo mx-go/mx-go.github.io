@@ -171,7 +171,7 @@ public class Client {
 		subject.study();
 		System.out.println();
 		
-		String string = subject.say("Hellow World.");
+		String string = subject.say("Hello World.");
 		System.out.println(string);
 	}
 }

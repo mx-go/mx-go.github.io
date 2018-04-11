@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java,tips," />
+  <meta name="keywords" content="redis," />
 
 
 
@@ -87,24 +87,21 @@
 
 
 
-<meta name="description" content="引言String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。 intern()方法设计的初衷，就是重用String对象，以节省内存消耗。">
-<meta name="keywords" content="java,tips">
+<meta name="description" content="前言Redis作为一个高性能的内存NoSQL数据库，其容量受到最大内存限制的限制。为了防止一次性清理大量过期Key导致Redis服务受影响，Redis只在空闲时清理过期Key。">
+<meta name="keywords" content="redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java String intern方法">
-<meta property="og:url" content="https://sunny0715.github.io/2017/12/01/Java-String-intern方法/index.html">
+<meta property="og:title" content="Redis数据过期策略">
+<meta property="og:url" content="https://sunny0715.github.io/2018/04/09/Redis数据过期策略/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
-<meta property="og:description" content="引言String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。 intern()方法设计的初衷，就是重用String对象，以节省内存消耗。">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/creating-java-strings.jpg">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/no-intern.png">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/use-intern.png">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jdk1.6.png">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jdk1.7.png">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/jdk1.7-2.png">
-<meta property="og:updated_time" content="2018-03-13T05:48:34.428Z">
+<meta property="og:description" content="前言Redis作为一个高性能的内存NoSQL数据库，其容量受到最大内存限制的限制。为了防止一次性清理大量过期Key导致Redis服务受影响，Redis只在空闲时清理过期Key。">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-4/redisKeyExpire/redis.jpg">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-4/redisKeyExpire/e1.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-4/redisKeyExpire/e2.png">
+<meta property="og:updated_time" content="2018-04-10T10:12:39.340Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java String intern方法">
-<meta name="twitter:description" content="引言String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。 intern()方法设计的初衷，就是重用String对象，以节省内存消耗。">
-<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/creating-java-strings.jpg">
+<meta name="twitter:title" content="Redis数据过期策略">
+<meta name="twitter:description" content="前言Redis作为一个高性能的内存NoSQL数据库，其容量受到最大内存限制的限制。为了防止一次性清理大量过期Key导致Redis服务受影响，Redis只在空闲时清理过期Key。">
+<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2018-4/redisKeyExpire/redis.jpg">
 
 
 
@@ -132,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="https://sunny0715.github.io/2017/12/01/Java-String-intern方法/"/>
+  <link rel="canonical" href="https://sunny0715.github.io/2018/04/09/Redis数据过期策略/"/>
 
 
 
 
 
-  <title> Java String intern方法 | rainbowhorse's blog </title>
+  <title> Redis数据过期策略 | rainbowhorse's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -321,7 +318,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/12/01/Java-String-intern方法/">
+    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2018/04/09/Redis数据过期策略/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rainbowhorse">
@@ -342,7 +339,7 @@
             
             
               
-                Java String intern方法
+                Redis数据过期策略
               
             
           </h2>
@@ -357,8 +354,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-01T10:27:19+08:00">
-                2017-12-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-09T16:18:12+08:00">
+                2018-04-09
               </time>
             
 
@@ -397,7 +394,7 @@
 
           
           
-             <span id="/2017/12/01/Java-String-intern方法/" class="leancloud_visitors" data-flag-title="Java String intern方法">
+             <span id="/2018/04/09/Redis数据过期策略/" class="leancloud_visitors" data-flag-title="Redis数据过期策略">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -420,7 +417,7 @@
                    <span class="post-meta-item-text">字数统计</span>
                  
                    <span title="字数统计" }}">
-                     1,899 字
+                     1,975 字
                    </span>
              
              
@@ -434,7 +431,7 @@
                    <span class="post-meta-item-text">阅读时长</span>
                  
                    <span title="阅读时长" }}">
-                     8 分钟
+                     7 分钟
                    </span>
              
            </div>
@@ -456,66 +453,95 @@
       
 
       
-        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。</p>
-<p>intern()方法设计的初衷，就是重用String对象，以节省内存消耗。<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/creating-java-strings.jpg" algin="center"></div></p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Redis作为一个高性能的内存NoSQL数据库，其容量受到最大内存限制的限制。为了防止一次性清理大量过期Key导致Redis服务受影响，Redis只在空闲时清理过期Key。<div align="center"></div></p>
+<blockquote>
+<p><img width="800" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-4/redisKeyExpire/redis.jpg"></p>
+</blockquote>
 <p><a id="more"></a></p>
-<h1 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String str1 = <span class="keyword">new</span> String(<span class="string">"rainbow"</span>) + <span class="keyword">new</span> String(<span class="string">"horse"</span>);</div><div class="line">System.out.println(str1.intern() == str1);</div><div class="line">System.out.println(str1 == <span class="string">"rainbowhorse"</span>);</div></pre></td></tr></table></figure>
-<p>在<strong>JDK1.7</strong>下输出结果为：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">true</span></div><div class="line"><span class="keyword">true</span></div></pre></td></tr></table></figure>
-<p>再将上面的例子加上一行代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">String str2 = <span class="string">"rainbowhorse"</span>;	<span class="comment">//新加的一行代码，其余不变  </span></div><div class="line">String str1 = <span class="keyword">new</span> String(<span class="string">"rainbow"</span>) + <span class="keyword">new</span> String(<span class="string">"horse"</span>);</div><div class="line">System.out.println(str1.intern() == str1);</div><div class="line">System.out.println(str1 == <span class="string">"rainbowhorse"</span>);</div></pre></td></tr></table></figure>
-<p>再运行，结果为：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">false</span></div><div class="line"><span class="keyword">false</span></div></pre></td></tr></table></figure>
-<p>在JVM运行时数据区中的方法区有一个常量池，但是发现在JDK1.6以后常量池被放置在了堆空间，因此常量池位置的不同影响到了String的intern()方法的表现。</p>
-<h1 id="为什么使用intern-方法"><a href="#为什么使用intern-方法" class="headerlink" title="为什么使用intern()方法"></a>为什么使用intern()方法</h1><p>就如引言所说的，<strong>intern()方法设计的初衷，就是重用String对象，以节省内存消耗</strong>。下面通过例子来说明：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">	<span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX = <span class="number">100000</span>;</div><div class="line">	<span class="keyword">static</span> <span class="keyword">final</span> String[] arr = <span class="keyword">new</span> String[MAX];</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		<span class="comment">// 为长度为10的Integer数组随机赋值</span></div><div class="line">		Integer[] sample = <span class="keyword">new</span> Integer[<span class="number">10</span>];</div><div class="line">		Random random = <span class="keyword">new</span> Random(<span class="number">1000</span>);</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; sample.length; i++) &#123;</div><div class="line">			sample[i] = random.nextInt();</div><div class="line">		&#125;</div><div class="line">		<span class="comment">// 记录程序开始时间</span></div><div class="line">		<span class="keyword">long</span> t = System.currentTimeMillis();</div><div class="line">		<span class="comment">// 使用/不使用intern方法为10万个String赋值，值来自于Integer数组的10个数</span></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; MAX; i++) &#123;</div><div class="line">			arr[i] = <span class="keyword">new</span> String(String.valueOf(sample[i % sample.length]));</div><div class="line">			<span class="comment">// arr[i] = new String(String.valueOf(sample[i % sample.length])).intern();</span></div><div class="line">		&#125;</div><div class="line">		System.out.println((System.currentTimeMillis() - t) + <span class="string">"ms"</span>);</div><div class="line">		System.gc();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这个主要是为了证明<code>使用intern()比不使用intern()消耗的内存更少</code>。</p>
-<p>先定义一个长度为10的Integer数组，并随机为其赋值，在通过for循环为长度为10万的String对象依次赋值，这些值都来自于Integer数组。两种情况分别运行，可通过Window —&gt; Preferences –&gt; Java –&gt; Installed JREs设置JVM启动参数为-agentlib:hprof=heap=dump,format=b，将程序运行完后的hprof置于工程目录下。再通过<a href="http://download.eclipse.org/mat/" target="_blank" rel="external">MAT</a>插件查看该hprof文件。</p>
-<p>不使用intern()方法</p>
-<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/no-intern.png" algin="center"><br><br></div>
-
-<p>使用intern()方法</p>
-<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/use-intern.png" algin="center"><br><br></div>
-
-<p>从运行结果来看，不使用intern()的情况下，程序生成了101762个String对象，而使用了intern()方法时，程序仅生成了1772个String对象。证明了intern()节省内存的结论。</p>
-<p>但是会发现使用了intern()方法后程序运行时间有所增加。这是因为程序中每次都是用了new String后又进行intern()操作的耗时时间，但是不使用intern()占用内存空间导致GC的时间是要远远大于这点时间的。 </p>
-<h1 id="深入理解intern-方法"><a href="#深入理解intern-方法" class="headerlink" title="深入理解intern()方法"></a>深入理解intern()方法</h1><p><strong>JDK1.7后，常量池被放入到堆空间中，这导致intern()函数的功能不同。这点很重要。</strong></p>
-<p>看看下面代码，这个例子是网上流传较广的一个例子，我也是照抄过来的。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String s = <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">s.intern();  </div><div class="line">String s2 = <span class="string">"1"</span>;  </div><div class="line">System.out.println(s == s2);  </div><div class="line">  </div><div class="line">String s3 = <span class="keyword">new</span> String(<span class="string">"1"</span>) + <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">s3.intern();  </div><div class="line">String s4 = <span class="string">"11"</span>;  </div><div class="line">System.out.println(s3 == s4);</div></pre></td></tr></table></figure>
-<p>输出结果为：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">JDK1.6以及以下：<span class="keyword">false</span> <span class="keyword">false</span>  </div><div class="line">JDK1.7以及以上：<span class="keyword">false</span> <span class="keyword">true</span></div></pre></td></tr></table></figure>
-<p>再分别调整上面代码2、3行，7、8行的顺序：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String s = <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">String s2 = <span class="string">"1"</span>;  </div><div class="line">s.intern();  </div><div class="line">System.out.println(s == s2);  </div><div class="line">  </div><div class="line">String s3 = <span class="keyword">new</span> String(<span class="string">"1"</span>) + <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">String s4 = <span class="string">"11"</span>;  </div><div class="line">s3.intern();  </div><div class="line">System.out.println(s3 == s4);</div></pre></td></tr></table></figure>
-<p>输出结果为：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">JDK1.6以及以下：<span class="keyword">false</span> <span class="keyword">false</span>  </div><div class="line">JDK1.7以及以上：<span class="keyword">false</span> <span class="keyword">false</span></div></pre></td></tr></table></figure>
-<h2 id="JDK1-6"><a href="#JDK1-6" class="headerlink" title="JDK1.6"></a><strong>JDK1.6</strong></h2><div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jdk1.6.png" algin="center"><br><br></div>
-
-<p>在JDK1.6中所有的输出结果都是 false，因为JDK1.6以及以前版本中，常量池是放在 Perm 区（属于方法区）中的，Perm区是和堆区完全分开的。</p>
-<p>使用<strong>引号声明的字符串都是会直接在字符串常量池中生成</strong>的，而<strong>new 出来的String对象是放在堆空间中</strong>的。所以两者的内存地址肯定是不相同的，即使调用了intern()方法也是不影响的。</p>
-<p>intern()方法在JDK1.6中的作用是：比如String s = new String(“rainbowhorse”)，再调用s.intern()，此时返回值还是字符串”rainbowhorse”，表面上看起来好像这个方法没什么用处。但实际上，在JDK1.6中它做了个小动作：检查字符串池里是否存在”rainbowhorse”这么一个字符串，如果存在，就返回池里的字符串；如果不存在，该方法把”rainbowhorse”添加到字符串池中，然后再返回它的引用。</p>
-<h2 id="JDK1-7"><a href="#JDK1-7" class="headerlink" title="JDK1.7"></a>JDK1.7</h2><h3 id="例一分析"><a href="#例一分析" class="headerlink" title="例一分析"></a>例一分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String s = <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">s.intern();  </div><div class="line">String s2 = <span class="string">"1"</span>;  </div><div class="line">System.out.println(s == s2);  </div><div class="line">  </div><div class="line">String s3 = <span class="keyword">new</span> String(<span class="string">"1"</span>) + <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">s3.intern();  </div><div class="line">String s4 = <span class="string">"11"</span>;  </div><div class="line">System.out.println(s3 == s4);</div></pre></td></tr></table></figure>
-<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jdk1.7.png" algin="center"><br><br></div>
-
-<p>String s = newString(“1”)，<strong>生成了常量池中的“1” 和堆空间中的字符串对象</strong>。</p>
-<p>s.intern()，这一行的作用是s对象去常量池中寻找后发现”1”<strong>已经存在于常量池中了</strong>。</p>
-<p>String s2 = “1”，这行代码是生成一个s2的引用<strong>指向常量池中的“1”对象</strong>。</p>
-<p>结果就是 s 和 s2 的引用地址明显不同。因此返回了false。</p>
-<p>String s3 = new String(“1”) + newString(“1”)，这行代码<strong>在字符串常量池中生成“1” ，并在堆空间中生成s3引用指向的对象（内容为”11”）</strong>。注意<strong>此时常量池中是没有 “11”对象</strong>的。</p>
-<p>s3.intern()，这一行代码，是将 s3中的<strong>“11”字符串放入 String 常量池中</strong>，此时常量池中不存在“11”字符串，JDK1.6的做法是直接在常量池中生成一个 “11” 的对象。</p>
-<p><strong>但是在JDK1.7中，常量池中不需要再存储一份对象了，可以直接存储堆中的引用</strong>。这份引用直接指向 s3 引用的对象，也就是说s3.intern() ==s3会返回true。</p>
-<p>String s4 = “11”， 这一行代码会<strong>直接去常量池中创建</strong>，但是发现已经有这个对象了，此时也就是<strong>指向 s3 引用对象的一个引用</strong>。因此s3 == s4返回了true。</p>
-<h3 id="例二分析"><a href="#例二分析" class="headerlink" title="例二分析"></a>例二分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String s = <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">String s2 = <span class="string">"1"</span>;  </div><div class="line">s.intern();  </div><div class="line">System.out.println(s == s2);  </div><div class="line">  </div><div class="line">String s3 = <span class="keyword">new</span> String(<span class="string">"1"</span>) + <span class="keyword">new</span> String(<span class="string">"1"</span>);  </div><div class="line">String s4 = <span class="string">"11"</span>;  </div><div class="line">s3.intern();  </div><div class="line">System.out.println(s3 == s4);</div></pre></td></tr></table></figure>
-<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/jdk1.7-2.png" algin="center"><br><br></div>
-
-<p>String s = newString(“1”)，生成了<strong>常量池中的“1” 和堆空间中的字符串对象</strong>。</p>
-<p>String s2 = “1”，这行代码是生成一个s2的<strong>引用指向常量池中的“1”对象，但是发现已经存在了，那么就直接指向了它</strong>。</p>
-<p>s.intern()，这一行在这里就没什么实际作用了。因为”1”已经存在了。</p>
-<p>结果就是 s 和 s2 的引用地址明显不同。因此返回了false。</p>
-<p>String s3 = new String(“1”) + newString(“1”)，这行代码<strong>在字符串常量池中生成“1” ，并在堆空间中生成s3引用指向的对象（内容为”11”）</strong>。注意此时常量池中是没有 “11”对象的。</p>
-<p>String s4 = “11”， 这一行代码会<strong>直接去生成常量池中的”11”</strong>。</p>
-<p>s3.intern()，这一行在这里就没什么实际作用了。因为”11”已经存在了。</p>
-<p>结果就是 s3 和 s4 的引用地址明显不同。因此返回了false。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>从JDK 1.7后，HotSpot 将常量池从永久代移到了元空间，正因为如此，JDK 1.7 后的intern方法在实现上发生了比较大的改变，JDK 1.7后，intern方法还是会先去查询常量池中是否有已经存在，如果存在，则返回常量池中的引用，这一点与之前没有区别，区别在于，<strong>如果在常量池找不到对应的字符串，则不会再将字符串拷贝到常量池，而只是在常量池中生成一个对原字符串的引用</strong>。</p>
+<h1 id="Redis过期时间"><a href="#Redis过期时间" class="headerlink" title="Redis过期时间"></a>Redis过期时间</h1><h2 id="设置过期时间"><a href="#设置过期时间" class="headerlink" title="设置过期时间"></a>设置过期时间</h2><p>redis有四种命令可以用于设置键的生存时间和过期时间：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">EXPIRE <span class="tag">&lt;<span class="name">KEY</span>&gt;</span> <span class="tag">&lt;<span class="name">TTL</span>&gt;</span> : 		将键的生存时间设为 ttl 秒</div><div class="line">PEXPIRE <span class="tag">&lt;<span class="name">KEY</span>&gt;</span> <span class="tag">&lt;<span class="name">TTL</span>&gt;</span> :		将键的生存时间设为 ttl 毫秒</div><div class="line">EXPIREAT <span class="tag">&lt;<span class="name">KEY</span>&gt;</span> <span class="tag">&lt;<span class="name">timestamp</span>&gt;</span> :	将键的过期时间设为 timestamp 所指定的秒数时间戳</div><div class="line">PEXPIREAT <span class="tag">&lt;<span class="name">KEY</span>&gt;</span> <span class="tag">&lt;<span class="name">timestamp</span>&gt;</span>: 	将键的过期时间设为 timestamp 所指定的毫秒数时间戳.</div></pre></td></tr></table></figure>
+<p><strong>返回值</strong></p>
+<p>一个整数值<strong>1或0</strong>，如下：</p>
+<ul>
+<li>如果<strong>成功</strong>地为该键设置了超时时间，<strong>返回 1</strong></li>
+<li>如果键<strong>不存在或无法设置</strong>超时时间，<strong>返回 0</strong></li>
+</ul>
+<h2 id="保存过期时间"><a href="#保存过期时间" class="headerlink" title="保存过期时间"></a>保存过期时间</h2><p><strong>redis中key的过期时间和生存时间保存方式</strong>：在数据库结构redisDb中的expires字典中保存了数据库中所有键的过期时间，称expire这个字典为过期字典。<br>（1）过期字典是一个指针，指向键空间的某个键对象。<br>（2）过期字典的值是一个longlong类型的整数，这个整数保存了键所指向的数据库键的过期时间–一个毫秒级的 UNIX 时间戳。</p>
+<p>下图是一个带过期字典的数据库例子：<div align="center"></div></p>
+<blockquote>
+<p><img width="800" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/redisKeyExpire/e1.png"></p>
+</blockquote>
+<p></p>
+<p>从以上结构中可以看到expire字典(过期字典)和dict字典（数据库键空间，保存着数据库中所有键值对）是并列的，由此可见expire字典的重要性。</p>
+<h2 id="移除过期时间"><a href="#移除过期时间" class="headerlink" title="移除过期时间"></a>移除过期时间</h2><p><strong>PERSIST</strong>命令可以移除一个键的过期时间：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">6379</span>&gt; set message <span class="string">"hello"</span></div><div class="line">OK</div><div class="line"><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">6379</span>&gt; expire message <span class="number">60</span></div><div class="line">(integer) <span class="number">1</span></div><div class="line"><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">6379</span>&gt; ttl message</div><div class="line">(integer) <span class="number">54</span></div><div class="line"><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">6379</span>&gt; persist message</div><div class="line">(integer) <span class="number">1</span></div><div class="line"><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">6379</span>&gt; ttl message</div><div class="line">(integer) -<span class="number">1</span></div></pre></td></tr></table></figure>
+<p>persist命令就是expire命令的反命令，这个函数在过期字典中查找给定的键,并从过期字典中移除。<br>比如在数据库当前状态(如上图所示)，当给book这个key移除过期时间：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">redis&gt; persist book</div><div class="line">(integer) <span class="number">1</span></div></pre></td></tr></table></figure>
+<p>数据库将更新成如下状态：<div align="center"></div></p>
+<blockquote>
+<p><img width="800" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/redisKeyExpire/e2.png"></p>
+</blockquote>
+<p></p>
+<p>可以从图中看到,当PERSIST book命令执行之后,过期字典中的 book 键消失了。</p>
+<h2 id="计算并返回剩余生存时间"><a href="#计算并返回剩余生存时间" class="headerlink" title="计算并返回剩余生存时间"></a>计算并返回剩余生存时间</h2><p><strong>ttl</strong>命令以<strong>秒为单位</strong>返回指定键的剩余生存时间。<strong>pttl</strong>以<strong>毫秒</strong>返回。两个命令都是通过计算当前时间和过期时间的差值得到剩余生存期的。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">6379</span>&gt; set name rainbowhorse</div><div class="line">OK</div><div class="line"><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">6379</span>&gt; expire name <span class="number">60</span></div><div class="line">(integer) <span class="number">1</span></div><div class="line"><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">6379</span>&gt; ttl name</div><div class="line">(integer) <span class="number">57</span></div><div class="line"><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">6379</span>&gt; ttl name</div><div class="line">(integer) <span class="number">27</span></div><div class="line"><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">6379</span>&gt; pttl name</div><div class="line">(integer) <span class="number">23839</span></div><div class="line"><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">6379</span>&gt;</div></pre></td></tr></table></figure>
+<h1 id="过期键的删除策略"><a href="#过期键的删除策略" class="headerlink" title="过期键的删除策略"></a>过期键的删除策略</h1><p>如果一个键是过期的，它的怎么从内存中消失的，是什么时候被删除的？</p>
+<p>redis有三种不同的删除策略：</p>
+<ul>
+<li><strong>定时删除</strong>。每隔一段时间，对expires字典进行检查，删除里面的过期键。</li>
+</ul>
+<ul>
+<li><strong>立即删除</strong>。在设置键的过期时间时，创建一个回调事件，当过期时间达到时，由时间处理器自动执行键的删除操作。</li>
+<li><strong>惰性删除</strong>。键过期了就过期了，不管。每次从dict字典中按key取值时，先检查此key是否已经过期，如果过期了就删除它，并返回nil，如果没过期，就返回键值。</li>
+</ul>
+<p>由此可见，第二种为被动删除，第一种和第三种为主动删除，且第一种实时性更高。下面对这三种删除策略进行具体分析。</p>
+<h2 id="定时删除"><a href="#定时删除" class="headerlink" title="定时删除"></a>定时删除</h2><ul>
+<li>含义：在设置key的过期时间的同时，为该key创建一个定时器，让定时器在key的过期时间来临时，对key进行删除</li>
+<li>优点：保证内存被尽快释放</li>
+<li>缺点：<ul>
+<li>若过期key很多，删除这些key会占用很多的CPU时间，在CPU时间紧张的情况下，CPU不能把所有的时间用来做要紧的事儿，还需要去花时间删除这些key</li>
+<li>定时器的创建耗时，若为每一个设置过期时间的key创建一个定时器（将会有大量的定时器产生），性能影响严重</li>
+<li>没人用</li>
+</ul>
+</li>
+</ul>
+<h2 id="定期删除"><a href="#定期删除" class="headerlink" title="定期删除"></a>定期删除</h2><ul>
+<li>含义：每隔一段时间执行一次删除(在redis.conf配置文件设置hz，1s刷新的频率)过期key操作</li>
+<li>优点：<ul>
+<li>通过限制删除操作的时长和频率，来减少删除操作对CPU时间的占用–处理”定时删除”的缺点</li>
+<li>定期删除过期key–处理”惰性删除”的缺点</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>在内存友好方面，不如”定时删除”</li>
+<li>在CPU时间友好方面，不如”惰性删除”</li>
+</ul>
+</li>
+<li>难点<ul>
+<li>合理设置删除操作的执行时长（每次删除执行多长时间）和执行频率（每隔多长时间做一次删除）（这个要根据服务器运行情况来定了）</li>
+</ul>
+</li>
+</ul>
+<p>定期删除可以通过：</p>
+<ul>
+<li>第一、配置redis.conf 的hz选项，默认为10 （即1秒执行10次，100ms一次，值越大说明刷新频率越快，最Redis性能损耗也越大） </li>
+<li>第二、配置redis.conf的maxmemory最大值，当已用内存超过maxmemory限定时，就会触发主动清理策略</li>
+</ul>
+<h2 id="惰性删除"><a href="#惰性删除" class="headerlink" title="惰性删除"></a>惰性删除</h2><ul>
+<li>含义：key过期的时候不删除，每次从数据库获取key的时候去检查是否过期，若过期，则删除，返回null。</li>
+<li>优点：删除操作只发生在从数据库取出key的时候发生，而且只删除当前key，所以对CPU时间的占用是比较少的，而且此时的删除是已经到了非做不可的地步（如果此时还不删除的话，我们就会获取到了已经过期的key了）</li>
+<li>缺点：若大量的key在超出超时时间后，很久一段时间内，都没有被获取过，那么可能发生内存泄露（无用的垃圾占用了大量的内存）</li>
+</ul>
+<p><strong>定时删除和定期删除为主动删除</strong>：Redis会定期主动淘汰一批已过去的key。</p>
+<p><strong>惰性删除为被动删除</strong>：用到的时候才会去检验key是不是已过期，过期就删除。</p>
+<h2 id="redis使用的策略"><a href="#redis使用的策略" class="headerlink" title="redis使用的策略"></a>redis使用的策略</h2><p>redis使用的过期键值删除策略是：<strong>惰性删除加上定期删除，两者配合使用</strong>。</p>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><ul>
+<li>不要放垃圾数据，及时清理无用数据。实验性的数据和下线的业务数据及时删除。</li>
+<li>key尽量都设置过期时间。对具有时效性的key设置过期时间，通过redis自身的过期key清理策略来降低过期key对于内存的占用，同时也能够减少业务的麻烦，不需要定期手动清理了。</li>
+<li>单Key不要过大。给用户排查问题时遇到过单个string的value有43M的，也有一个list 100多万个大成员占了1G多内存的。这种key在get的时候网络传输延迟会比较大，需要分配的输出缓冲区也比较大，在定期清理的时候也容易造成比较高的延迟. 最好能通过业务拆分，数据压缩等方式避免这种过大的key的产生。</li>
+<li>不同业务如果公用一个业务的话，最好使用不同的逻辑db分开。从上面的分析可以看出，Redis的过期Key清理策略和强制淘汰策略都会遍历各个db。将key分布在不同的db有助于过期Key的及时清理。另外不同业务使用不同db也有助于问题排查和无用数据的及时下线。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.jianshu.com/p/9352d20fb2e0?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation" target="_blank" rel="external"><strong><em>redis的过期时间和过期删除机制</em></strong></a></p>
 
       
     </div>
@@ -571,9 +597,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
-          
-            <a href="/tags/tips/" rel="tag"><i class="fa fa-tag"></i> tips</a>
+            <a href="/tags/redis/" rel="tag"><i class="fa fa-tag"></i> redis</a>
           
         </div>
       
@@ -586,18 +610,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/06/UML工具-PowerDesigner设计数据库/" rel="next" title="UML工具-PowerDesigner设计数据库">
-                <i class="fa fa-chevron-left"></i> UML工具-PowerDesigner设计数据库
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/11/20/JVM入门/" rel="prev" title="JVM入门">
-                JVM入门 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/04/02/Spring之动态代理/" rel="prev" title="Spring之动态代理">
+                Spring之动态代理 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -786,7 +806,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#案例"><span class="nav-number">2.</span> <span class="nav-text">案例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么使用intern-方法"><span class="nav-number">3.</span> <span class="nav-text">为什么使用intern()方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#深入理解intern-方法"><span class="nav-number">4.</span> <span class="nav-text">深入理解intern()方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JDK1-6"><span class="nav-number">4.1.</span> <span class="nav-text">JDK1.6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JDK1-7"><span class="nav-number">4.2.</span> <span class="nav-text">JDK1.7</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#例一分析"><span class="nav-number">4.2.1.</span> <span class="nav-text">例一分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例二分析"><span class="nav-number">4.2.2.</span> <span class="nav-text">例二分析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis过期时间"><span class="nav-number">2.</span> <span class="nav-text">Redis过期时间</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#设置过期时间"><span class="nav-number">2.1.</span> <span class="nav-text">设置过期时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#保存过期时间"><span class="nav-number">2.2.</span> <span class="nav-text">保存过期时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#移除过期时间"><span class="nav-number">2.3.</span> <span class="nav-text">移除过期时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算并返回剩余生存时间"><span class="nav-number">2.4.</span> <span class="nav-text">计算并返回剩余生存时间</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#过期键的删除策略"><span class="nav-number">3.</span> <span class="nav-text">过期键的删除策略</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定时删除"><span class="nav-number">3.1.</span> <span class="nav-text">定时删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定期删除"><span class="nav-number">3.2.</span> <span class="nav-text">定期删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#惰性删除"><span class="nav-number">3.3.</span> <span class="nav-text">惰性删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis使用的策略"><span class="nav-number">3.4.</span> <span class="nav-text">redis使用的策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最佳实践"><span class="nav-number">3.5.</span> <span class="nav-text">最佳实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">3.6.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
             
 
           </div>
