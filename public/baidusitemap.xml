@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>https://sunny0715.github.io/2018/04/17/MySQL%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/</loc>
+    <lastmod>2018-04-17T07:44:56.740Z</lastmod>
+    <data>
+        <display>
+        <title>MySQL主从/主主复制</title>
+        <pubTime>2018-04-17T05:43:00.000Z</pubTime>
+        
+        <tag>mysql</tag>
+         
+         
+           
+             
+              <breadCrumb title="technology" url="https://sunny0715.github.io/categories/technology/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://sunny0715.github.io/2018/04/09/Redis%E6%95%B0%E6%8D%AE%E8%BF%87%E6%9C%9F%E7%AD%96%E7%95%A5/</loc>
     <lastmod>2018-04-10T10:12:39.340Z</lastmod>
     <data>
