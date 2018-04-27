@@ -87,20 +87,20 @@
 
 
 
-<meta name="description" content="引言数据库在每个项目中都会用到，现在又分为两个门派，一种关系型数据库，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是非关系型数据库，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。">
+<meta name="description" content="前言MySQL执行计划，简单的来说，是SQL在数据库中执行时的表现情况，通常用于SQL性能分析，优化等场景。在MySQL使用 explain 关键字来查看SQL的执行计划。">
 <meta name="keywords" content="mysql">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySQL优化">
-<meta property="og:url" content="https://sunny0715.github.io/2017/04/17/MySQL优化/index.html">
+<meta property="og:title" content="MySQL执行计划">
+<meta property="og:url" content="https://sunny0715.github.io/2018/04/27/MySQL执行计划/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
-<meta property="og:description" content="引言数据库在每个项目中都会用到，现在又分为两个门派，一种关系型数据库，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是非关系型数据库，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-4-17/MYSQL.jpg">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-4-17/redis.png">
-<meta property="og:updated_time" content="2018-03-13T05:51:53.654Z">
+<meta property="og:description" content="前言MySQL执行计划，简单的来说，是SQL在数据库中执行时的表现情况，通常用于SQL性能分析，优化等场景。在MySQL使用 explain 关键字来查看SQL的执行计划。">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_explain/mysql-explain.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_explain/eg.png">
+<meta property="og:updated_time" content="2018-04-27T02:50:33.906Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MySQL优化">
-<meta name="twitter:description" content="引言数据库在每个项目中都会用到，现在又分为两个门派，一种关系型数据库，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是非关系型数据库，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。">
-<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2017-4-17/MYSQL.jpg">
+<meta name="twitter:title" content="MySQL执行计划">
+<meta name="twitter:description" content="前言MySQL执行计划，简单的来说，是SQL在数据库中执行时的表现情况，通常用于SQL性能分析，优化等场景。在MySQL使用 explain 关键字来查看SQL的执行计划。">
+<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_explain/mysql-explain.png">
 
 
 
@@ -128,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="https://sunny0715.github.io/2017/04/17/MySQL优化/"/>
+  <link rel="canonical" href="https://sunny0715.github.io/2018/04/27/MySQL执行计划/"/>
 
 
 
 
 
-  <title> MySQL优化 | rainbowhorse's blog </title>
+  <title> MySQL执行计划 | rainbowhorse's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -317,7 +317,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/04/17/MySQL优化/">
+    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2018/04/27/MySQL执行计划/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rainbowhorse">
@@ -338,7 +338,7 @@
             
             
               
-                MySQL优化
+                MySQL执行计划
               
             
           </h2>
@@ -353,8 +353,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-17T12:31:55+08:00">
-                2017-04-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-27T09:24:06+08:00">
+                2018-04-27
               </time>
             
 
@@ -393,7 +393,7 @@
 
           
           
-             <span id="/2017/04/17/MySQL优化/" class="leancloud_visitors" data-flag-title="MySQL优化">
+             <span id="/2018/04/27/MySQL执行计划/" class="leancloud_visitors" data-flag-title="MySQL执行计划">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -416,7 +416,7 @@
                    <span class="post-meta-item-text">字数统计</span>
                  
                    <span title="字数统计" }}">
-                     1,330 字
+                     1,318 字
                    </span>
              
              
@@ -452,50 +452,95 @@
       
 
       
-        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>数据库在每个项目中都会用到，现在又分为两个门派，一种<em><a href="http://baike.baidu.com/link?url=F1B2ducJyF3-AS6F8RbkCx-1y10TqUb0tcFlxpySya025ev87isg4GprakGLkp0RvhYLO6qbgzGBTskhi-iLVM9R6yI9MtAqhHq6qy7VPj6HTfW01Y2bIhIR5O7g1xOYdZ6Zsm_qzvnKGVw5oFSzkK" target="_blank" rel="external">关系型数据库</a></em>，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是<em>非关系型数据库</em>，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-4-17/MYSQL.jpg" algin="center"></div></p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>MySQL执行计划，简单的来说，是SQL在数据库中执行时的表现情况，通常用于SQL性能分析，优化等场景。在MySQL使用 <strong>explain</strong> 关键字来查看SQL的执行计划。<div align="center"><img width="800" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_explain/mysql-explain.png" algin="center"></div></p>
 <p><a id="more"></a></p>
-<h1 id="关于MySQL"><a href="#关于MySQL" class="headerlink" title="关于MySQL"></a>关于MySQL</h1><p>MySQL 是一个跨平台的<code>开源</code><strong>关系型数据库</strong>管理系统，目前 MySQL 被广泛地应用在 Internet 上的中小型网站中。由于其体积小、速度快、总体拥有成本低，尤其是开放源码这一特点，许多中小型网站为了降低网站总体拥有成本而选择了 MySQL 作为网站数据库。比如淘宝、京东等知名公司也都在使用。</p>
-<p>MySQL的<strong>存储引擎</strong>有分为很多种。MyISAM、InnoDB等。每个引擎的特性都不一样，可以在不同的情况下选择不同的存储引擎。</p>
-<h1 id="MySQL的优化"><a href="#MySQL的优化" class="headerlink" title="MySQL的优化"></a>MySQL的优化</h1><p>对于一个小项目来说，MySQL优化与否可能没有那么重要，带来的优化效果也没有那么明显。但是如果面对的是一个千万级的大表、千万级甚至上亿的数据量时，优化是必不可少的。那么要从如下几方面来做优化：</p>
-<h2 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h2><p>一般情况可以选择MyISAM存储引擎，如果需要事务支持必须使用InnoDB存储引擎。</p>
+<h1 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h1><p>适用于 <strong><em>select</em></strong>、<strong><em>update</em></strong>、<strong><em>insert</em></strong>、<strong><em>replace</em></strong>、<strong><em>delete</em></strong>语句，在需要分析的语句前加<em>EXPLAIN</em>，即可。</p>
+<h1 id="EXPLAIN可得到的信息"><a href="#EXPLAIN可得到的信息" class="headerlink" title="EXPLAIN可得到的信息"></a>EXPLAIN可得到的信息</h1><ul>
+<li>SQL如何使用索引</li>
+<li>关联查询的执行顺序</li>
+<li>查询扫描的数据行数</li>
+</ul>
+<h1 id="读懂执行计划"><a href="#读懂执行计划" class="headerlink" title="读懂执行计划"></a>读懂执行计划</h1><p>例如以下关联查询：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> tb_item <span class="keyword">JOIN</span> tb_item_desc <span class="keyword">ON</span> tb_item.id=tb_item_desc.item_id <span class="keyword">WHERE</span> <span class="keyword">id</span>=<span class="string">'679533'</span>;</div></pre></td></tr></table></figure>
+<p><div align="center"><img width="900" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_explain/eg.png" algin="center"></div></p>
+<p>根据上图可得到执行计划的列信息，下面分析一下每列所表示的信息。</p>
+<h2 id="ID"><a href="#ID" class="headerlink" title="ID"></a>ID</h2><ul>
+<li>ID列中的数据为一组数字，表示执行Select语句的顺序。</li>
+<li>ID值相同时，执行顺序由上至下。</li>
+<li>ID值越大优先级越高，越先被执行。</li>
+</ul>
+<h2 id="SELECT-TYPE"><a href="#SELECT-TYPE" class="headerlink" title="SELECT_TYPE"></a>SELECT_TYPE</h2><p>表示查询中每个Select子句的类型（简单 OR 复杂）。</p>
+<ul>
+<li><strong>SIMPLE</strong>：不包含子查询或是<em>UNION</em>操作的查询。</li>
+<li><strong>PRIMARY</strong>：查询中如果包含任何子查询，那么最外层的查询则被标记为<em>PRIMARY</em>。</li>
+<li><strong>SUBQUERY</strong>：<em>SELECT</em> 列表中的子查询。</li>
+<li><strong>DEPENDENT SUBQUERY</strong>：被别的查询所依赖的子查询。</li>
+<li><strong>UNION</strong>：<em>union</em>操作的第二个或是之后的查询的值为<em>union</em>。</li>
+<li><strong>DEPENDENT UNION</strong>：当<em>union</em>作为子查询时，第二或者是第二个后的查询的值。</li>
+<li><strong>UNION RESULT</strong>：<em>union</em>产生的结果集。</li>
+<li><strong>DERIVED</strong>：出现在<em>from</em>子句中的子查询。</li>
+</ul>
+<h2 id="TABLE"><a href="#TABLE" class="headerlink" title="TABLE"></a>TABLE</h2><p>输出数据行所在的表的名称或别名。</p>
+<ul>
+<li><strong><code>&lt;unionM,N&gt;</code></strong>：由ID为M,N查询<em>union</em>产生的结果集。</li>
+<li><strong><code>&lt;derivedN&gt;/&lt;subqueryN&gt;</code></strong>：由ID为N的查询产生的结果。</li>
+</ul>
+<h2 id="PARTITIONS"><a href="#PARTITIONS" class="headerlink" title="PARTITIONS"></a>PARTITIONS</h2><ul>
+<li>对于分区表，显示查询的分区ID。</li>
+<li>对于非分区表，显示为NULL。</li>
+</ul>
+<h2 id="TYPE（类型性能是依次降低）"><a href="#TYPE（类型性能是依次降低）" class="headerlink" title="TYPE（类型性能是依次降低）"></a>TYPE（类型性能是依次降低）</h2><p>该属性表示访问类型,有很多种访问类型。</p>
+<ul>
+<li><strong>system</strong>：这是const连接类型的一个特例，当查询的表只有一行时使用。</li>
+<li><strong>const</strong>：表中有且只有一个匹配的行时使用，如对主键或是唯一索引的查询，这是效率最高的联接方式。</li>
+<li><strong>eq_ref</strong>：唯一索引或者是主键索引查找，对于每个索引键，表中只有一条记录与之匹配</li>
+<li><strong>ref</strong>：非唯一索引查找，返回匹配某个单独值的所有行。</li>
+<li><strong>ref_or_null</strong>：类似于ref类型的查询，但是附加了对NULL值列的查询。</li>
+<li><strong>index_merge</strong>：该联接类型表示使用了索引合并优化方法。</li>
+<li><strong>range</strong>：索引范围扫描，常见于<em>between</em>、&gt;、&lt;、这样的查询条件。</li>
+<li><strong>index</strong>：<em>full index scan</em> 全索引扫描，同ALL的区别是，遍历的是索引树。</li>
+<li><strong>all</strong>：<em>full table scan</em> 全表扫描，这是效率最差的联接方式。</li>
+</ul>
+<h2 id="POSSIBLE-KEYS"><a href="#POSSIBLE-KEYS" class="headerlink" title="POSSIBLE_KEYS"></a>POSSIBLE_KEYS</h2><p>指出MySQL能使用那些索引来优化查询，<strong>查询列所涉及到的列上的索引都会被列出，但不一定会被使用</strong>。</p>
+<h2 id="KEY"><a href="#KEY" class="headerlink" title="KEY"></a>KEY</h2><p>显示MySQL在查询中实际使用的索引，若没有使用索引，显示为NULL。</p>
 <blockquote>
-<p>MyISAM类型的表强调的是性能，其执行数度比InnoDB类型更快，但是不提供事务支持，而InnoDB提供事务支持以及外部键等高级数据库功能。</p>
+<p>TIPS：查询中若使用了覆盖索引，则该索引仅出现在key列表中。</p>
 </blockquote>
-<h2 id="命名规则"><a href="#命名规则" class="headerlink" title="命名规则"></a>命名规则</h2><p>本着<strong>约定优先于配置</strong>（Convention Over Configuration）的原则，表的命名规则一样很重要。</p>
+<h2 id="KEY-LEN"><a href="#KEY-LEN" class="headerlink" title="KEY_LEN"></a>KEY_LEN</h2><ul>
+<li>表示索引字段的最大可能长度。</li>
+</ul>
+<ul>
+<li>此值的长度有字段定义计算而来，并非数据的实际长度。</li>
+</ul>
+<h2 id="REF"><a href="#REF" class="headerlink" title="REF"></a>REF</h2><p>表示表的连接匹配条件，即哪些列或常量被用于查找索引列上的值。</p>
+<h2 id="ROWS"><a href="#ROWS" class="headerlink" title="ROWS"></a>ROWS</h2><p>表示MySQL通过索引统计的信息，估算出的所需读取的行数。是一个不十分准确的值。</p>
+<h2 id="FILTERED"><a href="#FILTERED" class="headerlink" title="FILTERED"></a>FILTERED</h2><p>表示返回结果的行数占需读取行数的百分比，越大越好，也并不十分准确。</p>
+<h2 id="EXTRA"><a href="#EXTRA" class="headerlink" title="EXTRA"></a>EXTRA</h2><p>1、<strong>Using index</strong></p>
+<p>该值表示相应的<em>Select</em>操作中使用了<strong><em>覆盖索引(Covering Index)</em></strong>。</p>
 <blockquote>
-<ul>
-<li>MySQL数据库、表、字段等名称统一使用小写，单词间用_下划线分隔。</li>
-<li>表名和字段名不宜过长（不超过64个字符）。</li>
-<li>建议数据库统一设置编码为utf8，不仅仅是为了应付数据库间导入导出过程中、因编码格式不统一而导致的恼人的乱码问题，也是因为utf8是一种万国码（Unicode）。</li>
-</ul>
+<p>TIPS：覆盖索引（Covering Index）</p>
+<p>MySQL可以利用索引返回select列表中的字段，而不必根据索引再次读取数据文件包含所有满足查询需要的数据的索引称为 <strong>覆盖索引</strong>（Covering Index）</p>
 </blockquote>
-<h2 id="语句-索引"><a href="#语句-索引" class="headerlink" title="语句+索引"></a>语句+索引</h2><p>索引的合理建立和查询语句的优化可以迅速提升数据库性能。</p>
-<p>设计阶段就需要预计QPS（Query Per Second）及数据规模，参考业务场景对数据的要求，合理设计表结构（参考mysql在线DDL问题），甚至违反设计范式做到适当冗余。生产环境分析慢日志，优化语句。索引的设计需要知道索引是怎么用的，比如innodb的加锁机制。</p>
-<p>垃圾查询拖慢性能。不合理的schema设计也会导致数据存取慢。索引的作用不必多说，但如innodb下，错的索引带来的可能不只是查询变慢。</p>
-<blockquote>
-<p>MySQL语句优化是我们最常见也是开发过程中最需要注意的。各种关键字的使用场合、多表之间的关联(据说阿里的要求是关联表不超多三个)、索引的合理使用、批量插入、批量更新、批量删除、临时表的使用等等。</p>
-</blockquote>
-<h2 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h2><p>当数据库的压力太大时可以将一部分压力转嫁到缓存（我常用的是Redis），其流程如下：</p>
-<div align="center"><img width="350" height="350" src="http://on937g0jc.bkt.clouddn.com/2017-4-17/redis.png" algin="center"><br><br></div>
-
-<h2 id="复制及读写分离"><a href="#复制及读写分离" class="headerlink" title="复制及读写分离"></a>复制及读写分离</h2><p>这个是大多数场景下都是必须的。因为复制可以实现备份、高可用、负载均衡。</p>
-<p>其中读写分离可以在应用层做，效率高，也可以用三方工具，如360的atlas。</p>
-<h2 id="切分"><a href="#切分" class="headerlink" title="切分"></a>切分</h2><p>切分包括<code>垂直切分</code>和<code>水平切分</code>，实现方式上又包括分库、分表。</p>
-<ul>
-<li>垂直切分保证业务的独立性，防止不同业务争抢资源，毕竟业务是有优先级的。</li>
-<li>水平切分主要用于突破单机瓶颈。除了主主外，只有切分能真正做到将负载分配下去。</li>
-<li>切分后也可对不同片数据进行不同优化。如按时间切分，超过一定时间数据不允许修改，就可以引入压缩了，数据传输及读取减少很多。</li>
+<p>注意：如果要使用覆盖索引，一定要注意<em>Select</em>列表中只取出需要的列，不可Select *，因为如果将所有字段一起做索引会导致索引文件过大，查询性能下降。</p>
+<p>2、<strong>Using where</strong></p>
+<p>表示MySQL服务器在存储引擎受到记录后进行“后过滤”（Post-filter），如果查询未能使用索引，<em>Using where</em>的作用只是提醒我们MySQL将用<em>where</em>子句来过滤结果集。</p>
+<p>3、<strong>Using temporary</strong></p>
+<p>表示MySQL需要使用临时表来存储结果集，常见于排序和分组查询。</p>
+<p>4、<strong>Using filesort</strong></p>
+<p>MySQL中无法利用索引完成的排序操作称为“文件排序”。</p>
+<p>5、<strong>distinct</strong></p>
+<p>优化distinct操作，在找到第一匹配的元组后即停止找同样值的动作。</p>
+<p>6、<strong>not exists</strong></p>
+<p>使用<em>not exists</em>来优化查询。</p>
+<p>7、<strong>select tables optimized away</strong></p>
+<p>直接通过索引来获得数据，不用访问表。</p>
+<h1 id="执行计划的局限性"><a href="#执行计划的局限性" class="headerlink" title="执行计划的局限性"></a>执行计划的局限性</h1><ul>
+<li>EXPLAIN无法展示关于触发器、存储过程的信息或用户自定义函数对查询的影响情况。</li>
+<li>EXPLAIN不考虑各种Cache。</li>
+<li>EXPLAIN不能显示MySQL在执行查询时所作的优化工作。</li>
+<li>部分统计信息是估算的，并非精确值。</li>
+<li>早期版本的MySQL只支持对<em>Select</em>语句进行分析。</li>
 </ul>
-<ul>
-<li>根据业务垂直切分。业务内部分库、分表。一般都需要修改应用。除分表外，其余实现不是很复杂。有第三方组件可用，但通用高效又灵活的方式，还是自己写client。</li>
-</ul>
-<ul>
-<li>垂直切分一般都要做，只不过业务粒度大小而已。</li>
-<li>分库有是经常用的，就算当前压力小，也尽量分出几个逻辑库出来。等规模上去了，很方便就迁移扩展。</li>
-<li>水平拆分有一定难度，但如果将来一定会到这个规模，又可能用到，建议越早做越好。因为对应用的改动较大，而且迁移成本高。</li>
-</ul>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>MySQL总结可以说是： <strong>优化SQL</strong>，<strong>优化结构</strong>，<strong>优化存储</strong>。</p>
-<p>对于MySQL的优化我还需要进一步提高，从表的设计建立到后期的维护考虑的问题有很多，每一步都需要注意。没有DBA，只有自己来实现。</p>
 
       
     </div>
@@ -564,18 +609,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/01/微信公众号网页开发/" rel="next" title="微信公众号网页开发">
-                <i class="fa fa-chevron-left"></i> 微信公众号网页开发
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/04/07/Linux基本命令/" rel="prev" title="Linux基本命令">
-                Linux基本命令 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/04/17/MySQL主从复制/" rel="prev" title="MySQL主从/主主复制">
+                MySQL主从/主主复制 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -764,7 +805,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于MySQL"><span class="nav-number">2.</span> <span class="nav-text">关于MySQL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MySQL的优化"><span class="nav-number">3.</span> <span class="nav-text">MySQL的优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#存储引擎"><span class="nav-number">3.1.</span> <span class="nav-text">存储引擎</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#命名规则"><span class="nav-number">3.2.</span> <span class="nav-text">命名规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语句-索引"><span class="nav-number">3.3.</span> <span class="nav-text">语句+索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存"><span class="nav-number">3.4.</span> <span class="nav-text">缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复制及读写分离"><span class="nav-number">3.5.</span> <span class="nav-text">复制及读写分离</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切分"><span class="nav-number">3.6.</span> <span class="nav-text">切分</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#适用场景"><span class="nav-number">2.</span> <span class="nav-text">适用场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#EXPLAIN可得到的信息"><span class="nav-number">3.</span> <span class="nav-text">EXPLAIN可得到的信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#读懂执行计划"><span class="nav-number">4.</span> <span class="nav-text">读懂执行计划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ID"><span class="nav-number">4.1.</span> <span class="nav-text">ID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SELECT-TYPE"><span class="nav-number">4.2.</span> <span class="nav-text">SELECT_TYPE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TABLE"><span class="nav-number">4.3.</span> <span class="nav-text">TABLE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PARTITIONS"><span class="nav-number">4.4.</span> <span class="nav-text">PARTITIONS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TYPE（类型性能是依次降低）"><span class="nav-number">4.5.</span> <span class="nav-text">TYPE（类型性能是依次降低）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#POSSIBLE-KEYS"><span class="nav-number">4.6.</span> <span class="nav-text">POSSIBLE_KEYS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KEY"><span class="nav-number">4.7.</span> <span class="nav-text">KEY</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KEY-LEN"><span class="nav-number">4.8.</span> <span class="nav-text">KEY_LEN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#REF"><span class="nav-number">4.9.</span> <span class="nav-text">REF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ROWS"><span class="nav-number">4.10.</span> <span class="nav-text">ROWS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FILTERED"><span class="nav-number">4.11.</span> <span class="nav-text">FILTERED</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EXTRA"><span class="nav-number">4.12.</span> <span class="nav-text">EXTRA</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#执行计划的局限性"><span class="nav-number">5.</span> <span class="nav-text">执行计划的局限性</span></a></li></ol></div>
             
 
           </div>

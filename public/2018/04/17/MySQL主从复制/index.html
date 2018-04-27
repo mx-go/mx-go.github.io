@@ -101,7 +101,7 @@
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_master_slave/2-1.png">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_master_slave/db_1.jpg">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_master_slave/db_2.png">
-<meta property="og:updated_time" content="2018-04-17T07:44:56.740Z">
+<meta property="og:updated_time" content="2018-04-27T06:10:36.944Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL主从/主主复制">
 <meta name="twitter:description" content="前言MySQL作为世界上最广泛的数据库之一，免费是原因之一，其本身功能的强大也是获得众多用的青睐的重要原因。在实际的生产环境中，单机版MySQL数据库就不能满足实际的需求了，此时数据库集群就很好的解决了这个问题了。采用MySQL分布式集群，能够搭建一个高并发、负载均衡的集群服务器。在此之前必须要保证每台MySQL服务器里的数据同步。数据同步可以通过MySQL内部配置就可以轻松完成，主要有主从复制和">
@@ -421,7 +421,7 @@
                    <span class="post-meta-item-text">字数统计</span>
                  
                    <span title="字数统计" }}">
-                     2,131 字
+                     2,143 字
                    </span>
              
              
@@ -478,13 +478,14 @@
 <p>默认采用基于语句的复制，一旦发现基于语句的无法精确的复制时，就会采用基于行的复制。</p>
 </blockquote>
 <h1 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h1><ul>
-<li>主从服务器操作系统版本和位数一致 。</li>
+<li>文件${mysql}/data/auto.cnf里server-uuid不能重复。</li>
+<li>主从服务器操作系统版本和位数一致。</li>
 </ul>
 <ul>
-<li>Master和Slave数据库的版本要一致 。</li>
+<li>Master和Slave数据库的版本要一致。</li>
 </ul>
 <ul>
-<li>Master和Slave数据库中的数据要一致 。</li>
+<li>Master和Slave数据库中的数据要一致。</li>
 </ul>
 <ul>
 <li>Master开启二进制日志，Master和Slave的server_id在局域网内必须唯一。</li>
@@ -617,6 +618,10 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/04/27/MySQL执行计划/" rel="next" title="MySQL执行计划">
+                <i class="fa fa-chevron-left"></i> MySQL执行计划
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
@@ -700,7 +705,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-count">41</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

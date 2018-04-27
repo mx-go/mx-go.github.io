@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="mysql," />
+  <meta name="keywords" content="开发,java,技巧,技术,rainbowhorse,http://rainbowhorse.site" />
 
 
 
@@ -87,20 +87,15 @@
 
 
 
-<meta name="description" content="引言数据库在每个项目中都会用到，现在又分为两个门派，一种关系型数据库，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是非关系型数据库，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。">
-<meta name="keywords" content="mysql">
-<meta property="og:type" content="article">
-<meta property="og:title" content="MySQL优化">
-<meta property="og:url" content="https://sunny0715.github.io/2017/04/17/MySQL优化/index.html">
+<meta name="description" content="总结个人心得，记录个人知识">
+<meta property="og:type" content="website">
+<meta property="og:title" content="rainbowhorse's blog">
+<meta property="og:url" content="https://sunny0715.github.io/archives/page/5/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
-<meta property="og:description" content="引言数据库在每个项目中都会用到，现在又分为两个门派，一种关系型数据库，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是非关系型数据库，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-4-17/MYSQL.jpg">
-<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2017-4-17/redis.png">
-<meta property="og:updated_time" content="2018-03-13T05:51:53.654Z">
+<meta property="og:description" content="总结个人心得，记录个人知识">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MySQL优化">
-<meta name="twitter:description" content="引言数据库在每个项目中都会用到，现在又分为两个门派，一种关系型数据库，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是非关系型数据库，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。">
-<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2017-4-17/MYSQL.jpg">
+<meta name="twitter:title" content="rainbowhorse's blog">
+<meta name="twitter:description" content="总结个人心得，记录个人知识">
 
 
 
@@ -128,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="https://sunny0715.github.io/2017/04/17/MySQL优化/"/>
+  <link rel="canonical" href="https://sunny0715.github.io/archives/page/5/"/>
 
 
 
 
 
-  <title> MySQL优化 | rainbowhorse's blog </title>
+  <title> 归档 | rainbowhorse's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -169,7 +164,7 @@
     
   
 
-  <div class="container sidebar-position-right page-post-detail ">
+  <div class="container sidebar-position-right  page-archive  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -307,292 +302,69 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
+  <section id="posts" class="posts-collapse">
+    <span class="archive-move-on"></span>
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/04/17/MySQL优化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rainbowhorse">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://on937g0jc.bkt.clouddn.com/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="rainbowhorse's blog">
+    <span class="archive-page-counter">
+      
+      
+       
+      
+      OK! 目前共计 41 篇日志。 继续努力。
     </span>
 
     
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                MySQL优化
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-17T12:31:55+08:00">
-                2017-04-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/technology/" itemprop="url" rel="index">
-                    <span itemprop="name">technology</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/04/17/MySQL优化/" class="leancloud_visitors" data-flag-title="MySQL优化">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-		  
-		  
-           <div class="post-wordcount">
-             
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-edit"></i>
-               </span>
-                 
-                   <span class="post-meta-item-text">字数统计</span>
-                 
-                   <span title="字数统计" }}">
-                     1,330 字
-                   </span>
-             
-             
-               <span class="post-meta-divider">|</span>
-             
-             
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-clock-o"></i>
-               </span>
-                 
-                   <span class="post-meta-item-text">阅读时长</span>
-                 
-                   <span title="阅读时长" }}">
-                     5 分钟
-                   </span>
-             
-           </div>
-         
-		  
-		  
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
 
       
       
-
       
-        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>数据库在每个项目中都会用到，现在又分为两个门派，一种<em><a href="http://baike.baidu.com/link?url=F1B2ducJyF3-AS6F8RbkCx-1y10TqUb0tcFlxpySya025ev87isg4GprakGLkp0RvhYLO6qbgzGBTskhi-iLVM9R6yI9MtAqhHq6qy7VPj6HTfW01Y2bIhIR5O7g1xOYdZ6Zsm_qzvnKGVw5oFSzkK" target="_blank" rel="external">关系型数据库</a></em>，常见的有MySQL、SQL Server、Oracle、DB2等。另一种是<em>非关系型数据库</em>，也就是NOSQL( Not Only SQL)，常见的NOSQL数据库有Redis 、MongoDB、Cassandra等。数据库的优化直接影响到网站的性能，在这里记录一下MySQL的优化。<div align="center"><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-4-17/MYSQL.jpg" algin="center"></div></p>
-<p><a id="more"></a></p>
-<h1 id="关于MySQL"><a href="#关于MySQL" class="headerlink" title="关于MySQL"></a>关于MySQL</h1><p>MySQL 是一个跨平台的<code>开源</code><strong>关系型数据库</strong>管理系统，目前 MySQL 被广泛地应用在 Internet 上的中小型网站中。由于其体积小、速度快、总体拥有成本低，尤其是开放源码这一特点，许多中小型网站为了降低网站总体拥有成本而选择了 MySQL 作为网站数据库。比如淘宝、京东等知名公司也都在使用。</p>
-<p>MySQL的<strong>存储引擎</strong>有分为很多种。MyISAM、InnoDB等。每个引擎的特性都不一样，可以在不同的情况下选择不同的存储引擎。</p>
-<h1 id="MySQL的优化"><a href="#MySQL的优化" class="headerlink" title="MySQL的优化"></a>MySQL的优化</h1><p>对于一个小项目来说，MySQL优化与否可能没有那么重要，带来的优化效果也没有那么明显。但是如果面对的是一个千万级的大表、千万级甚至上亿的数据量时，优化是必不可少的。那么要从如下几方面来做优化：</p>
-<h2 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h2><p>一般情况可以选择MyISAM存储引擎，如果需要事务支持必须使用InnoDB存储引擎。</p>
-<blockquote>
-<p>MyISAM类型的表强调的是性能，其执行数度比InnoDB类型更快，但是不提供事务支持，而InnoDB提供事务支持以及外部键等高级数据库功能。</p>
-</blockquote>
-<h2 id="命名规则"><a href="#命名规则" class="headerlink" title="命名规则"></a>命名规则</h2><p>本着<strong>约定优先于配置</strong>（Convention Over Configuration）的原则，表的命名规则一样很重要。</p>
-<blockquote>
-<ul>
-<li>MySQL数据库、表、字段等名称统一使用小写，单词间用_下划线分隔。</li>
-<li>表名和字段名不宜过长（不超过64个字符）。</li>
-<li>建议数据库统一设置编码为utf8，不仅仅是为了应付数据库间导入导出过程中、因编码格式不统一而导致的恼人的乱码问题，也是因为utf8是一种万国码（Unicode）。</li>
-</ul>
-</blockquote>
-<h2 id="语句-索引"><a href="#语句-索引" class="headerlink" title="语句+索引"></a>语句+索引</h2><p>索引的合理建立和查询语句的优化可以迅速提升数据库性能。</p>
-<p>设计阶段就需要预计QPS（Query Per Second）及数据规模，参考业务场景对数据的要求，合理设计表结构（参考mysql在线DDL问题），甚至违反设计范式做到适当冗余。生产环境分析慢日志，优化语句。索引的设计需要知道索引是怎么用的，比如innodb的加锁机制。</p>
-<p>垃圾查询拖慢性能。不合理的schema设计也会导致数据存取慢。索引的作用不必多说，但如innodb下，错的索引带来的可能不只是查询变慢。</p>
-<blockquote>
-<p>MySQL语句优化是我们最常见也是开发过程中最需要注意的。各种关键字的使用场合、多表之间的关联(据说阿里的要求是关联表不超多三个)、索引的合理使用、批量插入、批量更新、批量删除、临时表的使用等等。</p>
-</blockquote>
-<h2 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h2><p>当数据库的压力太大时可以将一部分压力转嫁到缓存（我常用的是Redis），其流程如下：</p>
-<div align="center"><img width="350" height="350" src="http://on937g0jc.bkt.clouddn.com/2017-4-17/redis.png" algin="center"><br><br></div>
 
-<h2 id="复制及读写分离"><a href="#复制及读写分离" class="headerlink" title="复制及读写分离"></a>复制及读写分离</h2><p>这个是大多数场景下都是必须的。因为复制可以实现备份、高可用、负载均衡。</p>
-<p>其中读写分离可以在应用层做，效率高，也可以用三方工具，如360的atlas。</p>
-<h2 id="切分"><a href="#切分" class="headerlink" title="切分"></a>切分</h2><p>切分包括<code>垂直切分</code>和<code>水平切分</code>，实现方式上又包括分库、分表。</p>
-<ul>
-<li>垂直切分保证业务的独立性，防止不同业务争抢资源，毕竟业务是有优先级的。</li>
-<li>水平切分主要用于突破单机瓶颈。除了主主外，只有切分能真正做到将负载分配下去。</li>
-<li>切分后也可对不同片数据进行不同优化。如按时间切分，超过一定时间数据不允许修改，就可以引入压缩了，数据传输及读取减少很多。</li>
-</ul>
-<ul>
-<li>根据业务垂直切分。业务内部分库、分表。一般都需要修改应用。除分表外，其余实现不是很复杂。有第三方组件可用，但通用高效又灵活的方式，还是自己写client。</li>
-</ul>
-<ul>
-<li>垂直切分一般都要做，只不过业务粒度大小而已。</li>
-<li>分库有是经常用的，就算当前压力小，也尽量分出几个逻辑库出来。等规模上去了，很方便就迁移扩展。</li>
-<li>水平拆分有一定难度，但如果将来一定会到这个规模，又可能用到，建议越早做越好。因为对应用的改动较大，而且迁移成本高。</li>
-</ul>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>MySQL总结可以说是： <strong>优化SQL</strong>，<strong>优化结构</strong>，<strong>优化存储</strong>。</p>
-<p>对于MySQL的优化我还需要进一步提高，从表的设计建立到后期的维护考虑的问题有很多，每一步都需要注意。没有DBA，只有自己来实现。</p>
-
-      
-    </div>
-	
-	<div>
-		
-			<div>
-    
-        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
-    
-</div>
-		
-	</div>
-
-    <div>
       
         
-
-      
-    </div>
-
-    <div>
-      
-        
-  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-    <div>谢谢你请我吃糖果</div>
-    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-      <span>赏</span>
-    </button>
-    <div id="QR" style="display: none;">
-      
-        <div id="wechat" style="display: inline-block">
-          <img id="wechat_qr" src="/uploads/weixinPay.jpg" alt="rainbowhorse WeChat Pay"/>
-          <p>微信打赏</p>
+        <div class="collection-title">
+          <h2 class="archive-year motion-element" id="archive-year-2017">2017</h2>
         </div>
       
       
-    </div>
-  </div>
-
 
       
-    </div>
 
-    <div>
-      
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h2 class="post-title">
         
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/mysql/" rel="tag"><i class="fa fa-tag"></i> mysql</a>
-          
-        </div>
-      
-
-      
+            <a class="post-title-link" href="/2017/03/07/博客建成第一天/" itemprop="url">
+              
+                <span itemprop="name">博客建成第一天</span>
+              
+            </a>
         
-      
+      </h2>
 
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/06/01/微信公众号网页开发/" rel="next" title="微信公众号网页开发">
-                <i class="fa fa-chevron-left"></i> 微信公众号网页开发
-              </a>
-            
-          </div>
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2017-03-07T13:30:26+08:00"
+              content="2017-03-07" >
+          03-07
+        </time>
+      </div>
 
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/04/07/Linux基本命令/" rel="prev" title="Linux基本命令">
-                Linux基本命令 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
+    </header>
   </article>
 
 
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+    
+
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/archives/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/4/">4</a><span class="page-number current">5</span>
+  </nav>
+
+
 
 
 
@@ -601,12 +373,6 @@
 
 
           
-  <div class="comments" id="comments">
-    
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDc4MS8xMTMxOA=="></div>
-    
-  </div>
-
 
         </div>
         
@@ -626,17 +392,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://on937g0jc.bkt.clouddn.com/avatar.jpg"
@@ -754,22 +511,6 @@
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于MySQL"><span class="nav-number">2.</span> <span class="nav-text">关于MySQL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MySQL的优化"><span class="nav-number">3.</span> <span class="nav-text">MySQL的优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#存储引擎"><span class="nav-number">3.1.</span> <span class="nav-text">存储引擎</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#命名规则"><span class="nav-number">3.2.</span> <span class="nav-text">命名规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语句-索引"><span class="nav-number">3.3.</span> <span class="nav-text">语句+索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存"><span class="nav-number">3.4.</span> <span class="nav-text">缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复制及读写分离"><span class="nav-number">3.5.</span> <span class="nav-text">复制及读写分离</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切分"><span class="nav-number">3.6.</span> <span class="nav-text">切分</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -894,9 +635,11 @@
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
-
+  
+    <script type="text/javascript" id="motion.page.archive">
+      $('.archive-year').velocity('transition.slideLeftIn');
+    </script>
+  
 
 
   

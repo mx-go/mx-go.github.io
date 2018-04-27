@@ -35,13 +35,14 @@ MySQL作为世界上最广泛的数据库之一，免费是原因之一，其本
 
 # 要求
 
-- 主从服务器操作系统版本和位数一致 。
+- 文件${mysql}/data/auto.cnf里server-uuid不能重复。
+- 主从服务器操作系统版本和位数一致。
 
 
-- Master和Slave数据库的版本要一致 。
+- Master和Slave数据库的版本要一致。
 
 
-- Master和Slave数据库中的数据要一致 。
+- Master和Slave数据库中的数据要一致。
 
 
 - Master开启二进制日志，Master和Slave的server_id在局域网内必须唯一。
