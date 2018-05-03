@@ -5,7 +5,7 @@ tags: [mysql]
 categories: technology
 ---
 
-# 前言
+# 引言
 
 MySQL执行计划，简单的来说，是SQL在数据库中执行时的表现情况，通常用于SQL性能分析，优化等场景。在MySQL使用 **explain** 关键字来查看SQL的执行计划。<div align=center><img width="800" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_explain/mysql-explain.png" algin="center"/>
 

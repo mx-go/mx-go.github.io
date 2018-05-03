@@ -5,7 +5,7 @@ tags: [redis]
 categories: technology
 ---
 
-# 前言
+# 引言
 
 Redis作为一个高性能的内存NoSQL数据库，其容量受到最大内存限制的限制。为了防止一次性清理大量过期Key导致Redis服务受影响，Redis只在空闲时清理过期Key。<div align=center>
 

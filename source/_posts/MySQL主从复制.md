@@ -5,7 +5,7 @@ tags: [mysql]
 categories: technology
 ---
 
-# 前言
+# 引言
 
 MySQL作为世界上最广泛的数据库之一，免费是原因之一，其本身功能的强大也是获得众多用的青睐的重要原因。在实际的生产环境中，单机版MySQL数据库就不能满足实际的需求了，此时数据库集群就很好的解决了这个问题了。采用MySQL分布式集群，能够搭建一个高并发、负载均衡的集群服务器。在此之前必须要保证每台MySQL服务器里的数据同步。数据同步可以通过MySQL内部配置就可以轻松完成，主要有**主从复制**和**主主复制**。<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_master_slave/index.jpg" algin="center"/>
 
@@ -37,15 +37,10 @@ MySQL作为世界上最广泛的数据库之一，免费是原因之一，其本
 
 - 文件${mysql}/data/auto.cnf里server-uuid不能重复。
 - 主从服务器操作系统版本和位数一致。
-
-
 - Master和Slave数据库的版本要一致。
-
-
 - Master和Slave数据库中的数据要一致。
-
-
 - Master开启二进制日志，Master和Slave的server_id在局域网内必须唯一。
+
 
 # 主从复制
 
