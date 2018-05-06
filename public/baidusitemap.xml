@@ -4,12 +4,32 @@
 
     
   <url>
-    <loc>https://sunny0715.github.io/2018/05/03/Spring%E4%B8%8BMySQL%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB/</loc>
-    <lastmod>2018-05-03T09:07:59.634Z</lastmod>
+    <loc>https://sunny0715.github.io/2018/05/05/HTTPS%E5%8D%8F%E8%AE%AE/</loc>
+    <lastmod>2018-05-05T05:45:26.221Z</lastmod>
+    <data>
+        <display>
+        <title>HTTPS协议</title>
+        <pubTime>2018-05-05T02:06:57.000Z</pubTime>
+        
+        <tag>tips</tag>
+         
+         
+           
+             
+              <breadCrumb title="technology" url="https://sunny0715.github.io/categories/technology/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://sunny0715.github.io/2018/05/02/Spring%E4%B8%8BMySQL%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB/</loc>
+    <lastmod>2018-05-04T13:43:48.442Z</lastmod>
     <data>
         <display>
         <title>Spring下MySQL读写分离</title>
-        <pubTime>2018-05-03T07:46:51.000Z</pubTime>
+        <pubTime>2018-05-02T07:46:51.000Z</pubTime>
         
         <tag>mysql</tag>
          

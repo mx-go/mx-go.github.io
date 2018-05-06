@@ -1,6 +1,6 @@
 ---
 title: Spring下MySQL读写分离
-date: 2018-05-03 15:46:51
+date: 2018-05-02 15:46:51
 tags: [mysql,spring]
 categories: technology
 ---

@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java,tips," />
+  <meta name="keywords" content="tips," />
 
 
 
@@ -87,17 +87,25 @@
 
 
 
-<meta name="description" content="近期在公司做了一个关于定时执行任务的功能（没有使用框架定时），查了一下资料，有Thread、Timer和Executors三种方法，之前使用的是Timer，但是详细查了资料觉得Executors更优，所以在这里比较一下它们的区别。">
-<meta name="keywords" content="java,tips">
+<meta name="description" content="引言HTTP和HTTPS协议是互联网上应用最为广泛的网络协议，现在为了安全，很多网站从HTTP的阵营转向HTTPS。近两年，Google、Baidu、Facebook 等这样的互联网巨头，不谋而合地开始大力推行 HTTPS， 国内外的大型互联网公司很多也都已经启用了全站 HTTPS，这也是未来互联网发展的趋势。">
+<meta name="keywords" content="tips">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JAVA定时调度 Timer和Executors">
-<meta property="og:url" content="https://sunny0715.github.io/2017/03/27/JAVA定时调度-Timer和Executors/index.html">
+<meta property="og:title" content="HTTPS协议">
+<meta property="og:url" content="https://sunny0715.github.io/2018/05/05/HTTPS协议/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
-<meta property="og:description" content="近期在公司做了一个关于定时执行任务的功能（没有使用框架定时），查了一下资料，有Thread、Timer和Executors三种方法，之前使用的是Timer，但是详细查了资料觉得Executors更优，所以在这里比较一下它们的区别。">
-<meta property="og:updated_time" content="2018-03-13T05:49:02.851Z">
+<meta property="og:description" content="引言HTTP和HTTPS协议是互联网上应用最为广泛的网络协议，现在为了安全，很多网站从HTTP的阵营转向HTTPS。近两年，Google、Baidu、Facebook 等这样的互联网巨头，不谋而合地开始大力推行 HTTPS， 国内外的大型互联网公司很多也都已经启用了全站 HTTPS，这也是未来互联网发展的趋势。">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-5/HTTPS/https.jpg">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-5/HTTPS/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B.gif">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-5/HTTPS/tcp.gif">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-5/HTTPS/tcp_1.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-5/HTTPS/tcp_2.png">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-5/HTTPS/compare.jpg">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-5/HTTPS/HTTPS.png">
+<meta property="og:updated_time" content="2018-05-05T05:45:26.221Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JAVA定时调度 Timer和Executors">
-<meta name="twitter:description" content="近期在公司做了一个关于定时执行任务的功能（没有使用框架定时），查了一下资料，有Thread、Timer和Executors三种方法，之前使用的是Timer，但是详细查了资料觉得Executors更优，所以在这里比较一下它们的区别。">
+<meta name="twitter:title" content="HTTPS协议">
+<meta name="twitter:description" content="引言HTTP和HTTPS协议是互联网上应用最为广泛的网络协议，现在为了安全，很多网站从HTTP的阵营转向HTTPS。近两年，Google、Baidu、Facebook 等这样的互联网巨头，不谋而合地开始大力推行 HTTPS， 国内外的大型互联网公司很多也都已经启用了全站 HTTPS，这也是未来互联网发展的趋势。">
+<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2018-5/HTTPS/https.jpg">
 
 
 
@@ -125,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="https://sunny0715.github.io/2017/03/27/JAVA定时调度-Timer和Executors/"/>
+  <link rel="canonical" href="https://sunny0715.github.io/2018/05/05/HTTPS协议/"/>
 
 
 
 
 
-  <title> JAVA定时调度 Timer和Executors | rainbowhorse's blog </title>
+  <title> HTTPS协议 | rainbowhorse's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -314,7 +322,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2017/03/27/JAVA定时调度-Timer和Executors/">
+    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2018/05/05/HTTPS协议/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rainbowhorse">
@@ -335,7 +343,7 @@
             
             
               
-                JAVA定时调度 Timer和Executors
+                HTTPS协议
               
             
           </h2>
@@ -350,8 +358,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-27T17:42:49+08:00">
-                2017-03-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-05T10:06:57+08:00">
+                2018-05-05
               </time>
             
 
@@ -390,7 +398,7 @@
 
           
           
-             <span id="/2017/03/27/JAVA定时调度-Timer和Executors/" class="leancloud_visitors" data-flag-title="JAVA定时调度 Timer和Executors">
+             <span id="/2018/05/05/HTTPS协议/" class="leancloud_visitors" data-flag-title="HTTPS协议">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -413,7 +421,7 @@
                    <span class="post-meta-item-text">字数统计</span>
                  
                    <span title="字数统计" }}">
-                     1,168 字
+                     2,235 字
                    </span>
              
              
@@ -427,7 +435,7 @@
                    <span class="post-meta-item-text">阅读时长</span>
                  
                    <span title="阅读时长" }}">
-                     5 分钟
+                     8 分钟
                    </span>
              
            </div>
@@ -449,50 +457,65 @@
       
 
       
-        <p>近期在公司做了一个关于定时执行任务的功能（没有使用框架定时），查了一下资料，有<strong>Thread</strong>、<strong>Timer</strong>和<strong>Executors</strong>三种方法，之前使用的是Timer，但是详细查了资料觉得<strong>Executors更优</strong>，所以在这里比较一下它们的区别。<a id="more"></a></p>
-<h2 id="Thread类"><a href="#Thread类" class="headerlink" title="Thread类"></a>Thread类</h2><p>这是最基本的，创建一个Thread，然后让它在while循环里一直运行着，通过sleep方法来达到定时任务的效果。这样可以快速简单的实现，代码如下： </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Task1</span> </span>&#123;  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;  </div><div class="line">        <span class="comment">// run in a second  </span></div><div class="line">        <span class="keyword">final</span> <span class="keyword">long</span> timeInterval = <span class="number">1000</span>;  </div><div class="line">        Runnable runnable = <span class="keyword">new</span> Runnable() &#123;  </div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;  </div><div class="line">                <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;  </div><div class="line">                    <span class="comment">// ------- code for task to run  </span></div><div class="line">                    System.out.println(<span class="string">"Hello !!"</span>);  </div><div class="line">                    <span class="comment">// ------- ends here  </span></div><div class="line">                    <span class="keyword">try</span> &#123;  </div><div class="line">                        Thread.sleep(timeInterval);  </div><div class="line">                    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;  </div><div class="line">                        e.printStackTrace();  </div><div class="line">                    &#125;  </div><div class="line">                &#125;  </div><div class="line">            &#125;  </div><div class="line">        &#125;;  </div><div class="line">        Thread thread = <span class="keyword">new</span> Thread(runnable);  </div><div class="line">        thread.start();  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>HTTP和HTTPS协议是互联网上应用最为广泛的网络协议，现在为了安全，很多网站从HTTP的阵营转向HTTPS。近两年，Google、Baidu、Facebook 等这样的互联网巨头，不谋而合地开始大力推行 HTTPS， 国内外的大型互联网公司很多也都已经启用了全站 HTTPS，这也是未来互联网发展的趋势。<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-5/HTTPS/https.jpg" algin="center"></div></p>
+<p><a id="more"></a></p>
+<h1 id="TCP协议"><a href="#TCP协议" class="headerlink" title="TCP协议"></a>TCP协议</h1><h2 id="TCP协议的三次握手与四次挥手"><a href="#TCP协议的三次握手与四次挥手" class="headerlink" title="TCP协议的三次握手与四次挥手"></a>TCP协议的三次握手与四次挥手</h2><p>先来一张网络模型图（应表会传网数物），可以看到TCP、UDP协议处于传输层。</p>
+<div align="center"><img width="900" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-5/HTTPS/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B.gif" algin="center"><br><br></div>
+
+<p>建立TCP需要三次握手才能建立，而断开连接连接则需要四次挥手。整个过程如下图：</p>
+<div align="center"><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-5/HTTPS/tcp.gif" algin="center"><br><br></div>
+
+<h2 id="三次握手建立连接"><a href="#三次握手建立连接" class="headerlink" title="三次握手建立连接"></a>三次握手建立连接</h2><div align="center"><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-5/HTTPS/tcp_1.png" algin="center"><br><br></div>
+
+<p>   1、<code>Client</code>端发送连接请求报文。</p>
+<p>   2、<code>Server</code>端接受连接后回复ACK报文，并为这次连接分配资源。</p>
+<p>   3、<code>Client</code>端接收到ACK报文后也向Server段发送报文，并分配资源</p>
+<p>这就是TCP的<strong>三次握手建立连接</strong>阶段。</p>
+<h2 id="四次挥手断开连接"><a href="#四次挥手断开连接" class="headerlink" title="四次挥手断开连接"></a>四次挥手断开连接</h2><div align="center"><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-5/HTTPS/tcp_2.png" algin="center"><br><br></div>
+
+<p>中断连接端可以是Client端，也可以是Server端。</p>
+<p>   1、假设<code>Client</code>端发起中断请求，也就是发送FIN报文。</p>
+<p>   2、<code>Server</code>端接到FIN报文后，告诉Client端，“你的请求我收到了，但是我还没准备好，请继续你等我的消息”。这个时候Client端就进入FIN_WAIT状态，继续等待Server端的FIN报文。</p>
+<p>   3、当<code>Server</code>端确定数据已发送完成，则向Client端发送FIN报文。告诉Client端，”好了，我这边数据发完了，准备好关闭连接了”。</p>
+<p>   4、<code>Client</code>端收到FIN报文后，就知道可以关闭连接了，但是他还是不相信网络，怕Server端不知道要关闭，所以发送ACK后进入TIME_WAIT状态，如果Server端没有收到ACK则可以重传。Server端收到ACK后，就知道可以断开连接了。Client端等待了2MSL后依然没有收到回复，则证明Server端已正常关闭，那Client端也可以关闭连接了。</p>
+<p>这就是TCP四次挥手断开连接。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一、为什么连接的时候是三次握手，关闭的时候却是四次握手？</p>
 <blockquote>
-<p>Thread的做定时任务的几率不大，因为不可控制启动停止时间、不能指定想要的delay时间。</p>
+<p>答：因为当Server端收到Client端的SYN连接请求报文后，可以直接发送SYN+ACK报文。其中ACK报文是用来应答的，SYN报文是用来同步的。但是关闭连接时，当Server端收到FIN报文时，很可能并不会立即关闭SOCKET，所以只能先回复一个ACK报文，告诉Client端，”你发的FIN报文我收到了”。只有等到我Server端所有的报文都发送完了，我才能发送FIN报文，因此不能一起发送。故需要四步握手。</p>
 </blockquote>
-<h2 id="Timer类"><a href="#Timer类" class="headerlink" title="Timer类"></a>Timer类</h2><ol>
-<li><p>于第一种方式相比，优势 :</p>
-<p>(1) 当启动和去取消任务时可以控制 ;</p>
-<p>(2) 第一次执行任务时可以指定你想要的delay时间。</p>
-</li>
-<li><p>在实现时，Timer类可以调度任务，TimerTask则是通过在run()方法里实现具体任务。 Timer实例可以调度多任务，它是线程安全的。 </p>
-</li>
-<li><p>当Timer的构造器被调用时，它创建了一个线程，这个线程可以用来调度任务。</p>
-</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Task2</span> </span>&#123;  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;  </div><div class="line">        TimerTask task = <span class="keyword">new</span> TimerTask() &#123;  </div><div class="line">            <span class="meta">@Override</span>  </div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;  </div><div class="line">                <span class="comment">// task to run goes here  </span></div><div class="line">                System.out.println(<span class="string">"Hello !!!"</span>);  </div><div class="line">            &#125;  </div><div class="line">        &#125;;  </div><div class="line">        Timer timer = <span class="keyword">new</span> Timer();  </div><div class="line">        <span class="keyword">long</span> delay = <span class="number">0</span>;  </div><div class="line">        <span class="keyword">long</span> intevalPeriod = <span class="number">1</span> * <span class="number">1000</span>;  </div><div class="line">        <span class="comment">// schedules the task to be run in an interval  </span></div><div class="line">        timer.scheduleAtFixedRate(task, delay, intevalPeriod);  </div><div class="line">    &#125; <span class="comment">// end of main  </span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>二、为什么TIME_WAIT状态需要经过2MSL(最大报文段生存时间Maximum Segment Lifetime)才能返回到CLOSE状态？</p>
 <blockquote>
-<p>缺点：如果TimerTask抛出未检查的异常，Timer将会产生无法预料的行为。Timer线程并不捕获异常，所以 TimerTask抛出的未检查的异常会终止timer线程。这种情况下，Timer也不会再重新恢复线程的执行了;它错误的认为整个Timer都被取消了。此时，已经被安排但尚未执行的TimerTask永远不会再执行了，新的任务也不能被调度了。</p>
+<p>答：虽然按道理，四个报文都发送完毕，我们可以直接进入CLOSE状态了，但是我们必须假象网络是不可靠的，有可以最后一个ACK丢失。所以TIME_WAIT状态就是用来重发可能丢失的ACK报文。</p>
 </blockquote>
-<h2 id="Executors"><a href="#Executors" class="headerlink" title="Executors"></a>Executors</h2><ol>
-<li><p><code>ScheduledExecutorService</code>是从Java SE5的java.util.concurrent里，做为并发工具类被引进的，这是最理想的定时任务实现方式。  </p>
-</li>
-<li><p>相比于上两个方法，它有以下好处 : </p>
-<p>(1) 相比于Timer的单线程，它是通过线程池的方式来执行任务的 ;</p>
-<p>(2) 可以很灵活的去设定第一次执行任务delay时间 ;</p>
-<p>(3) 提供了良好的约定，以便设定执行的时间间隔 。</p>
-</li>
-<li><p>下面是实现代码，我们通过ScheduledExecutorService展示这个例子，通过代码里参数的控制，首次执行加了delay时间。 </p>
-</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Task3</span> </span>&#123;  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;  </div><div class="line">        Runnable runnable = <span class="keyword">new</span> Runnable() &#123;  </div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;  </div><div class="line">                <span class="comment">// task to run goes here  </span></div><div class="line">                System.out.println(<span class="string">"Hello !!"</span>);  </div><div class="line">            &#125;  </div><div class="line">        &#125;;  </div><div class="line">        ScheduledExecutorService service = Executors  </div><div class="line">                .newSingleThreadScheduledExecutor();  </div><div class="line">        <span class="comment">// 第二个参数为首次执行的延时时间，第三个参数为定时执行的间隔时间  </span></div><div class="line">        service.scheduleAtFixedRate(runnable, <span class="number">10</span>, <span class="number">1</span>, TimeUnit.SECONDS);  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<blockquote>
-<ol>
-<li>线程池能按时间计划来执行任务，允许用户设定计划执行任务的时间。</li>
-<li>当任务较多时，线程池可能会自动创建更多的工作线程来执行任务 。</li>
-<li>支持多个任务并发执行。</li>
-</ol>
-</blockquote>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>Timer</code>是单线程的。所以task都是串行执行。假如其中一个task执行需要很长的时间，那其他的task只能干巴巴的等着。</p>
-<p><code>ScheduledThreadPoolExecutor</code>是一个可以重复执行任务的<code>线程池</code>，并且可以指定任务的间隔和延迟时间。它作为比Timer/TimerTask更加通用的替代品。因为它允许多个服务线程，接受不同的时间单位，且不需要继承TimeTask（仅仅需要实现Runnable接口）。配置ScheduledThreadPoolExecutor为单线程，则与使用Timer等效。</p>
-<p><strong>上述，基本说明了在以后的开发中尽可能使用ScheduledExecutorService(JDK1.5以后)替代Timer。</strong></p>
-<p>下面是自己做的功能，通过短信API定时查询教师回复信息并更新数据库。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 定时查询教师回复状态</div><div class="line"> * <span class="doctag">@param</span> a</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getStatusSchedule</span><span class="params">(<span class="keyword">final</span> Date replyEnd)</span></span>&#123;</div><div class="line">	</div><div class="line">	<span class="keyword">final</span> SendMessage sendMsg = <span class="keyword">new</span> SendMessage();</div><div class="line">	<span class="keyword">final</span> ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();</div><div class="line">	</div><div class="line">	service.scheduleAtFixedRate(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			<span class="keyword">try</span> &#123;</div><div class="line">				Date nowDate = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>).parse(<span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>).format(<span class="keyword">new</span> Date()));<span class="comment">//当前时间</span></div><div class="line">				<span class="comment">//若截至时间在当前时间之前执行定时任务 否则不执行</span></div><div class="line">				<span class="keyword">if</span> (!nowDate.before(replyEnd)) &#123;</div><div class="line">					service.shutdown();  <span class="comment">//停止任务</span></div><div class="line">					<span class="keyword">return</span>;</div><div class="line">				&#125;<span class="keyword">else</span> &#123;</div><div class="line">					Map&lt;String,Object&gt; map = sendMsg.getReplyMsg();  <span class="comment">//获取回复信息</span></div><div class="line">					<span class="keyword">if</span>(!map.isEmpty())&#123;		 <span class="comment">//当map不为空时执行						</span></div><div class="line">						updateMsgStatus(map);   <span class="comment">//更新数据库</span></div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">			&#125; <span class="keyword">catch</span> (ParseException e) &#123;</div><div class="line">				e.printStackTrace();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;, <span class="number">1</span>, <span class="number">1</span>, TimeUnit.MINUTES); <span class="comment">//执行后第一次查询在1分钟之后，每隔1分钟查询一次。 </span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="HTTPS协议"><a href="#HTTPS协议" class="headerlink" title="HTTPS协议"></a>HTTPS协议</h1><p>HTTPS（Hypertext Transfer Protocol over Secure Socket Layer，基于SSL的HTTP协议）使用了HTTP协议，但HTTPS使用不同于HTTP协议的默认端口及一个加密、身份验证层（HTTP与TCP之间）。HTTPS是一个安全通信通道，用于在客户计算机和服务器之间交换信息。它使用安全套接字层(SSL)进行信息交换，简单来说它是HTTP的安全版。</p>
+<ul>
+<li><strong>内容加密：</strong>建立一个信息安全通道，来保证数据传输的安全；</li>
+<li><strong>身份认证：</strong>确认网站的真实性；</li>
+<li><strong>数据完整性：</strong>防止内容被第三方冒充或者篡改；</li>
+</ul>
+<div align="center"><img width="450" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-5/HTTPS/compare.jpg" algin="center"><br><br></div>
+
+<h2 id="加密算法"><a href="#加密算法" class="headerlink" title="加密算法"></a>加密算法</h2><h3 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h3><p>有流式、分组两种。<strong>加密和解密都是使用的同一个密钥</strong>。</p>
+<p>例如：<em>DES、AES-GCM、ChaCha20-Poly1305</em>等。</p>
+<h3 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h3><p><strong>加密使用的密钥和解密使用的密钥是不相同的</strong>，分别称为：公钥、私钥，公钥的算法是公开的，私钥是保密的。非对称加密算法性能较低，但是安全性超强，由于其加密特性，非对称加密算法能加密的数据长度也是有限的。</p>
+<p>例如：<em>RSA、DSA、ECDSA、 DH、ECDHE</em>。</p>
+<h3 id="哈希算法"><a href="#哈希算法" class="headerlink" title="哈希算法"></a>哈希算法</h3><p>将任意长度的信息转换为较短的固定长度的值，通常其长度要比信息小得多，且<strong>算法不可逆</strong>。</p>
+<p>例如：<em>MD5、SHA-1、SHA-2、SHA-256</em> 等</p>
+<h3 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h3><p>签名就是在信息的后面再加上一段内容（信息经过hash后的值），可以证明信息没有被修改过。hash值一般都会加密后（也就是签名）再和信息一起发送，以保证这个hash值不被修改。</p>
+<h2 id="请求过程"><a href="#请求过程" class="headerlink" title="请求过程"></a>请求过程</h2><p>HTTPS其实是有两部分组成：<strong>HTTP + SSL/TLS</strong>，也就是在HTTP上又加了一层处理加密信息的模块。服务端和客户端的信息传输都会通过TLS进行加密，所以传输的数据都是加密后的数据。</p>
+<div align="center"><img width="800" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-5/HTTPS/HTTPS.png" algin="center"><br><br></div>
+
+<h3 id="客户端发起HTTPS请求"><a href="#客户端发起HTTPS请求" class="headerlink" title="客户端发起HTTPS请求"></a>客户端发起HTTPS请求</h3><p>用户在浏览器里输入一个https网址，连接到server的443端口。</p>
+<h3 id="服务端配置"><a href="#服务端配置" class="headerlink" title="服务端配置"></a>服务端配置</h3><p>采用HTTPS协议的服务器必须要有一套数字证书，可以自己制作，也可以向组织申请。区别就是自己颁发的证书需要客户端验证通过，才可以继续访问，而使用受信任的公司申请的证书则不会弹出提示页面。这套证书其实就是一对公钥和私钥。如果对公钥和私钥不太理解，可以想象成一把钥匙和一个锁头，只是全世界只有你一个人有这把钥匙，你可以把锁头给别人，别人可以用这个锁把重要的东西锁起来，然后发给你，因为只有你一个人有这把钥匙，所以只有你才能看到被这把锁锁起来的东西。</p>
+<h3 id="传送证书"><a href="#传送证书" class="headerlink" title="传送证书"></a>传送证书</h3><p>这个证书其实就是公钥，只是包含了很多信息，如证书的颁发机构，过期时间等等。</p>
+<h3 id="客户端解析证书"><a href="#客户端解析证书" class="headerlink" title="客户端解析证书"></a>客户端解析证书</h3><p>这部分工作是有<strong>客户端的TLS来完成</strong>的，首先会验证公钥是否有效，比如颁发机构，过期时间等等，如果发现异常，则会弹出一个警告框，提示证书存在问题。如果证书没有问题，那么就生成一个随即值。然后用证书对该随机值进行加密。就好像上面说的，把随机值用锁头锁起来，这样除非有钥匙，不然看不到被锁住的内容。</p>
+<h3 id="传送加密信息"><a href="#传送加密信息" class="headerlink" title="传送加密信息"></a>传送加密信息</h3><p>这部分传送的是用证书加密后的随机值，目的就是让服务端得到这个随机值，以后客户端和服务端的通信就可以通过这个随机值来进行加密解密了。</p>
+<h3 id="服务端解密信息"><a href="#服务端解密信息" class="headerlink" title="服务端解密信息"></a>服务端解密信息</h3><p>服务端用私钥解密后，得到了客户端传过来的随机值(私钥)，然后把内容通过该值进行对称加密。所谓对称加密就是，将信息和私钥通过某种算法混合在一起，这样除非知道私钥，不然无法获取内容，而正好客户端和服务端都知道这个私钥，所以只要加密算法够彪悍，私钥够复杂，数据就够安全。</p>
+<h3 id="传输加密后的信息"><a href="#传输加密后的信息" class="headerlink" title="传输加密后的信息"></a>传输加密后的信息</h3><p>这部分信息是服务段用私钥加密后的信息，可以在客户端被还原。</p>
+<h3 id="客户端解密信息"><a href="#客户端解密信息" class="headerlink" title="客户端解密信息"></a>客户端解密信息</h3><p>客户端用之前生成的私钥解密服务段传过来的信息，于是获取了解密后的内容。整个过程第三方即使监听到了数据，也束手无策。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>HTTPS请求连接的全过程可简化理解为：客户端拿到服务端非对称加密的公钥验证其身份后，将对称加密的私钥通过非对称加密的公钥加密后传输给服务端，服务端通过非对称加密的私钥解密后得到对称加密的私钥，其后客户端和服务端通过非对称加密的私钥对数据进行加密传输。</p>
+<p>相比 HTTP 协议，HTTPS 协议增加了很多握手、加密解密等流程，虽然过程很复杂，但其可以保证数据传输的安全。然而，加密和解密过程需要耗费系统大量的开销，严重降低机器的性能，相关测试数据表明使用HTTPS协议传输数据的工作效率只有使用HTTP协议传输的十分之一。所谓鱼与熊掌不可兼得，适当的选择HTTP和HTTPS协议非常重要。</p>
+
       
     </div>
 	
@@ -547,8 +570,6 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
-          
             <a href="/tags/tips/" rel="tag"><i class="fa fa-tag"></i> tips</a>
           
         </div>
@@ -562,18 +583,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/01/JAVA实现简单爬虫/" rel="next" title="JAVA实现简单网络爬虫">
-                <i class="fa fa-chevron-left"></i> JAVA实现简单网络爬虫
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/03/24/浅谈共享单车/" rel="prev" title="浅谈共享单车">
-                浅谈共享单车 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/05/02/Spring下MySQL读写分离/" rel="prev" title="Spring下MySQL读写分离">
+                Spring下MySQL读写分离 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -762,7 +779,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Thread类"><span class="nav-number">1.</span> <span class="nav-text">Thread类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Timer类"><span class="nav-number">2.</span> <span class="nav-text">Timer类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Executors"><span class="nav-number">3.</span> <span class="nav-text">Executors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP协议"><span class="nav-number">2.</span> <span class="nav-text">TCP协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP协议的三次握手与四次挥手"><span class="nav-number">2.1.</span> <span class="nav-text">TCP协议的三次握手与四次挥手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三次握手建立连接"><span class="nav-number">2.2.</span> <span class="nav-text">三次握手建立连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四次挥手断开连接"><span class="nav-number">2.3.</span> <span class="nav-text">四次挥手断开连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">2.4.</span> <span class="nav-text">问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTPS协议"><span class="nav-number">3.</span> <span class="nav-text">HTTPS协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#加密算法"><span class="nav-number">3.1.</span> <span class="nav-text">加密算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#对称加密"><span class="nav-number">3.1.1.</span> <span class="nav-text">对称加密</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非对称加密"><span class="nav-number">3.1.2.</span> <span class="nav-text">非对称加密</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希算法"><span class="nav-number">3.1.3.</span> <span class="nav-text">哈希算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数字签名"><span class="nav-number">3.1.4.</span> <span class="nav-text">数字签名</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求过程"><span class="nav-number">3.2.</span> <span class="nav-text">请求过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端发起HTTPS请求"><span class="nav-number">3.2.1.</span> <span class="nav-text">客户端发起HTTPS请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务端配置"><span class="nav-number">3.2.2.</span> <span class="nav-text">服务端配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#传送证书"><span class="nav-number">3.2.3.</span> <span class="nav-text">传送证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端解析证书"><span class="nav-number">3.2.4.</span> <span class="nav-text">客户端解析证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#传送加密信息"><span class="nav-number">3.2.5.</span> <span class="nav-text">传送加密信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务端解密信息"><span class="nav-number">3.2.6.</span> <span class="nav-text">服务端解密信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#传输加密后的信息"><span class="nav-number">3.2.7.</span> <span class="nav-text">传输加密后的信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端解密信息"><span class="nav-number">3.2.8.</span> <span class="nav-text">客户端解密信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
             
 
           </div>
