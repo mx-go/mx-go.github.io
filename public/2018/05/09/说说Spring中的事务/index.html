@@ -1,0 +1,1256 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java,spring," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引言在开发过程中，合理的使用事务是非常重要的。使用事务常常是为了维护高度的数据完整性和一致性。如果不关心数据的质量，就不必使用事务。毕竟，Java平台中的事务支持会降低性能，引发锁定问题和数据库并发性问题，而且会增加应用程序的复杂性。最近在面试中也是频频出现，在这里回顾加深一下。">
+<meta name="keywords" content="java,spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="说说Spring中的事务">
+<meta property="og:url" content="https://sunny0715.github.io/2018/05/09/说说Spring中的事务/index.html">
+<meta property="og:site_name" content="rainbowhorse's blog">
+<meta property="og:description" content="引言在开发过程中，合理的使用事务是非常重要的。使用事务常常是为了维护高度的数据完整性和一致性。如果不关心数据的质量，就不必使用事务。毕竟，Java平台中的事务支持会降低性能，引发锁定问题和数据库并发性问题，而且会增加应用程序的复杂性。最近在面试中也是频频出现，在这里回顾加深一下。">
+<meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-5/transaction/spring.jpg">
+<meta property="og:updated_time" content="2018-05-10T06:15:41.994Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="说说Spring中的事务">
+<meta name="twitter:description" content="引言在开发过程中，合理的使用事务是非常重要的。使用事务常常是为了维护高度的数据完整性和一致性。如果不关心数据的质量，就不必使用事务。毕竟，Java平台中的事务支持会降低性能，引发锁定问题和数据库并发性问题，而且会增加应用程序的复杂性。最近在面试中也是频频出现，在这里回顾加深一下。">
+<meta name="twitter:image" content="http://on937g0jc.bkt.clouddn.com/2018-5/transaction/spring.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":true},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '3891674546',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sunny0715.github.io/2018/05/09/说说Spring中的事务/"/>
+
+
+
+
+
+  <title> 说说Spring中的事务 | rainbowhorse's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?84a33ad5473913bd89d3c06ab19ae7fc";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rainbowhorse's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">不忘初心 方得始终</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://sunny0715.github.io/2018/05/09/说说Spring中的事务/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rainbowhorse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://on937g0jc.bkt.clouddn.com/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rainbowhorse's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                说说Spring中的事务
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-09T21:24:58+08:00">
+                2018-05-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/technology/" itemprop="url" rel="index">
+                    <span itemprop="name">technology</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/05/09/说说Spring中的事务/" class="leancloud_visitors" data-flag-title="说说Spring中的事务">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+		  
+		  
+           <div class="post-wordcount">
+             
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-edit"></i>
+               </span>
+                 
+                   <span class="post-meta-item-text">字数统计</span>
+                 
+                   <span title="字数统计" }}">
+                     3,942 字
+                   </span>
+             
+             
+               <span class="post-meta-divider">|</span>
+             
+             
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-clock-o"></i>
+               </span>
+                 
+                   <span class="post-meta-item-text">阅读时长</span>
+                 
+                   <span title="阅读时长" }}">
+                     15 分钟
+                   </span>
+             
+           </div>
+         
+		  
+		  
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在开发过程中，合理的使用事务是非常重要的。使用事务常常是为了维护高度的数据完整性和一致性。如果不关心数据的质量，就不必使用事务。毕竟，Java平台中的事务支持会降低性能，引发锁定问题和数据库并发性问题，而且会增加应用程序的复杂性。最近在面试中也是频频出现，在这里回顾加深一下。<div align="center"><img width="800" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-5/transaction/spring.jpg" algin="center"></div><a id="more"></a></p>
+<h1 id="四大特性"><a href="#四大特性" class="headerlink" title="四大特性"></a>四大特性</h1><p>数据库中事务有四大特性，简称为 <strong>ACID</strong> 特性。</p>
+<h2 id="原子性-Atomicity"><a href="#原子性-Atomicity" class="headerlink" title="原子性(Atomicity)"></a>原子性(Atomicity)</h2><p>事务的原子性是指事务是一个不可分割的工作单位，这组操作要么全部发生，否则全部不发生。</p>
+<h2 id="一致性-Consistency"><a href="#一致性-Consistency" class="headerlink" title="一致性(Consistency)"></a>一致性(Consistency)</h2><p>一致性是指事务必须使数据库从一个一致性状态变换到另一个一致性状态，也就是说一个事务执行之前和执行之后都必须处于一致性状态。</p>
+<h2 id="隔离性-Isolation"><a href="#隔离性-Isolation" class="headerlink" title="隔离性(Isolation)"></a>隔离性(Isolation)</h2><p>隔离性是当多个用户并发访问数据库时，比如操作同一张表时，数据库为每一个用户开启的事务，不能被其他事务的操作所干扰，多个并发事务之间要相互隔离。</p>
+<h2 id="持久性-Durability"><a href="#持久性-Durability" class="headerlink" title="持久性(Durability)"></a>持久性(Durability)</h2><p>持久性是指一个事务一旦被提交了，那么对数据库中的数据的改变就是永久性的，即便是在数据库系统遇到故障的情况下也不会丢失提交事务的操作。</p>
+<h1 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h1><h2 id="事务并发带来的问题"><a href="#事务并发带来的问题" class="headerlink" title="事务并发带来的问题"></a>事务并发带来的问题</h2><h3 id="脏读-Dirty-Reads"><a href="#脏读-Dirty-Reads" class="headerlink" title="脏读(Dirty Reads)"></a>脏读(Dirty Reads)</h3><p>脏读是指在一个事务处理过程里读取了另一个未提交的事务中的数据。</p>
+<p>当一个事务正在多次修改某个数据，而在这个事务中这多次的修改都还未提交，这时一个并发的事务来访问该数据，就会造成两个事务得到的数据不一致。</p>
+<p>例如：用户A向用户B转账100元，对应SQL命令如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">update</span> <span class="keyword">account</span> <span class="keyword">set</span> money = money + <span class="number">100</span> <span class="keyword">where</span> <span class="keyword">name</span>=<span class="string">'B'</span>;  (此时A通知B)</div><div class="line"></div><div class="line"><span class="keyword">update</span> <span class="keyword">account</span> <span class="keyword">set</span> money = money - <span class="number">100</span> <span class="keyword">where</span> <span class="keyword">name</span>=<span class="string">'A'</span>;</div></pre></td></tr></table></figure>
+<p>当只执行第一条SQL时，A通知B查看账户，B发现确实钱已到账（<em>此时即发生了脏读</em>），而之后无论第二条SQL是否执行，只要该事务不提交，则所有操作都将回滚，那么当B以后再次查看账户时就会发现钱其实并没有转。</p>
+<h3 id="不可重复读-Non-Repeatable-Reads"><a href="#不可重复读-Non-Repeatable-Reads" class="headerlink" title="不可重复读(Non-Repeatable Reads)"></a>不可重复读(Non-Repeatable Reads)</h3><p>不可重复读是指在对于数据库中的某个数据，一个事务范围内多次查询却返回了不同的数据值，这是由于在查询间隔，被另一个事务修改并提交了。</p>
+<p>例如事务T1在读取某一数据，而事务T2立马修改了这个数据并且提交事务给数据库，事务T1再次读取该数据就得到了不同的结果，发生了不可重复读。</p>
+<blockquote>
+<p>不可重复读和脏读的区别是，脏读是某一事务读取了另一个事务未提交的脏数据，而不可重复读则是读取了前一事务提交的数据。</p>
+</blockquote>
+<h3 id="幻读-虚读-Phantom-Reads"><a href="#幻读-虚读-Phantom-Reads" class="headerlink" title="幻读(虚读)(Phantom Reads)"></a>幻读(虚读)(Phantom Reads)</h3><p>幻读是事务非独立执行时发生的一种现象。</p>
+<p>例如事务T1对一个表中所有的行的某个数据项做了从“1”修改为“2”的操作，这时事务T2又对这个表中插入了一行数据项，而这个数据项的数值还是为“1”并且提交给数据库。而操作事务T1的用户如果再查看刚刚修改的数据，会发现还有一行没有修改，其实这行是从事务T2中添加的，就好像产生幻觉一样，这就是发生了幻读。</p>
+<blockquote>
+<p>不可重复读是指同一查询在同一事务中多次进行，由于其他提交事务所做的<strong>修改或删除</strong>，每次返回不同的结果集，此时发生非重复读。</p>
+<p>幻像读是指同一查询在同一事务中多次进行，由于其他提交事务所做的<strong>插入</strong>操作，每次返回不同的结果集，此时发生幻像读。</p>
+</blockquote>
+<h2 id="四种隔离级别-Isolation-Level"><a href="#四种隔离级别-Isolation-Level" class="headerlink" title="四种隔离级别(Isolation Level)"></a>四种隔离级别(Isolation Level)</h2><ul>
+<li><strong>Serializable</strong> (串行化)：可避免脏读、不可重复读、幻读的发生。</li>
+<li><strong>Repeatable read</strong> (可重复读)：可避免脏读、不可重复读的发生。</li>
+<li><strong>Read committed</strong> (读已提交)：可避免脏读的发生。</li>
+<li><strong>Read uncommitted</strong> (读未提交)：最低级别，任何情况都无法保证。</li>
+</ul>
+<p>以上四种隔离级别最高的是<em>Serializable</em>级别，最低的是<em>Read uncommitted</em>级别，当然级别越高，执行效率就越低。像<em>Serializable</em>这样的级别，就是以锁表的方式(类似于Java多线程中的锁) 使得其他的线程只能在锁外等待，所以平时选用何种隔离级别应该根据实际情况。<strong><code>MySQL数据库中默认的隔离级别为Repeatable read (可重复读)</code></strong>。</p>
+<p>在MySQL数据库中查看当前事务的隔离级别：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> @@tx_isolation;</div></pre></td></tr></table></figure>
+<h1 id="传播方式-Propagation"><a href="#传播方式-Propagation" class="headerlink" title="传播方式(Propagation)"></a>传播方式(Propagation)</h1><h2 id="REQUIRED（默认）"><a href="#REQUIRED（默认）" class="headerlink" title="REQUIRED（默认）"></a><strong>REQUIRED（默认）</strong></h2><p>如果存在一个事务，则支持当前事务。如果没有事务则开启一个新的事务(S<em>upport a current transaction, create a new one if none exists.</em>)。</p>
+<p>被设置成这个级别时，会为每一个被调用的方法创建一个逻辑事务域。如果前面的方法已经创建了事务，那么后面的方法支持当前的事务，如果当前没有事务会重新建立事务。</p>
+<h2 id="REQUIRES-NEW"><a href="#REQUIRES-NEW" class="headerlink" title="REQUIRES_NEW"></a><strong>REQUIRES_NEW</strong></h2><p>新建事务，如果当前存在事务，把当前事务挂起(<em>Create a new transaction, suspend the current transaction if one exists.</em>)。</p>
+<h2 id="SUPPORTS"><a href="#SUPPORTS" class="headerlink" title="SUPPORTS"></a><strong>SUPPORTS</strong></h2><p>支持当前事务，如果当前没有事务，就以非事务方式执行(<em>Support a current transaction, execute non-transactionally if none exists.</em>)。</p>
+<h2 id="NOT-SUPPORTED"><a href="#NOT-SUPPORTED" class="headerlink" title="NOT_SUPPORTED"></a><strong>NOT_SUPPORTED</strong></h2><p>以非事务方式执行操作，如果当前存在事务，就把当前事务挂起(<em>Execute non-transactionally, suspend the current transaction if one exists.</em>)。</p>
+<h2 id="NEVER"><a href="#NEVER" class="headerlink" title="NEVER"></a><strong>NEVER</strong></h2><p>以非事务方式执行，如果当前存在事务，则抛出异常(<em>Execute non-transactionally, throw an exception if a transaction exists.</em>)。</p>
+<h2 id="NESTED"><a href="#NESTED" class="headerlink" title="NESTED"></a><strong>NESTED</strong></h2><p>支持当前事务，新增Savepoint点，与当前事务同步提交或回滚(<em>Execute within a nested transaction if a current transaction exists, behave like PROPAGATION_REQUIRED else.</em>)。</p>
+<h2 id="MANDATORY"><a href="#MANDATORY" class="headerlink" title="MANDATORY"></a><strong>MANDATORY</strong></h2><p>支持当前事务，如果当前没有事务，就抛出异常(<em>Support a current transaction, throw an exception if none exists.</em>)。</p>
+<h2 id="REQUIRES-NEW和NESTED区别"><a href="#REQUIRES-NEW和NESTED区别" class="headerlink" title="REQUIRES_NEW和NESTED区别"></a>REQUIRES_NEW和NESTED区别</h2><p><strong><em><code>REQUIRES_NEW</code></em></strong>启动一个新的，不依赖于环境的 “内部” 事务。这个事务将被完全<em>commited</em>或<em>rolledback</em>而不依赖于外部事务，它拥有自己的隔离范围，自己的锁等等。当内部事务开始执行时，外部事务将被挂起，内务事务结束时，外部事务将继续执行。<em>REQUIRES_NEW</em>常用于日志记录、交易失败仍需留痕等场景。</p>
+<p><strong><em><code>PROPAGATION_NESTED</code></em></strong>开始一个”嵌套”的事务，它是已经存在事务的一个真正的子事务。嵌套事务开始执行时，它将取得一个<em>savepoint</em>。 如果这个嵌套事务失败，将回滚到此<em>savepoint</em>.。嵌套事务是外部事务的一部分,，只有外部事务结束后它才会被提交。</p>
+<p>由此可见，<strong>PROPAGATION_REQUIRES_NEW</strong>和<strong>PROPAGATION_NESTED</strong>的最大区别在于，<em>PROPAGATION_REQUIRES_NEW</em>完全是一个新的事务，而<em>PROPAGATION_NESTED</em>则是外部事务的子事务，如果外部事务<em>commit</em>，嵌套事务也会被<em>commit</em>，这个规则同样适用于<em>rollback</em>。</p>
+<h1 id="Spring事务陷阱"><a href="#Spring事务陷阱" class="headerlink" title="Spring事务陷阱"></a>Spring事务陷阱</h1><h2 id="同一方法中执行多次表更新（无事务）"><a href="#同一方法中执行多次表更新（无事务）" class="headerlink" title="同一方法中执行多次表更新（无事务）"></a>同一方法中执行多次表更新（无事务）</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 例一</span></div><div class="line"><span class="function"><span class="keyword">public</span> TradeData <span class="title">placeTrade</span><span class="params">(TradeData trade)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">      insertTrade(trade);</div><div class="line">      updateAcct(trade);</div><div class="line">      <span class="keyword">return</span> trade;</div><div class="line">   &#125; <span class="keyword">catch</span> (Exception up) &#123;</div><div class="line">      <span class="comment">//log the error</span></div><div class="line">      <span class="keyword">throw</span> up;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>insertTrade()</code> 和 <code>updateAcct()</code> 方法使用不带事务的标准 JDBC 代码。<code>insertTrade()</code> 方法结束后，数据库保存（并提交了）交易订单。如果 <code>updateAcct()</code> 方法由于任意原因失败，交易订单仍然会在 <code>placeTrade()</code> 方法结束时保存在 <code>TRADE</code> 表内，这会导致数据库出现不一致的数据。如果 <code>placeTrade()</code> 方法使用了事务，这两个活动都会包含在一个事务中，如果帐户更新失败，交易订单就会回滚。</p>
+<h2 id="利用-Transaction注解事务"><a href="#利用-Transaction注解事务" class="headerlink" title="利用@Transaction注解事务"></a>利用@Transaction注解事务</h2><p>例二：将只读标志与 <strong><code>SUPPORTS</code></strong> 传播模式结合使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 例二</span></div><div class="line"><span class="meta">@Transactional</span>(readOnly = <span class="keyword">true</span>, propagation=Propagation.SUPPORTS)</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">insertTrade</span><span class="params">(TradeData trade)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">   	insert(trade);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>执行到例二的 <code>insertTrade()</code> 方法时，结果是：<strong>正确插入交易订单并提交数据</strong>。</p>
+<p>交易订单会被正确地插入到数据库中，即使只读标志被设置为 <code>true</code>，且事务传播模式被设置为 <code>SUPPORTS</code>。但这是如何做到的呢？由于传播模式被设置为 <code>SUPPORTS</code>，所以不会启动任何事务，因此该方法有效地利用了一个本地（数据库）事务。<strong>只读标志只在事务启动时应用</strong>。在本例中，因为没有启动任何事务，所以只读标志被忽略。</p>
+<p>例三：将只读标志与 <strong><code>REQUIRED</code></strong> 传播模式结合使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Transactional</span>(readOnly = <span class="keyword">true</span>, propagation=Propagation.REQUIRED)</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">insertTrade</span><span class="params">(TradeData trade)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line"> 	 em.persist(trade);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>执行到例三的 <code>insertTrade()</code> 方法时，结果是：<strong>抛出一个只读连接异常</strong>。</p>
+<p>表示正在试图对一个只读连接执行更新。因为启动了一个事务（<code>REQUIRED</code>），而连接被设置为只读。毫无疑问，在试图执行 SQL 语句时，会得到一个异常，告诉该连接是一个只读连接。</p>
+<p>关于只读标志很奇怪的一点是：要使用它，必须启动一个事务。如果只是读取数据，需要事务吗？答案是根本不需要。<strong>启动一个事务来执行只读操作会增加处理线程的开销，并会导致数据库发生共享读取锁定</strong>（具体取决于使用的数据库类型和设置的隔离级别）。</p>
+<p>例四：使用只读标志</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Transactional</span>(readOnly = <span class="keyword">true</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> TradeData <span class="title">getTrade</span><span class="params">(<span class="keyword">long</span> tradeId)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">   <span class="keyword">return</span> em.find(tradeId);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>执行到例四的 <code>getTrade()</code> 方法时，结果是：<strong>启动一个事务，获取交易订单，然后提交事务</strong>。</p>
+<p><code>@Transactional</code> 注释的<strong>默认传播模式是 <code>REQUIRED</code></strong>。这意味着事务会在不必要的情况下启动。根据使用的数据库，这会引起不必要的共享锁，可能会使数据库中出现死锁的情况。此外，启动和停止事务将消耗不必要的处理时间和资源。总的来说，在使用基于ORM的框架时，只读标志基本上毫无用处，在大多数情况下会被忽略。但如果坚持使用它，记得将传播模式设置为 <code>SUPPORTS</code>（如下例五所示），这样就不会启动事务：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 例五</span></div><div class="line"><span class="meta">@Transactional</span>(readOnly = <span class="keyword">true</span>, propagation=Propagation.SUPPORTS)</div><div class="line"><span class="function"><span class="keyword">public</span> TradeData <span class="title">getTrade</span><span class="params">(<span class="keyword">long</span> tradeId)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">   <span class="keyword">return</span> em.find(tradeId);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="REQUIRES-NEW事务属性陷阱"><a href="#REQUIRES-NEW事务属性陷阱" class="headerlink" title="REQUIRES_NEW事务属性陷阱"></a><code>REQUIRES_NEW</code>事务属性陷阱</h2><p><code>REQUIRES_NEW</code> 事务属性总是会在启动方法时启动一个新的事务，使用 <code>REQUIRES_NEW</code> 事务属性都会得到不好的结果并导致数据损坏和不一致。</p>
+<p>例六： 使用 <code>REQUIRES_NEW</code> 事务属性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Transactional</span>(propagation=Propagation.REQUIRES_NEW)</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">insertTrade</span><span class="params">(TradeData trade)</span> <span class="keyword">throws</span> Exception </span>&#123;...&#125;</div><div class="line"> </div><div class="line"><span class="meta">@Transactional</span>(propagation=Propagation.REQUIRES_NEW)</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateAcct</span><span class="params">(TradeData trade)</span> <span class="keyword">throws</span> Exception </span>&#123;...&#125;</div></pre></td></tr></table></figure>
+<p>例六中的两个方法都是公共方法，意味着它们可以单独调用。当使用 <code>REQUIRES_NEW</code> 属性的几个方法通过服务间通信或编排在同一逻辑工作单元内调用时，该属性就会出现问题。假设在例六中，可以独立于一些用例中的任何其他方法来调用 <code>updateAcct()</code> 方法，但也有在 <code>insertTrade()</code> 方法中调用 <code>updateAcct()</code> 方法的情况。现在如果调用 <code>updateAcct()</code> 方法后抛出异常，交易订单就会回滚，但帐户更新将会提交给数据库，如下例七所示：</p>
+<p>例七：使用 <code>REQUIRES_NEW</code> 事务属性的多次更新</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Transactional</span>(propagation=Propagation.REQUIRES_NEW)</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">insertTrade</span><span class="params">(TradeData trade)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">   em.persist(trade);</div><div class="line">   updateAcct(trade);</div><div class="line">   <span class="comment">// 这里出现异常! insertTrade回滚但是updateAcct不会回滚!</span></div><div class="line">   <span class="comment">// exception occurs here! Trade rolled back but account update is not!</span></div><div class="line">   ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>发生这种情况的原因是 <code>updateAcct()</code> 方法中启动了一个新事务，所以在 <code>updateAcct()</code> 方法结束后，事务将被提交。使用 <code>REQUIRES_NEW</code> 事务属性时，如果存在现有事务上下文，当前的事务会被挂起并启动一个新事务。方法结束后，新的事务被提交，原来的事务继续执行。</p>
+<p><strong>由于这种行为，只有在被调用方法中的数据库操作需要保存到数据库中，而不管覆盖事务的结果如何时，才应该使用 <code>REQUIRES_NEW</code> 事务属性</strong>。比如，假设尝试的所有股票交易都必须被记录在一个审计数据库中。出于验证错误、资金不足或其他原因，不管交易是否失败，这条信息都需要被持久化。如果没有对审计方法使用 <code>REQUIRES_NEW</code> 属性，审计记录就会连同尝试执行的交易一起回滚。使用 <code>REQUIRES_NEW</code> 属性可以确保不管初始事务的结果如何，审计数据都会被保存。这里要注意的一点是，要始终使用 <code>MANDATORY</code> 或 <code>REQUIRED</code> 属性，而不是 <code>REQUIRES_NEW</code>，除非您有足够的理由来使用它，类似审计示例中的那些理由。</p>
+<h2 id="Spring事务REQUIRES-NEW不起作用"><a href="#Spring事务REQUIRES-NEW不起作用" class="headerlink" title="Spring事务REQUIRES_NEW不起作用"></a>Spring事务REQUIRES_NEW不起作用</h2><p>原因是A方法（<em>REQUIRES</em>）调用B方法（<em>REQUIRES_NEW</em>）在同一类中，如果两个方法写在同一个Service类中，Spring并不会重新创建新事务，如果是两不同的Service，就会创建新事务了。 </p>
+<p>解决方案1：需要将两个方法分别卸载不同的类中。</p>
+<p>解决方案2：方法写在同一个类里，但调用B方法的时候，将service自己注入自己，用这个注入对象来调用B方法。</p>
+<h2 id="事务回滚陷阱"><a href="#事务回滚陷阱" class="headerlink" title="事务回滚陷阱"></a>事务回滚陷阱</h2><p>例八：没有回滚支持</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Transactional</span>(propagation=Propagation.REQUIRED)</div><div class="line"><span class="function"><span class="keyword">public</span> TradeData <span class="title">placeTrade</span><span class="params">(TradeData trade)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">      insertTrade(trade);</div><div class="line">      updateAcct(trade);</div><div class="line">      <span class="keyword">return</span> trade;</div><div class="line">   &#125; <span class="keyword">catch</span> (Exception up) &#123;</div><div class="line">      <span class="comment">//log the error</span></div><div class="line">      <span class="keyword">throw</span> up;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>假设帐户中没有足够的资金来购买需要的股票，或者还没有准备购买或出售股票，并抛出了一个受检异常，那么交易订单会保存在数据库中吗？还是整个逻辑工作单元将执行回滚？答案出乎意料：根据受检异常（不管是在 Spring Framework 中还是在 EJB 中），事务会提交它还未提交的所有工作。使用例八，这意味着，如果在执行 <code>updateAcct()</code> 方法期间抛出受控异常，就会保存交易订单，但不会更新帐户来反映交易情况。</p>
+<p>这可能是在使用事务时出现的主要数据完整性和一致性问题了。<strong>运行时异常（即非受检异常）自动强制执行整个逻辑工作单元的回滚，但受检异常不会。</strong></p>
+<p>例九：添加事务回滚支持 — Spring</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Transactional</span>(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)</div><div class="line"><span class="function"><span class="keyword">public</span> TradeData <span class="title">placeTrade</span><span class="params">(TradeData trade)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">      insertTrade(trade);</div><div class="line">      updateAcct(trade);</div><div class="line">      <span class="keyword">return</span> trade;</div><div class="line">   &#125; <span class="keyword">catch</span> (Exception up) &#123;</div><div class="line">      <span class="comment">//log the error</span></div><div class="line">      <span class="keyword">throw</span> up;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>@Transactional</code> 注释中使用了 <code>rollbackFor</code> 参数。这个参数接受一个单一异常类或一组异常类，也可以使用 <code>rollbackForClassName</code> 参数将异常的名称指定为 Java <code>String</code> 类型。还可以使用此属性的相反形式（<code>noRollbackFor</code>）指定除某些异常以外的所有异常应该强制回滚。通常大多数开发人员指定 <code>Exception.class</code> 作为值，表示该方法中的所有异常应该强制回滚。</p>
+<p>下面两种方式同样会回滚</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 方式一，手动回滚</span></div><div class="line"><span class="meta">@Transactional</span>(propagation=Propagation.REQUIRED)</div><div class="line"><span class="function"><span class="keyword">public</span> TradeData <span class="title">placeTrade1</span><span class="params">(TradeData trade)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">      insertTrade(trade);</div><div class="line">      updateAcct(trade);</div><div class="line">      <span class="keyword">return</span> trade;</div><div class="line">   &#125; <span class="keyword">catch</span> (Exception up) &#123;</div><div class="line">   	  TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();</div><div class="line">   &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 方式二，抛出RuntimeException</span></div><div class="line"><span class="meta">@Transactional</span>(propagation=Propagation.REQUIRED)</div><div class="line"><span class="function"><span class="keyword">public</span> TradeData <span class="title">placeTrade2</span><span class="params">(TradeData trade)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">      insertTrade(trade);</div><div class="line">      updateAcct(trade);</div><div class="line">      <span class="keyword">return</span> trade;</div><div class="line">   &#125; <span class="keyword">catch</span> (Exception up) &#123;</div><div class="line">   	  <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(); </div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://www.ibm.com/developerworks/cn/java/j-ts1.html" target="_blank" rel="external">了解事务陷阱</a></p>
+
+      
+    </div>
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	</div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>谢谢你请我吃糖果</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/uploads/weixinPay.jpg" alt="rainbowhorse WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
+          
+            <a href="/tags/spring/" rel="tag"><i class="fa fa-tag"></i> spring</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/11/深入理解Spring/" rel="next" title="深入理解Spring">
+                <i class="fa fa-chevron-left"></i> 深入理解Spring
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/06/JAVA并发之锁/" rel="prev" title="JAVA并发之锁">
+                JAVA并发之锁 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNDc4MS8xMTMxOA=="></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://on937g0jc.bkt.clouddn.com/avatar.jpg"
+               alt="rainbowhorse" />
+          <p class="site-author-name" itemprop="name">rainbowhorse</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Sunny0715" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/%E6%97%AD-%E9%A9%AC-77a826105" target="_blank" title="linkedin">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  linkedin
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:mx_sunny@sina.com" target="_blank" title="mail">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.importnew.com/" title="爪哇ImportNew" target="_blank">爪哇ImportNew</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.open-open.com" title="深度开源open-open" target="_blank">深度开源open-open</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://tool.oschina.net/" title="在线工具" target="_blank">在线工具</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.pythontab.com/" title="Python中文社区" target="_blank">Python中文社区</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+		<br><br>
+		
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四大特性"><span class="nav-number">2.</span> <span class="nav-text">四大特性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#原子性-Atomicity"><span class="nav-number">2.1.</span> <span class="nav-text">原子性(Atomicity)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一致性-Consistency"><span class="nav-number">2.2.</span> <span class="nav-text">一致性(Consistency)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#隔离性-Isolation"><span class="nav-number">2.3.</span> <span class="nav-text">隔离性(Isolation)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持久性-Durability"><span class="nav-number">2.4.</span> <span class="nav-text">持久性(Durability)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#隔离级别"><span class="nav-number">3.</span> <span class="nav-text">隔离级别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#事务并发带来的问题"><span class="nav-number">3.1.</span> <span class="nav-text">事务并发带来的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#脏读-Dirty-Reads"><span class="nav-number">3.1.1.</span> <span class="nav-text">脏读(Dirty Reads)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不可重复读-Non-Repeatable-Reads"><span class="nav-number">3.1.2.</span> <span class="nav-text">不可重复读(Non-Repeatable Reads)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#幻读-虚读-Phantom-Reads"><span class="nav-number">3.1.3.</span> <span class="nav-text">幻读(虚读)(Phantom Reads)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四种隔离级别-Isolation-Level"><span class="nav-number">3.2.</span> <span class="nav-text">四种隔离级别(Isolation Level)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#传播方式-Propagation"><span class="nav-number">4.</span> <span class="nav-text">传播方式(Propagation)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#REQUIRED（默认）"><span class="nav-number">4.1.</span> <span class="nav-text">REQUIRED（默认）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#REQUIRES-NEW"><span class="nav-number">4.2.</span> <span class="nav-text">REQUIRES_NEW</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SUPPORTS"><span class="nav-number">4.3.</span> <span class="nav-text">SUPPORTS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NOT-SUPPORTED"><span class="nav-number">4.4.</span> <span class="nav-text">NOT_SUPPORTED</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NEVER"><span class="nav-number">4.5.</span> <span class="nav-text">NEVER</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NESTED"><span class="nav-number">4.6.</span> <span class="nav-text">NESTED</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MANDATORY"><span class="nav-number">4.7.</span> <span class="nav-text">MANDATORY</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#REQUIRES-NEW和NESTED区别"><span class="nav-number">4.8.</span> <span class="nav-text">REQUIRES_NEW和NESTED区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring事务陷阱"><span class="nav-number">5.</span> <span class="nav-text">Spring事务陷阱</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#同一方法中执行多次表更新（无事务）"><span class="nav-number">5.1.</span> <span class="nav-text">同一方法中执行多次表更新（无事务）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用-Transaction注解事务"><span class="nav-number">5.2.</span> <span class="nav-text">利用@Transaction注解事务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#REQUIRES-NEW事务属性陷阱"><span class="nav-number">5.3.</span> <span class="nav-text">REQUIRES_NEW事务属性陷阱</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring事务REQUIRES-NEW不起作用"><span class="nav-number">5.4.</span> <span class="nav-text">Spring事务REQUIRES_NEW不起作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事务回滚陷阱"><span class="nav-number">5.5.</span> <span class="nav-text">事务回滚陷阱</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" style="color:red">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rainbowhorse</span>
+</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("8rKac39CM1EjFl9q7i97aDSu-gzGzoHsz", "5wiSIVcjJCXPwgEwOqK8GaoJ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+  <!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>
