@@ -296,4 +296,4 @@ public class QuartzTest {
 
 # 总结
 
-通过以上测试可以明显的看出两者的优劣，Quartz足够灵活强大，单Spring scheduled 在简单任务下也是一个不错的选择。
+通过以上测试可以明显的看出两者的优劣，Quartz足够灵活强大，但Spring scheduled 在简单任务下也是一个不错的选择。
