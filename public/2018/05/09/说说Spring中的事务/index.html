@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="rainbowhorse's blog">
 <meta property="og:description" content="引言在开发过程中，合理的使用事务是非常重要的。使用事务常常是为了维护高度的数据完整性和一致性。如果不关心数据的质量，就不必使用事务。毕竟，Java平台中的事务支持会降低性能，引发锁定问题和数据库并发性问题，而且会增加应用程序的复杂性。最近在面试中也是频频出现，在这里回顾加深一下。">
 <meta property="og:image" content="http://on937g0jc.bkt.clouddn.com/2018-5/transaction/spring.jpg">
-<meta property="og:updated_time" content="2018-05-10T06:15:41.994Z">
+<meta property="og:updated_time" content="2018-05-18T14:36:18.619Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="说说Spring中的事务">
 <meta name="twitter:description" content="引言在开发过程中，合理的使用事务是非常重要的。使用事务常常是为了维护高度的数据完整性和一致性。如果不关心数据的质量，就不必使用事务。毕竟，Java平台中的事务支持会降低性能，引发锁定问题和数据库并发性问题，而且会增加应用程序的复杂性。最近在面试中也是频频出现，在这里回顾加深一下。">
@@ -415,7 +415,7 @@
                    <span class="post-meta-item-text">字数统计</span>
                  
                    <span title="字数统计" }}">
-                     3,942 字
+                     3,941 字
                    </span>
              
              
@@ -516,10 +516,10 @@
 <p>例七：使用 <code>REQUIRES_NEW</code> 事务属性的多次更新</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Transactional</span>(propagation=Propagation.REQUIRES_NEW)</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">insertTrade</span><span class="params">(TradeData trade)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">   em.persist(trade);</div><div class="line">   updateAcct(trade);</div><div class="line">   <span class="comment">// 这里出现异常! insertTrade回滚但是updateAcct不会回滚!</span></div><div class="line">   <span class="comment">// exception occurs here! Trade rolled back but account update is not!</span></div><div class="line">   ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>发生这种情况的原因是 <code>updateAcct()</code> 方法中启动了一个新事务，所以在 <code>updateAcct()</code> 方法结束后，事务将被提交。使用 <code>REQUIRES_NEW</code> 事务属性时，如果存在现有事务上下文，当前的事务会被挂起并启动一个新事务。方法结束后，新的事务被提交，原来的事务继续执行。</p>
-<p><strong>由于这种行为，只有在被调用方法中的数据库操作需要保存到数据库中，而不管覆盖事务的结果如何时，才应该使用 <code>REQUIRES_NEW</code> 事务属性</strong>。比如，假设尝试的所有股票交易都必须被记录在一个审计数据库中。出于验证错误、资金不足或其他原因，不管交易是否失败，这条信息都需要被持久化。如果没有对审计方法使用 <code>REQUIRES_NEW</code> 属性，审计记录就会连同尝试执行的交易一起回滚。使用 <code>REQUIRES_NEW</code> 属性可以确保不管初始事务的结果如何，审计数据都会被保存。这里要注意的一点是，要始终使用 <code>MANDATORY</code> 或 <code>REQUIRED</code> 属性，而不是 <code>REQUIRES_NEW</code>，除非您有足够的理由来使用它，类似审计示例中的那些理由。</p>
+<p><strong>由于这种行为，只有在被调用方法中的数据库操作需要保存到数据库中，而不管覆盖事务的结果如何时，才应该使用 <code>REQUIRES_NEW</code> 事务属性</strong>。比如，假设尝试的所有股票交易都必须被记录在一个审计数据库中。出于验证错误、资金不足或其他原因，不管交易是否失败，这条信息都需要被持久化。如果没有对审计方法使用 <code>REQUIRES_NEW</code> 属性，审计记录就会连同尝试执行的交易一起回滚。使用 <code>REQUIRES_NEW</code> 属性可以确保不管初始事务的结果如何，审计数据都会被保存。这里要注意的一点是，要始终使用 <code>MANDATORY</code> 或 <code>REQUIRED</code> 属性，而不是 <code>REQUIRES_NEW</code>，除非有足够的理由来使用它，类似审计示例中的那些理由。</p>
 <h2 id="Spring事务REQUIRES-NEW不起作用"><a href="#Spring事务REQUIRES-NEW不起作用" class="headerlink" title="Spring事务REQUIRES_NEW不起作用"></a>Spring事务REQUIRES_NEW不起作用</h2><p>原因是A方法（<em>REQUIRES</em>）调用B方法（<em>REQUIRES_NEW</em>）在同一类中，如果两个方法写在同一个Service类中，Spring并不会重新创建新事务，如果是两不同的Service，就会创建新事务了。 </p>
-<p>解决方案1：需要将两个方法分别卸载不同的类中。</p>
-<p>解决方案2：方法写在同一个类里，但调用B方法的时候，将service自己注入自己，用这个注入对象来调用B方法。</p>
+<p>解决方案1：需要将两个方法分别写在不同的类中。</p>
+<p>解决方案2：方法写在同一个类里，但调用B方法的时候，将<em>service</em>自己注入自己，用这个注入对象来调用B方法。</p>
 <h2 id="事务回滚陷阱"><a href="#事务回滚陷阱" class="headerlink" title="事务回滚陷阱"></a>事务回滚陷阱</h2><p>例八：没有回滚支持</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Transactional</span>(propagation=Propagation.REQUIRED)</div><div class="line"><span class="function"><span class="keyword">public</span> TradeData <span class="title">placeTrade</span><span class="params">(TradeData trade)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">      insertTrade(trade);</div><div class="line">      updateAcct(trade);</div><div class="line">      <span class="keyword">return</span> trade;</div><div class="line">   &#125; <span class="keyword">catch</span> (Exception up) &#123;</div><div class="line">      <span class="comment">//log the error</span></div><div class="line">      <span class="keyword">throw</span> up;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>假设帐户中没有足够的资金来购买需要的股票，或者还没有准备购买或出售股票，并抛出了一个受检异常，那么交易订单会保存在数据库中吗？还是整个逻辑工作单元将执行回滚？答案出乎意料：根据受检异常（不管是在 Spring Framework 中还是在 EJB 中），事务会提交它还未提交的所有工作。使用例八，这意味着，如果在执行 <code>updateAcct()</code> 方法期间抛出受控异常，就会保存交易订单，但不会更新帐户来反映交易情况。</p>

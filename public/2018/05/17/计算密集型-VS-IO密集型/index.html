@@ -94,7 +94,7 @@
 <meta property="og:url" content="https://sunny0715.github.io/2018/05/17/计算密集型-VS-IO密集型/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
 <meta property="og:description" content="引言　　在开发过程中，经常会遇到多线程的问题，解决多线程的其中一种方式就是利用线程池，其中需要开启线程的数量便成为了我们关注的焦点。JAVA中有两种并发类型：计算密集型（CUP-bound）和IO密集型（I/O-bound）。">
-<meta property="og:updated_time" content="2018-05-17T11:39:38.380Z">
+<meta property="og:updated_time" content="2018-05-17T13:15:43.362Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计算密集型 VS IO密集型">
 <meta name="twitter:description" content="引言　　在开发过程中，经常会遇到多线程的问题，解决多线程的其中一种方式就是利用线程池，其中需要开启线程的数量便成为了我们关注的焦点。JAVA中有两种并发类型：计算密集型（CUP-bound）和IO密集型（I/O-bound）。">
@@ -413,7 +413,7 @@
                    <span class="post-meta-item-text">字数统计</span>
                  
                    <span title="字数统计" }}">
-                     1,314 字
+                     1,316 字
                    </span>
              
              
@@ -453,7 +453,7 @@
 <a id="more"></a>
 <h1 id="计算密集型（CPU-bound）"><a href="#计算密集型（CPU-bound）" class="headerlink" title="计算密集型（CPU-bound）"></a>计算密集型（CPU-bound）</h1><p>　　计算密集型，顾名思义就是应用需要非常多的CPU计算资源，CPU大部份时间用来做计算、逻辑判断等CPU动作的程序称之CPU bound。在多核CPU时代，我们要让每一个CPU核心都参与计算，将CPU的性能充分利用起来，这样才算是没有浪费服务器配置，如果在非常好的服务器配置上还运行着单线程程序，那将是非常大的浪费。对于计算密集型的应用，完全是靠CPU的核数来工作，所以为了让它的优势完全发挥出来，避免过多的上下文切换，比较理性的方案是：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">线程数 = CPU核数 + <span class="number">1</span></div></pre></td></tr></table></figure>
-<p>为什么是 +1？<strong>即使当计算密集型的线程偶尔由于缺失故障或者其他原因而暂停时，这个额外的线程也能确保CPU的时钟周期不会被浪费。</strong></p>
+<p>为什么是 +1？<strong>因为即使当计算密集型的线程偶尔由于缺失故障或者其他原因而暂停时，这个额外的线程也能确保CPU的时钟周期不会被浪费。</strong></p>
 <blockquote>
 <p>也可以设置成CPU核数 x 2，这还是要看JDK的使用版本，以及CPU配置(服务器的CPU有超线程)。对于JDK1.8来说，里面增加了一个并行计算，计算密集型的较理想线程数 = CPU内核线程数 x 2</p>
 </blockquote>
