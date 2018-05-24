@@ -94,7 +94,7 @@
 <meta property="og:url" content="https://sunny0715.github.io/2018/05/17/计算密集型-VS-IO密集型/index.html">
 <meta property="og:site_name" content="rainbowhorse's blog">
 <meta property="og:description" content="引言　　在开发过程中，经常会遇到多线程的问题，解决多线程的其中一种方式就是利用线程池，其中需要开启线程的数量便成为了我们关注的焦点。JAVA中有两种并发类型：计算密集型（CUP-bound）和IO密集型（I/O-bound）。">
-<meta property="og:updated_time" content="2018-05-17T13:15:43.362Z">
+<meta property="og:updated_time" content="2018-05-22T03:34:26.300Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计算密集型 VS IO密集型">
 <meta name="twitter:description" content="引言　　在开发过程中，经常会遇到多线程的问题，解决多线程的其中一种方式就是利用线程池，其中需要开启线程的数量便成为了我们关注的焦点。JAVA中有两种并发类型：计算密集型（CUP-bound）和IO密集型（I/O-bound）。">
@@ -449,8 +449,7 @@
       
 
       
-        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>　　在开发过程中，经常会遇到多线程的问题，解决多线程的其中一种方式就是利用线程池，其中需要开启线程的数量便成为了我们关注的焦点。JAVA中有两种并发类型：<strong>计算密集型（CUP-bound）</strong>和<strong>IO密集型（I/O-bound）</strong>。</p>
-<a id="more"></a>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>　　在开发过程中，经常会遇到多线程的问题，解决多线程的其中一种方式就是利用线程池，其中需要开启线程的数量便成为了我们关注的焦点。JAVA中有两种并发类型：<strong>计算密集型（CUP-bound）</strong>和<strong>IO密集型（I/O-bound）</strong>。<a id="more"></a></p>
 <h1 id="计算密集型（CPU-bound）"><a href="#计算密集型（CPU-bound）" class="headerlink" title="计算密集型（CPU-bound）"></a>计算密集型（CPU-bound）</h1><p>　　计算密集型，顾名思义就是应用需要非常多的CPU计算资源，CPU大部份时间用来做计算、逻辑判断等CPU动作的程序称之CPU bound。在多核CPU时代，我们要让每一个CPU核心都参与计算，将CPU的性能充分利用起来，这样才算是没有浪费服务器配置，如果在非常好的服务器配置上还运行着单线程程序，那将是非常大的浪费。对于计算密集型的应用，完全是靠CPU的核数来工作，所以为了让它的优势完全发挥出来，避免过多的上下文切换，比较理性的方案是：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">线程数 = CPU核数 + <span class="number">1</span></div></pre></td></tr></table></figure>
 <p>为什么是 +1？<strong>因为即使当计算密集型的线程偶尔由于缺失故障或者其他原因而暂停时，这个额外的线程也能确保CPU的时钟周期不会被浪费。</strong></p>
@@ -535,6 +534,10 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/05/22/MySQL清除表空间碎片/" rel="next" title="MySQL清除表空间碎片">
+                <i class="fa fa-chevron-left"></i> MySQL清除表空间碎片
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
@@ -618,7 +621,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">48</span>
+                <span class="site-state-item-count">49</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
