@@ -1,15 +1,15 @@
 ---
 title: JVM类加载机制
 date: 2017-12-13 10:03:36
-tags: [java,jvm]
-categories: technology
+tags: [java, jvm]
+categories: 后端
 ---
 
 # 引言
 
 之前的博客说了Java虚拟机的运行时数据区域、GC算法、垃圾回收器等知识。距离深入了解还有一段距离，包括虚拟机的类加载机制、性能调优、线程并发等等还都没有涉及到，一直在看周志明的《深入理解Java虚拟机》，越深入去读发现这本书写的真的是经典，解决了自己很多的疑惑。
 
-JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内存中，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/ClassLoader/0.png" algin="center"/>
+JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内存中，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。<div align=center><img width="700" height="300" src="../../../../images/2017/12/ClassLoader/0.png" algin="center"/>
 
 </div><!-- more -->
 
@@ -17,7 +17,7 @@ JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内
 
 类被加载到虚拟机内存中开始，到卸载出内存为止。它的生命周期分7个阶段，加载（Loading）、验证（Verification）、准备（Preparation）、解析（Resolution）、初始化（Initialization）、使用（Using）、卸载（Unloading）。其中验证、准备、解析三个部分统称为连接（Linking）。
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/ClassLoader/2.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017/12/ClassLoader/2.png" algin="center"/>
 
 </div>
 
@@ -76,7 +76,7 @@ JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内
 
 下表列出了Java中所有基本数据类型以及reference类型的默认零值：
 
-<div align=center><img width="300" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/ClassLoader/defaultValue.png"/>
+<div align=center><img width="300" height="300" src="../../../../images/2017/12/ClassLoader/defaultValue.png"/>
 
 </div>
 
@@ -133,7 +133,7 @@ JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内
 
 # 双亲委派模型
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/ClassLoader/3.jpg" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017/12/ClassLoader/3.jpg" algin="center"/>
 
 </div>
 

@@ -2,15 +2,12 @@
 title: MySQL清除表空间碎片
 date: 2018-05-22 11:12:17
 tags: [mysql]
-categories: technology
+categories: 数据库
 ---
 
 # 引言
-
 MySQL在数据表使用很长时间后，表上的B-Tree索引可能会碎片化，会降低查询的效率。碎片化的索引可能会以很差或者无序的方式存储在磁盘上，这时就需要对表进行碎片化整理。<!-- more -->
-
 # 碎片产生原因
-
 1、表的存储会出现碎片化，每当删除了一行内容，该段空间就会变为空白、被留空，而在一段时间内的大量删除操作，会使这种留空的空间变得比存储列表内容所使用的空间更大；
 
 2、当执行插入操作时，MySQL会尝试使用空白空间，但如果某个空白空间一直没有被大小合适的数据占用，仍然无法将其彻底占用，就形成了碎片；
@@ -29,7 +26,7 @@ SHOW TABLE STATUS LIKE '表名';
 
 结果中’**Data_free**’列的值就是碎片大小
 
-<div align=center><img width="900" height="100" src="http://on937g0jc.bkt.clouddn.com/2018-5/mysql%E7%A2%8E%E7%89%87%E4%BC%98%E5%8C%96/show-status.png" algin="center"/>
+<div align=center><img width="900" height="100" src="../../../../images/2018-5/mysql%E7%A2%8E%E7%89%87%E4%BC%98%E5%8C%96/show-status.png" algin="center"/>
 
 </div>
 

@@ -2,12 +2,12 @@
 title: JVM入门
 date: 2017-11-20 15:27:10
 tags: [java,jvm]
-categories: technology
+categories: 后端
 ---
 
 # 引言
 
-JVM（Java Virtual Machine）Java 虚拟机是整个 Java 平台的基石，是 Java 系统实现硬件无关与操作系统无关的关键部分，是保障用户机器免于恶意代码损害的屏障。Java开发人员不需要了解JVM是如何工作的，但是，了解 JVM 有助于我们更好的开发java 程序。近些天一直在看周志明的《深入理解Java虚拟机》这本书，这本书写的堪称经典，对于JVM的学习非常有帮助。<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jvm.png" algin="center"/>
+JVM（Java Virtual Machine）Java 虚拟机是整个 Java 平台的基石，是 Java 系统实现硬件无关与操作系统无关的关键部分，是保障用户机器免于恶意代码损害的屏障。Java开发人员不需要了解JVM是如何工作的，但是，了解 JVM 有助于我们更好的开发java 程序。近些天一直在看周志明的《深入理解Java虚拟机》这本书，这本书写的堪称经典，对于JVM的学习非常有帮助。<div align=center><img width="700" height="300" src="../../../../images/2017-12-04/JVM/jvm.png" algin="center"/>
 
 </div><!-- more -->
 
@@ -15,7 +15,7 @@ JVM（Java Virtual Machine）Java 虚拟机是整个 Java 平台的基石，是 
 
 JVM将内存主要划分为：方法区、虚拟机栈、本地方法栈、堆、程序计数器。JVM运行时数据区如下： 
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jmm.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017-12-04/JVM/jmm.png" algin="center"/>
 
 </div>
 
@@ -75,7 +75,7 @@ Java与C++之间有一堵由内存动态分配和垃圾收集技术所围成的�
 1. 效率问题，标记和清除两个过程效率都不高；
 2. 空间问题，标记清除之后会产生大量不连续的内存碎片，空间碎片太多可能会导致以后在程序运行过程中需要分配较大对象时，无法找到足够的连续内存而不得不提前触发另一次垃圾收集动作。
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/Mark-Sweep.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017-12-04/JVM/Mark-Sweep.png" algin="center"/>
 
 </div>
 
@@ -89,7 +89,7 @@ Java与C++之间有一堵由内存动态分配和垃圾收集技术所围成的�
 
 当剩下的Survivor内存不足时，可以去老年代内存进行分配担保。如何理解分配担保呢，其实就是，内存不足时，去老年代内存空间分配，然后等新生代内存缓过来了之后，把内存归还给老年代，保持新生代中的Eden：Survivor=8:1.另外，两个Survivor分别有自己的名称：From Survivor、To Survivor。二者身份经常调换，即有时这块内存与Eden一起参与分配，有时是另一块。因为他们之间经常相互复制。
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/copy.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017-12-04/JVM/copy.png" algin="center"/>
 
 </div>
 
@@ -99,7 +99,7 @@ Java与C++之间有一堵由内存动态分配和垃圾收集技术所围成的�
 
 标记整理算法很简单，就是先标记需要回收的对象，然后把所有存活的对象移动到内存的一端，最后直接清理掉边界意外的内存。这样的好处是避免了内存碎片。
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/gc_mark_compact.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017-12-04/JVM/gc_mark_compact.png" algin="center"/>
 
 </div>
 
@@ -121,7 +121,7 @@ Java与C++之间有一堵由内存动态分配和垃圾收集技术所围成的�
 3. 方法区中的常量引用的对象;
 4. 本地方法栈中JNI的引用的对象 。
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/reachability.jpg" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017-12-04/JVM/reachability.jpg" algin="center"/>
 
 </div>
 
@@ -135,7 +135,7 @@ Java与C++之间有一堵由内存动态分配和垃圾收集技术所围成的�
 
 Java虚拟机规范中对垃圾收集器应该如何实现并没有任何规定，因此不同的厂商、不同版本的虚拟机所提供的垃圾收集器都可能会有很大差别，并且一般都会提供参数供用户根据自己的应用特点和要求组合出各个年代所使用的收集器。
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.jpg" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017-12-04/JVM/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.jpg" algin="center"/>
 
 </div>
 
@@ -165,7 +165,7 @@ Serial收集器是最基本、发展历史最悠久的收集器，曾经（在JD
 
 
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/serial.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017-12-04/JVM/serial.png" algin="center"/>
 
 </div>
 
@@ -178,7 +178,7 @@ Serial收集器是最基本、发展历史最悠久的收集器，曾经（在JD
 
 ### ParNew收集器
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/parnew.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017-12-04/JVM/parnew.png" algin="center"/>
 
 </div>
 
@@ -215,7 +215,7 @@ ParNew收集器在单CPU的环境中绝对不会有比Serial收集器更好的�
 
 ### Serial Old收集器
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/Serial-Old.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017-12-04/JVM/Serial-Old.png" algin="center"/>
 
 </div>
 
@@ -230,7 +230,7 @@ ParNew收集器在单CPU的环境中绝对不会有比Serial收集器更好的�
 
 ### **Parallel Old收集器**
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/Parallel-Old.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017-12-04/JVM/Parallel-Old.png" algin="center"/>
 
 </div>
 
@@ -243,7 +243,7 @@ ParNew收集器在单CPU的环境中绝对不会有比Serial收集器更好的�
 
 ### **CMS收集器**
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/CMS.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017-12-04/JVM/CMS.png" algin="center"/>
 
 </div>
 
@@ -283,7 +283,7 @@ ParNew收集器在单CPU的环境中绝对不会有比Serial收集器更好的�
 
 ### **G1收集器**
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/G1.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017-12-04/JVM/G1.png" algin="center"/>
 
 </div>
 

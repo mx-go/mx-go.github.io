@@ -2,14 +2,14 @@
 title: Nginx配置文件详解
 date: 2018-01-24 14:12:52
 tags: [nginx]
-categories: technology
+categories: 工具
 ---
 
 # 引言
 
 之前介绍了Linux下安装Nginx，Nginx 专为性能优化而开发，性能是其最重要的考量,实现上非常注重效率 。它支持内核 Poll 模型，能经受高负载的考验,有报告表明能支持高达 50,000 个并发连接数。<div align=center>
 
-<img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/nginx/index.png" algin="center"/>
+<img width="700" height="200" src="../../../../images/2018-01/nginx/index.png" algin="center"/>
 
 </div><!-- more -->
 
@@ -27,7 +27,7 @@ Nginx 支持热部署。它的启动特别容易, 并且几乎可以做到 7*24 
 
 虚拟主机是一种特殊的软硬件技术，它可以将网络上的每一台计算机分成多个虚拟主机，每个虚拟主机可以独立对外提供www服务，这样就可以实现一台主机对外提供多个web服务，每个虚拟主机之间是独立的，互不影响的。
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/nginx/1.png" algin="center"/>
+<div align=center><img width="600" height="200" src="../../../../images/2018-01/nginx/1.png" algin="center"/>
 
 </div>
 
@@ -43,7 +43,7 @@ Nginx 支持热部署。它的启动特别容易, 并且几乎可以做到 7*24 
 
 ​	而反向代理（Reverse Proxy）方式是指以代理服务器来接受internet上的连接请求，然后将请求转发给内部网络上的服务器，并将从服务器上得到的结果返回给internet上请求连接的客户端，此时代理服务器对外就表现为一个反向代理服务器。
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/nginx/2.png" algin="center"/>
+<div align=center><img width="600" height="200" src="../../../../images/2018-01/nginx/2.png" algin="center"/>
 
 </div>
 

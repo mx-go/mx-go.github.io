@@ -2,12 +2,12 @@
 title: MySQL主从/主主复制
 date: 2018-04-17 13:43:00
 tags: [mysql]
-categories: technology
+categories: 数据库
 ---
 
 # 引言
 
-MySQL作为世界上最广泛的数据库之一，免费是原因之一，其本身功能的强大也是获得众多用的青睐的重要原因。在实际的生产环境中，单机版MySQL数据库就不能满足实际的需求了，此时数据库集群就很好的解决了这个问题了。采用MySQL分布式集群，能够搭建一个高并发、负载均衡的集群服务器。在此之前必须要保证每台MySQL服务器里的数据同步。数据同步可以通过MySQL内部配置就可以轻松完成，主要有**主从复制**和**主主复制**。<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_master_slave/index.jpg" algin="center"/>
+MySQL作为世界上最广泛的数据库之一，免费是原因之一，其本身功能的强大也是获得众多用的青睐的重要原因。在实际的生产环境中，单机版MySQL数据库就不能满足实际的需求了，此时数据库集群就很好的解决了这个问题了。采用MySQL分布式集群，能够搭建一个高并发、负载均衡的集群服务器。在此之前必须要保证每台MySQL服务器里的数据同步。数据同步可以通过MySQL内部配置就可以轻松完成，主要有**主从复制**和**主主复制**。<div align=center><img width="700" height="300" src="../../../../images/2018-4/MySQL_master_slave/index.jpg" algin="center"/>
 
 </div><!-- more -->
 
@@ -143,7 +143,7 @@ SHOW MASTER STATUS;
 
 记录下返回结果的**File列和Position列**的值。
 
-<div align=center><img width="1000" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_master_slave/master_status.png" algin="center"/></div>
+<div align=center><img width="1000" height="300" src="../../../../images/2018-4/MySQL_master_slave/master_status.png" algin="center"/></div>
 
 ### 在Slave中设置Master信息
 
@@ -166,7 +166,7 @@ CHANGE MASTER TO MASTER_HOST='127.0.0.1', MASTER_USER='slave', MASTER_PASSWORD='
 SHOW SLAVE STATUS;
 ```
 
-<div align=center><img width="1000" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_master_slave/master_slave_notok.png" algin="center"/></div>
+<div align=center><img width="1000" height="300" src="../../../../images/2018-4/MySQL_master_slave/master_slave_notok.png" algin="center"/></div>
 
 可看到Slave_IO_State为空， Slave_IO_Running和Slave_SQL_Running是No，表明Slave还没有开始复制过程。相反Slave_IO_Running和Slave_SQL_Running是Yes表明已经开始工作了。
 
@@ -181,7 +181,7 @@ STOP SLAVE;
 START SLAVE;
 ```
 
-<div align=center><img width="1000" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_master_slave/master_slave_ok.png" algin="center"/></div>
+<div align=center><img width="1000" height="300" src="../../../../images/2018-4/MySQL_master_slave/master_slave_ok.png" algin="center"/></div>
 
 查询查看主从同步状态，会发现**Slave_IO_Running和Slave_SQL_Running是Yes**了，表明开启成功。
 
@@ -202,7 +202,7 @@ SHOW MASTER STATUS;
 
 同样记录下返回结果的**File列和Position列**的值。
 
-<div align=center><img width="1000" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_master_slave/2-1.png" algin="center"/></div>
+<div align=center><img width="1000" height="300" src="../../../../images/2018-4/MySQL_master_slave/2-1.png" algin="center"/></div>
 
 ## 配置Slave
 
@@ -214,9 +214,9 @@ CHANGE MASTER TO MASTER_HOST='127.0.0.1', MASTER_USER='slave1', MASTER_PASSWORD=
 
 分别开启 **START SLAVE;**
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_master_slave/db_1.jpg" algin="center"/></div>
+<div align=center><img width="700" height="300" src="../../../../images/2018-4/MySQL_master_slave/db_1.jpg" algin="center"/></div>
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_master_slave/db_2.png" algin="center"/></div>
+<div align=center><img width="700" height="300" src="../../../../images/2018-4/MySQL_master_slave/db_2.png" algin="center"/></div>
 
 **当且仅当两个数据库Slave_IO_Running和Slave_SQL_Running都为 YES才表明状态正常。**
 

@@ -1,13 +1,13 @@
 ---
 title: Linux下Tomcat的安装与优化
 date: 2018-01-05 19:04:11
-tags: [tomcat, tips, linux]
-categories: technology
+tags: [tomcat, tips]
+categories: Linux
 ---
 
 # 引言
 
-Linux系统已经搁置很久了，之前有在Ubuntu系统上开发过，但是Linux已经很久没有用了。现在公司把项目部署在Linux系统上，又要把Linux相关知识温习一下。这篇博客温习一下Linux下Tomcat的部署与优化，大部分的操作与在windows上相同。<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_tomcat/tomcat_linux.png" algin="center"/></div><!-- more -->
+Linux系统已经搁置很久了，之前有在Ubuntu系统上开发过，但是Linux已经很久没有用了。现在公司把项目部署在Linux系统上，又要把Linux相关知识温习一下。这篇博客温习一下Linux下Tomcat的部署与优化，大部分的操作与在windows上相同。<div align=center><img width="700" height="300" src="../../../../images/2018-01/linux_tomcat/tomcat_linux.png" algin="center"/></div><!-- more -->
 
 # Tomcat的安装
 
@@ -22,7 +22,7 @@ tar -zxvf apache-tomcat-7.0.82.tar.gz
 
 进入到apache-tomcat-7.0.82.tar.gz的bin目录下执行**./startup.sh** 命令即可启动Tomcat。
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_tomcat/1.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2018-01/linux_tomcat/1.png" algin="center"/>
 
 </div>
 

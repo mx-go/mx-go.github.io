@@ -2,14 +2,14 @@
 title: Spring之动态代理
 date: 2018-04-02 09:55:03
 tags: [java,spring]
-categories: technology
+categories: 后端
 ---
 
 # 引言
 
 Spring主要有两大思想，一个是AOP，一个是IOC。对于Spring的核心AOP来说，动态代理机制是其核心，想要明白AOP原理，一定要了解动态代理机制。
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-4/DynamicProxy/proxy-index.jpg" algin="center"/></div>
+<div align=center><img width="600" height="200" src="../../../../images/2018-4/DynamicProxy/proxy-index.jpg" algin="center"/></div>
 
 <!-- more -->
 
@@ -34,7 +34,7 @@ Spring主要有两大思想，一个是AOP，一个是IOC。对于Spring的核�
 
 ## JDK动态代理(对有实现接口的对象做代理)
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-4/DynamicProxy/yuanli.png" algin="center"/></div>
+<div align=center><img width="600" height="200" src="../../../../images/2018-4/DynamicProxy/yuanli.png" algin="center"/></div>
 
 ### 实现方式说明
 
@@ -60,7 +60,7 @@ public interface InvocationHandler {
 
 Proxy类是专门完成代理的操作类，可以通过此类为一个或多个接口动态地生成实现类，该类常用的调用方法为**newProxyInstance**
 
-<div align=center><img width="600" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/DynamicProxy/interfere.png" algin="center"/></div>
+<div align=center><img width="600" height="300" src="../../../../images/2018-4/DynamicProxy/interfere.png" algin="center"/></div>
 
 newProxyInstance方法参数说明如下：
 
@@ -179,7 +179,7 @@ public class Client {
 
 运行->控制台输出结果如下
 
-<div align=center><img width="800" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/DynamicProxy/JDKProxy.png" algin="center"/></div>
+<div align=center><img width="800" height="300" src="../../../../images/2018-4/DynamicProxy/JDKProxy.png" algin="center"/></div>
 
 ## CGLib动态代理[对没有实现接口的普通类做代理]
 
@@ -286,7 +286,7 @@ public class CGLibClient {
 
 运行->控制台输出结果如下
 
-<div align=center><img width="800" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/DynamicProxy/cglibResult.png" algin="center"/></div>
+<div align=center><img width="800" height="300" src="../../../../images/2018-4/DynamicProxy/cglibResult.png" algin="center"/></div>
 
 # 总结
 

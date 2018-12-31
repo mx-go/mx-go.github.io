@@ -1,13 +1,13 @@
 ---
 title: UML工具-PowerDesigner设计数据库
 date: 2017-12-6 15:47:06
-tags: [mysql,tool]
-categories: technology
+tags: [sql,tools]
+categories: 工具
 ---
 
 # 引言
 
-在数据库的开发设计中，PowerDesiger（PD）是一个较为常用的UML工具。PowerDesiger为各类数据模型提供了直观的符号表示，不仅使设计人员能更方便、更快捷地使非计算机专业技术人员展示数据库设计和应用系统设计，使系统设计人员与使用系统的业务人员更易于相互理解和交流，同时也使项目组内的交流更为直观、准确，更便于协调工作，从而加速系统的设计和开发过程。PowerDesiger设计完成后的数据库可直接生成SQL语句。<div align=center><img width="200" height="100" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/logo-powerdesigner.png" algin="center"/></div><!-- more -->
+在数据库的开发设计中，PowerDesiger（PD）是一个较为常用的UML工具。PowerDesiger为各类数据模型提供了直观的符号表示，不仅使设计人员能更方便、更快捷地使非计算机专业技术人员展示数据库设计和应用系统设计，使系统设计人员与使用系统的业务人员更易于相互理解和交流，同时也使项目组内的交流更为直观、准确，更便于协调工作，从而加速系统的设计和开发过程。PowerDesiger设计完成后的数据库可直接生成SQL语句。<div align=center><img width="200" height="100" src="../../../../images/2017/12/PowerDesigner/logo-powerdesigner.png" algin="center"/></div><!-- more -->
 
 # 使用ODBC连接MySQL
 
@@ -21,39 +21,39 @@ MySQL Connector /ODBC下载地址：*https://dev.mysql.com/downloads/connector/o
 
 1. 安装完ODBC之后，打开PowerDesigner，新建一个Model，File—>New Model
 
-<div align=center><img width="500" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2.png" algin="center"/>
+<div align=center><img width="500" height="300" src="../../../../images/2017/12/PowerDesigner/2.png" algin="center"/>
 
 </div>
 
 2. 选择工具栏中的Database—> Update Model from Database，如下图
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/3.png" algin="center"/>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/3.png" algin="center"/>
 
 </div>
 
 3. 打开配置对话框，选择[Using a data source]，点击输入框后的图标
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/4.png" algin="center"/>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/4.png" algin="center"/>
 
 </div>
 
 4. 配置ODBC数据源
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/5.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/5.png" algin="center"/></div>
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/6.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/6.png" algin="center"/></div>
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/7.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/7.png" algin="center"/></div>
 
 说明：这里提供了ANSI和Unicode两种字符集版本的Driver，**Unicode提供更丰富的字符集，一般推荐使用Unicode**。
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/8.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/8.png" algin="center"/></div>
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/9.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/9.png" algin="center"/></div>
 
 点击完成，配置连接信息。
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/10.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/10.png" algin="center"/></div>
 
 ```xml
 说明：
@@ -69,13 +69,13 @@ Database：数据库中的database。
 
 信息输入完之后可以选择Test测试配置是否正确，点击OK就结束了配置。
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/12.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/12.png" algin="center"/></div>
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/13.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/13.png" algin="center"/></div>
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/14.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/14.png" algin="center"/></div>
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/15.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/15.png" algin="center"/></div>
 
 到这里已经可以连接数据库了。
 
@@ -83,31 +83,31 @@ Database：数据库中的database。
 
 如果在已有的数据库上需要设计和修改，先取消所有表，再选择需要设计或修改的数据库，选择表，点击ok。
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-1.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-1.png" algin="center"/></div>
 
 连接后的UML如下，可以新建和修改表
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-2.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-2.png" algin="center"/></div>
 
 同时可对表进行主外键设计，现在主外键已经很少用到了。
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-3.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-3.png" algin="center"/></div>
 
 双击表之间的连接线，点击Joins
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-4.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-4.png" algin="center"/></div>
 
 点击【确定】按钮，即可如我们所愿： 
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-6.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-6.png" algin="center"/></div>
 
 # 生成建表语句
 
 点击Database—>Generate Database
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-7.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-7.png" algin="center"/></div>
 
-<div align=center><img width="450" height="300" src="http://on937g0jc.bkt.clouddn.com/2017/12/PowerDesigner/2-8.png" algin="center"/></div>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-8.png" algin="center"/></div>
 
 点击【确定】按钮之后，可以在桌面上找到shiro.sql这样的一个文件，打开，即可看到建表语句： 
 

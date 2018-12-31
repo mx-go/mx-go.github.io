@@ -7,14 +7,15 @@ title: rainbowhorse's blog
 subtitle: 不忘初心 方得始终
 description: 总结个人心得，记录个人知识
 author: rainbowhorse
-language: zh-Hans
+language: zh-CN
 timezone: 
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: https://sunny0715.github.io
 root: /
-permalink: :year/:month/:day/:title/
+# permalink: :year/:month/:title/
+permalink: :title/
 permalink_defaults:
 
 # Directory
@@ -71,7 +72,7 @@ tag_generator:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: next
+theme: snippet
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html

@@ -1,15 +1,15 @@
 ---
 title: Spring下MySQL读写分离
 date: 2018-05-02 15:46:51
-tags: [mysql,spring]
-categories: technology
+tags: [mysql,java]
+categories: 数据库
 ---
 
 # 引言
 
 之前的文章已经说明MySQL主从/主主同步环境的搭建，接下来就是要实现在业务代码里面实现读写分离。在当前流行的SSM的框架开发的web项目下，数据库模式为主从同步的环境下编写业务代码。
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-5/MySQL_spring/index.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2018-5/MySQL_spring/index.png" algin="center"/>
 
 </div><!-- more -->
 

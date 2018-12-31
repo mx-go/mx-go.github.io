@@ -1,15 +1,15 @@
 ---
 title: Java String intern方法
 date: 2017-11-31 10:27:19
-tags: [java,tips]
-categories: technology
+tags: [java]
+categories: 后端
 ---
 
 # 引言
 
 String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。
 
-intern()方法设计的初衷，就是重用String对象，以节省内存消耗。<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/creating-java-strings.jpg" algin="center"/>
+intern()方法设计的初衷，就是重用String对象，以节省内存消耗。<div align=center><img width="700" height="200" src="../../../../images/2017-12-7/String_intern/creating-java-strings.jpg" algin="center"/>
 
 </div><!-- more -->
 
@@ -81,13 +81,13 @@ public class Test {
 
 不使用intern()方法
 
-<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/no-intern.png" algin="center"/>
+<div align=center><img width="700" height="200" src="../../../../images/2017-12-7/String_intern/no-intern.png" algin="center"/>
 
 </div>
 
 使用intern()方法
 
-<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/use-intern.png" algin="center"/>
+<div align=center><img width="700" height="200" src="../../../../images/2017-12-7/String_intern/use-intern.png" algin="center"/>
 
 </div>
 
@@ -143,7 +143,7 @@ JDK1.7以及以上：false false
 
 ## **JDK1.6**
 
-<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jdk1.6.png" algin="center"/>
+<div align=center><img width="700" height="200" src="../../../../images/2017-12-04/JVM/jdk1.6.png" algin="center"/>
 
 </div>
 
@@ -169,7 +169,7 @@ String s4 = "11";
 System.out.println(s3 == s4); 
 ```
 
-<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-04/JVM/jdk1.7.png" algin="center"/>
+<div align=center><img width="700" height="200" src="../../../../images/2017-12-04/JVM/jdk1.7.png" algin="center"/>
 
 </div>
 
@@ -205,7 +205,7 @@ s3.intern();
 System.out.println(s3 == s4); 
 ```
 
-<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-7/String_intern/jdk1.7-2.png" algin="center"/>
+<div align=center><img width="700" height="200" src="../../../../images/2017-12-7/String_intern/jdk1.7-2.png" algin="center"/>
 
 </div>
 

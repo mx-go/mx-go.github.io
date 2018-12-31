@@ -2,12 +2,12 @@
 title: JAVA并发之锁
 date: 2018-05-06 15:45:39
 tags: [java]
-categories: technology
+categories: 后端
 ---
 
 # 引言
 
-锁作为并发共享数据，保证一致性的工具，数据库中有悲观锁、乐观锁等实现。在JAVA平台同样有多种实现(如 `synchronized`和`Lock`)。这些已经写好提供的锁为开发提供了便利，让我们有了更多的选择。<div align=center><img width="800" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-5/JAVA%E2%80%94Lock/index.jpg"/>
+锁作为并发共享数据，保证一致性的工具，数据库中有悲观锁、乐观锁等实现。在JAVA平台同样有多种实现(如 `synchronized`和`Lock`)。这些已经写好提供的锁为开发提供了便利，让我们有了更多的选择。<div align=center><img width="800" height="200" src="../../../../images/2018-5/JAVA%E2%80%94Lock/index.jpg"/>
 
 </div><!-- more -->
 
@@ -115,7 +115,7 @@ public class Main {
 
 反编译结果如下图：
 
-<div align=center><img width="800" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-5/JAVA%E2%80%94Lock/sync.png"/></div>
+<div align=center><img width="800" height="200" src="../../../../images/2018-5/JAVA%E2%80%94Lock/sync.png"/></div>
 
 - **同步代码块**：*monitorenter*和*monitorexit*指令实现的。
 - **同步方法**（在这看不出来需要看JVM底层实现）：方法修饰符上的*ACC_SYNCHRONIZED*实现。
@@ -234,7 +234,7 @@ public class SynchoronizedDemo {
 
 结果证明：**类锁和对象锁是不会冲突的**！
 
-<div align=center><img width="900" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-5/JAVA%E2%80%94Lock/console.png"/>
+<div align=center><img width="900" height="200" src="../../../../images/2018-5/JAVA%E2%80%94Lock/console.png"/>
 
 </div>
 
@@ -283,11 +283,11 @@ Lock显式锁是JDK1.5之后才有的，之前都是使用`synchronized`锁来�
 
 Lock显式锁是一个接口
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-5/JAVA%E2%80%94Lock/lock_1.png"/>
+<div align=center><img width="600" height="200" src="../../../../images/2018-5/JAVA%E2%80%94Lock/lock_1.png"/>
 
 </div>
 
-<div align=center><img width="900" height="1500" src="http://on937g0jc.bkt.clouddn.com/2018-5/JAVA%E2%80%94Lock/lock_2.png"/></div>
+<div align=center><img width="900" height="1500" src="../../../../images/2018-5/JAVA%E2%80%94Lock/lock_2.png"/></div>
 
 - Lock方式来获取锁**支持中断、超时不获取、是非阻塞的。**
 - **提高了语义化**，哪里加锁，哪里解锁都得写出来。

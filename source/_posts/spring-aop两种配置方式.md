@@ -2,14 +2,14 @@
 title: Spring-AOP两种配置方式
 date: 2017-09-09 19:44:46
 tags: [java,spring]
-categories: technology
+categories: 后端
 ---
 
 # 引言
 
 ## AOP
 
-AOP（Aspect Oriented Programming），即面向切面编程，可以说是OOP（Object Oriented Programming，面向对象编程）的补充和完善。OOP引入封装、继承、多态等概念来建立一种对象层次结构，用于模拟公共行为的一个集合。不过OOP允许开发者定义纵向的关系，但并不适合定义横向的关系，例如日志功能。日志代码往往横向地散布在所有对象层次中，而与它对应的对象的核心功能毫无关系对于其他类型的代码，如安全性、异常处理和透明的持续性也都是如此，这种散布在各处的无关的代码被称为横切（cross cutting），在OOP设计中，它导致了大量代码的重复，而不利于各个模块的重用。<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-9-12/SpringAOP/spring.png" algin="center"/></div><!-- more -->
+AOP（Aspect Oriented Programming），即面向切面编程，可以说是OOP（Object Oriented Programming，面向对象编程）的补充和完善。OOP引入封装、继承、多态等概念来建立一种对象层次结构，用于模拟公共行为的一个集合。不过OOP允许开发者定义纵向的关系，但并不适合定义横向的关系，例如日志功能。日志代码往往横向地散布在所有对象层次中，而与它对应的对象的核心功能毫无关系对于其他类型的代码，如安全性、异常处理和透明的持续性也都是如此，这种散布在各处的无关的代码被称为横切（cross cutting），在OOP设计中，它导致了大量代码的重复，而不利于各个模块的重用。<div align=center><img width="600" height="200" src="../../../../images/2017-9-12/SpringAOP/spring.png" algin="center"/></div><!-- more -->
 
 AOP技术恰恰相反，它利用一种称为"横切"的技术，剖解开封装的对象内部，并将那些影响了多个类的公共行为封装到一个可重用模块，并将其命名为"Aspect"，即切面。所谓"切面"，简单说就是那些与业务无关，却为业务模块所共同调用的逻辑或责任封装起来，便于减少系统的重复代码，降低模块之间的耦合度，并有利于未来的可操作性和可维护性。
 
@@ -67,7 +67,7 @@ AOP编程其实是很简单的事情，纵观AOP编程，程序员只需要参�
 
 所以进行AOP编程的关键就是定义切入点和定义增强处理，一旦定义了合适的切入点和增强处理，AOP框架将自动生成AOP代理，即：**代理对象的方法=增强处理+被代理对象**的方法。
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-12/SpringAOP/Aop.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017-9-12/SpringAOP/Aop.png" algin="center"/>
 
 </div>
 

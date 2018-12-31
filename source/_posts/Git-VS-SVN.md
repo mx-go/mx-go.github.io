@@ -1,15 +1,15 @@
 ---
 title: Git-VS-SVN
 date: 2018-05-14 14:04:08
-tags: [tool]
-categories: technology
+tags: [tools]
+categories: 工具
 ---
 
 # 引言
 
 在软件开发过程中，版本控制是非常重要的一环。常用的版本控制工具有`Git`和`SVN`。
 
-<div align=center><img width="800" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-5/Git-vs-SVN/index.png" algin="center"/></div><!-- more -->
+<div align=center><img width="800" height="200" src="../../../../images/2018-5/Git-vs-SVN/index.png" algin="center"/></div><!-- more -->
 
 Git是目前世界上最先进的分布式版本控制系统，其实 Git 跟 SVN 一样有自己的集中式版本库或服务器，但是Git 更倾向于被使用于分布式模式，也就是每个开发人员从中心版本库/服务器上*chect out*代码后会在自己的机器上**克隆一个跟中心版本库一模一样的本地版本库**。可以这样说，如果你被困在一个不能连接网络的地方时，你仍然能够提交文件，查看log（历史版本记录），创建项目分支等。
 

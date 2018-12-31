@@ -1,13 +1,13 @@
 ---
 title: Mybatis之缓存
 date: 2018-03-20 10:43:53
-tags: [java,mybatis]
-categories: technology
+tags: [java, mybatis]
+categories: 后端
 ---
 
 # 引言
 
-Mybatis中有一级缓存和二级缓存，默认情况下一级缓存是开启的，而且是不能关闭的。一级缓存是指SqlSession级别的缓存，当在同一个SqlSession中进行相同的SQL语句查询时，第二次以后的查询不会从数据库查询，而是直接从缓存中获取，一级缓存最多缓存1024条SQL。二级缓存是指可以跨SqlSession的缓存。<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/cache.png" algin="center"/></div><!-- more -->
+Mybatis中有一级缓存和二级缓存，默认情况下一级缓存是开启的，而且是不能关闭的。一级缓存是指SqlSession级别的缓存，当在同一个SqlSession中进行相同的SQL语句查询时，第二次以后的查询不会从数据库查询，而是直接从缓存中获取，一级缓存最多缓存1024条SQL。二级缓存是指可以跨SqlSession的缓存。<div align=center><img width="700" height="300" src="../../../../images/2018-3/Mybatis/cache.png" algin="center"/></div><!-- more -->
 
 # Mybatis缓存
 
@@ -18,13 +18,13 @@ Mybatis中有一级缓存和二级缓存，默认情况下一级缓存是开启�
 - mybatis一级缓存是一个SqlSession级别，sqlsession只能访问自己的一级缓存的数据。
 - 二级缓存是跨sqlSession，是mapper级别的缓存，对于mapper级别的缓存不同的sqlsession是可以共享的。
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/cache-index.png" algin="center"/></div>
+<div align=center><img width="600" height="200" src="../../../../images/2018-3/Mybatis/cache-index.png" algin="center"/></div>
 
 ## Mybatis一级缓存
 
 Mybatis的一级缓存原理：
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/cache-first.png" algin="center"/></div>
+<div align=center><img width="600" height="200" src="../../../../images/2018-3/Mybatis/cache-first.png" algin="center"/></div>
 
 第一次发出一个查询sql，sql查询结果写入sqlsession的一级缓存中，缓存使用的数据结构是一个map`<key,value>`
 
@@ -43,7 +43,7 @@ Mybatis一级缓存值得注意的地方：
 
 二级缓存原理：
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/cache-2.png" algin="center"/></div>
+<div align=center><img width="600" height="200" src="../../../../images/2018-3/Mybatis/cache-2.png" algin="center"/></div>
 
 **二级缓存的范围是mapper级别（mapper同一个命名空间）**，mapper以命名空间为单位创建缓存数据结构，结构是map`<key、value>`。
 
@@ -120,7 +120,7 @@ org.apache.ibatis.cache.CacheException: Error serializing object.  Cause: java.i
 
 **Ehcache是专门用于管理缓存的，Mybatis的缓存交由ehcache管理会更加得当。在mybatis中提供一个cache接口，只要实现cache接口就可以把缓存数据灵活的管理起来**。
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/ehcache.png" algin="center"/></div>
+<div align=center><img width="600" height="200" src="../../../../images/2018-3/Mybatis/ehcache.png" algin="center"/></div>
 
 ## 整合jar包
 
@@ -129,7 +129,7 @@ org.apache.ibatis.cache.CacheException: Error serializing object.  Cause: java.i
 
 Ehcache对cache接口的实现类：
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-3/Mybatis/ehcachecache.png" algin="center"/></div>
+<div align=center><img width="600" height="200" src="../../../../images/2018-3/Mybatis/ehcachecache.png" algin="center"/></div>
 
 ## ehcache.xml配置信息
 

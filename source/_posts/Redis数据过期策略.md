@@ -1,15 +1,15 @@
 ---
 title: Redis数据过期策略
 date: 2018-04-09 16:18:12
-tags: [redis]
-categories: technology
+tags: [redis,tools]
+categories: 后端
 ---
 
 # 引言
 
 Redis作为一个高性能的内存NoSQL数据库，其容量受到最大内存限制的限制。为了防止一次性清理大量过期Key导致Redis服务受影响，Redis只在空闲时清理过期Key。<div align=center>
 
-> <img width="800" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-4/redisKeyExpire/redis.jpg"/>
+> <img width="800" height="200" src="../../../../images/2018-4/redisKeyExpire/redis.jpg"/>
 
 </div><!-- more -->
 
@@ -41,7 +41,7 @@ PEXPIREAT <KEY> <timestamp>: 	将键的过期时间设为 timestamp 所指定的
 
 下图是一个带过期字典的数据库例子：<div align=center>
 
-> <img width="800" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/redisKeyExpire/e1.png"/>
+> <img width="800" height="300" src="../../../../images/2018-4/redisKeyExpire/e1.png"/>
 
 </div>
 
@@ -74,7 +74,7 @@ redis> persist book
 
 数据库将更新成如下状态：<div align=center>
 
-> <img width="800" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/redisKeyExpire/e2.png"/>
+> <img width="800" height="300" src="../../../../images/2018-4/redisKeyExpire/e2.png"/>
 
 </div>
 

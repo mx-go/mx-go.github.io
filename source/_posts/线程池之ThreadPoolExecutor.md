@@ -1,13 +1,13 @@
 ---
 title: 线程池之ThreadPoolExecutor
 date: 2018-03-17 14:09:10
-tags: [java,tips]
-categories: technology
+tags: [java, tips]
+categories: 后端
 ---
 
 # 引言
 
-JAVA对于多线程的封装非常丰富，提供了多种适用于不同场景的多并发实现。但如果并发的线程数量很多，并且每个线程都是执行一个时间很短的任务就结束了，这样频繁创建线程就会大大降低系统的效率，因为频繁创建线程和销毁线程需要时间。这里就引入了线程池来管理线程，其中最基础、最核心的线程池要属ThreadPoolExecutor类了。<div align=center><img width="500" height="200" src="http://on937g0jc.bkt.clouddn.com//2018-3/threadpoolexcetor/threadpoolexecutor.png" algin="center"/></div>	<!-- more -->
+JAVA对于多线程的封装非常丰富，提供了多种适用于不同场景的多并发实现。但如果并发的线程数量很多，并且每个线程都是执行一个时间很短的任务就结束了，这样频繁创建线程就会大大降低系统的效率，因为频繁创建线程和销毁线程需要时间。这里就引入了线程池来管理线程，其中最基础、最核心的线程池要属ThreadPoolExecutor类了。<div align=center><img width="500" height="200" src="../../../../images//2018-3/threadpoolexcetor/threadpoolexecutor.png" algin="center"/></div>	<!-- more -->
 
 # Java中的ThreadPoolExecutor类
 
@@ -80,7 +80,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
   ThreadPoolExecutor.CallerRunsPolicy：由调用线程处理该任务 
   ```
 
-<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com//2018-3/threadpoolexcetor/inherit.png" algin="center"/></div>
+<div align=center><img width="700" height="200" src="../../../../images//2018-3/threadpoolexcetor/inherit.png" algin="center"/></div>
 
 由图中我们可得知ThreadPoolExecutor继承了AbstractExecutorService，AbstractExecutorService是一个抽象类，它实现了ExecutorService接口，而ExecutorService又是继承了Executor接口。
 
@@ -121,7 +121,7 @@ private static final int TERMINATED =  3 << COUNT_BITS;
 4. **TIDYING**：所有任务被终止了，工作线程数`workCount`也被设为0，线程的状态也被设为**TIDYING**，并开始调用钩子函数terminated()。
 5. **TERMINATED**：钩子函数`terminated()`执行完毕。
 
-<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-3/threadpoolexcetor/status.png" algin="center"/></div>
+<div align=center><img width="700" height="200" src="../../../../images/2018-3/threadpoolexcetor/status.png" algin="center"/></div>
 
 ## 任务的执行
 
@@ -248,7 +248,7 @@ class MyTask implements Runnable {
 
 执行结果：
 
-<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com//2018-3/threadpoolexcetor/result.png" algin="center"/></div>
+<div align=center><img width="700" height="200" src="../../../../images//2018-3/threadpoolexcetor/result.png" algin="center"/></div>
 
 ## 合理配置线程池大小
 

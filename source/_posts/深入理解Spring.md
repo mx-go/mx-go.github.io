@@ -2,12 +2,12 @@
 title: 深入理解Spring
 date: 2018-05-11 12:31:22
 tags: [java,spring]
-categories: technology
+categories: 后端
 ---
 
 # 引言
 
-Spring在当前Java项目开发中可谓是核心，无论是SpringMVC、SpringBoot、SpringCloud都离不开Spring这个核心。自己对Spring的了解也停留在一知半解状态。<div align=center><img width="800" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-5/Spring/Spring.jpg" algin="center"/></div><!-- more -->
+Spring在当前Java项目开发中可谓是核心，无论是SpringMVC、SpringBoot、SpringCloud都离不开Spring这个核心。自己对Spring的了解也停留在一知半解状态。<div align=center><img width="800" height="200" src="../../../../images/2018-5/Spring/Spring.jpg" algin="center"/></div><!-- more -->
 
 说起Spring，都知道是一个轻量级开源企业开发框架，包含控制反转（IOC）和面向切面（AOP）两大特性。
 

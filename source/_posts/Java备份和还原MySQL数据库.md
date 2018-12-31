@@ -1,13 +1,13 @@
 ---
 title: Java备份和还原MySQL数据库
 date: 2017-09-24 17:43:10
-tags: [java,mysql]
-categories: technology
+tags: [java, mysql]
+categories: 数据库
 ---
 
 # 引言
 
-​	在项目中经常会用到Java程序备份和还原MySQL数据库的内容，都是大同小异，但程序也会出现各种各样的问题（运行时异常，乱码等）。实现上都是用Runtime执行MySQL的命令行工具，然后读写IO流数据；也有可能是由于使用Java的Runtime来实现备份还原功能，而由于大家的运行时环境有差异才导致代码运行不成功。在这里记录一下自己使用的工具和方法。<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-21/MySQLbackUpAndRestore/mysql-index.png" algin="center"/>
+​	在项目中经常会用到Java程序备份和还原MySQL数据库的内容，都是大同小异，但程序也会出现各种各样的问题（运行时异常，乱码等）。实现上都是用Runtime执行MySQL的命令行工具，然后读写IO流数据；也有可能是由于使用Java的Runtime来实现备份还原功能，而由于大家的运行时环境有差异才导致代码运行不成功。在这里记录一下自己使用的工具和方法。<div align=center><img width="700" height="300" src="../../../../images/2017-9-21/MySQLbackUpAndRestore/mysql-index.png" algin="center"/>
 
 </div><!-- more -->
 
@@ -170,7 +170,7 @@ public static void main(String[] args){
     }
 ```
 
-代码下载点击：[*下载*](http://on937g0jc.bkt.clouddn.com/2017-9-21/MySQLbackUpAndRestore/MySQLDatabaseBackupAndRestore.java)
+代码下载点击：[*下载*](../../../../images/2017-9-21/MySQLbackUpAndRestore/MySQLDatabaseBackupAndRestore.java)
 
 # Windows下bat命令
 

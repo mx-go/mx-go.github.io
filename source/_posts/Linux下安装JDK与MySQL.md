@@ -1,13 +1,13 @@
 ---
 title: Linux下安装JDK与MySQL
 date: 2018-01-09 19:53:24
-tags: [mysql, linux]
-categories: technology
+tags: [mysql, tips]
+categories: Linux
 ---
 
 # 引言
 
-重温记录下Linux环境下JDK和MySQL的安装。<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/installing-mysql-on-linux.png" algin="center"/></div><!-- more -->
+重温记录下Linux环境下JDK和MySQL的安装。<div align=center><img width="700" height="200" src="../../../../images/2018-01/linux_JDK_MySQL/installing-mysql-on-linux.png" algin="center"/></div><!-- more -->
 
 # JDK的安装
 
@@ -54,7 +54,7 @@ source /etc/profile
 alternatives --config java
 ```
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/config-f.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2018-01/linux_JDK_MySQL/config-f.png" algin="center"/>
 
 </div>
 
@@ -70,7 +70,7 @@ alternatives --install /usr/bin/java java /usr/soft/jdk1.8.0_152 4
 alternatives --config java
 ```
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/config-s1.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2018-01/linux_JDK_MySQL/config-s1.png" algin="center"/>
 
 </div>
 
@@ -80,7 +80,7 @@ alternatives --config java
 
 从Oracle官方网站下载Linux系统对应的MySQL的yum源包。地址：*https://dev.mysql.com/downloads/repo/yum/*
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/1.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2018-01/linux_JDK_MySQL/1.png" algin="center"/>
 
 </div>
 
@@ -91,7 +91,7 @@ yum localinstall mysql-community-release-el6-5.noarch.rpm
 yum install mysql-server
 ```
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/2.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2018-01/linux_JDK_MySQL/2.png" algin="center"/>
 
 </div>
 
@@ -101,7 +101,7 @@ yum install mysql-server
 service mysqld start
 ```
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/3.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2018-01/linux_JDK_MySQL/3.png" algin="center"/>
 
 </div>
 
@@ -156,7 +156,7 @@ rm -rf /var/lib/mysql/
 
 下载MySQL离线安装包：*https://dev.mysql.com/downloads/mysql/*
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/download.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2018-01/linux_JDK_MySQL/download.png" algin="center"/>
 
 </div>
 
@@ -169,7 +169,7 @@ tar -zxvf  mysql-5.6.38-linux-glibc2.12-x86_64.tar.gz
 mv mysql-5.6.38-linux-glibc2.12-x86_64 mysql
 ```
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/tar.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2018-01/linux_JDK_MySQL/tar.png" algin="center"/>
 
 </div>
 
@@ -200,7 +200,7 @@ chgrp -R mysql ../mysql/
 ./scripts/mysql_install_db --user=mysql --basedir=/usr/local/mysql/ --datadir=/usr/local/mysql/data/
 ```
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/scripts.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2018-01/linux_JDK_MySQL/scripts.png" algin="center"/>
 
 </div>
 
@@ -228,7 +228,7 @@ datadir = /usr/local/mysql/data
 ./bin/mysql -h127.0.0.1 -uroot -proot
 ```
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/start.jpg" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2018-01/linux_JDK_MySQL/start.jpg" algin="center"/>
 
 </div>
 
@@ -250,7 +250,7 @@ service mysqld restart
 service mysqld status  
 ```
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_JDK_MySQL/ok.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2018-01/linux_JDK_MySQL/ok.png" algin="center"/>
 
 </div>
 

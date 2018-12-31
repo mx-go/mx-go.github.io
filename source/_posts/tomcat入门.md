@@ -1,19 +1,19 @@
 ---
 title: Tomcat入门
 date: 2017-12-20 14:35:32
-tags: [tomcat,tips]
-categories: technology
+tags: [tomcat]
+categories: 后端
 ---
 
 # 引言
 
-Tomcat 服务器是一个免费的开放源代码的Web 应用服务器，属于轻量级应用服务器。说是经常用到，也只是熟悉，还没没有真正达到了解其中的原理和其中配置的意义，最近也找了一些书籍来看，先入门。<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-27/tomcat%E5%85%A5%E9%97%A8/tomcat.jpg"/></div><!-- more -->
+Tomcat 服务器是一个免费的开放源代码的Web 应用服务器，属于轻量级应用服务器。说是经常用到，也只是熟悉，还没没有真正达到了解其中的原理和其中配置的意义，最近也找了一些书籍来看，先入门。<div align=center><img width="600" height="200" src="../../../../images/2017-12-27/tomcat%E5%85%A5%E9%97%A8/tomcat.jpg"/></div><!-- more -->
 
 # Tomcat简介
 
 Tomcat的下载包解压之后的目录
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-27/tomcat%E5%85%A5%E9%97%A8/tomcat%E7%9B%AE%E5%BD%95.jpg"/>
+<div align=center><img width="600" height="200" src="../../../../images/2017-12-27/tomcat%E5%85%A5%E9%97%A8/tomcat%E7%9B%AE%E5%BD%95.jpg"/>
 
 </div>
 
@@ -155,7 +155,7 @@ Connector的主要功能，是接收连接请求，**创建Request和Response对
 
 （2）通过配置第2个Connector，客户端可以通过8009端口号使用AJP协议访问Tomcat。AJP协议负责和其他的HTTP服务器(如Apache)建立连接；在把Tomcat与其他HTTP服务器集成时，就需要用到这个连接器。之所以使用Tomcat和其他服务器集成，是因为Tomcat可以用作Servlet/JSP容器，但是对静态资源的处理速度较慢，不如Apache和IIS等HTTP服务器；因此常常将Tomcat与Apache等集成，前者作Servlet容器，后者处理静态资源，而AJP协议便负责Tomcat和Apache的连接。Tomcat与Apache等集成的原理如下图：
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-27/tomcat%E5%85%A5%E9%97%A8/tomcat-Apache.png"/>
+<div align=center><img width="600" height="200" src="../../../../images/2017-12-27/tomcat%E5%85%A5%E9%97%A8/tomcat-Apache.png"/>
 
 </div>
 
@@ -255,7 +255,7 @@ reloadable属性指示tomcat是否在运行时监控在WEB-INF/classes和WEB-INF
 
 最典型的自动部署，就是当我们安装完Tomcat后，$TOMCAT_HOME/webapps目录下有如下文件夹：
 
-<div align=center><img width="100" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-27/tomcat%E5%85%A5%E9%97%A8/%E7%9B%AE%E5%BD%95.png"/>
+<div align=center><img width="100" height="200" src="../../../../images/2017-12-27/tomcat%E5%85%A5%E9%97%A8/%E7%9B%AE%E5%BD%95.png"/>
 
 </div>
 
@@ -321,7 +321,7 @@ Service确定后，Tomcat在Service中寻找名称与域名/IP地址匹配的Hos
 
 以Win7为例，可以用如下方法找出某个端口是否被其他进程占用：netstat -aon|findstr “8081″发现8081端口被PID为2064的进程占用，tasklist |findstr “2064″发现该进程为FrameworkService.exe(这是McAfee杀毒软件的进程)。
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-27/tomcat%E5%85%A5%E9%97%A8/task.png"/>
+<div align=center><img width="600" height="200" src="../../../../images/2017-12-27/tomcat%E5%85%A5%E9%97%A8/task.png"/>
 
 </div>
 
@@ -455,7 +455,7 @@ AccessLogValve的作用是通过日志记录其所在的容器中处理的所有
 
 （4）suffix：指定了日志文件的后缀。通过directory、prefix和suffix的配置，在$TOMCAT_HOME/logs目录下，可以看到如下所示的日志文件。
 
-<div align=center><img width="400" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-27/tomcat%E5%85%A5%E9%97%A8/log.png"/>
+<div align=center><img width="400" height="200" src="../../../../images/2017-12-27/tomcat%E5%85%A5%E9%97%A8/log.png"/>
 
 </div>
 
@@ -471,7 +471,7 @@ AccessLogValve的作用是通过日志记录其所在的容器中处理的所有
 
 例如，下面是访问日志中的一条记录
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-27/tomcat%E5%85%A5%E9%97%A8/access_log.png"/>
+<div align=center><img width="600" height="200" src="../../../../images/2017-12-27/tomcat%E5%85%A5%E9%97%A8/access_log.png"/>
 
 </div>
 

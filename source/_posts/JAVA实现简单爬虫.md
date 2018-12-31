@@ -1,11 +1,11 @@
 ---
 title: JAVA实现简单网络爬虫
 date: 2017-04-01 14:17:39
-tags: [java, tool]
-categories: technology
+tags: [java, tools]
+categories: 后端
 ---
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-4-1/%E7%88%AC%E8%99%AB.jpg" algin="center"/></div><!-- more -->
+<div align=center><img width="700" height="300" src="../../../../images/2017-4-1/%E7%88%AC%E8%99%AB.jpg" algin="center"/></div><!-- more -->
 
 ## 爬虫基本理解
 
@@ -121,7 +121,7 @@ public class Reptile {
 
 > `Jsoup` 是一个 Java 的开源HTML解析器，可直接解析某个URL地址、HTML文本内容。同时提供了一套非常省力的API，可通过DOM，CSS以及类似于jQuery的操作方法来取出和操作数据。可以直接使用DOM或者JQuery方法和表达式取出数据。
 >
-> 需要下载JAR包，下载地址：[*点我*](http://on937g0jc.bkt.clouddn.com/2017-4-1/jsoup-1.10.2.jar)
+> 需要下载JAR包，下载地址：[*点我*](../../../../images/2017-4-1/jsoup-1.10.2.jar)
 >
 > `Jsoup API`：详见：*http://www.open-open.com/jsoup/*
 

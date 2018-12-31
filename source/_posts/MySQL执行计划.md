@@ -2,12 +2,12 @@
 title: MySQL执行计划
 date: 2018-04-27 09:24:06
 tags: [mysql]
-categories: technology
+categories: 数据库
 ---
 
 # 引言
 
-MySQL执行计划，简单的来说，是SQL在数据库中执行时的表现情况，通常用于SQL性能分析，优化等场景。在MySQL使用 **explain** 关键字来查看SQL的执行计划。<div align=center><img width="800" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_explain/mysql-explain.png" algin="center"/>
+MySQL执行计划，简单的来说，是SQL在数据库中执行时的表现情况，通常用于SQL性能分析，优化等场景。在MySQL使用 **explain** 关键字来查看SQL的执行计划。<div align=center><img width="800" height="300" src="../../../../images/2018-4/MySQL_explain/mysql-explain.png" algin="center"/>
 
 </div><!-- more -->
 
@@ -29,7 +29,7 @@ MySQL执行计划，简单的来说，是SQL在数据库中执行时的表现情
 EXPLAIN SELECT * FROM tb_item JOIN tb_item_desc ON tb_item.id=tb_item_desc.item_id WHERE id='679533';
 ```
 
-<div align=center><img width="900" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-4/MySQL_explain/eg.png" algin="center"/>
+<div align=center><img width="900" height="300" src="../../../../images/2018-4/MySQL_explain/eg.png" algin="center"/>
 
 </div>根据上图可得到执行计划的列信息，下面分析一下每列所表示的信息。
 

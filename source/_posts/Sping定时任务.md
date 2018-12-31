@@ -2,14 +2,14 @@
 title: Sping定时任务
 date: 2018-03-07 17:09:22
 tags: [java,spring]
-categories: technology
+categories: 后端
 ---
 
 # 引言
 
 在企业开发中，经常会遇到时间任务调度的需求，比如每天凌晨生成前天报表、数据汇总等动态配置是否开启定时的任务。在Java领域中，定时任务的开源工具也非常多，小到一个Timer类，大到Quartz框架。在Spring中最常见的定时任务方式属**Spring schedule注解的方式**和利用**Quartz动态管理定时任务**。总体来说，个人比较喜欢的还是Quartz，功能强大而且使用方便。<div align=center>
 
-> <img width="800" height="300" src="http://on937g0jc.bkt.clouddn.com/2018-03/quartz/index.png"/>
+> <img width="800" height="300" src="../../../../images/2018-03/quartz/index.png"/>
 
 </div><!-- more -->
 
@@ -69,7 +69,7 @@ public class ATask {
 
 启动项目会发现定时任务已经开启。
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-03/quartz/taskCode.png" algin="center"/>
+<div align=center><img width="600" height="200" src="../../../../images/2018-03/quartz/taskCode.png" algin="center"/>
 
 </div>
 
@@ -290,7 +290,7 @@ public class QuartzTest {
 
 输出如下：
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-03/quartz/quartzResult.png" algin="center"/>
+<div align=center><img width="600" height="200" src="../../../../images/2018-03/quartz/quartzResult.png" algin="center"/>
 
 </div>
 

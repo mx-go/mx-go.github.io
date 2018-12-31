@@ -2,20 +2,20 @@
 title: Spring+Mybatis之Mapper热部署
 date: 2017-09-15 16:52:07
 tags: [java,tips,mybatis]
-categories: technology
+categories: 工具
 ---
 
 # 引言
 
 ​	Spring+Mybatis经常用，在项目中最痛苦的就是修改mapper文件的时候需要重启一下项目，每修改一次就需要重启一次项目。项目小还好，如果项目大，重启一次项目简直是要命。所以，去网上查资料看有没有办法让mybatis热部署，每次更新mapper文件不需要重启项目。
 
-​	功夫不负有心人，终于找到了，这玩意只要发现mapper文件被修改，就会重新加载被修改的mapper文件。且**只加载被修改的mapper文件**！这个可省事了，效率又高，简直爽到爆。<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/relationship-with-mybatis.png" algin="center"/></div><!-- more -->
+​	功夫不负有心人，终于找到了，这玩意只要发现mapper文件被修改，就会重新加载被修改的mapper文件。且**只加载被修改的mapper文件**！这个可省事了，效率又高，简直爽到爆。<div align=center><img width="700" height="300" src="../../../../images/2017-9-15/mybatis-mapper/relationship-with-mybatis.png" algin="center"/></div><!-- more -->
 
 # 创建MapperRefresh刷新类
 
 在src下创建一个util包，包下面创建一个类，类名为：**MapperRefresh**
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/refresh.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017-9-15/mybatis-mapper/refresh.png" algin="center"/>
 
 </div>
 
@@ -395,7 +395,7 @@ MyBatis有几个不太好的地方，是当实体类别名重名的时候，Mapp
 
 1. 在当前项目下新建一个包：右键 *src > new Package >* *org.mybatis.spring*，创建SqlSessionFactoryBean.java类。
 
-   <div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/sqlSessionfactory-java.png" algin="center"/>
+   <div align=center><img width="700" height="300" src="../../../../images/2017-9-15/mybatis-mapper/sqlSessionfactory-java.png" algin="center"/>
 
    </div>
 
@@ -721,7 +721,7 @@ MyBatis有几个不太好的地方，是当实体类别名重名的时候，Mapp
 
    4. 去Tomcat 8的根目录找到对应的SqlSessionFactoryBean.class文件复制出来。
 
-      <div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/sqlsessionfactory-class.jpg" algin="center"/>
+      <div align=center><img width="700" height="300" src="../../../../images/2017-9-15/mybatis-mapper/sqlsessionfactory-class.jpg" algin="center"/>
 
       </div>
 
@@ -729,7 +729,7 @@ MyBatis有几个不太好的地方，是当实体类别名重名的时候，Mapp
 
       **检查无误之后，把SqlSessionFactoryBean.class复制到mybatis-spring-1.2.2.jar(是你本地项目中的jar)包中，替换原来的class文件**。
 
-      <div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/%E6%9B%BF%E6%8D%A2class%E6%96%87%E4%BB%B6.png" algin="center"/>
+      <div align=center><img width="700" height="300" src="../../../../images/2017-9-15/mybatis-mapper/%E6%9B%BF%E6%8D%A2class%E6%96%87%E4%BB%B6.png" algin="center"/>
 
       </div>
 
@@ -739,7 +739,7 @@ MyBatis有几个不太好的地方，是当实体类别名重名的时候，Mapp
 
       一切准备就绪，还剩下最后一个属性文件， 创建**mybatis-refresh.properties**文件，记得把文件格式改成**UTF-8**。
 
-      <div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/properties%E6%96%87%E4%BB%B6.png" algin="center"/>
+      <div align=center><img width="700" height="300" src="../../../../images/2017-9-15/mybatis-mapper/properties%E6%96%87%E4%BB%B6.png" algin="center"/>
 
       </div>
 
@@ -762,7 +762,7 @@ MyBatis有几个不太好的地方，是当实体类别名重名的时候，Mapp
 
       2. 启动项目，然后随便修改一个mapper.xml文件，然后稍等片刻，在控制台出现如下输出，就表示你成功啦！**这样就不用重启项目，也能加载到你修改的mapper.xml文件了** 。
 
-         <div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-15/mybatis-mapper/success.png" algin="center"/>
+         <div align=center><img width="700" height="300" src="../../../../images/2017-9-15/mybatis-mapper/success.png" algin="center"/>
 
          </div>
 

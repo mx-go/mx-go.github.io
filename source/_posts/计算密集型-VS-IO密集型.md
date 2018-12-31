@@ -1,8 +1,8 @@
 ---
 title: 计算密集型 VS IO密集型
 date: 2018-05-17 18:56:06
-tags: [java]
-categories: technology
+tags: [java, tips]
+categories: 后端
 ---
 
 # 引言

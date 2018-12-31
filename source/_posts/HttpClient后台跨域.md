@@ -1,13 +1,13 @@
 ---
 title: HttpClient后台跨域
 date: 2018-01-20 09:48:24
-tags: [java,tips]
-categories: technology
+tags: [java, tips]
+categories: 后端
 ---
 
 # 引言
 
-跨域可以说是一个经常遇到的问题，最近在联调一个身份证识别接口，该接口由python语言编写，Java语言调用，刚开始采用了CORS（Cross-Origin Resource Sharing）跨域，在IE8上一直出现兼容性问题，固定的思维容易出现错误，自己一直想着前端Ajax跨域而忽略了后台HttpClient的跨域，最后还是用HttpClient顺利解决问题，避免了浏览器跨域带来的兼容性问题。<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01-20/HTTPClient.png" algin="center"/></div><!-- more -->
+跨域可以说是一个经常遇到的问题，最近在联调一个身份证识别接口，该接口由python语言编写，Java语言调用，刚开始采用了CORS（Cross-Origin Resource Sharing）跨域，在IE8上一直出现兼容性问题，固定的思维容易出现错误，自己一直想着前端Ajax跨域而忽略了后台HttpClient的跨域，最后还是用HttpClient顺利解决问题，避免了浏览器跨域带来的兼容性问题。<div align=center><img width="700" height="200" src="../../../../images/2018-01-20/HTTPClient.png" algin="center"/></div><!-- more -->
 
 # HttpClient VS Jsonp
 

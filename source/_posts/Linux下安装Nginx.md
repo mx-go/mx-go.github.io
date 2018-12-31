@@ -1,11 +1,11 @@
 ---
 title: Linux下安装Nginx
 date: 2018-01-11 15:16:49
-tags: [nginx, linux]
-categories: technology
+tags: [nginx, tips]
+categories: Linux
 ---
-
-<div align=center><img width="400" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_nginx/index.jpg" algin="center"/></div><!-- more -->
+记录下Linux下安装Nginx。
+<div align=center><img width="400" height="200" src="../../../../images/2018-01/linux_nginx/index.jpg" algin="center"/></div><!-- more -->
 
 # Nginx安装环境
 
@@ -72,7 +72,7 @@ make
 make  install
 ```
 
-<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_nginx/install.png" algin="center"/>
+<div align=center><img width="700" height="200" src="../../../../images/2018-01/linux_nginx/install.png" algin="center"/>
 
 </div>
 
@@ -93,7 +93,7 @@ ps aux|grep nginx
 
 **如果不指定-c，nginx在启动时默认加载/usr/local/nginx/conf/nginx.conf文件，此文件的地址也可以在编译安装nginx时指定./configure的参数（--conf-path= 指向配置文件（nginx.conf））**
 
-<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_nginx/start.png" algin="center"/>
+<div align=center><img width="700" height="200" src="../../../../images/2018-01/linux_nginx/start.png" algin="center"/>
 
 </div>
 
@@ -120,7 +120,7 @@ ps aux|grep nginx
 
 nginx安装成功，启动nginx，即可访问虚拟机上的nginx
 
-<div align=center><img width="700" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-01/linux_nginx/ok.png" algin="center"/>
+<div align=center><img width="700" height="200" src="../../../../images/2018-01/linux_nginx/ok.png" algin="center"/>
 
 </div>
 

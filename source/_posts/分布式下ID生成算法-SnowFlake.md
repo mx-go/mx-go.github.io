@@ -1,13 +1,13 @@
 ---
 title: 分布式下ID生成算法 SnowFlake
 date: 2017-10-30 14:26:21
-tags: [java,mysql]
-categories: technology
+tags: [java]
+categories: 后端
 ---
 
 # 引言
 
-在做系统开发时，系统唯一ID是我们在设计一个系统的时候经常遇到的问题，也常常为这个问题纠结。生成ID的方法有很多，适应不同的场景、需求及性能要求。所以有些比较复杂的系统会有多个ID生成策略。在这里总结一下常用到的ID生成策略。<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-21/%E8%87%AA%E5%A2%9EID/index.png" algin="center"/></div><!-- more -->
+在做系统开发时，系统唯一ID是我们在设计一个系统的时候经常遇到的问题，也常常为这个问题纠结。生成ID的方法有很多，适应不同的场景、需求及性能要求。所以有些比较复杂的系统会有多个ID生成策略。在这里总结一下常用到的ID生成策略。<div align=center><img width="700" height="300" src="../../../../images/2017-9-21/%E8%87%AA%E5%A2%9EID/index.png" algin="center"/></div><!-- more -->
 
 # 数据库自增长序列或字段
 
@@ -54,7 +54,7 @@ categories: technology
 
 ## 算法原理
 
-<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-9-21/%E8%87%AA%E5%A2%9EID/snowflake.png" algin="center"/>
+<div align=center><img width="700" height="300" src="../../../../images/2017-9-21/%E8%87%AA%E5%A2%9EID/snowflake.png" algin="center"/>
 
 </div>
 

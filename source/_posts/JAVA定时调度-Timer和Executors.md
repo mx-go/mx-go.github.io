@@ -1,8 +1,8 @@
 ---
 title: 'JAVA定时调度 Timer和Executors'
 date: 2017-03-27 17:42:49
-tags: [java,tips]
-categories: technology
+tags: [java, tips]
+categories: 后端
 ---
 
 近期在公司做了一个关于定时执行任务的功能（没有使用框架定时），查了一下资料，有**Thread**、**Timer**和**Executors**三种方法，之前使用的是Timer，但是详细查了资料觉得**Executors更优**，所以在这里比较一下它们的区别。<!-- more -->

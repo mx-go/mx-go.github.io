@@ -1,8 +1,8 @@
 ---
 title: JAVA实现HTML转PDF
 date: 2017-07-27 13:22:32
-tags: [java,tips]
-categories: technology
+tags: [java, tips]
+categories: 后端
 ---
 
 ​	最近公司里面有一个任务，在线题卡，就是把客户在线编辑的题卡样式保存下来，然后可以导出为PDF格式。于是上网找了一系列的资料，找到了以下两种方法：
@@ -10,7 +10,7 @@ categories: technology
 1. 使用`wkhtmltox`
 2. 使用`iText+Flying Saucer`
 
-但是还是强烈推荐用第一种方法。<div align=center><img width="450" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-9-13/additional/html_to_pdf.png" algin="center"/></div><!-- more -->
+但是还是强烈推荐用第一种方法。<div align=center><img width="450" height="200" src="../../../../images/2017-9-13/additional/html_to_pdf.png" algin="center"/></div><!-- more -->
 
 # 使用wkhtmltox(推荐)
 
@@ -21,7 +21,7 @@ wkhtmltox实现网页转换成图片或PDF
 1. 进入wkhtmltox官网软件下载  ：https://wkhtmltopdf.org/downloads.html
 2. 安装完成后进入${home}/bin目录下有两个exe文件，通过名称就可以辨别`wkhtmltoimage.exe`是将HTML转化为image，`wkhtmltopdf.exe`是将HTML转化为PDF文件，这正是我们想要的。
 
-![path](http://on937g0jc.bkt.clouddn.com/2017-8-27/HtmlToPdf/HtmlToPdf.png)
+![path](../../../../images/2017-8-27/HtmlToPdf/HtmlToPdf.png)
 
 3. 进入${home}/bin目录下打开cmd输入以下命令验证 
 
@@ -30,7 +30,7 @@ wkhtmltopdf HTML路径 保存路径
 如： wkhtmltopdf www.baidu.com d:\test.pdf
 ```
 
-![command](http://on937g0jc.bkt.clouddn.com/2017-8-27/HtmlToPdf/command.png)
+![command](../../../../images/2017-8-27/HtmlToPdf/command.png)
 
 生成完成后会出现Done。
 
@@ -152,7 +152,7 @@ public class HtmlToPDF {
 
 2. 生成PDF，添加生成PDF所使用的字符集.注：这里字符集要和模板中使用的字符集一一致。 比如:java中使用宋体 renderer.getFontResolver().addFont("C:/Windows/Fonts/simsun.ttc", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED); 那么HTML的body中样式必须加上 style='font-family:SimSun'，要是使用其他字符生成pdf时候，中文就会不显示生成PDF
 3. 设置PDF的页面大小模板页面中添加该样式：@page { size: 8.5in 11in; }这时候生成PDF页面正好是A4纸大小
-4. 所需的jar包，[下载点我](http://on937g0jc.bkt.clouddn.com/2017-8-27/HtmlToPdf/flyingsaucer.zip)。核心jar是修改后的
+4. 所需的jar包，[下载点我](../../../../images/2017-8-27/HtmlToPdf/flyingsaucer.zip)。核心jar是修改后的
 
 
 

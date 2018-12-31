@@ -1,8 +1,8 @@
 ---
 title: 详解Tomcat连接池与连接数
 date: 2017-12-28 14:56:06
-tags: [tomcat,tips]
-categories: technology
+tags: [tomcat, tips]
+categories: 后端
 ---
 
 # 引言
@@ -59,7 +59,7 @@ Connector使用哪种protocol，可以通过**`<connector>`**元素中的protoco
 
 在NIO实现的Connector中，处理请求的主要实体是NIoEndpoint对象。NIoEndpoint中除了包含Acceptor和Worker外，还是用了Poller，处理流程如下图所示
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-28/tomcat%E8%BF%9E%E6%8E%A5%E6%B1%A0/Nio.jpg"/>
+<div align=center><img width="600" height="200" src="../../../../images/2017-12-28/tomcat%E8%BF%9E%E6%8E%A5%E6%B1%A0/Nio.jpg"/>
 
 </div>
 
@@ -133,7 +133,7 @@ Executor的主要属性包括：
 
 现成的工具，如JDK自带的jconsole工具可以方便的查看线程信息（此外还可以查看CPU、内存、类、JVM基本信息等），Tomcat自带的manager，收费工具New Relic等。下图是jconsole查看线程信息的界面：
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-28/tomcat%E8%BF%9E%E6%8E%A5%E6%B1%A0/jconsole.png"/>
+<div align=center><img width="600" height="200" src="../../../../images/2017-12-28/tomcat%E8%BF%9E%E6%8E%A5%E6%B1%A0/jconsole.png"/>
 
 </div>
 
@@ -147,7 +147,7 @@ netstat –nat|grep 8080
 
 结果如下所示：
 
-<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-12-28/tomcat%E8%BF%9E%E6%8E%A5%E6%B1%A0/net.png"/>
+<div align=center><img width="600" height="200" src="../../../../images/2017-12-28/tomcat%E8%BF%9E%E6%8E%A5%E6%B1%A0/net.png"/>
 
 </div>
 

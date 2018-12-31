@@ -1,13 +1,13 @@
 ---
 title: 说说Spring中的事务
 date: 2018-05-09 21:24:58
-tags: [java,spring]
-categories: technology
+tags: [java, spring]
+categories: 后端
 ---
 
 # 引言
 
-在开发过程中，合理的使用事务是非常重要的。使用事务常常是为了维护高度的数据完整性和一致性。如果不关心数据的质量，就不必使用事务。毕竟，Java平台中的事务支持会降低性能，引发锁定问题和数据库并发性问题，而且会增加应用程序的复杂性。最近在面试中也是频频出现，在这里回顾加深一下。<div align=center><img width="800" height="200" src="http://on937g0jc.bkt.clouddn.com/2018-5/transaction/spring.jpg" algin="center"/></div><!-- more -->
+在开发过程中，合理的使用事务是非常重要的。使用事务常常是为了维护高度的数据完整性和一致性。如果不关心数据的质量，就不必使用事务。毕竟，Java平台中的事务支持会降低性能，引发锁定问题和数据库并发性问题，而且会增加应用程序的复杂性。最近在面试中也是频频出现，在这里回顾加深一下。<div align=center><img width="800" height="200" src="../../../../images/2018-5/transaction/spring.jpg" algin="center"/></div><!-- more -->
 
 # 四大特性
 

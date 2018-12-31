@@ -3,7 +3,7 @@ title: Markdown语法指南
 date: 2017-03-21 22:51:10
 tags: [tips]
 ---
-花了一段时间把自己的个人博客搭建好了，但是博客必须是要用Markdown书写，所以查了一下Markdown编辑器的语法，在这里做个记录。<div align=center><img width="700" height="300" src="http://on937g0jc.bkt.clouddn.com/2017-3-23/markdown.png" algin="center"/></div><!-- more -->
+花了一段时间把自己的个人博客搭建好了，但是博客必须是要用Markdown书写，所以查了一下Markdown编辑器的语法，在这里做个记录。<div align=center><img width="700" height="300" src="../../../../images/2017-3-23/markdown.png" algin="center"/></div><!-- more -->
 
 > **Markdown**是一种可以使用普通文本编辑器编写的标记语言，通过简单的标记语法，它可以使普通文本内容具有一定的格式。Markdown的语法简洁明了、学习容易，而且功能比纯文本更强，因此有很多人用它写博客。世界上最流行的博客平台[WordPress](http://baike.baidu.com/item/WordPress)和大型CMS如[Joomla](http://baike.baidu.com/item/Joomla)、[Drupal](http://baike.baidu.com/item/Drupal)都能很好的支持Markdown。完全采用Markdown编辑器的博客平台有[Ghost](http://baike.baidu.com/item/Ghost/17013737)和[Typecho](http://baike.baidu.com/item/Typecho)。
 

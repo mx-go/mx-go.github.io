@@ -154,7 +154,7 @@ social_icons:
 # Sidebar Avatar
 # in theme directory(source/images): /images/avatar.jpg
 # in site  directory(source/uploads): /uploads/avatar.jpg
-avatar: http://on937g0jc.bkt.clouddn.com/avatar.jpg
+avatar: ../images/avatar.jpg
 
 # Table Of Contents in the Sidebar
 toc:

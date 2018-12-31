@@ -1,15 +1,15 @@
 ---
 title: Java生成PDF
 date: 2017-11-13 15:51:53
-tags: [java,tips]
-categories: technology
+tags: [java, tips]
+categories: 后端
 ---
 
 # 引言
 
 在某些业务场景中，需要提供相关的电子凭证，比如网银/支付宝中转账的电子回单，签约的电子合同、证书等。方便用户查看，下载，打印。目前常用的解决方案是，把相关数据信息，生成对应的PDF文件返回给用户。之前有写过一篇博客关于**JAVA实现HTML转PDF**，不同场景下的业务不同，现在需要使用PDF生成证书，这篇博客主要介绍iText的使用。
 
-本博客项目地址：https://github.com/Sunny0715/java_pdf_demo<div align=center><img width="600" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-11-13/iText/0.png"/>
+本博客项目地址：https://github.com/Sunny0715/java_pdf_demo<div align=center><img width="600" height="200" src="../../../../images/2017-11-13/iText/0.png"/>
 
 </div><!-- more -->
 
@@ -74,7 +74,7 @@ public class JavaToPdf {
 
 运行结果
 
-<div align=center><img width="800" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-11-13/iText/1.png" algin="center"/>
+<div align=center><img width="800" height="200" src="../../../../images/2017-11-13/iText/1.png" algin="center"/>
 
 </div>
 
@@ -128,7 +128,7 @@ public class JavaToPdfCN {
 
 运行结果
 
-<div align=center><img width="800" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-11-13/iText/2.png" algin="center"/>
+<div align=center><img width="800" height="200" src="../../../../images/2017-11-13/iText/2.png" algin="center"/>
 
 </div>
 
@@ -222,7 +222,7 @@ public class JavaToPdfHtml {
 
 运行结果
 
-<div align=center><img width="800" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-11-13/iText/3.png" algin="center"/>
+<div align=center><img width="800" height="200" src="../../../../images/2017-11-13/iText/3.png" algin="center"/>
 
 </div>
 
@@ -378,7 +378,7 @@ public class JavaToPdfHtmlFreeMarker {
 
 运行结果
 
-<div align=center><img width="800" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-11-13/iText/4.png" algin="center"/>
+<div align=center><img width="800" height="200" src="../../../../images/2017-11-13/iText/4.png" algin="center"/>
 
 </div>
 
@@ -559,7 +559,7 @@ public class JavaToPdfHtmlFreeMarker {
 
 运行结果
 
-<div align=center><img width="800" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-11-13/iText/5.png" algin="center"/>
+<div align=center><img width="800" height="200" src="../../../../images/2017-11-13/iText/5.png" algin="center"/>
 
 </div>
 
@@ -748,7 +748,7 @@ public class JavaToPdfImgHtmlFreeMarker {
 
 输出结果
 
-<div align=center><img width="800" height="200" src="http://on937g0jc.bkt.clouddn.com/2017-11-13/iText/6.png" algin="center"/>
+<div align=center><img width="800" height="200" src="../../../../images/2017-11-13/iText/6.png" algin="center"/>
 
 </div>
 
