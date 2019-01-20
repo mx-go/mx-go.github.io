@@ -136,7 +136,7 @@ try{
 }
 ```
 
-虽然解决了同步获取*accessToken*的问题，但是对于异常情况的考虑还是欠缺，请求线程同时还是阻塞的，自己测试在TPS=700时还可以扛住，高于单个服务负载或是redis故障时请求被阻塞会导致服务受到影响。
+虽然解决了同步获取*accessToken*的问题，但是对于异常情况的考虑还是欠缺，请求线程同时还是阻塞的，自己测试在TPS为700时还可以扛住，高于单个服务负载或是redis故障时请求被阻塞会导致服务受到影响。
 
 # Redisson
 
@@ -159,7 +159,7 @@ Redisson是基于Redlock实现同时也是redis官方推荐的分布式JAVA客�
 在分布式下加锁*lock*和释放锁*unlock*的伪代码如下
 
 ```java
-String lock_key = REDIS_KEY_PREFIX + "_" + accountId + "_" + appId + "_" + secret;
+String lock_key = REDIS_KEY_PREFIX + accountId + "_" + appId + "_" + secret;
 String accessToken = client.get(redis_key);
 
 if (StringUtils.isEmpty(accessToken)) {
@@ -183,4 +183,4 @@ if (StringUtils.isEmpty(accessToken)) {
 
 # 总结
 
-当然，分布式锁不止基于redis和redisson这两种方案，还有数据库乐观锁、基于ZooKeeper的分布式锁。当时在基于redis方面，通过自己的分析及测试，**Redisson在分布式锁方面是首选**，同时Redisson不光是针对锁，提供了很多客户端操作redis的方法，也需要自己去摸索。
+当然，分布式锁不止基于redis和redisson这两种方案，还有数据库乐观锁、基于ZooKeeper的分布式锁等。但是在基于redis方面，通过自己的分析及测试，**Redisson在分布式锁方面是还是首选**，同时Redisson不光是针对锁，同时提供了很多客户端操作redis的方法，也需要自己去摸索。
