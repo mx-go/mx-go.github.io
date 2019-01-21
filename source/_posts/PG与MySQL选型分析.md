@@ -4,7 +4,7 @@ date: 2018-08-07 10:50:58
 tags: [pg,mysql]
 categories: 数据库
 ---
-# 前言
+# 引言
 PostgreSQL(简称pg)是近几年增长率较快的开源数据库，很多企业由原来的MySQL转向pg，在这里对比这两大开源关系型数据库的优劣，以便使用时快速选型。
 <div align=center><img width="450" height="200" src="../../../../images/2018-8/pg-vs-mysql/pg_vs_mysql.jpg" algin="center"/>
 </div>	

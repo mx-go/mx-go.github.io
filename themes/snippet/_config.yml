@@ -227,6 +227,6 @@ baidu_site_verification:
 baidu_push: true
 
 #网站主题配置
-since: 2017-2018
+since: 2017-2019
 robot: 'all' ### 控制搜索引擎的抓取和索引编制行为，默认为all
 version: 1.2.1
