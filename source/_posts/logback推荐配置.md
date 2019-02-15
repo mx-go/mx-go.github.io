@@ -21,6 +21,23 @@ categories: 工具
 
 # 配置的正确姿势
 
+我们大部分Java后台都是Maven工程，标准目录如下：
+
+|      包路径       |                     说明                      |
+| :---------------: | :-------------------------------------------: |
+|   src/main/java   |     java源代码文件，编译到target/classes      |
+| src/main/resource |  正式包资源库，编译时会复制到target/classes   |
+|   src/test/java   | 测试java源代码文件，编译到target/test-classes |
+| src/test/resource | 测试时资源库，编译时复制到target/test-classes |
+
+建议配置2个logback配置文件：
+
+|                路径                 |                             说明                             |
+| :---------------------------------: | :----------------------------------------------------------: |
+|   src/main/resources/logback.xml    | 异步打印到按天轮转的日志文件中。
+jar包不要配置，避免污染业务配置。 |
+| src/test/resources/logback-test.xml |                  测试时候使用，打印到stdout                  |
+
 1. 线上和开发环境的配置要分离，对于java项目：
    1. src/main/resources 目录下的东西都是正式环境使用的
    2. src/test/resources 目录下的东西才是本机开发环境使用的
