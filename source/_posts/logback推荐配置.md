@@ -34,8 +34,7 @@ categories: 工具
 
 |                路径                 |                             说明                             |
 | :---------------------------------: | :----------------------------------------------------------: |
-|   src/main/resources/logback.xml    | 异步打印到按天轮转的日志文件中。
-jar包不要配置，避免污染业务配置。 |
+|   src/main/resources/logback.xml    | 异步打印到按天轮转的日志文件中。jar包不要配置，避免污染业务配置。 |
 | src/test/resources/logback-test.xml |                  测试时候使用，打印到stdout                  |
 
 1. 线上和开发环境的配置要分离，对于java项目：
@@ -188,4 +187,4 @@ jar包不要配置，避免污染业务配置。 |
 
 > log.error("cannot open url={}", url, e)
 
-针对error，务必把异常栈打印出来，这里最有一个exception对象，不需要使用占位符，如果多一个占位符，则只会打印e.getMessage()的内容，就不方便查问题了。 
+针对error，务必把异常栈打印出来，这里有一个exception对象，不需要使用占位符，如果多一个占位符，则只会打印e.getMessage()的内容，就不方便查问题了。 
