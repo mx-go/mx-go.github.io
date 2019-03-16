@@ -159,8 +159,18 @@ Redisson是基于Redlock实现同时也是redis官方推荐的分布式JAVA客�
 在分布式下加锁*lock*和释放锁*unlock*的伪代码如下
 
 ```java
+private static RedissonClient redisson;
+
 String lock_key = REDIS_KEY_PREFIX + accountId + "_" + appId + "_" + secret;
 String accessToken = client.get(redis_key);
+
+static {
+        Config config = new Config();
+        config.useSingleServer()
+                .setTimeout(1000000)
+                .setAddress("redis://127.0.0.1:6379");
+        redisson = Redisson.create(config);
+}
 
 if (StringUtils.isEmpty(accessToken)) {
     // 1.获得锁对象实例

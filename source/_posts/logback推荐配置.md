@@ -59,7 +59,7 @@ categories: 工具
         </rollingPolicy>
         <encoder>
             <!-- 异常栈中去掉包含如下字符的行避免打印很多无用的信息-->
-            <pattern>%d{HH:mm:ss} [%thread] %-5level %logger{12} %msg%rEx{full,
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{12} %msg%rEx{full,
                 java.lang.Thread,
                 javassist,
                 sun.reflect,
@@ -158,7 +158,7 @@ categories: 工具
 <configuration scan="false" scanPeriod="60 seconds" debug="false">
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss} [%thread] %-5level %logger{12} %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{12} %msg%n</pattern>
         </encoder>
     </appender>
  
