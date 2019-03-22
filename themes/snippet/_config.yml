@@ -140,7 +140,7 @@ fontAwesome:
 
 ## 文章过期提醒功能
 warning:
-  days: 700
+  days: 1000
   text: '本文于%d天之前发表，文中内容可能已经过时。'
 
 ## 文章内声明

@@ -111,6 +111,12 @@ public class OrganizationServiceFactoryBean implements InitializingBean, Applica
     public void afterPropertiesSet() throws Exception {
         List<String> list = Splitter.on(",").splitToList(beanNames);
         List<Object> instances = Lists.newArrayList();
+      	// 判断bean是否存在走对应的条件
+        /*if (!applicationContext.containsBean(list.get(0))) {
+            employeeServiceProxy = new EmployeeServiceProxyImpl();
+            return;
+        }*/
+      
         list.forEach(o -> {
             instances.add(applicationContext.getBean(o));
         });
