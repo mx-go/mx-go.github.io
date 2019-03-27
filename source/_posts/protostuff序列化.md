@@ -31,7 +31,35 @@ protostuff是一个效率很高的对普通的javabean进行序列化、反序�
 </dependency>
 ```
 
-## ProtostuffUtil工具类
+# 继承父类方式
+
+```java
+public interface CanProto {
+
+    byte[] toProto();
+
+    void fromProto(byte[] bytes);
+}
+```
+
+```java
+public class ProtoBase implements CanProto, Serializable {
+    @Override
+    public byte[] toProto() {
+        Schema schema = RuntimeSchema.getSchema(getClass());
+        return ProtobufIOUtil.toByteArray(this, schema, LinkedBuffer.allocate(256));
+    }
+    @Override
+    public void fromProto(byte[] bytes) {
+        Schema schema = RuntimeSchema.getSchema(getClass());
+        ProtobufIOUtil.mergeFrom(bytes, this, schema);
+    }
+}
+```
+
+此方式可以使用Javabean继承ProtoBase类实现序列化。
+
+# ProtostuffUtil工具类方式
 
 ProtostuffUtil.java
 
