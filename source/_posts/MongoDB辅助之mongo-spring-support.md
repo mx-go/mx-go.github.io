@@ -18,7 +18,7 @@ img: ../../../../images/2019/4-6/mongo-spring-support.jpg
 
 # MongoDB数据库及集合
 
-以下测试在MongoDB的TEST库中，其中有集合student、student_1。student_1可以用来测试同库中，根据后缀来切换集合，相当与分表。
+以下测试在MongoDB的TEST库中，其中有两个集合student、student_1。student_1可以用来测试同库中，根据后缀来切换集合，相当与分表。
 
 <div align=center><img width="700" height="220" src="../../../../images/2019/4-6/Mongo-ext1.jpg" algin="center"/></div>
 
@@ -26,7 +26,7 @@ img: ../../../../images/2019/4-6/mongo-spring-support.jpg
 
 # 配置管理
 
-在Spring配置中配置*server*地址、*dbName*等信息，可以配置更多参数，见**MongoConfiguration**类中属性。jar包中已包含*mongo-java-driver*和*morphia*。
+在Spring中配置MongoDB的*server*地址、*dbName*等信息，可以配置更多参数，见[MongoConfiguration](https://github.com/Sunny0715/mongo-spring-support/blob/master/src/main/java/com/max/mongo/support/mongo/MongoConfiguration.java)类中属性。jar包中已包含*mongo-java-driver*和*morphia*。
 
 ```xml
 <context:component-scan base-package="com.rainbowhorse.demo"/>
@@ -48,7 +48,7 @@ img: ../../../../images/2019/4-6/mongo-spring-support.jpg
 
 # 集合实体类StudentDO
 
-MongoDB是文档型数据库，借助*morphia*可以把集合映射到到Java中的bean。
+MongoDB是文档型数据库，借助*morphia*可以把集合映射到到Java中的Bean。
 
 ```java
 import lombok.Data;
@@ -80,7 +80,7 @@ public class StudentDO implements Serializable {
 
 ## 接口StudentDAO
 
-接口继承*mongo-support*中的**BaseDao**，可以实现更多方法的调用。
+接口继承*mongo-support*中的**[BaseDao](https://github.com/Sunny0715/mongo-spring-support/blob/master/src/main/java/com/max/mongo/support/dao/BaseDao.java)**，可以实现更多方法的调用。
 
 ```java
 public interface StudentDAO extends BaseDao<StudentDO> {
@@ -114,7 +114,7 @@ public interface StudentDAO extends BaseDao<StudentDO> {
 
 ## 接口实现类StudentDAOImpl
 
-继承**BaseDaoImpl**，其中实现基础方法。
+继承**[BaseDaoImpl](<https://github.com/Sunny0715/mongo-spring-support/blob/master/src/main/java/com/max/mongo/support/dao/BaseDaoImpl.java>)**，其中实现基础方法。
 
 ```java
 @Repository

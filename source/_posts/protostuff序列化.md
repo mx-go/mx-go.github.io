@@ -14,7 +14,11 @@ HTTP通信离不开对象的序列化和反序列化。通过序列化技术，�
 
 # protostuff
 
-protostuff是一个效率很高的对普通的javabean进行序列化、反序列化的产品。详细效率对比可参考：[java序列化/反序列化之xstream、protobuf、protostuff 的比较与使用例子](https://www.cnblogs.com/xiaoMzjm/p/4555209.html)
+protostuff是Google出品的一种轻量并且高效的结构化数据存储格式，性能比 `JSON`、`XML` 要高很多。
+
+之所以性能如此好，主要得益于两个：**第一**，它使用 proto 编译器，自动进行序列化和反序列化，速度非常快，应该比 `XML` 和 `JSON` 快上了 `20~100` 倍；**第二**，它的数据压缩效果好，就是说它序列化后的数据量体积小。因为体积小，传输起来带宽和速度上会有优化。
+
+详细效率对比可参考：[java序列化/反序列化之xstream、protobuf、protostuff 的比较与使用例子](https://www.cnblogs.com/xiaoMzjm/p/4555209.html)
 
 ## maven依赖
 
