@@ -74,9 +74,9 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
 - **handler**：表示当拒绝处理任务时的策略，有以下四种取值：
 
   ```java
-  ThreadPoolExecutor.AbortPolicy:丢弃任务并抛出RejectedExecutionException异常。 
-  ThreadPoolExecutor.DiscardPolicy：也是丢弃任务，但是不抛出异常。 
-  ThreadPoolExecutor.DiscardOldestPolicy：丢弃队列最前面的任务，然后重新尝试执行任务（重复此过程）
+  ThreadPoolExecutor.AbortPolicy: 缺省。丢弃任务并抛出RejectedExecutionException异常。 
+  ThreadPoolExecutor.DiscardPolicy：丢弃任务，但是不抛出异常。 
+  ThreadPoolExecutor.DiscardOldestPolicy：丢弃任务队列中最旧任务，然后重新尝试执行任务（重复此过程）
   ThreadPoolExecutor.CallerRunsPolicy：由调用线程处理该任务 
   ```
 

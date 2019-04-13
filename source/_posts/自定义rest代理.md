@@ -1,5 +1,5 @@
 ---
-title: 自定义rest代理
+title: 自定义rest代理(一)
 date: 2019-03-24 09:44:49
 tags: [tips]
 categories: 工具
@@ -8,6 +8,8 @@ categories: 工具
 # 引言
 
 在项目中可能我们会调用其他的rest接口，我们会写一个`HttpClientSender`工具类，返回后然后一大堆的条件判断，既繁琐又不直观。我们可以运用所学的`FactoryBean`手写一个**rest代理**，使用时可以像Mybatis那样注入接口就可以，方便又简洁。<div align=center><img width="220" height="220" src="../../../../images/2019/1-3/restful.png" algin="center"/></div>
+
+此工具类是依据`HttpClient`编写的。灵活性比较高，代码量也是比较多，还是有一些局限性，比如请求方法只支持GET、POST、PUT、DELETE等。
 
 # FactoryBean
 
@@ -127,4 +129,3 @@ public class RestServiceProxyFactory {
 # 开源地址
 
 由代理对象根据配置可以调用HTTP请求反序列化并封装返回结果，这样就不需要自己做其他的工作。项目已经更新到我的GitHub：<https://github.com/Sunny0715/rest-proxy>，**READM**中有使用方法。打成jar放到自己的项目中即可使用。
-

@@ -46,6 +46,72 @@ img: ../../../../images/2019/4-6/mongo-spring-support.jpg
     </bean>
 ```
 
+# 简单使用范例
+
+## 简单模式
+
+```java
+@Service
+class UserService {
+  @Autowired
+  DatastoreExt datastoreExt;
+
+  public void save(User user) {
+    datastore.save(user);
+  }
+}
+```
+
+## 单实例多库
+
+```java
+@Service
+class UserService {
+  @Autowired
+  DatastoreExt datastoreExt;
+
+  public void save(User user) {
+    datastore.use("user_db").save(user);
+  }
+}
+
+@Service
+class BlogService {
+  @Autowired
+  DatastoreExt datastoreExt;
+
+  public void save(Blog blog) {
+    datastore.use("blog_db").save(blog);
+  }
+}
+```
+
+## 表名添加前缀或者后缀
+
+```java
+@Service
+class UserService {
+  @Autowired
+  DatastoreExt datastoreExt;
+
+  public void save(User user) {
+    // user对象会保存到db01.2017_user的表中
+    datastore.getDatastoreByPrefix("db01", "2017").save(user);
+  }
+}
+
+@Service
+class BlogService {
+  @Autowired
+  DatastoreExt datastoreExt;
+
+  public void save(Blog blog) {
+    // blog对象会保存到db02.blog_2017的表中
+    datastore.getDatastoreBySuffix("db02", "2017").save(blog);
+  }
+}
+```
+
 # 集合实体类StudentDO
 
 MongoDB是文档型数据库，借助*morphia*可以把集合映射到到Java中的Bean。
