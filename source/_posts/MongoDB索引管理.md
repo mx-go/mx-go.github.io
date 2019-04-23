@@ -1,5 +1,5 @@
 ---
-title: MongoDB索引管理
+title: MongoDB索引管理(二)
 date: 2019-01-26 15:17:03
 tags: [MongoDB]
 categories: 数据库
@@ -66,6 +66,8 @@ db.COLLECTION_NAME.ensureIndex({name: 1, age: 1}, {background: true});
 ```
 
 通过在创建索引时加 **background:true** 选项，让创建工作在后台执行。
+
+使用索引和不使用差距很大，合理使用索引，一个集合适合做 4-5 个索引。
 
 ## 查看索引创建进度
 

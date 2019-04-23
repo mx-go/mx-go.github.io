@@ -124,7 +124,7 @@ public class SwaggerConfig {
    - value：对操作的简单说明，长度为120个字母，60个汉字。
    - notes：对操作的详细说明。
    - httpMethod：HTTP请求的动作名，可选值有："GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS" and "PATCH"。
-   - code：默认为200，有效值必须符合标准的[*HTTP Status Code Definitions*](https://link.jianshu.com?t=http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)。
+   - code：默认为200，有效值必须符合标准的[HTTP Status Code Definitions](<https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html>)。
 
 3. **@ApiModelProperty**
 
