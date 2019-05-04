@@ -173,7 +173,7 @@ WriteResult({ "nInserted" : 1 })
 
 在执行计划中，部分操作符需要放至`explain()`之前，部分需要放到`explain()`之后才能正确执行。
 
-聚合查询中使用：`collection.explain(verbose).aggregate(...)`
+聚合查询中使用：`collection.explain().aggregate(...)`
 
 ## 执行计划相关描述
 

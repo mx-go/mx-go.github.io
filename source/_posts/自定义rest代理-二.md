@@ -68,6 +68,10 @@ public interface SendHttp {
 
     @POST("/callback")
     Student getResult(@Body Student student);
+  
+  // 返回为void类型时需写为Void
+  @POST("/update")
+    Void update(@Body Student student);
 }
 ```
 
