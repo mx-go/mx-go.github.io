@@ -12,7 +12,7 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://sunny0715.github.io
+url: https://mx-go.github.io
 root: /
 # permalink: :year/:month/:title/
 permalink: :title/
@@ -78,7 +78,7 @@ theme: snippet
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
    type: git
-   repo: git@github.com:Sunny0715/Sunny0715.github.io.git
+   repo: git@github.com:mx-go/mx-go.github.io.git
    branch: master
    message: '站点更新:{{now("YYYY-MM-DD HH/mm/ss")}}'
 #搜索

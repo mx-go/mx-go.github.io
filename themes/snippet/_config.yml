@@ -68,7 +68,7 @@ notification: |-
 social:
  - name: Github
    icon: git
-   href: https://github.com/Sunny0715
+   href: https://github.com/mx-go
  - name: 邮箱
    icon: envelope-o
    href: mailto:mx_sunny@sina.com
