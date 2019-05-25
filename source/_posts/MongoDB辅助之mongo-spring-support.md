@@ -10,7 +10,7 @@ img: ../../../../images/2019/4-6/mongo-spring-support.jpg
 
 在开发中经常使用到**MongoDB**，每个项目使用各不相同，既繁琐又好不管理。这里封装了一套MongoDB类似于Mybatis的ORM增强版工具，和Spring无缝结合，只需要简单的配置就可以实现强大的功能。同时扩展了MongoDB的Datastore功能，加了一些自定义方法。其原理离不开之前所说的FactoryBean。<div align=center><img width="220" height="220" src="../../../../images/2019/4-6/mongo-spring-support.jpg" algin="center"/></div><!-- more -->
 
-源码放在了我的GitHub上：<https://github.com/Sunny0715/mongo-spring-support>
+源码放在了我的GitHub上：<https://github.com/mx-go/mongo-spring-support>
 
 源码中有详细使用注释，其原理就是实现FactoryBean生成代理对象并对原本的Datastore进行增强。
 
@@ -26,17 +26,17 @@ img: ../../../../images/2019/4-6/mongo-spring-support.jpg
 
 # 配置管理
 
-在Spring中配置MongoDB的*server*地址、*dbName*等信息，可以配置更多参数，见[MongoConfiguration](https://github.com/Sunny0715/mongo-spring-support/blob/master/src/main/java/com/max/mongo/support/mongo/MongoConfiguration.java)类中属性。jar包中已包含*mongo-java-driver*和*morphia*。
+在Spring中配置MongoDB的*server*地址、*dbName*等信息，可以配置更多参数，见[MongoConfiguration](https://github.com/mx-go/mongo-spring-support/blob/master/src/main/java/com/github/mongo/support/mongo/MongoConfiguration.java)类中属性。jar包中已包含*mongo-java-driver*和*morphia*。
 
 ```xml
 <context:component-scan base-package="com.rainbowhorse.demo"/>
 
 <!--生成代理对象，增强原方法，自定义方法-->
-    <bean id="datastoreExt" class="com.max.mongo.support.mongo.MongoDataStoreFactoryBean">
+    <bean id="datastoreExt" class="com.github.mongo.support.mongo.MongoDataStoreFactoryBean">
         <property name="configuration" ref="configuration"/>
     </bean>
     <!--配置属性。可以配置更多属性，详细看MongoConfiguration类-->
-    <bean id="configuration" class="com.max.mongo.support.mongo.MongoConfiguration">
+    <bean id="configuration" class="com.github.mongo.support.mongo.MongoConfiguration">
         <!--数据库连接-->
         <property name="servers" value="mongodb://root:root@localhost:27017/TEST"/>
         <!--数据库名称-->
@@ -146,7 +146,7 @@ public class StudentDO implements Serializable {
 
 ## 接口StudentDAO
 
-接口继承*mongo-support*中的**[BaseDao](https://github.com/Sunny0715/mongo-spring-support/blob/master/src/main/java/com/max/mongo/support/dao/BaseDao.java)**，可以实现更多方法的调用。
+接口继承*mongo-support*中的**[BaseDao](https://github.com/mx-go/mongo-spring-support/blob/master/src/main/java/com/github/mongo/support/dao/BaseDao.java)**，可以实现更多方法的调用。
 
 ```java
 public interface StudentDAO extends BaseDao<StudentDO> {
@@ -180,7 +180,7 @@ public interface StudentDAO extends BaseDao<StudentDO> {
 
 ## 接口实现类StudentDAOImpl
 
-继承**[BaseDaoImpl](<https://github.com/Sunny0715/mongo-spring-support/blob/master/src/main/java/com/max/mongo/support/dao/BaseDaoImpl.java>)**，其中实现基础方法。
+继承**[BaseDaoImpl](<https://github.com/mx-go/mongo-spring-support/blob/master/src/main/java/com/github/mongo/support/dao/BaseDaoImpl.java>)**，其中实现基础方法。
 
 ```java
 @Repository

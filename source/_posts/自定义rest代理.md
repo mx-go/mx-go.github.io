@@ -128,4 +128,4 @@ public class RestServiceProxyFactory {
 
 # 开源地址
 
-由代理对象根据配置可以调用HTTP请求反序列化并封装返回结果，这样就不需要自己做其他的工作。项目已经更新到我的GitHub：<https://github.com/Sunny0715/rest-proxy>，**READM**中有使用方法。打成jar放到自己的项目中即可使用。
+由代理对象根据配置可以调用HTTP请求反序列化并封装返回结果，这样就不需要自己做其他的工作。项目已经更新到我的GitHub：<https://github.com/mx-go/rest-proxy>，**READM**中有使用方法。打成jar放到自己的项目中即可使用。
