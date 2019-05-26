@@ -24,6 +24,16 @@ img: ../../../../images/2019/4-6/mongo-spring-support.jpg
 
 <div align=center><img width="700" height="220" src="../../../../images/2019/4-6/Mongo-ext2.jpg" algin="center"/></div>
 
+# 引入Maven坐标
+
+```xml
+<dependency>
+		<groupId>com.github.mx-go</groupId>
+    <artifactId>mongo-spring-support</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
 # 配置管理
 
 在Spring中配置MongoDB的*server*地址、*dbName*等信息，可以配置更多参数，见[MongoConfiguration](https://github.com/mx-go/mongo-spring-support/blob/master/src/main/java/com/github/mongo/support/mongo/MongoConfiguration.java)类中属性。jar包中已包含*mongo-java-driver*和*morphia*。
