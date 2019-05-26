@@ -12,7 +12,17 @@ img: ../../../../images/2019/1-3/restful.png
 
 # Spring配置
 
-在*applicationContext.xml*文件中加入配置。
+## 引入Maven坐标
+
+```xml
+<dependency>
+   <groupId>com.github.mx-go</groupId>
+   <artifactId>retrofit-rest-proxy</artifactId>
+   <version>1.0.0</version>
+</dependency>
+```
+
+## 在*applicationContext.xml*文件中加入配置
 
 ```xml
 <bean id="retrofitFactory" class="com.github.proxy.core.ConfigRetrofitSpringFactory"
