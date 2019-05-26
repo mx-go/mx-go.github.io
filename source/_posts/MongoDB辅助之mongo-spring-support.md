@@ -28,7 +28,7 @@ img: ../../../../images/2019/4-6/mongo-spring-support.jpg
 
 ```xml
 <dependency>
-		<groupId>com.github.mx-go</groupId>
+    <groupId>com.github.mx-go</groupId>
     <artifactId>mongo-spring-support</artifactId>
     <version>1.0.0</version>
 </dependency>
