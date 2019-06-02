@@ -2,7 +2,7 @@
 title: bug简记
 date: 2018-10-01 22:39:56
 tags: [java]
-categories: bug
+categories: 采坑记录
 ---
 
 # 引言
