@@ -167,8 +167,13 @@ public class SyncTest {
 ```java
 public class SyncTest {
     
-    // 修饰代码块，此时用的锁是SyncTest类锁
+    // 1.修饰代码块，此时用的锁是SyncTest类锁
     public static synchronized void test() {
+        // doSomething
+    }
+  
+  	// 2.修饰类的class
+  	synchronized(SyncTest.class) {
         // doSomething
     }
 }
@@ -372,7 +377,7 @@ try {
 
 ## 读写锁
 
-`synchronized`获取的互斥锁不仅互斥读写操作、写写操作，还互斥读读操作，而读读操作时不会带来数据竞争的，因此对对读读操作也互斥的话，会降低性能。Java5中提供了读写锁，它将读锁和写锁分离，使得读读操作不互斥，获取读锁和写锁的一般形式如下：
+`synchronized`获取的互斥锁不仅互斥读写操作、写写操作，还互斥读读操作，而读读操作是不会带来数据竞争的，因此对对读读操作也互斥的话，会降低性能。Java5中提供了读写锁，它将读锁和写锁分离，使得读读操作不互斥，获取读锁和写锁的一般形式如下：
 
 ```java
 ReadWriteLock rwl = new ReentrantReadWriteLock();      
