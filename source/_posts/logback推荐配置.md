@@ -88,6 +88,7 @@ categories: 工具
     <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
         <queueSize>512</queueSize>
         <appender-ref ref="RollingFile"/>
+      	<includeCallerData>true</includeCallerData>
     </appender>
  
     <!-- 配置基础组件为WARN级别，避免打印过多影响服务自己日志 -->
@@ -120,7 +121,6 @@ categories: 工具
             <maxHistory>15</maxHistory>
         </rollingPolicy>
     </appender>
-
 
     <appender name="ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${catalina.base}/logs/all.log</File>
