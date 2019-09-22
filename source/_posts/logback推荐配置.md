@@ -10,7 +10,6 @@ categories: 工具
 大约从16年，不管是我参与别人已搭建好的项目还是自己单独搭建的项目，日志框架基本都换成了logback。
 
 <div align=center><img src="../../../../images/2018-8/logback.jpg" algin="center"/></div><!-- more -->
-
 # logback优点
 
 - 内核重写、测试充分、初始化内存加载更小，这一切让logback性能和log4j相比有诸多倍的提升
