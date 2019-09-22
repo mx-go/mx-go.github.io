@@ -103,7 +103,6 @@ tagcloud:
 ## 友链设置
 links:
   - 在线工具: http://tool.oschina.net/
-  - 爪哇ImportNew: http://www.importnew.com/
   - Python中文社区: http://www.pythontab.com/
   - 深度开源open-open: http://www.open-open.com
 
@@ -148,7 +147,7 @@ declaration:
   enable: false
   title: '转载声明'
   tip: |-
-      商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">Snippet</a>
+      商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">rainbowhorse</a>
 
 ## 文章打赏
 reward:
