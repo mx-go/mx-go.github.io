@@ -2,7 +2,7 @@
 title: logback行号输出问号问题
 date: 2019-07-22 13:45:40
 tags: [java]
-categories: 采坑记录
+categories: 踩坑记录
 img: ../../../../images/2019/think.jpg
 ---
 

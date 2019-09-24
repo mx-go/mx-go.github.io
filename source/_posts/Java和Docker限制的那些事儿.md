@@ -2,7 +2,7 @@
 title: Java和Docker限制的那些事儿
 date: 2019-06-01 09:01:36
 tags: [java]
-categories: 采坑记录
+categories: 踩坑记录
 img: ../../../../images/2019/4-6/java_docker.jpg
 ---
 

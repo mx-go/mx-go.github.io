@@ -2,7 +2,7 @@
 title: bug简记
 date: 2018-10-01 22:39:56
 tags: [java]
-categories: 采坑记录
+categories: 踩坑记录
 ---
 
 # 引言
@@ -12,8 +12,7 @@ categories: 采坑记录
 
 
 <div align=center><img width="220" height="160" src="../../../../images/2018-8/bug.jpg" algin="center"/></div><!-- more -->
-
-# 采坑记录
+# 踩坑记录
 
 在与第三方对接的接口中，对方推送消息接口定义如果接收成功返回*success*，反之返回其他字符串，如果不是*success*字符串就会再重复推送三次。自己在代码中为：
 
