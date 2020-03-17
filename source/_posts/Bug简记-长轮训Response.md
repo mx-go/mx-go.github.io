@@ -127,5 +127,5 @@ public class AsyncContextImpl implements AsyncContext, AsyncContextCallback {
 
 **修改为context.getResponse().getWriter().write(…)即可，就是这么一行代码，导致了整个事件的发生。**
 
-另外，使用Spring提供的DeferredResult已完全封装，可避免此问题。
+另外，使用Spring提供的DeferredResult已完全封装了异步请求，可避免此问题。
 
