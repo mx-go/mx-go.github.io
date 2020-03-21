@@ -126,7 +126,7 @@ public class ObjectMapperConverter extends ObjectMapper {
 
 ### xml中配置注册方式
 
-Spring配置中需要指定为自定义序列化
+SpringMVC配置中需要指定为自定义序列化
 
 ```xml
 <mvc:annotation-driven>
