@@ -120,6 +120,6 @@ splice去掉sendfile的使用范围限制，可以用于任意两个文件描述
 
 # Java应用
 
-Java NIO的**FileChannel.transferFrom()、FileChannel.transferTo()**底层基于**sendfile/splice**，不仅可以进行网络文件传输，还可以对本地文件实现零拷贝操作
+Java NIO的**FileChannel.transferFrom()、FileChannel.transferTo()**底层基于**sendfile/splice**，不仅可以进行网络文件传输，还可以对本地文件实现零拷贝操作。
 
 <div align=center><img width="720" height="460" src="../../../../images/2020/1-4/java-nio.jpg" algin="center"/></div>
