@@ -37,7 +37,10 @@ Mybatis的一级缓存原理：
 Mybatis一级缓存值得注意的地方：
 
 1. *Mybatis默认就是支持一级缓存的，并不需要我们配置。*
-2. **mybatis和spring整合后进行mapper代理开发，不支持一级缓存，mybatis和spring整合，spring按照mapper的模板去生成mapper代理对象，模板中在最后统一关闭sqlsession**。
+2. **mybatis和spring整合后进行mapper代理开发，不支持一级缓存，mybatis和Spring整合，Spring按照mapper的模板去生成mapper代理对象，模板中在最后统一关闭sqlsession**。
+
+> - 在未开启事物的情况之下，每次查询，spring都会关闭旧的sqlSession而创建新的sqlSession，因此此时的一级缓存是没有启作用的。
+> - 在开启事物的情况之下，Spring使用ThreadLocal获取当前资源绑定同一个sqlSession，因此此时一级缓存是有效的。
 
 ## Mybatis二级缓存
 

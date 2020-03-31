@@ -28,7 +28,7 @@ Spring主要有两大思想，一个是AOP，一个是IOC。对于Spring的核�
 
 > 由程序员创建或工具生成代理类的源码，再编译代理类。所谓静态也就是在程序运行前就已经存在代理类的字节码文件，代理类和委托类的关系在运行前就确定了。
 
-静态代理之前已经说过 [***Spring-AOP两种配置方式***](http://rainbowhorse.site/2017/09/09/Spring-AOP%E4%B8%A4%E7%A7%8D%E9%85%8D%E7%BD%AE%E6%96%B9%E5%BC%8F/)
+静态代理之前已经说过 [***Spring-AOP两种配置方式***](http://rainbowhorse.site/spring-aop%E4%B8%A4%E7%A7%8D%E9%85%8D%E7%BD%AE%E6%96%B9%E5%BC%8F/)
 
 # Spring动态代理
 

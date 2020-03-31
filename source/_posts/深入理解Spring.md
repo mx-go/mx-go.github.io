@@ -51,7 +51,7 @@ Spring在当前Java项目开发中可谓是核心，无论是SpringMVC、SpringB
 
 　　AOP的优点：**便于减少系统的重复代码，降低模块间的耦合度，并有利于未来的可操作性和可维护性。**
 
-具体代理模式可参见[***Spring之动态代理***](http://rainbowhorse.site/2018/04/02/Spring%E4%B9%8B%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/#more)
+具体代理模式可参见[***Spring之动态代理***](http://rainbowhorse.site/Spring%E4%B9%8B%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86)
 
 # Spring单例、线程安全
 
