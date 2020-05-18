@@ -8,7 +8,7 @@ img: ../../../../images/2020/5-8/spring-dependency0.jpg
 
 # 引言
 
-在使用Spring框架中，针对Bean之间的循环依赖，Spring通过**三级缓存**的机制已经解决和规避了部分场景的Bean的循环依赖。但是仍需了解和注意Spring无法解决的场景下的Bean的注入方式，避免出现此类问题。<div align=center><img width="800" height="400" src="../../../../images/2020/5-8/spring-dependency1.jpg" algin="center"/></div><!-- more -->
+在Spring框架中，针对Bean之间的循环依赖，Spring通过**三级缓存**的机制已经解决和规避了部分场景Bean的循环依赖。但是仍需了解Spring解决循环依赖的原理和注意Spring无法解决循环依赖的场景，避免出现此类问题。<div align=center><img width="800" height="400" src="../../../../images/2020/5-8/spring-dependency1.jpg" algin="center"/></div><!-- more -->
 
 # 循环依赖示例
 
@@ -28,7 +28,7 @@ public class BServiceImpl implements BService{
 }
 ```
 
-上面例子是很经典的Spring Bean循环依赖的场景，在这种循环依赖场景，Spring已经帮我们解决了循环依赖的问题，所以可以正常启动和运行。
+这个例子是非常经典的Spring Bean循环依赖的场景，在这种循环依赖场景，Spring已经帮我们解决了循环依赖的问题，所以服务可以正常启动和运行。
 
 # Spring循环依赖的场景
 
@@ -66,7 +66,7 @@ Caused by: org.springframework.beans.factory.BeanCurrentlyInCreationException: E
 	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
 ```
 
-**构造器注入无法解决循环依赖问题**，只能抛出`BeanCurrentlyInCreationException`依赖表示循环依赖。
+**构造器注入无法解决循环依赖问题**，Spring只能抛出`BeanCurrentlyInCreationException`依赖表示循环依赖。
 
 > Spring解决循环依赖是依靠Bean的“中间态“的概念，”中间态“是指Bean已经实例化，但还没有初始化的状态，而构造器注入的是初始化后的对象，所以不能解决循环依赖。
 
@@ -178,14 +178,14 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
      */
     private final Map<String, Object> earlySingletonObjects = new HashMap<String, Object>(16);
 
-    /** 正在创建中的Bean。Bean开始创建时存入,创建完成移除。 */
+    /** 正在创建中的Bean。Bean开始创建时存入,创建完成时移除。 */
     /**
      * Names of beans that are currently in creation
      */
     private final Set<String> singletonsCurrentlyInCreation =
             Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>(16));
 
-    /** 创建完成的Bean */
+    /** 创建完成的Bean集合 */
     /**
      * Set of registered singletons, containing the bean names in registration order
      */
