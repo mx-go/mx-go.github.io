@@ -3,15 +3,12 @@ title: Apache-Commons-Email发送邮件
 date: 2018-03-28 18:18:13
 tags: [java, tips]
 categories: 工具
+cover: ../../../../images/2018-3/java-email/index.jpg
 ---
 
 # 引言
 
-使用Apache-Commons-Email发送邮件
-
-<div align=center><img width="700" height="200" src="../../../../images/2018-3/java-email/index.jpg" algin="center"/></div>
-
-<!-- more -->
+使用Apache-Commons-Email发送邮件<div align=center><img src="../../../../images/2018-3/java-email/index.jpg" algin="center"/></div>
 
 # 环境准备
 
@@ -129,13 +126,13 @@ public class TestSimpleSSLEmail {
 
 特别要注意的是qq邮箱进行了加密，所以需要到qq账户设置里面拿到开启stmp发信客户端的密码。
 
-<div align=center><img width="700" height="200" src="../../../../images/2018-3/java-email/QQ-1.png" algin="center"/></div>
+<div align=center><img src="../../../../images/2018-3/java-email/QQ-1.png" algin="center"/></div>
 
-<div align=center><img width="500" height="200" src="../../../../images/2018-3/java-email/QQ-2.png" algin="center"/></div>
+<div align=center><img src="../../../../images/2018-3/java-email/QQ-2.png" algin="center"/></div>
 
 取到一串字符串，然后填写到密码处。不然会报以下的错误。而不是填写QQ账号密码到密码认证处。详细也可以参照[***QQ客户端说明文档***](http://service.mail.qq.com/cgi-bin/help?subtype=1&&id=28&&no=331)。
 
-<div align=center><img width="700" height="200" src="../../../../images/2018-3/java-email/QQ-Exception.png" algin="center"/></div>
+<div align=center><img src="../../../../images/2018-3/java-email/QQ-Exception.png" algin="center"/></div>
 
 # 发送带附件的邮件
 

@@ -2,7 +2,9 @@
 title: Linux基本命令
 date: 2017-04-07 15:59:22
 tags: [tips]
-categories: Linux
+categories: 
+- [Linux, 基础]
+cover: ../../../../images/2017-4-6/Linux.jpg
 ---
 
 # 引言

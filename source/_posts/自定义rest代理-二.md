@@ -4,6 +4,7 @@ date: 2019-04-13 14:45:22
 tags: [tips]
 categories: 工具
 img: ../../../../images/2019/1-3/restful.png
+cover: ../../../../images/2019/1-3/restful.png
 ---
 
 之前用`HttpClient`实现了rest代理([自定义rest代理(一)](<http://rainbowhorse.site/%E8%87%AA%E5%AE%9A%E4%B9%89rest%E4%BB%A3%E7%90%86/>))，从网上看了下资料，同时针对公司已有的框架做了一些封装和改造。用`Retrofit2`另外实现了一套rest代理工具包。其中基本都是都是基于`Retrofit2`，自己又做了一层简单的封装。<div align=center><img width="220" height="220" src="../../../../images/2019/1-3/restful.png" algin="center"/></div>

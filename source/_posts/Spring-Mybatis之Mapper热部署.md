@@ -3,6 +3,7 @@ title: Spring+Mybatis之Mapper热部署
 date: 2017-09-15 16:52:07
 tags: [java,tips,mybatis]
 categories: 工具
+cover: ../../../../images/2017-9-15/mybatis-mapper/relationship-with-mybatis.png
 ---
 
 # 引言
@@ -733,7 +734,7 @@ MyBatis有几个不太好的地方，是当实体类别名重名的时候，Mapp
 
       </div>
 
-      ​
+      
 
       # 创建mybatis-refresh.properties文件
 

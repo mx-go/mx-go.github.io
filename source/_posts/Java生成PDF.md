@@ -3,6 +3,7 @@ title: Java生成PDF
 date: 2017-11-13 15:51:53
 tags: [java, tips]
 categories: 后端
+cover: ../../../../images/2017-11-13/iText/0.png
 ---
 
 # 引言

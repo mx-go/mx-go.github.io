@@ -3,6 +3,7 @@ title: 说说JSON和JSONP
 date: 2018-01-16 14:41:09
 tags: [tips]
 categories: 前端
+cover: ../../../../images/2018-01/JSON_JSONP/jsonp-json-with-padding.gif
 ---
 
 # 前言

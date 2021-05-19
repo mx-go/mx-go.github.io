@@ -3,12 +3,13 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: rainbowhorse's blog
+title: 彩虹马的博客
 subtitle: 不忘初心 方得始终
+# description: 一个收藏回忆与分享技术的地方！
 description: 总结个人心得，记录个人知识
-author: rainbowhorse
+author: 彩虹马
 language: zh-CN
-timezone: 
+timezone: Asia/Shanghai
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
@@ -32,7 +33,7 @@ skip_render:
 new_post_name: :title.md # File name of new posts
 default_layout: post
 titlecase: false # Transform title into titlecase
-external_link: true # Open external links in new tab
+external_link.enable: true # Open external links in new tab
 filename_case: 0
 render_drafts: false
 post_asset_folder: false
@@ -43,6 +44,14 @@ highlight:
   line_number: true
   auto_detect: false
   tab_replace:
+
+# search
+algolia:
+  applicationID: 'BPJ9SXT7ZR'
+  apiKey: '1e6680e95b88762ed1d26a076986b922'
+  adminApiKey: 'aac678c4994c5ac80601d89269c92f79'
+  indexName: 'blog'
+  chunkSize: 5000
 
 # Category & Tag
 default_category: uncategorized
@@ -71,8 +80,9 @@ tag_generator:
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/
-## Themes: https://hexo.io/themes/
-theme: snippet
+## Themes: https://hexo.io/themes/  
+## snippet butterfly
+theme: butterfly
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html

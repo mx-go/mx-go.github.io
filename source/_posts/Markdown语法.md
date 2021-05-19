@@ -2,6 +2,7 @@
 title: Markdown语法指南
 date: 2017-03-21 22:51:10
 tags: [tips]
+cover: ../../../../images/2017-3-23/markdown.png
 ---
 花了一段时间把自己的个人博客搭建好了，但是博客必须是要用Markdown书写，所以查了一下Markdown编辑器的语法，在这里做个记录。<div align=center><img width="700" height="300" src="../../../../images/2017-3-23/markdown.png" algin="center"/></div><!-- more -->
 

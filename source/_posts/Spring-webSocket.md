@@ -3,11 +3,12 @@ title: Spring+webSocket
 date: 2018-03-16 14:00:11
 tags: [java,tips,spring]
 categories: 后端
+cover: ../../../../images//2018-3/websocket/websocket-java.jpg
 ---
 
 # 引言
 
-websocket 是 HTML5新增加特性之一，目的是浏览器与服务端建立全双工的通信方式，解决 HTTP请求-响应带来过多的资源消耗，同时对特殊场景应用提供了全新的实现方式，比如聊天、股票交易、游戏等对对实时性要求较高的行业领域。<div align=center><img width="600" height="200" src="../../../../images//2018-3/websocket/websocket-java.jpg" algin="center"/></div><!-- more -->
+websocket 是 HTML5新增加特性之一，目的是浏览器与服务端建立全双工的通信方式，解决 HTTP请求-响应带来过多的资源消耗，同时对特殊场景应用提供了全新的实现方式，比如聊天、股票交易、游戏等对对实时性要求较高的行业领域。<div align=center><img src="../../../../images//2018-3/websocket/websocket-java.jpg" algin="center"/></div><!-- more -->
 
 # STOMP
 
@@ -22,7 +23,7 @@ WebSocket是一个消息架构，不强制使用任何特定的消息协议，�
 2) 直接使用 WebSocket（SockJS） 就很类似于 使用 TCP 套接字来编写 web 应用，因为没有高层协议，就需要我们定义应用间所发送消息的语义，还需要确保连接的两端都能遵循这些语义； 
 3) 同 HTTP 在 TCP 套接字上添加请求-响应模型层一样，STOMP 在 WebSocket 之上提供了一个基于帧的线路格式层，用来定义消息语义；
 
-<div align=center><img width="600" height="200" src="../../../../images//2018-3/websocket/stomp.jpg" algin="center"/></div>
+<div align=center><img src="../../../../images//2018-3/websocket/stomp.jpg" algin="center"/></div>
 
 # Spring+websocket
 
@@ -162,7 +163,7 @@ public class WebsocketController {
 
 ## 测试
 
-在客户端请求*/websocket/sendMsg*后会有如下效果：<div align=center><img width="600" height="200" src="../../../../images//2018-3/websocket/result.png" algin="center"/></div>
+在客户端请求*/websocket/sendMsg*后会有如下效果：<div align=center><img src="../../../../images//2018-3/websocket/result.png" algin="center"/></div>
 
 参考：
 

@@ -4,11 +4,12 @@ date: 2020-03-05 16:21:32
 tags: [java,spring]
 categories: 后端
 img: ../../../../images/2020/5-8/spring-dependency0.jpg
+cover: ../../../../images/2020/5-8/spring-dependency0.jpg
 ---
 
 # 引言
 
-在Spring框架中，针对Bean之间的循环依赖，Spring通过**三级缓存**的机制已经解决和规避了部分场景Bean的循环依赖。但是仍需了解Spring解决循环依赖的原理和注意Spring无法解决循环依赖的场景，避免出现此类问题。<div align=center><img width="800" height="400" src="../../../../images/2020/5-8/spring-dependency1.jpg" algin="center"/></div><!-- more -->
+在Spring框架中，针对Bean之间的循环依赖，Spring通过**三级缓存**的机制已经解决和规避了部分场景Bean的循环依赖。但是仍需了解Spring解决循环依赖的原理和注意Spring无法解决循环依赖的场景，避免出现此类问题。<div align=center><img src="../../../../images/2020/5-8/spring-dependency1.jpg" algin="center"/></div><!-- more -->
 
 # 循环依赖示例
 
@@ -364,7 +365,7 @@ Spring通过三级缓存可以解决部分场景下Bean循环依赖的问题，�
 
 Spring解决循环依赖的流程可以简化如下图所示：
 
-<div align=center><img width="800" height="200" src="../../../../images/2020/5-8/spring-dependency3.jpg" algin="center"/></div>
+<div align=center><img src="../../../../images/2020/5-8/spring-dependency3.jpg" algin="center"/></div>
 
 以A、B类使用注解注入为例，对整个流程描述如下：
 

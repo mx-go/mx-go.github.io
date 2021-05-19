@@ -3,6 +3,7 @@ title: JVM入门
 date: 2017-11-20 15:27:10
 tags: [java,jvm]
 categories: 后端
+cover: ../../../../images/2017-12-04/JVM/jvm.png
 ---
 
 # 引言

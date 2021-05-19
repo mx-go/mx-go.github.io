@@ -4,11 +4,12 @@ date: 2019-11-12 16:33:29
 tags: [RocketMQ]
 categories: 中间件
 img: ../../../../images/2020/1-4/Idempotent.png
+cover: ../../../../images/2020/1-4/Idempotent.png
 ---
 
 # 引言
 
-在MQ中，`Producer`和`Consumer`因为各种原因会进行消息重试处理，在消费消息时，会按照一定规则推送消息到消费端进行消息消费。既然有重试，那么就少不了**幂等**。<div align=center><img width="220" height="160" src="../../../../images/2020/1-4/Idempotent.png" algin="center"/></div><!-- more -->
+在MQ中，`Producer`和`Consumer`因为各种原因会进行消息重试处理，在消费消息时，会按照一定规则推送消息到消费端进行消息消费。既然有重试，那么就少不了**幂等**。<div align=center><img width="220" height="160" src="../../../../images/2020/1-4/Idempotent.png" algin="center"/></div>
 
 # 幂等概念
 

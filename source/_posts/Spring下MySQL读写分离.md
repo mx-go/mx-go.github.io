@@ -3,6 +3,7 @@ title: Spring下MySQL读写分离
 date: 2018-05-02 15:46:51
 tags: [mysql,java]
 categories: 数据库
+cover: ../../../../images/2018-5/MySQL_spring/index.png
 ---
 
 # 引言

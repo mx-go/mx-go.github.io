@@ -4,6 +4,7 @@ date: 2019-06-01 09:01:36
 tags: [java]
 categories: 踩坑记录
 img: ../../../../images/2019/4-6/java_docker.jpg
+cover: ../../../../images/2019/4-6/java_docker.jpg
 ---
 
 # 引言

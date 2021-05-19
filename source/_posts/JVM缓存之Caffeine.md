@@ -4,6 +4,7 @@ date: 2020-05-17 09:48:52
 tags: [java,cache]
 categories: 后端
 img: ../../../../images/2020/5-8/caffeine.png
+cover: ../../../../images/2020/5-8/caffeine.png
 ---
 
 # 引言
@@ -12,7 +13,7 @@ img: ../../../../images/2020/5-8/caffeine.png
 
 # Caffeine VS Guava Cache
 
-Spring5中将放弃Guava Cache作为默认的缓存机制，而改用Caffeine作为本地缓存组件，Spring作出如此大的改变不是没有原因的。在Caffeine的[Benchmarks](https://github.com/ben-manes/caffeine/wiki/Benchmarks)给出了亮眼的数据，对比其他的缓存组件，Caffeine的读写性能都很优异。<div align=center><img width="600" height="300" src="../../../../images/2020/5-8/caffeine-1.png" algin="center"/></div>
+Spring5中将放弃Guava Cache作为默认的缓存机制，而改用Caffeine作为本地缓存组件，Spring作出如此大的改变不是没有原因的。在Caffeine的[Benchmarks](https://github.com/ben-manes/caffeine/wiki/Benchmarks)给出了亮眼的数据，对比其他的缓存组件，Caffeine的读写性能都很优异。<div align=center><img src="../../../../images/2020/5-8/caffeine-1.png" algin="center"/></div>
 
 # Caffeine的使用
 

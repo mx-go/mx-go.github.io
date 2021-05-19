@@ -4,11 +4,12 @@ date: 2019-07-22 13:45:40
 tags: [java]
 categories: 踩坑记录
 img: ../../../../images/2019/think.jpg
+cover: ../../../../images/2019/think.jpg
 ---
 
 # 引言
 
-Logback日志输出使用 AsyncAppender 时，输出的文件行号信息是 **?:?** ，问题产生原因及解决方案。<!-- more -->
+Logback日志输出使用 `AsyncAppender` 时，输出的文件行号信息是 **?:?** ，问题产生原因及解决方案。<!-- more -->
 
 # 问题
 

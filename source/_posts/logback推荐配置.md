@@ -3,6 +3,7 @@ title: logback推荐配置
 date: 2018-08-18 15:51:53
 tags: [tips]
 categories: 工具
+cover: ../../../../images/2018-8/logback.jpg
 ---
 
 # 引言
@@ -186,4 +187,4 @@ categories: 工具
 
 > log.error("cannot open url={}", url, e)
 
-针对error，务必把异常栈打印出来，这里有一个exception对象，不需要使用占位符，如果多一个占位符，则只会打印e.getMessage()的内容，就不方便查问题了。 
+针对error，务必把异常栈打印出来，这里有一个exception对象，不需要使用占位符，如果多一个占位符，则只会打印`e.getMessage()`的内容，就不方便查问题了。 

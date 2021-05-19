@@ -37,11 +37,11 @@ carousel:
 ## widgets
 widgets:
   - search
-  ## - notification
+#  - notification
+  - social
   - category
   - archive
   - tagcloud
-  - social
   - friends
 
 
@@ -106,6 +106,7 @@ links:
   - Python中文社区: http://www.pythontab.com/
   - 深度开源open-open: http://www.open-open.com
 
+
 # 主题自定义个性化配置
 
 ## 网站宣传语
@@ -113,7 +114,7 @@ branding: 不忘初心 方得始终
 
 ## 设置banner背景图片
 banner:
-    img: http://snippet.shenliyang.com/img/banner.jpg
+    img: https://hexo-theme-snippet-1251680922.cos.ap-beijing.myqcloud.com/img/banner.jpg
 
 ## 首页列表底部面板
 homePanel: true
@@ -139,12 +140,12 @@ fontAwesome:
 
 ## 文章过期提醒功能
 warning:
-  days: 1000
+  days: 300
   text: '本文于%d天之前发表，文中内容可能已经过时。'
 
 ## 文章内声明
 declaration:
-  enable: false
+  enable: true
   title: '转载声明'
   tip: |-
       商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">rainbowhorse</a>
@@ -152,12 +153,53 @@ declaration:
 ## 文章打赏
 reward:
   alipay: ''
-  wepay: '../img/reward-wepay.jpg'
+  wepay: '../images/weixinPay.jpg'
   tip: 赞赏是不耍流氓的鼓励
 
 ## 主题评论
 
-### gitment
+## Valine评论
+valine:
+   enable: true
+   appId: Ssq7roEkyKbwBTtpAxWgS7ow-gzGzoHsz
+   appKey: CAyA0W3oDDcdzNSkB2KDdFmI
+   placeholder: 说点什么吧
+   notify: false
+   verify: false
+   avatar: wavatar
+   meta: nick,mail
+   emojiCDN: https://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/
+   pageSize: 15
+
+### 畅言评论(需要ICP备案)
+changyan:
+  enable: false
+  appid:
+  conf:
+
+### 来必力
+livere:
+  enable: false
+  livere_uid: MTAyMC8zMzA1MS85NjEz
+
+## Gitalk评论
+gitalk:
+   enable: false
+   clientID:
+   clientSecret:
+   repo:
+   owner:
+   admin:
+   perPage:
+   distractionFreeMode: true
+
+### Disqus评论
+disqus:
+  enable: false
+  shortname: snippet
+  count: false
+
+### gitment评论(长期不更新，不建议使用)
 gitment:
   enable: false
   owner:
@@ -166,39 +208,11 @@ gitment:
   client_secret:
   perPage: 10
 
-### 来必力
-livere:
-  enable: false
-  livere_uid: MTAyMC8zNDc4MS8xMTMxOA==
-
 ### 友言评论(服务不稳定)
 uyan:
   enable: false
   uyan_id: 1966422
 
-### Disqus评论
-disqus:
-  enable: false
-  shortname: snippet
-  count: false
-
-### 畅言评论(需要ICP备案)
-changyan:
-  enable: false
-  appid:
-  conf:
-
-## Valine评论
-valine:
-   enable: true
-   appId: "8rKac39CM1EjFl9q7i97aDSu-gzGzoHsz"
-   appKey: "5wiSIVcjJCXPwgEwOqK8GaoJ"
-   placeholder: 说点什么吧
-   notify: false
-   verify: false
-   avatar: robohash
-   meta: nick,mail
-   pageSize: 10
 
 ## 网站访客统计
 visit_counter:
@@ -208,7 +222,7 @@ visit_counter:
 ## 网站访问统计分析
 
 ### 网盟CNZZ统计
-## cnzz_analytics: 1263868967
+cnzz_analytics: 1263868967
 
 ### 百度统计
 baidu_analytics:
@@ -226,6 +240,7 @@ baidu_site_verification:
 baidu_push: true
 
 #网站主题配置
-since: 2017-2020
+since: 2017-2021
+beian: 44030502003606
 robot: 'all' ### 控制搜索引擎的抓取和索引编制行为，默认为all
-version: 1.2.1
+version: 1.2.3

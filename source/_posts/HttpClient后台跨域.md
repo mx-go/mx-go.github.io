@@ -3,6 +3,7 @@ title: HttpClient后台跨域
 date: 2018-01-20 09:48:24
 tags: [java, tips]
 categories: 后端
+cover: ../../../../images/2018-01-20/HTTPClient.png
 ---
 
 # 引言

@@ -26,7 +26,7 @@ SHOW TABLE STATUS LIKE '表名';
 
 结果中’**Data_free**’列的值就是碎片大小
 
-<div align=center><img width="900" height="100" src="../../../../images/2018-5/mysql%E7%A2%8E%E7%89%87%E4%BC%98%E5%8C%96/show-status.png" algin="center"/>
+<div align=center><img src="../../../../images/2018-5/mysql%E7%A2%8E%E7%89%87%E4%BC%98%E5%8C%96/show-status.png" algin="center"/>
 
 </div>
 

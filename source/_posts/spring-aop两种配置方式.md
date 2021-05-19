@@ -3,6 +3,7 @@ title: Spring-AOP两种配置方式
 date: 2017-09-09 19:44:46
 tags: [java,spring]
 categories: 后端
+cover: ../../../../images/2017-9-12/SpringAOP/spring.png
 ---
 
 # 引言

@@ -3,13 +3,12 @@ title: JAVA并发之锁
 date: 2018-05-06 15:45:39
 tags: [java]
 categories: 后端
+cover: ../../../../images/2018-5/JAVA%E2%80%94Lock/index.jpg
 ---
 
 # 引言
 
-锁作为并发共享数据，保证一致性的工具，数据库中有悲观锁、乐观锁等实现。在JAVA平台同样有多种实现(如 `synchronized`和`Lock`)。这些已经写好提供的锁为开发提供了便利，让我们有了更多的选择。<div align=center><img width="800" height="200" src="../../../../images/2018-5/JAVA%E2%80%94Lock/index.jpg"/>
-
-</div><!-- more -->
+锁作为并发共享数据，保证一致性的工具，数据库中有悲观锁、乐观锁等实现。在JAVA平台同样有多种实现(如 `synchronized`和`Lock`)。这些已经写好提供的锁为开发提供了便利，让我们有了更多的选择。<div align=center><img src="../../../../images/2018-5/JAVA%E2%80%94Lock/index.jpg"/></div><!-- more -->
 
 # JAVA中锁分类
 
@@ -25,13 +24,13 @@ categories: 后端
 >
 > CAS缺点：ABA问题。
 
-**悲观锁**：悲观锁认为对于同一个数据的并发操作，一定是会发生修改的，哪怕没有修改，也会认为修改。因此对于同一个数据的并发操作，悲观锁采取加锁的形式。悲观的认为，不加锁的并发操作一定会出问题。**适合写操作多的场景**。Java里面的同步语义**`synchronized关键字的实现是悲观锁`**。
+**悲观锁**：悲观锁认为对于同一个数据的并发操作，一定是会发生修改的，哪怕没有修改，也会认为修改。因此对于同一个数据的并发操作，悲观锁采取加锁的形式。悲观的认为，不加锁的并发操作一定会出问题。**适合写操作多的场景**。Java里面的同步语义`synchronized关键字的实现是悲观锁`。
 
 ## 可重入锁
 
 可重入锁又名递归锁，是指在同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁。JAVA中的**synchronized与ReentrantLock都是可重入锁**。可重入锁的一个好处是可一定程度避免死锁。
 
-- 对于Java `ReentrantLock`而言, 他的名字就可以看出是一个可重入锁，其名字是`Re entrant Lock`重新进入锁。
+- 对于Java `ReentrantLock`而言, 他的名字就可以看出是一个可重入锁，其名字是`ReentrantLock`重新进入锁。
 - 对于`synchronized`而言，也是一个可重入锁。
 
 ```java
@@ -115,7 +114,7 @@ public class Main {
 
 反编译结果如下图：
 
-<div align=center><img width="800" height="200" src="../../../../images/2018-5/JAVA%E2%80%94Lock/sync.png"/></div>
+<div align=center><img src="../../../../images/2018-5/JAVA%E2%80%94Lock/sync.png"/></div>
 
 - **同步代码块**：*monitorenter*和*monitorexit*指令实现的。
 - **同步方法**（在这看不出来需要看JVM底层实现）：方法修饰符上的*ACC_SYNCHRONIZED*实现。
@@ -325,9 +324,9 @@ try {
 
 Lock基于冲突检测的**乐观并发策略**，如果没有其他线程争用共享数据，那操作就成功了，如果共享数据被争用，产生了冲突，那就再进行其他的补偿措施(最常见的补偿措施就是不断地重试，直到试成功为止)，这种乐观并发策略的许多实现都不需要把线程挂起，因此这种同步被称为`非阻塞同步`。**ReetrantLock采用的便是这种并发策略。**
 
-在乐观的并发策略中，需要操作和冲突检测这两个步骤具备原子性，它靠**硬件指令来保证**，这里用的是CAS操作(*Compare and Swap*)。JDK1.5之后，Java程序才可以使用CAS操作。进一步研究`ReentrantLock`的源代码，会发现其中比较重要的获得锁的一个方法是*compareAndSetState*，这里其实就是调用的CPU提供的特殊指令。现代的CPU提供了指令，可以自动更新共享数据，而且能够检测到其他线程的干扰，而*compareAndSet()*就用这些代替了锁定。这个算法称作非阻塞算法，意思是一个线程的失败或者挂起不应该影响其他线程的失败或挂起。
+在乐观的并发策略中，需要操作和冲突检测这两个步骤具备原子性，它靠**硬件指令来保证**，这里用的是CAS操作(*Compare and Swap*)。JDK1.5之后，Java程序才可以使用CAS操作。进一步研究`ReentrantLock`的源代码，会发现其中比较重要的获得锁的一个方法是*compareAndSetState*，这里其实就是调用的CPU提供的特殊指令。现代的CPU提供了指令，可以自动更新共享数据，而且能够检测到其他线程的干扰，而`compareAndSet()`就用这些代替了锁定。这个算法称作非阻塞算法，意思是一个线程的失败或者挂起不应该影响其他线程的失败或挂起。
 
-Java 5中引入了注入*AutomicInteger、AutomicLong、AutomicReference*等特殊的原子性变量类，它们提供的如：*compareAndSet()、incrementAndSet()*和*getAndIncrement()*等方法都使用了CAS操作。因此，它们都是由硬件指令来保证的原子方法。
+Java 5中引入了注入*AutomicInteger、AutomicLong、AutomicReference*等特殊的原子性变量类，它们提供的如：`compareAndSet()`、`incrementAndSet()`和`getAndIncrement()`等方法都使用了CAS操作。因此，它们都是由硬件指令来保证的原子方法。
 
 # ReetrankLock与synchronized比较
 
@@ -341,7 +340,7 @@ Java 5中引入了注入*AutomicInteger、AutomicLong、AutomicReference*等特�
 
 ## 实现策略
 
-`synchronized`采用的是互斥同步，因而这种同步又称为阻塞同步，它属于一种**悲观的并发策略**，即线程获得的是**独占锁**。独占锁意味着其他线程只能依靠阻塞来等待线程释放锁，**`synchronized`是托管给JVM执行的**。而在CPU转换线程阻塞时会引起线程上下文切换，当有很多线程竞争锁的时候，会引起CPU频繁的上下文切换导致效率很低。
+`synchronized`采用的是互斥同步，因而这种同步又称为阻塞同步，它属于一种**悲观的并发策略**，即线程获得的是**独占锁**。独占锁意味着其他线程只能依靠阻塞来等待线程释放锁，`synchronized`是托管给JVM执行的。而在CPU转换线程阻塞时会引起线程上下文切换，当有很多线程竞争锁的时候，会引起CPU频繁的上下文切换导致效率很低。
 
 `Lock`基于乐观的并发策略，是Java写的控制锁的代码，基于CAS硬件指令保证。
 
@@ -369,7 +368,7 @@ try {
 
 ### 可实现公平锁
 
-多个线程在等待同一个锁时，必须按照申请锁的时间顺序排队等待，而非公平锁则不保证这点，在锁释放时，任何一个等待锁的线程都有机会获得锁。`synchronized`中的锁时非公平锁，**ReentrantLock默认情况下也是非公平锁**，但可以通过构造方法**ReentrantLock(ture)**来要求使用公平锁，公平锁会来带一些性能的消耗。
+多个线程在等待同一个锁时，必须按照申请锁的时间顺序排队等待，而非公平锁则不保证这点，在锁释放时，任何一个等待锁的线程都有机会获得锁。`synchronized`中的锁时非公平锁，**ReentrantLock默认情况下也是非公平锁**，但可以通过构造方法`ReentrantLock(ture)`来要求使用公平锁，公平锁会来带一些性能的消耗。
 
 ### 锁绑定多个条件
 

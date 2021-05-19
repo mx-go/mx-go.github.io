@@ -3,6 +3,7 @@ title: Tomcat入门
 date: 2017-12-20 14:35:32
 tags: [tomcat]
 categories: 后端
+cover: ../../../../images/2017-12-27/tomcat%E5%85%A5%E9%97%A8/tomcat.jpg
 ---
 
 # 引言

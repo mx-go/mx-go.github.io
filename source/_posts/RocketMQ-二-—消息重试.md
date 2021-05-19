@@ -4,6 +4,7 @@ date: 2019-08-13 20:37:29
 tags: [RocketMQ]
 categories: 中间件
 img: ../../../../images/2020/1-4/reconsumerTimes.png
+cover: ../../../../images/2020/1-4/reconsumerTimes.png
 ---
 
 # 引言

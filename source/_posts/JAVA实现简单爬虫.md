@@ -3,6 +3,7 @@ title: JAVA实现简单网络爬虫
 date: 2017-04-01 14:17:39
 tags: [java, tools]
 categories: 后端
+cover: ../../../../images/2017-4-1/%E7%88%AC%E8%99%AB.jpg
 ---
 
 <div align=center><img width="700" height="300" src="../../../../images/2017-4-1/%E7%88%AC%E8%99%AB.jpg" algin="center"/></div><!-- more -->

@@ -3,6 +3,7 @@ title: 自定义StopWatch
 date: 2018-12-22 21:34:34
 tags: [tips]
 categories: 工具
+cover: ../../../../images/2019/1-3/StopWatch.jpg
 ---
 
 # 引言

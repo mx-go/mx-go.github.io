@@ -4,6 +4,7 @@ date: 2019-06-15 23:00:16
 tags: [RocketMQ]
 categories: 中间件
 img: ../../../../images/2019/4-6/cover.jpg
+cover: ../../../../images/2019/4-6/cover.jpg
 ---
 
 # 引言

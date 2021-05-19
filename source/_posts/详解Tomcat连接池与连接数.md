@@ -3,6 +3,7 @@ title: 详解Tomcat连接池与连接数
 date: 2017-12-28 14:56:06
 tags: [tomcat, tips]
 categories: 后端
+cover: ../../../../images/2017-12-27/tomcat%E5%85%A5%E9%97%A8/tomcat.jpg
 ---
 
 # 引言

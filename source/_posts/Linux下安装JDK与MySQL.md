@@ -2,7 +2,9 @@
 title: Linux下安装JDK与MySQL
 date: 2018-01-09 19:53:24
 tags: [mysql, tips]
-categories: Linux
+categories: 
+- [Linux, 安装]
+cover: ../../../../images/2018-01/linux_JDK_MySQL/installing-mysql-on-linux.png
 ---
 
 # 引言

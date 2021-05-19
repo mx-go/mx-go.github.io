@@ -3,11 +3,12 @@ title: 线程池之ThreadPoolExecutor
 date: 2018-03-17 14:09:10
 tags: [java, tips]
 categories: 后端
+cover: ../../../../images//2018-3/threadpoolexcetor/threadpoolexecutor.png
 ---
 
 # 引言
 
-JAVA对于多线程的封装非常丰富，提供了多种适用于不同场景的多并发实现。但如果并发的线程数量很多，并且每个线程都是执行一个时间很短的任务就结束了，这样频繁创建线程就会大大降低系统的效率，因为频繁创建线程和销毁线程需要时间。这里就引入了线程池来管理线程，其中最基础、最核心的线程池要属ThreadPoolExecutor类了。<div align=center><img width="500" height="200" src="../../../../images//2018-3/threadpoolexcetor/threadpoolexecutor.png" algin="center"/></div>	<!-- more -->
+JAVA对于多线程的封装非常丰富，提供了多种适用于不同场景的多并发实现。但如果并发的线程数量很多，并且每个线程都是执行一个时间很短的任务就结束了，这样频繁创建线程就会大大降低系统的效率，因为频繁创建线程和销毁线程需要时间。这里就引入了线程池来管理线程，其中最基础、最核心的线程池要属ThreadPoolExecutor类了。<div align=center><img src="../../../../images//2018-3/threadpoolexcetor/threadpoolexecutor.png" algin="center"/></div>
 
 # Java中的ThreadPoolExecutor类
 
@@ -80,7 +81,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
   ThreadPoolExecutor.CallerRunsPolicy：由调用线程处理该任务 
   ```
 
-<div align=center><img width="700" height="200" src="../../../../images//2018-3/threadpoolexcetor/inherit.png" algin="center"/></div>
+<div align=center><img src="../../../../images//2018-3/threadpoolexcetor/inherit.png" algin="center"/></div>
 
 由图中我们可得知ThreadPoolExecutor继承了AbstractExecutorService，AbstractExecutorService是一个抽象类，它实现了ExecutorService接口，而ExecutorService又是继承了Executor接口。
 
@@ -121,7 +122,7 @@ private static final int TERMINATED =  3 << COUNT_BITS;
 4. **TIDYING**：所有任务被终止了，工作线程数`workCount`也被设为0，线程的状态也被设为**TIDYING**，并开始调用钩子函数terminated()。
 5. **TERMINATED**：钩子函数`terminated()`执行完毕。
 
-<div align=center><img width="700" height="200" src="../../../../images/2018-3/threadpoolexcetor/status.png" algin="center"/></div>
+<div align=center><img src="../../../../images/2018-3/threadpoolexcetor/status.png" algin="center"/></div>
 
 ## 任务的执行
 
@@ -185,7 +186,7 @@ ThreadPoolExecutor提供了两个方法，用于线程池的关闭，分别是sh
 
 ThreadPoolExecutor提供了动态调整线程池容量大小的方法：setCorePoolSize()和setMaximumPoolSize()：
 
-- setCorePoolSize：设置核心池大小。
+- <div align=center><img src="../../../../images/2018-3/Mybatis/ehcachecache.png" algin="center"/></div>
 - setMaximumPoolSize：设置线程池最大能创建的线程数目大小。
 
 # 使用Executors创建线程池
@@ -248,15 +249,13 @@ class MyTask implements Runnable {
 
 执行结果：
 
-<div align=center><img width="700" height="200" src="../../../../images//2018-3/threadpoolexcetor/result.png" algin="center"/></div>
+<div align=center><img src="../../../../images//2018-3/threadpoolexcetor/result.png" algin="center"/></div>
 
 ## 合理配置线程池大小
 
 一般需要根据任务的类型来配置线程池大小：
 
 - 如果是**CPU密集型任务**，就需要尽量压榨CPU，参考值可以设为 ***N*CPU+1**
-
-
 
 - 如果是**IO密集型任务**，参考值可以设置为2**N*CPU
 

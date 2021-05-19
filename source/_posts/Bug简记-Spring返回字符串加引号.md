@@ -3,15 +3,13 @@ title: Bug简记-Spring返回字符串加引号
 date: 2018-10-01 22:39:56
 tags: [java]
 categories: 踩坑记录
+cover: ../../../../images/2018-8/bug.jpg
 ---
 
 # 引言
 
-在开发过程中会遇到这种各样的bug，也是自己吃过的亏。以后在这里会把自己遇到的bug记录下来，吸取教训，避免犯同样的错误。
+在开发过程中会遇到这种各样的bug，也是自己吃过的亏。以后在这里会把自己遇到的bug记录下来，吸取教训，避免犯同样的错误。<div align=center><img width="220" height="160" src="../../../../images/2018-8/bug.jpg" algin="center"/></div><!-- more -->
 
-
-
-<div align=center><img width="220" height="160" src="../../../../images/2018-8/bug.jpg" algin="center"/></div><!-- more -->
 # 踩坑记录
 
 在与第三方对接的接口中，对方推送消息接口定义如果接收成功返回*success*，反之返回其他字符串，如果不是*success*字符串就会再重复推送三次。自己在代码中为：

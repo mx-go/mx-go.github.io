@@ -3,6 +3,7 @@ title: Bug简记-长轮训Response
 date: 2020-01-05 22:29:36
 tags: [java]
 categories: 踩坑记录
+cover: ../../../../images/2018-8/bug.jpg
 ---
 
 客服系统服务中使用Servlet3.0异步长轮训，服务压力大时，导致消息错乱。
@@ -128,4 +129,3 @@ public class AsyncContextImpl implements AsyncContext, AsyncContextCallback {
 **修改为context.getResponse().getWriter().write(…)即可，就是这么一行代码，导致了整个事件的发生。**
 
 另外，使用Spring提供的DeferredResult已完全封装了异步请求，可避免此问题。
-

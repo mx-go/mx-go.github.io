@@ -3,13 +3,12 @@ title: Spring之FactoryBean
 date: 2019-03-16 17:30:37
 tags: [java,spring]
 categories: 后端
+cover: ../../../../images/2019/1-3/Spring-FactoryBean.jpg
 ---
 
 # 引言
 
 **FactoryBean** 与 **BeanFactory**名字很像，很容易搞混。但其实它们两个是完全不一样的东东。
-
-<!-- more -->
 
 **BeanFactory**： 以Factory结尾，表示它是一个工厂类，是用于管理Bean的一个工厂。BeanFactory是 IOC 容器的核心接口。它的职责包括：实例化、定位、配置应用程序中的对象及建立这些对象间的依赖。
 

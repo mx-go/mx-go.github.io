@@ -3,13 +3,14 @@ title: Spring之动态代理
 date: 2018-04-02 09:55:03
 tags: [java,spring]
 categories: 后端
+cover: ../../../../images/2018-4/DynamicProxy/proxy-index.jpg
 ---
 
 # 引言
 
 Spring主要有两大思想，一个是AOP，一个是IOC。对于Spring的核心AOP来说，动态代理机制是其核心，想要明白AOP原理，一定要了解动态代理机制。
 
-<div align=center><img width="600" height="200" src="../../../../images/2018-4/DynamicProxy/proxy-index.jpg" algin="center"/></div>
+<div align=center><img src="../../../../images/2018-4/DynamicProxy/proxy-index.jpg" algin="center"/></div>
 
 <!-- more -->
 
@@ -34,7 +35,7 @@ Spring主要有两大思想，一个是AOP，一个是IOC。对于Spring的核�
 
 ## JDK动态代理(对有实现接口的对象做代理)
 
-<div align=center><img width="600" height="200" src="../../../../images/2018-4/DynamicProxy/yuanli.png" algin="center"/></div>
+<div align=center><img src="../../../../images/2018-4/DynamicProxy/yuanli.png" algin="center"/></div>
 
 ### 实现方式说明
 
@@ -60,7 +61,7 @@ public interface InvocationHandler {
 
 Proxy类是专门完成代理的操作类，可以通过此类为一个或多个接口动态地生成实现类，该类常用的调用方法为**newProxyInstance**
 
-<div align=center><img width="600" height="300" src="../../../../images/2018-4/DynamicProxy/interfere.png" algin="center"/></div>
+<div align=center><img src="../../../../images/2018-4/DynamicProxy/interfere.png" algin="center"/></div>
 
 newProxyInstance方法参数说明如下：
 
@@ -179,7 +180,7 @@ public class Client {
 
 运行->控制台输出结果如下
 
-<div align=center><img width="800" height="300" src="../../../../images/2018-4/DynamicProxy/JDKProxy.png" algin="center"/></div>
+<div align=center><img src="../../../../images/2018-4/DynamicProxy/JDKProxy.png" algin="center"/></div>
 
 ## CGLib动态代理[对没有实现接口的普通类做代理]
 
@@ -286,7 +287,7 @@ public class CGLibClient {
 
 运行->控制台输出结果如下
 
-<div align=center><img width="800" height="300" src="../../../../images/2018-4/DynamicProxy/cglibResult.png" algin="center"/></div>
+<div align=center><img src="../../../../images/2018-4/DynamicProxy/cglibResult.png" algin="center"/></div>
 
 # 总结
 
@@ -318,7 +319,7 @@ Spirng的AOP的动态代理实现机制有两种，分别是:
 
 ## 注意
 
-- 如果要被代理的对象是个**实现类**，那么Spring会使用**JDK动态代理**来完成操作（**Spirng默认采用JDK动态代理实现机制**）
+- <div align=center><img src="../../../../images/2018-4/MySQL_master_slave/db_2.png" algin="center"/></div>
 
 
 - 如果要被代理的对象**不是个实现类**，那么Spring会**强制使用CGLib来实现动态代理**。

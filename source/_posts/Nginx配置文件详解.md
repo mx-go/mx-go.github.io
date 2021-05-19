@@ -3,21 +3,20 @@ title: Nginx配置文件详解
 date: 2018-01-24 14:12:52
 tags: [nginx]
 categories: 工具
+cover: ../../../../images/2018-01/nginx/index.png
 ---
 
 # 引言
 
 之前介绍了Linux下安装Nginx，Nginx 专为性能优化而开发，性能是其最重要的考量,实现上非常注重效率 。它支持内核 Poll 模型，能经受高负载的考验,有报告表明能支持高达 50,000 个并发连接数。<div align=center>
 
-<img width="700" height="200" src="../../../../images/2018-01/nginx/index.png" algin="center"/>
-
-</div><!-- more -->
+<img src="../../../../images/2018-01/nginx/index.png" algin="center"/></div>
 
 # Nginx特点
 
-Nginx 具有很高的稳定性。其它 HTTP 服务器，当遇到访问的峰值，或者有人恶意发起慢速连接时，也很可能会导致服务器物理内存耗尽频繁交换，失去响应，只能重启服务器。例如当前 apache 一旦上到 200 个以上进程，web响应速度就明显非常缓慢了。而 Nginx 采取了分阶段资源分配技术，使得它的 CPU 与内存占用率非常低。Nginx 官方表示保持 10,000 个没有活动的连接，它只占 2.5M 内存，所以类似 DOS 这样的攻击对 Nginx 来说基本上是毫无用处的。就稳定性而言,Nginx 比 lighthttpd 更胜一筹。
+Nginx 具有很高的稳定性。其它 HTTP 服务器，当遇到访问的峰值，或者有人恶意发起慢速连接时，也很可能会导致服务器物理内存耗尽频繁交换，失去响应，只能重启服务器。例如当前 apache 一旦上到 200 个以上进程，web响应速度就明显非常缓慢了。而 Nginx 采取了分阶段资源分配技术，使得它的 CPU 与内存占用率非常低。Nginx 官方表示保持 10,000 个没有活动的连接，它只占 2.5M 内存，所以类似 DOS 这样的攻击对 Nginx 来说基本上是毫无用处的。就稳定性而言，Nginx 比 lighthttpd 更胜一筹。
 
-Nginx 支持热部署。它的启动特别容易, 并且几乎可以做到 7*24 不间断运行，即使运行数个月也不需要重新启动。你还能够在不间断服务的情况下，对软件版本进行进行升级。
+Nginx 支持热部署。启动特别容易，并且几乎可以做到 7*24 不间断运行，即使运行数个月也不需要重新启动。还能够在不间断服务的情况下，对软件版本进行进行升级。
 
 # Nginx的用处
 
@@ -27,9 +26,7 @@ Nginx 支持热部署。它的启动特别容易, 并且几乎可以做到 7*24 
 
 虚拟主机是一种特殊的软硬件技术，它可以将网络上的每一台计算机分成多个虚拟主机，每个虚拟主机可以独立对外提供www服务，这样就可以实现一台主机对外提供多个web服务，每个虚拟主机之间是独立的，互不影响的。
 
-<div align=center><img width="600" height="200" src="../../../../images/2018-01/nginx/1.png" algin="center"/>
-
-</div>
+<div align=center><img src="../../../../images/2018-01/nginx/1.png" algin="center"/></div>
 
 1、 基于ip的虚拟主机
 
@@ -43,9 +40,7 @@ Nginx 支持热部署。它的启动特别容易, 并且几乎可以做到 7*24 
 
 ​	而反向代理（Reverse Proxy）方式是指以代理服务器来接受internet上的连接请求，然后将请求转发给内部网络上的服务器，并将从服务器上得到的结果返回给internet上请求连接的客户端，此时代理服务器对外就表现为一个反向代理服务器。
 
-<div align=center><img width="600" height="200" src="../../../../images/2018-01/nginx/2.png" algin="center"/>
-
-</div>
+<div align=center><img src="../../../../images/2018-01/nginx/2.png" algin="center"/></div>
 
 # Nginx配置详解
 
@@ -70,7 +65,7 @@ worker_rlimit_nofile 204800;
 
 events
 {
-  	#使用epoll的I/O 模型
+  #使用epoll的I/O 模型
 	use epoll;
     补充说明:
     与apache相类，nginx针对不同的操作系统，有不同的事件模型
@@ -106,7 +101,6 @@ http
 	include mime.types;
 	default_type application/octet-stream;
 
-
 	log_format main '$host $status [$time_local] $remote_addr [$time_local] $request_uri '
 '"$http_referer" "$http_user_agent" "$http_x_forwarded_for" ''$bytes_sent $request_time $sent_http_x_cache_hit';
 log_format log404 '$status [$time_local] $remote_addr $host$request_uri $sent_http_location';
@@ -121,8 +115,8 @@ $http_referer：用来记录从那个页面链接访问过来的；
 $http_user_agent：记录客户毒啊浏览器的相关信息；
 通常web服务器放在反向代理的后面，这样就不能获取到客户的IP地址了，通过$remote_add拿到的IP地址是反向代理服务器的iP地址。反向代理服务器在转发请求的http头信息中，可以增加x_forwarded_for信息，用以记录原有客户端的IP地址和原来客户端的请求的服务器地址；
 
-	#用了log_format指令设置了日志格式之后，需要用access_log指令指定日志文件的存放路径；
-    # access_log /usr/local/nginx/logs/access_log main;
+	# 用了log_format指令设置了日志格式之后，需要用access_log指令指定日志文件的存放路径；
+  # access_log /usr/local/nginx/logs/access_log main;
 	access_log /dev/null;
 	
   	#保存服务器名字的hash表是由指令server_names_hash_max_size 和server_names_hash_bucket_size所控制的。参数hash bucket size总是等于hash表的大小，并且是一路处理器缓存大小的倍数。在减少了在内存中的存取次数后，使在处理器中加速查找hash表键值成为可能。如果hash bucket size等于一路处理器缓存的大小，那么在查找键的时候，最坏的情况下在内存中查找的次数为2。第一次是确定存储单元的地址，第二次是在存储单元中查找键 值。因此，如果Nginx给出需要增大hash max size 或 hash bucket size的提示，那么首要的是增大前一个参数的大小.
@@ -152,12 +146,12 @@ HTTP错误(Bad Request)。
 	#设定通过nginx上传文件的大小
 	client_max_body_size 300m;
 	
-  	#sendfile指令指定 nginx 是否调用sendfile 函数（zero copy 方式）来输出文件，
-#对于普通应用，必须设为on。
-#如果用来进行下载等应用磁盘IO重负载应用，可设置为off，以平衡磁盘与网络IO处理速度，降低系统uptime。
+  #sendfile指令指定 nginx 是否调用sendfile 函数（zero copy 方式）来输出文件，
+	#对于普通应用，必须设为on。
+	#如果用来进行下载等应用磁盘IO重负载应用，可设置为off，以平衡磁盘与网络IO处理速度，降低系统uptime。
 	sendfile on;
 	
-  	#此选项允许或禁止使用socke的TCP_CORK的选项，此选项仅在使用sendfile的时候使用
+  #此选项允许或禁止使用socke的TCP_CORK的选项，此选项仅在使用sendfile的时候使用
 	tcp_nopush on;
   
 	tcp_nodelay on;
@@ -165,16 +159,16 @@ HTTP错误(Bad Request)。
 	#后端服务器连接的超时时间_发起握手等候响应超时时间
 	proxy_connect_timeout 90; 
 	
-  	#连接成功后_等候后端服务器响应时间_其实已经进入后端的排队之中等候处理（也可以说是后端服务器处理请求的时间）
+  #连接成功后_等候后端服务器响应时间_其实已经进入后端的排队之中等候处理（也可以说是后端服务器处理请求的时间）
 	proxy_read_timeout 180;
 
 	#后端服务器数据回传时间_就是在规定时间之内后端服务器必须传完所有的数据
 	proxy_send_timeout 180;
 
-  	#设置从被代理服务器读取的第一部分应答的缓冲区大小，通常情况下这部分应答中包含一个小的应答头，默认情况下这个值的大小为指令proxy_buffers中指定的一个缓冲区的大小，不过可以将其设置为更小
+  #设置从被代理服务器读取的第一部分应答的缓冲区大小，通常情况下这部分应答中包含一个小的应答头，默认情况下这个值的大小为指令proxy_buffers中指定的一个缓冲区的大小，不过可以将其设置为更小
 	proxy_buffer_size 256k;
 	
-  	#设置用于读取应答（来自被代理服务器）的缓冲区数目和大小，默认情况也为分页大小，根据操作系统的不同可能是4k或者8k
+  #设置用于读取应答（来自被代理服务器）的缓冲区数目和大小，默认情况也为分页大小，根据操作系统的不同可能是4k或者8k
 	proxy_buffers 8 256k;
 
 	proxy_busy_buffers_size 256k;
@@ -182,14 +176,14 @@ HTTP错误(Bad Request)。
 	#设置在写入proxy_temp_path时数据的大小，预防一个工作进程在传递文件时阻塞太长
 	proxy_temp_file_write_size 256k;
 	
-  	#proxy_temp_path和proxy_cache_path指定的路径必须在同一分区
+  #proxy_temp_path和proxy_cache_path指定的路径必须在同一分区
 	proxy_temp_path /data0/proxy_temp_dir;
 	#设置内存缓存空间大小为200MB，1天没有被访问的内容自动清除，硬盘缓存空间大小为30GB。
 	proxy_cache_path /data0/proxy_cache_dir levels=1:2 keys_zone=cache_one:200m inactive=1d max_size=30g;
 	
-    client_header_timeout 5;
-    client_body_timeout 5;
-    send_timeout 5;
+  client_header_timeout 5;
+  client_body_timeout 5;
+  send_timeout 5;
   
 	#keepalive超时时间。
 	keepalive_timeout 120;
@@ -248,7 +242,7 @@ HTTP错误(Bad Request)。
 				   proxy_buffers   32 128k;           #proxy_buffers缓冲区，网页平均在32k以下的话，这样设置
 				   proxy_busy_buffers_size 128k;   #高负荷下缓冲大小（proxy_buffers*2）
 		  }
-      }
+}
 
 nginx的upstream目前支持4种方式的分配
 1、轮询（默认）
@@ -258,25 +252,25 @@ nginx的upstream目前支持4种方式的分配
 指定轮询几率，weight和访问比率成正比，用于后端服务器性能不均的情况。
 例如：
 upstream bakend {
-server 192.168.0.14 weight=10;
-server 192.168.0.15 weight=10;
+	server 192.168.0.14 weight=10;
+	server 192.168.0.15 weight=10;
 }
 
 3、ip_hash
 每个请求按访问ip的hash结果分配，这样每个访客固定访问一个后端服务器，可以解决session的问题。
 例如：
 upstream bakend {
-ip_hash;
-server 192.168.0.14:88;
-server 192.168.0.15:80;
+	ip_hash;
+	server 192.168.0.14:88;
+	server 192.168.0.15:80;
 }
 
 4、fair（第三方）
 按后端服务器的响应时间来分配请求，响应时间短的优先分配。
 upstream backend {
-server server1;
-server server2;
-fair;
+	server server1;
+	server server2;
+	fair;
 }
 
 5、url_hash（第三方）

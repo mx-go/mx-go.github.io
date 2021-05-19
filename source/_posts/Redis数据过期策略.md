@@ -1,17 +1,14 @@
 ---
 title: Redis数据过期策略
 date: 2018-04-09 16:18:12
-tags: [redis,tools]
+tags: [redis]
 categories: 后端
+cover: ../../../../images/2018-4/redisKeyExpire/redis.jpg
 ---
 
 # 引言
 
-Redis作为一个高性能的内存NoSQL数据库，其容量受到最大内存限制的限制。为了防止一次性清理大量过期Key导致Redis服务受影响，Redis只在空闲时清理过期Key。<div align=center>
-
-> <img width="800" height="200" src="../../../../images/2018-4/redisKeyExpire/redis.jpg"/>
-
-</div><!-- more -->
+Redis作为一个高性能的内存NoSQL数据库，其容量受到最大内存限制的限制。为了防止一次性清理大量过期Key导致Redis服务受影响，Redis只在空闲时清理过期Key。<div align=center><img src="../../../../images/2018-4/redisKeyExpire/redis.jpg"/></div>
 
 # Redis过期时间
 
@@ -39,11 +36,7 @@ PEXPIREAT <KEY> <timestamp>: 	将键的过期时间设为 timestamp 所指定的
 （1）过期字典是一个指针，指向键空间的某个键对象。
 （2）过期字典的值是一个longlong类型的整数，这个整数保存了键所指向的数据库键的过期时间–一个毫秒级的 UNIX 时间戳。
 
-下图是一个带过期字典的数据库例子：<div align=center>
-
-> <img width="800" height="300" src="../../../../images/2018-4/redisKeyExpire/e1.png"/>
-
-</div>
+下图是一个带过期字典的数据库例子：<div align=center><img src="../../../../images/2018-4/redisKeyExpire/e1.png"/></div>
 
 从以上结构中可以看到expire字典(过期字典)和dict字典（数据库键空间，保存着数据库中所有键值对）是并列的，由此可见expire字典的重要性。
 
@@ -72,11 +65,7 @@ redis> persist book
 (integer) 1
 ```
 
-数据库将更新成如下状态：<div align=center>
-
-> <img width="800" height="300" src="../../../../images/2018-4/redisKeyExpire/e2.png"/>
-
-</div>
+数据库将更新成如下状态：<div align=center><img src="../../../../images/2018-4/redisKeyExpire/e2.png"/></div>
 
 可以从图中看到,当PERSIST book命令执行之后,过期字典中的 book 键消失了。
 

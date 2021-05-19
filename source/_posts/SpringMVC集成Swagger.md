@@ -4,9 +4,10 @@ date: 2019-04-15 22:49:48
 tags: [tips]
 categories: 工具
 img: ../../../../images/2019/4-6/swagger.jpg
+cover: ../../../../images/2019/4-6/swagger.jpg
 ---
 
-当前方便管理项目中的API接口，最流行的莫过于Swagger了，功能强大，UI界面漂亮，并且支持在线测试等等。所以仔细研究了下Swagger的使用。在这里记录下SpringMVC集成Swagger。<!-- more -->
+当前方便管理项目中的API接口，最流行的莫过于Swagger了，功能强大，UI界面漂亮，并且支持在线测试等等。所以仔细研究了下Swagger的使用。在这里记录下SpringMVC集成Swagger。
 
 # 引入Maven坐标
 

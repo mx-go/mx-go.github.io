@@ -3,6 +3,7 @@ title: Sping定时任务
 date: 2018-03-07 17:09:22
 tags: [java,spring]
 categories: 后端
+cover: ../../../../images/2018-03/quartz/index.png
 ---
 
 # 引言

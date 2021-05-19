@@ -4,6 +4,7 @@ date: 2019-04-05 11:57:23
 tags: [java,MongoDB,tips]
 categories: 工具
 img: ../../../../images/2019/4-6/mongo-spring-support.jpg
+cover: ../../../../images/2019/4-6/mongo-spring-support.jpg
 ---
 
 # 引言

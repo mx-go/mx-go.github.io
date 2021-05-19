@@ -3,6 +3,7 @@ title: UML工具-PowerDesigner设计数据库
 date: 2017-12-6 15:47:06
 tags: [sql,tools]
 categories: 工具
+cover: ../../../../images/2017/12/PowerDesigner/logo-powerdesigner.png
 ---
 
 # 引言

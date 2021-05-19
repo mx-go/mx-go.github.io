@@ -3,11 +3,12 @@ title: HTTPS协议
 date: 2018-05-05 10:06:57
 tags: [tips]
 categories: 方法论
+cover: ../../../../images/2018-5/HTTPS/https.jpg
 ---
 
 # 引言
 
-HTTP和HTTPS协议是互联网上应用最为广泛的网络协议，现在为了安全，很多网站从HTTP的阵营转向HTTPS。近两年，Google、Baidu、Facebook 等这样的互联网巨头，不谋而合地开始大力推行 HTTPS， 国内外的大型互联网公司很多也都已经启用了全站 HTTPS，这也是未来互联网发展的趋势。<div align=center><img width="700" height="200" src="../../../../images/2018-5/HTTPS/https.jpg" algin="center"/>
+HTTP和HTTPS协议是互联网上应用最为广泛的网络协议，现在为了安全，很多网站从HTTP的阵营转向HTTPS。近两年，Google、Baidu、Facebook 等这样的互联网巨头，不谋而合地开始大力推行 HTTPS， 国内外的大型互联网公司很多也都已经启用了全站 HTTPS，这也是未来互联网发展的趋势。<div align=center><img src="../../../../images/2018-5/HTTPS/https.jpg" algin="center"/>
 
 </div><!-- more -->
 
@@ -17,21 +18,18 @@ HTTP和HTTPS协议是互联网上应用最为广泛的网络协议，现在为�
 
 先来一张网络模型图（应表会传网数物），可以看到TCP、UDP协议处于传输层。
 
-<div align=center><img width="900" height="200" src="../../../../images/2018-5/HTTPS/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B.gif" algin="center"/>
+<div align=center><img src="../../../../images/2018-5/HTTPS/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B.gif" algin="center"/>
+
 
 </div>
 
 建立TCP需要三次握手才能建立，而断开连接连接则需要四次挥手。整个过程如下图：
 
-<div align=center><img width="700" height="200" src="../../../../images/2018-5/HTTPS/tcp.gif" algin="center"/>
-
-</div>
+<div align=center><img src="../../../../images/2018-5/HTTPS/tcp.gif" algin="center"/></div>
 
 ## 三次握手建立连接
 
-<div align=center><img width="600" height="200" src="../../../../images/2018-5/HTTPS/tcp_1.png" algin="center"/>
-
-</div>
+<div align=center><img src="../../../../images/2018-5/HTTPS/tcp_1.png" algin="center"/></div>
 
    1、`Client`端发送连接请求报文。
 
@@ -43,9 +41,7 @@ HTTP和HTTPS协议是互联网上应用最为广泛的网络协议，现在为�
 
 ## 四次挥手断开连接
 
-<div align=center><img width="600" height="200" src="../../../../images/2018-5/HTTPS/tcp_2.png" algin="center"/>
-
-</div>
+<div align=center><img src="../../../../images/2018-5/HTTPS/tcp_2.png" algin="center"/></div>
 
 中断连接端可以是Client端，也可以是Server端。
 
@@ -77,9 +73,7 @@ HTTPS（Hypertext Transfer Protocol over Secure Socket Layer，基于SSL的HTTP�
 - **身份认证：**确认网站的真实性；
 - **数据完整性：**防止内容被第三方冒充或者篡改；
 
-<div align=center><img width="450" height="200" src="../../../../images/2018-5/HTTPS/compare.jpg" algin="center"/>
-
-</div>
+<div align=center><img src="../../../../images/2018-5/HTTPS/compare.jpg" algin="center"/></div>
 
 ## 加密算法
 
@@ -109,9 +103,7 @@ HTTPS（Hypertext Transfer Protocol over Secure Socket Layer，基于SSL的HTTP�
 
 HTTPS其实是有两部分组成：**HTTP + SSL/TLS**，也就是在HTTP上又加了一层处理加密信息的模块。服务端和客户端的信息传输都会通过TLS进行加密，所以传输的数据都是加密后的数据。
 
-<div align=center><img width="800" height="200" src="../../../../images/2018-5/HTTPS/HTTPS.png" algin="center"/>
-
-</div>
+<div align=center><img src="../../../../images/2018-5/HTTPS/HTTPS.png" algin="center"/></div>
 
 ### 客户端发起HTTPS请求
 

@@ -2,13 +2,15 @@
 title: Linux中的零拷贝技术
 date: 2020-02-10 12:02:58
 tags: [tips]
-categories: Linux
+categories: 
+- [Linux, 基础]
 img: ../../../../images/2020/1-4/Zero-Copy.png
+cover: ../../../../images/2020/1-4/Zero-Copy.png
 ---
 
 # 引言
 
-**零拷贝(Zero-Copy)**技术指在计算机执行操作时，CPU不需要先将数据从一个内存区域复制到另一个内存区域，从而可以减少上下文切换以及CPU的拷贝时间。作用是在数据从网络设备到用户程序空间传递的过程中，减少数据拷贝次数，减少系统调用，实现CPU的零参与，消除CPU在这方面的负载。<div align=center><img width="220" height="160" src="../../../../images/2020/1-4/Zero-Copy.png" algin="center"/></div><!-- more -->
+`零拷贝(Zero-Copy`)技术指在计算机执行操作时，CPU不需要先将数据从一个内存区域复制到另一个内存区域，从而可以减少上下文切换以及CPU的拷贝时间。作用是在数据从网络设备到用户程序空间传递的过程中，减少数据拷贝次数，减少系统调用，实现CPU的零参与，消除CPU在这方面的负载。<div align=center><img src="../../../../images/2020/1-4/Zero-Copy.png" algin="center"/></div><!-- more -->
 
 # 零拷贝思想
 
@@ -16,7 +18,7 @@ img: ../../../../images/2020/1-4/Zero-Copy.png
 
 # 原始数据拷贝
 
-<div align=center><img width="720" height="460" src="../../../../images/2020/1-4/Traditional-copy.jpg" algin="center"/></div>
+<div align=center><img src="../../../../images/2020/1-4/Traditional-copy.jpg" algin="center"/></div>
 
 传统数据拷贝产生了四次数据拷贝，即使使用了**DMA(Direct Memory Access)**处理了硬件的通讯，CPU仍然需要处理两次数据拷贝。同时，CPU在用户态和内核态也发生了多次上下文切换，增加了CPU的负担。在此过程中，如果没有对数据做任何修改，那么在内核态和用户态间来回拷贝数据就是一种浪费。
 
@@ -24,7 +26,7 @@ img: ../../../../images/2020/1-4/Zero-Copy.png
 
 ## 用户态直接IO
 
-<div align=center><img width="720" height="460" src="../../../../images/2020/1-4/Direct-IO.jpg" algin="center"/></div>
+<div align=center><img src="../../../../images/2020/1-4/Direct-IO.jpg" algin="center"/></div>
 
 对于这种数据传输方式来说，应用程序可以直接访问硬件存储，操作系统内核只是辅助数据传输。这种方式依旧存在用户空间和内核空间的上下文切换，但是硬件上的数据不会拷贝一份到内核空间，而是直接拷贝至了用户空间，因此直接I/O不存在内核空间缓冲区和用户空间缓冲区之间的数据拷贝。
 
@@ -42,7 +44,7 @@ buf = mmap(diskfd, len);
 write(sockfd, buf, len);
 ```
 
-<div align=center><img width="720" height="460" src="../../../../images/2020/1-4/mmap.jpg" algin="center"/></div>
+<div align=center><img src="../../../../images/2020/1-4/mmap.jpg" algin="center"/></div>
 
 ### **过程**
 
@@ -62,7 +64,7 @@ mmap隐藏着一个陷阱，当mmap一个文件时，如果这个文件被另一
 
 为了简化用户接口，同时减少CPU的拷贝次数，Linux 在版本 2.1 中引入了sendfile()系统调用。
 
-<div align=center><img width="720" height="460" src="../../../../images/2020/1-4/sendfile-1.jpg" algin="center"/></div>
+<div align=center><img src="../../../../images/2020/1-4/sendfile-1.jpg" algin="center"/></div>
 
 ### 过程
 
@@ -80,7 +82,7 @@ sendfile() 系统调用不需要将数据拷贝或者映射到应用程序地址
 
 常规sendfile还有一次内核态的拷贝操作，使用DMA辅助的sendfile可以把这次拷贝操作消除。
 
-<div align=center><img width="720" height="460" src="../../../../images/2020/1-4/sendfile-2.jpg" algin="center"/></div>
+<div align=center><img src="../../../../images/2020/1-4/sendfile-2.jpg" algin="center"/></div>
 
 ### 过程
 
@@ -101,7 +103,7 @@ sendfile() 系统调用不需要将数据拷贝或者映射到应用程序地址
 
 splice去掉sendfile的使用范围限制，可以用于任意两个文件描述符中传输数据。
 
-<div align=center><img width="720" height="460" src="../../../../images/2020/1-4/splice.jpg" algin="center"/></div>
+<div align=center><img src="../../../../images/2020/1-4/splice.jpg" algin="center"/></div>
 
 ### 过程
 
@@ -122,4 +124,4 @@ splice去掉sendfile的使用范围限制，可以用于任意两个文件描述
 
 Java NIO的**FileChannel.transferFrom()、FileChannel.transferTo()**底层基于**sendfile/splice**，不仅可以进行网络文件传输，还可以对本地文件实现零拷贝操作。
 
-<div align=center><img width="720" height="460" src="../../../../images/2020/1-4/java-nio.jpg" algin="center"/></div>
+<div align=center><img src="../../../../images/2020/1-4/java-nio.jpg" algin="center"/></div>

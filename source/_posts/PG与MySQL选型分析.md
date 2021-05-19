@@ -3,6 +3,7 @@ title: PG与MySQL选型分析
 date: 2018-08-07 10:50:58
 tags: [pg,mysql]
 categories: 数据库
+cover: ../../../../images/2018-8/pg-vs-mysql/pg_vs_mysql.jpg
 ---
 # 引言
 PostgreSQL(简称pg)是近几年增长率较快的开源数据库，很多企业由原来的MySQL转向pg，在这里对比这两大开源关系型数据库的优劣，以便使用时快速选型。

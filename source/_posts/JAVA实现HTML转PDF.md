@@ -3,6 +3,7 @@ title: JAVA实现HTML转PDF
 date: 2017-07-27 13:22:32
 tags: [java, tips]
 categories: 后端
+cover: ../../../../images/2017-9-13/additional/html_to_pdf.png
 ---
 
 ​	最近公司里面有一个任务，在线题卡，就是把客户在线编辑的题卡样式保存下来，然后可以导出为PDF格式。于是上网找了一系列的资料，找到了以下两种方法：

@@ -3,6 +3,7 @@ title: Javascript Number类型长度溢出
 date: 2019-09-19 10:36:39
 tags: [java]
 categories: 踩坑记录
+cover: ../../../../images/2018-8/bug.jpg
 ---
 
 # 引言
@@ -11,7 +12,7 @@ categories: 踩坑记录
 
 解决方案：使用Spring自定义Json序列化方式，将过长的Long类型转成String类型。
 
-<div align=center><img width="420" height="220" src="../../../../images/2018-8/bug.jpg" algin="center"/></div>
+<div align=center><img src="../../../../images/2018-8/bug.jpg" algin="center"/></div>
 
 # 默认序列化配置
 
@@ -102,7 +103,7 @@ public class CustomLongConverter extends StdSerializer<Long> {
 }
 ```
 
-需要注册到ObjectMapper中
+需要注册到`ObjectMapper`中
 
 ```java
 public class ObjectMapperConverter extends ObjectMapper {

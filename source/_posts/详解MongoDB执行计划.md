@@ -4,6 +4,7 @@ date: 2019-04-21 09:54:43
 tags: [MongoDB]
 categories: 数据库
 img: ../../../../images/2019/4-6/MongoDB-explain.png
+cover: ../../../../images/2019/4-6/MongoDB-explain.png
 ---
 
 # 引言

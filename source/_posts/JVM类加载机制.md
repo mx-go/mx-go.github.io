@@ -3,13 +3,14 @@ title: JVM类加载机制
 date: 2017-12-13 10:03:36
 tags: [java, jvm]
 categories: 后端
+cover: ../../../../images/2017/12/ClassLoader/0.png
 ---
 
 # 引言
 
 之前的博客说了Java虚拟机的运行时数据区域、GC算法、垃圾回收器等知识。距离深入了解还有一段距离，包括虚拟机的类加载机制、性能调优、线程并发等等还都没有涉及到，一直在看周志明的《深入理解Java虚拟机》，越深入去读发现这本书写的真的是经典，解决了自己很多的疑惑。
 
-JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内存中，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。<div align=center><img width="700" height="300" src="../../../../images/2017/12/ClassLoader/0.png" algin="center"/>
+JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内存中，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。<div align=center><img src="../../../../images/2017/12/ClassLoader/0.png" algin="center"/>
 
 </div><!-- more -->
 
@@ -17,10 +18,7 @@ JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内
 
 类被加载到虚拟机内存中开始，到卸载出内存为止。它的生命周期分7个阶段，加载（Loading）、验证（Verification）、准备（Preparation）、解析（Resolution）、初始化（Initialization）、使用（Using）、卸载（Unloading）。其中验证、准备、解析三个部分统称为连接（Linking）。
 
-<div align=center><img width="700" height="300" src="../../../../images/2017/12/ClassLoader/2.png" algin="center"/>
-
-</div>
-
+<div align=center><img src="../../../../images/2017/12/ClassLoader/2.png" algin="center"/></div>
 ## 加载
 
 1. 通过一个类的全限定名来获取定义此类的二进制字节流。
@@ -76,9 +74,7 @@ JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内
 
 下表列出了Java中所有基本数据类型以及reference类型的默认零值：
 
-<div align=center><img width="300" height="300" src="../../../../images/2017/12/ClassLoader/defaultValue.png"/>
-
-</div>
+<div align=center><img src="../../../../images/2017/12/ClassLoader/defaultValue.png"/></div>
 
 ```
 注意：
@@ -133,9 +129,9 @@ JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内
 
 # 双亲委派模型
 
-<div align=center><img width="700" height="300" src="../../../../images/2017/12/ClassLoader/3.jpg" algin="center"/>
+<div align=center><img src="../../../../images/2017/12/ClassLoader/3.jpg" algin="center"/>
 
-</div>
+<div align=center><img src="../../../../images/2020/1-4/java-nio.jpg" algin="center"/></div>
 
 如上图所示的类加载器之间的这种层次关系，就称为**类加载器的双亲委派模型**（Parent Delegation Model）。该模型要求除了顶层的启动类加载器外，其余的类加载器都应当有自己的父类加载器。子类加载器和父类加载器不是以继承（Inheritance）的关系来实现，而是通过组合（Composition）关系来复用父加载器的代码。
 
@@ -184,4 +180,4 @@ protected synchronized Class<?> loadClass(String name, boolean resolve)   throws
 
 # 总结
 
-整个类加载过程中，除了在加载阶段用户应用程序可以自定义类加载器参与之外，其余所有的动作完全由虚拟机主导和控制。到了初始化才开始执行类中定义的Java程序代码，但这里的执行代码只是个开端，它仅限于<clinit>（）方法。类加载过程中主要是将Class文件（准确地讲，应该是类的二进制字节流）加载到虚拟机内存中，真正执行字节码的操作，在加载完成后才真正开始。
+整个类加载过程中，除了在加载阶段用户应用程序可以自定义类加载器参与之外，其余所有的动作完全由虚拟机主导和控制。到了初始化才开始执行类中定义的Java程序代码，但这里的执行代码只是个开端，它仅限于<clinit>()方法。类加载过程中主要是将Class文件（准确地讲，应该是类的二进制字节流）加载到虚拟机内存中，真正执行字节码的操作，在加载完成后才真正开始。

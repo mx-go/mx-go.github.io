@@ -4,6 +4,7 @@ date: 2019-01-17 10:17:20
 tags: [MongoDB]
 categories: 数据库
 img: ../../../../images/2019/1-3/MongoDB-1.jpg
+cover: ../../../../images/2019/1-3/MongoDB-1.jpg
 ---
 
 # 引言

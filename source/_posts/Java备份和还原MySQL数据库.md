@@ -3,6 +3,7 @@ title: Java备份和还原MySQL数据库
 date: 2017-09-24 17:43:10
 tags: [java, mysql]
 categories: 数据库
+cover: ../../../../images/2017-9-21/MySQLbackUpAndRestore/mysql-index.png
 ---
 
 # 引言
