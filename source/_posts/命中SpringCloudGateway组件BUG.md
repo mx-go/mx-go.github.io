@@ -157,6 +157,7 @@ Dump堆内存下来也没有发现有什么问题
                     .flatMap(dataBuffer -> {
                         byte[] bytes = new byte[dataBuffer.readableByteCount()];
                         dataBuffer.read(bytes);
+                      // 释放堆外内存
                         DataBufferUtils.release(dataBuffer);
                         ServerHttpRequest mutatedRequest = new ServerHttpRequestDecorator(exchange.getRequest()) {
                             @Override
