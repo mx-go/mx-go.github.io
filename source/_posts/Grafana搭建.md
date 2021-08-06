@@ -57,17 +57,21 @@ rpm -Uvh grafana-v7.4.2.rpm
 
 ## 配置
 
+grafana配置详解：https://grafana.com/docs/grafana/latest/administration/configuration/
+
 ```shell
 cp grafana.ini /etc/grafana
 ```
 
 > grafana.ini文件主要需要关注的配置为
 >
-> domain = 当前IP地址
+> domain = 当前域名
 >
 > http_port = 80
 >
 > enable_gzip = true
+>
+> auth.anonymous enabled = false
 
 ## 服务操作命令
 
