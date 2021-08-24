@@ -22,15 +22,15 @@ cover: ../../../../images/2020/9-12/loki-logo.jpg
 
 ## Loki架构
 
-1. `Promtail`收集并将日志发送给Loki的Distributor组件；
+1. `Promtail`收集并将日志发送给`Loki`的`Distributor`组件；
 
-2. `Distributor`会对接收到的日志流进行正确性校验，并将验证后的日志分批并行发送到Ingester；
+2. `Distributor`会对接收到的日志流进行正确性校验，并将验证后的日志分批并行发送到`Ingester`；
 
 3. `Ingester`接受日志流并构建数据块，压缩后存放到所连接的存储后端；
 
-4. `Querier`收到HTTP查询请求，并将请求发送至Ingester用以获取内存数据 ，Ingester收到请求后返回符合条件的数据 ；
+4. `Querier`收到HTTP查询请求，并将请求发送至`Ingester`用以获取内存数据 ，`Ingester`收到请求后返回符合条件的数据 ；
 
-如果Ingester没有返回数据，Querier会从后端存储加载数据并遍历去重执行查询 ，通过HTTP返回查询结果。
+如果Ingester没有返回数据，`Querier`会从后端存储加载数据并遍历去重执行查询 ，通过HTTP返回查询结果。
 
 <div align=center><img src="../../../../images/2020/9-12/loki-architecture.jpg" algin="center"/></div>
 
@@ -38,9 +38,9 @@ cover: ../../../../images/2020/9-12/loki-logo.jpg
 
 # 安装包下载
 
-`Loki`安装包下载地址【loki-linux-amd64.zip】：https://github.com/grafana/loki/releases
+`Loki`安装包下载地址【**loki-linux-amd64.zip**】：https://github.com/grafana/loki/releases
 
-`Promtail`安装包下载地址【promtail-linux-amd64.zip】：https://github.com/grafana/loki/releases
+`Promtail`安装包下载地址【**promtail-linux-amd64.zip**】：https://github.com/grafana/loki/releases
 
 # Loki
 
