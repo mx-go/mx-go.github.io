@@ -1,6 +1,6 @@
 ---
 title: Docker常用命令总结
-date: 2021-07-20 20:28:49
+date: 2021-08-20 20:28:49
 tags: [docker]
 categories: 
 - [工具]
@@ -72,6 +72,9 @@ docker官方镜像地址：[https://hub.docker.com](https://hub.docker.com/)
 | docker logs <容器ID>                         | 查看容器日志         |
 | docker cp <本机文件> <容器ID>:<容器文件路径> | 拷贝宿主机文件到容器 |
 | docker cp <容器ID>:<容器文件> <本机路径>     | 拷贝容器文件到宿主机 |
+| docker volume ls                             | 查看挂载卷列表       |
+| docker inspect <volume名称>                  | 查看挂载卷详情       |
+| docker volume prune                          | 清理无效挂载卷       |
 
 # 常用镜像
 
@@ -87,28 +90,28 @@ docker官方镜像地址：[https://hub.docker.com](https://hub.docker.com/)
 ```shell
 # windows环境安装。使用手册见 https://hub.docker.com/r/portainer/portainer-ce
 # 访问端口为9000
-docker run -d -p 9000:9000 --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data -v \\.\pipe\docker_engine:\\.\pipe\docker_engine --name prtainer --net mynet portainer/portainer-ce
+docker run -d -p 9000:9000 --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data -v \\.\pipe\docker_engine:\\.\pipe\docker_engine --name prtainer portainer/portainer-ce
 ```
 
 ## MySQL
 
 ```shell
 # 数据库密码为123456
-docker run -d -p 3306:3306 -v G:\volumes\mysql\conf:/etc/mysql/conf.d -v G:\volumes\mysql\data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 --name mysql --net mynet mysql:8.0.26
+docker run -d -p 3306:3306 -v G:\volumes\mysql\conf:/etc/mysql/conf.d -v G:\volumes\mysql\data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 --name mysql mysql:8.0.26
 ```
 
 ## Grafana
 
 ```shell
 # 访问端口为3000
-docker run -d -p 3000:3000 --name grafana --net mynet grafana/grafana
+docker run -d -p 3000:3000 --name grafana grafana/grafana
 ```
 
 ## Nacos
 
 ```shell
 # 访问端口为8848
-docker run -dp 8848:8848 -e MODE=standalone --name nacos --net mynet nacos/nacos-server:latest
+docker run -dp 8848:8848 -e MODE=standalone --name nacos nacos/nacos-server:latest
 ```
 
 ## xxl-job
@@ -118,7 +121,7 @@ docker run -dp 8848:8848 -e MODE=standalone --name nacos --net mynet nacos/nacos
 
 ```groovy
 // 访问端口为9090。挂载配置路径为G:\volumes\xxl-job\application.properties
-docker run -dp 9090:9090 -v G:\volumes\xxl-job\application.properties:/application.properties -e PARAMS='--spring.config.location=/application.properties' --name xxl-job-admin --net mynet xuxueli/xxl-job-admin:2.3.0
+docker run -dp 9090:9090 -v G:\volumes\xxl-job\application.properties:/application.properties -e PARAMS='--spring.config.location=/application.properties' --name xxl-job-admin xuxueli/xxl-job-admin:2.3.0
 ```
 
 ## ElasticSearch相关

@@ -48,10 +48,21 @@ highlight:
 # search
 algolia:
   applicationID: 'BPJ9SXT7ZR'
-  apiKey: '1e6680e95b88762ed1d26a076986b922'
+  apiKey: '361b6069a16dee1e14d36408c5b11773'
   adminApiKey: 'aac678c4994c5ac80601d89269c92f79'
   indexName: 'blog'
   chunkSize: 5000
+  fields:
+    - content:strip:truncate,0,500
+    - excerpt:strip
+    - gallery
+    - permalink
+    - photos
+    - slug
+    - tags
+    - title
+plugins:
+  - hexo-algoliasearch
 
 # Category & Tag
 default_category: uncategorized
