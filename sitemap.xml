@@ -669,13 +669,6 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/tools/</loc>
-    <lastmod>2021-12-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://mx-go.github.io/tags/docker/</loc>
     <lastmod>2021-12-26</lastmod>
     <changefreq>daily</changefreq>
@@ -684,6 +677,13 @@
   
   <url>
     <loc>https://mx-go.github.io/tags/grafana/</loc>
+    <lastmod>2021-12-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mx-go.github.io/tags/tools/</loc>
     <lastmod>2021-12-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -739,7 +739,7 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/redis/</loc>
+    <loc>https://mx-go.github.io/tags/mybatis/</loc>
     <lastmod>2021-12-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -753,7 +753,7 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/mybatis/</loc>
+    <loc>https://mx-go.github.io/tags/redis/</loc>
     <lastmod>2021-12-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -781,14 +781,14 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/bug/</loc>
+    <loc>https://mx-go.github.io/tags/%E9%9A%8F%E7%AC%94/</loc>
     <lastmod>2021-12-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/%E9%9A%8F%E7%AC%94/</loc>
+    <loc>https://mx-go.github.io/tags/bug/</loc>
     <lastmod>2021-12-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -804,14 +804,14 @@
 
   
   <url>
-    <loc>https://mx-go.github.io/categories/%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/</loc>
+    <loc>https://mx-go.github.io/categories/%E5%B7%A5%E5%85%B7/</loc>
     <lastmod>2021-12-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/categories/%E5%B7%A5%E5%85%B7/</loc>
+    <loc>https://mx-go.github.io/categories/%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/</loc>
     <lastmod>2021-12-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
