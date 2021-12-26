@@ -1,0 +1,340 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>大话数据库连接池 | 彩虹马的博客</title><meta name="keywords" content="sql"><meta name="author" content="彩虹马"><meta name="copyright" content="彩虹马"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="引言数据库连接池在Java数据库相关中间件产品群中，应该算是最底层最基础的一类产品，作为企业应用开发必不可少的组件，无数开发者们贡献了一个又一个的优秀产品，它们有的随着时代发展，功成身退，有的还在不断迭代，老而弥坚，更有新生代产品，或性能无敌、或功能全面。接下来就聊一聊  “那些年，我们用过的数据库连接池。” 第一、二代连接池区分一个数据库连接池是属于第一代产品还是代二代产品有一个最重要的特征就是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大话数据库连接池">
+<meta property="og:url" content="https://mx-go.github.io/%E5%A4%A7%E8%AF%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/index.html">
+<meta property="og:site_name" content="彩虹马的博客">
+<meta property="og:description" content="引言数据库连接池在Java数据库相关中间件产品群中，应该算是最底层最基础的一类产品，作为企业应用开发必不可少的组件，无数开发者们贡献了一个又一个的优秀产品，它们有的随着时代发展，功成身退，有的还在不断迭代，老而弥坚，更有新生代产品，或性能无敌、或功能全面。接下来就聊一聊  “那些年，我们用过的数据库连接池。” 第一、二代连接池区分一个数据库连接池是属于第一代产品还是代二代产品有一个最重要的特征就是">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mx-go.github.io/images/2018-02/dataSource/index.jpg">
+<meta property="article:published_time" content="2018-02-06T09:50:49.000Z">
+<meta property="article:modified_time" content="2021-05-11T00:17:29.841Z">
+<meta property="article:author" content="彩虹马">
+<meta property="article:tag" content="sql">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mx-go.github.io/images/2018-02/dataSource/index.jpg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://mx-go.github.io/%E5%A4%A7%E8%AF%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.js" defer></script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"BPJ9SXT7ZR","apiKey":"361b6069a16dee1e14d36408c5b11773","indexName":"blog","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: {"limitDay":800,"position":"top","messagePrev":"本文于","messageNext":"天之前发表，文中内容可能已经过时。"},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 彩虹马","link":"链接: ","source":"来源: 彩虹马的博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '大话数据库连接池',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-11 08:17:29'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src= "/img/loading.gif" data-lazy-src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">89</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-bars"></i><span> 其他</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E7%BD%91%E5%9D%80%E6%94%B6%E8%97%8F/"><i class="fa-fw fas fa-sitemap"></i><span> 网址收藏</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://fontawesome.dashgame.com/"><i class="fa-fw fas fa-flag"></i><span> 图标速查</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/../../../../images/2018-02/dataSource/index.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">彩虹马的博客</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-bars"></i><span> 其他</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E7%BD%91%E5%9D%80%E6%94%B6%E8%97%8F/"><i class="fa-fw fas fa-sitemap"></i><span> 网址收藏</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://fontawesome.dashgame.com/"><i class="fa-fw fas fa-flag"></i><span> 图标速查</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">大话数据库连接池</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2018-02-06T09:50:49.000Z" title="undefined 2018-02-06 17:50:49">2018-02-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%90%8E%E7%AB%AF/">后端</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="大话数据库连接池"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>数据库连接池在Java数据库相关中间件产品群中，应该算是最底层最基础的一类产品，作为企业应用开发必不可少的组件，无数开发者们贡献了一个又一个的优秀产品，它们有的随着时代发展，功成身退，有的还在不断迭代，老而弥坚，更有新生代产品，或性能无敌、或功能全面。接下来就聊一聊  “那些年，我们用过的数据库连接池。”<div  align=center><img src= "/img/loading.gif" data-lazy-src="../../../../images/2018-02/dataSource/index.jpg" algin="center"/></div></p>
+<h1 id="第一、二代连接池"><a href="#第一、二代连接池" class="headerlink" title="第一、二代连接池"></a>第一、二代连接池</h1><p>区分一个数据库连接池是属于第一代产品还是代二代产品有一个最重要的特征就是看它在架构和设计时采用的线程模型，因为这直接影响的是并发环境下存取数据库连接的性能。</p>
+<p>一般来讲采用单线程同步的架构设计都属于第一代连接池，二采用多线程异步架构的则属于第二代。比较有代表性的就是Apache Commons DBCP，在1.x版本中，一直延续着单线程设计模式，到2.x才采用多线程模型。</p>
+<p>用版本发布时间来辨别区分两代产品，则一个偷懒的好方法。以下是这些常见数据库连接池最新版本的发布时间：</p>
+<table>
+<thead>
+<tr>
+<th>数据库连接池</th>
+<th>最新版本</th>
+<th>发布时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>C3P0</td>
+<td>c3p0-0.9.5.2</td>
+<td>on 9 Dec 2015</td>
+</tr>
+<tr>
+<td>DBCP</td>
+<td>2.2.0</td>
+<td>27 December 2017</td>
+</tr>
+<tr>
+<td>Druid</td>
+<td>0.11.0</td>
+<td>Dec 4 2017</td>
+</tr>
+<tr>
+<td>HikariCP</td>
+<td>2.7.6</td>
+<td>2018-01-14</td>
+</tr>
+</tbody></table>
+<p>从表中可以看出，C3P0已经很久没有更新了。DBCP更新速度很慢，基本处于不活跃状态，而Druid和HikariCP处于活跃状态的更新中，这就是我们说的二代产品了。</p>
+<p>二代产品对一代产品的超越是颠覆性的，除了一些“历史原因”，你很难再找到第二条理由说服自己不选择二代产品，但任何成功都不是偶然的，二代产品的成功很大程度上得益于前代产品们打下的基础，站在巨人的肩膀上，新一代的连接池的设计师们将这一项“工具化”的产品，推向了极致。其中，最具代表性的两款产品是：</p>
+<ul>
+<li>HikariCP</li>
+<li>Druid</li>
+</ul>
+<h1 id="彻底死掉的C3P0"><a href="#彻底死掉的C3P0" class="headerlink" title="彻底死掉的C3P0"></a>彻底死掉的C3P0</h1><p>C3P0是我使用的第一款数据库连接池，在很长一段时间内，它一直是Java领域内数据库连接池的代名词，当年盛极一时的Hibernate都将其作为内置的数据库连接池，可以业内对它的稳定性还是认可的。C3P0功能简单易用，稳定性好这是它的优点，但是性能上的缺点却让它彻底被打入冷宫。C3P0的性能很差，差到即便是同时代的产品相比它也是垫底的，更不用和Druid、HikariCP等相比了。正常来讲，有问题很正常，改就是了，但c3p0最致命的问题就是架构设计过于复杂，让重构变成了一项不可能完成的任务。随着国内互联网大潮的涌起，性能有硬伤的c3p0彻底的退出了历史舞台。</p>
+<div align=center><img src= "/img/loading.gif" data-lazy-src="../../../../images/2018-02/dataSource/1.png" algin="center"/>
+</div>
+
+
+<h1 id="咸鱼翻身的DBCP"><a href="#咸鱼翻身的DBCP" class="headerlink" title="咸鱼翻身的DBCP"></a>咸鱼翻身的DBCP</h1><p>DBCP（DataBase Connection Pool）属于Apache顶级项目Commons中的核心子项目（最早在Jakarta Commons里就有）,在Apache的生态圈中的影响里十分广泛，比如最为大家所熟知的Tomcat就在内部集成了DBCP，实现JPA规范的OpenJPA，也是默认集成DBCP的。但DBCP并不是独立实现连接池功能的，它内部依赖于Commons中的另一个子项目Pool，连接池最核心的“池”，就是由Pool组件提供的，因此，DBCP的性能实际上就是Pool的性能，DBCP和Pool的依赖关系如下表：</p>
+<table>
+<thead>
+<tr>
+<th>Apache Commons DBCP</th>
+<th>Apache Commons Pool</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>v1.2.2</td>
+<td>v1.3</td>
+</tr>
+<tr>
+<td>v1.3</td>
+<td>v1.5.4</td>
+</tr>
+<tr>
+<td>v1.4</td>
+<td>v1.5.4</td>
+</tr>
+<tr>
+<td>v2.0.x</td>
+<td>v2.2</td>
+</tr>
+<tr>
+<td>v2.1.x</td>
+<td>v2.4.2</td>
+</tr>
+<tr>
+<td>v2.2.x</td>
+<td>v2.5.0</td>
+</tr>
+</tbody></table>
+<p>可以看到，因为核心功能依赖于Pool，所以DBCP本身只能做小版本的更新，真正大版本的更迭则完全依托于pool。有很长一段时间，pool都还是停留在1.x版本，这直接导致DBCP也更新乏力。很多依赖DBCP的应用在遇到性能瓶颈之后，别无选择，只能将其替换掉，DBCP忠实的拥趸tomcat就在其tomcat 7.0版本中，自己重新设计开发出了一套连接池（Tomcat JDBC Pool）。好在，在2013年事情终于迎来转机，13年9月Commons-Pool 2.0版本发布，14年2月份，DBCP也终于迎来了自己的2.0版本，基于新的线程模型全新设计的“池”让DBCP重焕青春，虽然和新一代的连接池相比仍有一定差距，但差距并不大，DBCP2.x版本已经稳稳达到了和新一代产品同级别的性能指标（见下图）。</p>
+<div align=center><img src= "/img/loading.gif" data-lazy-src="../../../../images/2018-02/dataSource/3.png" algin="center"/>
+
+
+</div>
+
+<p>DBCP终于靠Pool咸鱼翻身，打了一个漂亮的翻身仗，但长时间的等待已经完全消磨了用户的耐心，与新一代的产品项目相比，DBCP没有任何优势，试问，谁会在有选择的前提下，去选择那个并不优秀的呢？也许，现在还选择DBCP2的唯一理由，就是情怀吧。</p>
+<h1 id="性能无敌的HikariCP"><a href="#性能无敌的HikariCP" class="headerlink" title="性能无敌的HikariCP"></a>性能无敌的HikariCP</h1><p>HikariCP号称“性能杀手”（It’s Faster），它的表现究竟如何呢，先来看下官网提供的数据：</p>
+<div align=center><img src= "/img/loading.gif" data-lazy-src="../../../../images/2018-02/dataSource/4.png" algin="center"/>
+
+
+</div>
+
+<p>不光性能强劲，稳定性也不差：</p>
+<div align=center><img src= "/img/loading.gif" data-lazy-src="../../../../images/2018-02/dataSource/5.png" algin="center"/>
+
+
+</div>
+
+<p>那它是怎么做到如此强劲的呢？官网给出的说明如下：</p>
+<ul>
+<li>字节码精简：优化代码，直到编译后的字节码最少，这样，CPU缓存可以加载更多的程序代码；</li>
+<li>优化代理和拦截器：减少代码，例如HikariCP的Statement proxy只有100行代码；</li>
+<li>自定义数组类型（FastStatementList）代替ArrayList：避免每次get()调用都要进行range check，避免调用remove()时的从头到尾的扫描；</li>
+<li>自定义集合类型（ConcurrentBag）：提高并发读写的效率；</li>
+<li>其他缺陷的优化，比如对于耗时超过一个CPU时间片的方法调用的研究（但没说具体怎么优化）。</li>
+</ul>
+<p>可以看到，上述这几点优化，和现在能找到的资料来看，HakariCP在性能上的优势应该是得到共识的，再加上它自身小巧的身形，在当前的“云时代、微服务”的背景下，HakariCP一定会得到更多人的青睐。</p>
+<h1 id="功能全面的Druid"><a href="#功能全面的Druid" class="headerlink" title="功能全面的Druid"></a>功能全面的Druid</h1><p>近几年，阿里在开源项目上动作频频，除了有像fastJson、dubbo这类项目，更有像AliSQL这类的大型软件，今天说的Druid，就是阿里众多优秀开源项目中的一个。它除了提供性能卓越的连接池功能外，还集成了SQL监控，黑名单拦截等功能，用它自己的话说，Druid是“为监控而生”。借助于阿里这个平台的号召力，产品一经发布就赢得了大批用户的拥趸，从用户使用的反馈来看，Druid也确实没让用户失望。</p>
+<p>相较于其他产品，Druid另一个比较大的优势，就是中文文档比较全面（毕竟是国人的项目么），在github的<a target="_blank" rel="noopener" href="https://github.com/alibaba/druid/wiki/%E9%A6%96%E9%A1%B5"><em>wiki页面</em></a>，列举了日常使用中可能遇到的问题，对一个新用户来讲，上面提供的内容已经足够指导它完成产品的配置和使用了。</p>
+<p>下图为Druid自己提供的性能测试数据：</p>
+<div align=center><img src= "/img/loading.gif" data-lazy-src="../../../../images/2018-02/dataSource/6.png" algin="center"/>
+
+</div>
+
+<p>现在项目开发中，我还是比较倾向于使用Durid，它不仅仅是一个数据库连接池，它还包含一个ProxyDriver，一系列内置的JDBC组件库，一个SQL Parser。</p>
+<h2 id="Druid-相对于其他数据库连接池的优点"><a href="#Druid-相对于其他数据库连接池的优点" class="headerlink" title="Druid 相对于其他数据库连接池的优点"></a>Druid 相对于其他数据库连接池的优点</h2><ol>
+<li><p>强大的监控特性，通过Druid提供的监控功能，可以清楚知道连接池和SQL的工作情况。</p>
+<p>a. 监控SQL的执行时间、ResultSet持有时间、返回行数、更新行数、错误次数、错误堆栈信息；</p>
+<p>b. SQL执行的耗时区间分布。什么是耗时区间分布呢？比如说，某个SQL执行了1000次，其中0<del>1毫秒区间50次，1</del>10毫秒800次，10<del>100毫秒100次，100</del>1000毫秒30次，1~10秒15次，10秒以上5次。通过耗时区间分布，能够非常清楚知道SQL的执行耗时情况；</p>
+<p>c.  监控连接池的物理连接创建和销毁次数、逻辑连接的申请和关闭次数、非空等待次数、PSCache命中率等。</p>
+</li>
+<li><p>方便扩展。Druid提供了Filter-Chain模式的扩展API，可以自己编写Filter拦截JDBC中的任何方法，可以在上面做任何事情，比如说性能监控、SQL审计、用户名密码加密、日志等等。</p>
+</li>
+<li><p>Druid集合了开源和商业数据库连接池的优秀特性，并结合阿里巴巴大规模苛刻生产环境的使用经验进行优化。</p>
+</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>时至今日，虽然每个应用（需要RDBMS的）都离不开连接池，但在实际使用的时候，连接池已经可以做到“隐形”了。也就是说在通常情况下，连接池完成项目初始化配置之后，就再不需要再做任何改动了。不论你是选择Druid或是HikariCP，甚至是DBCP，它们都足够稳定且高效！之前讨论了很多关于连接池的性能的问题，但这些性能上的差异，是相较于其他连接池而言的，对整个系统应用来说，第二代连接池在使用过程中体会到的差别是微乎其微的，基本上不存在因为连接池的自身的配饰和使用导致系统性能下降的情况，除非是在单点应用的数据库负载足够高的时候（压力测试的时候），但即便是如此，通用的优化的方式也是单点改集群，而不是在单点的连接池上死扣。</p>
+<p><strong>参考</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=http://blog.csdn.net/hetaohappy/article/details/50462486"><em>数据库连接池性能比对</em></a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/53de4b76f98c"><em>大话数据库连接池</em></a></li>
+<li><a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=http://blog.csdn.net/whzhaochao/article/details/49559931"><em>c3p0,Druid,Tomcat Jdbc Pool,dbcp2,proxool数据源性能比较</em></a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">彩虹马</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://mx-go.github.io/%E5%A4%A7%E8%AF%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/">https://mx-go.github.io/大话数据库连接池/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://mx-go.github.io" target="_blank">彩虹马的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/sql/">sql</a></div><div class="post_share"><div class="social-share" data-image="/../../../../images/2018-02/dataSource/index.jpg" data-sites="weibo"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/reward-wepay.jpg" target="_blank"><img class="post-qr-code-img" src= "/img/loading.gif" data-lazy-src="/img/reward-wepay.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/Sping%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/"><img class="prev-cover" src= "/img/loading.gif" data-lazy-src="/../../../../images/2018-03/quartz/index.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Sping定时任务</div></div></a></div><div class="next-post pull-right"><a href="/Nginx%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/"><img class="next-cover" src= "/img/loading.gif" data-lazy-src="/../../../../images/2018-01/nginx/index.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Nginx配置文件详解</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/UML工具-PowerDesigner设计数据库/" title="UML工具-PowerDesigner设计数据库"><img class="cover" src= "/img/loading.gif" data-lazy-src="/../../../../images/2017/12/PowerDesigner/logo-powerdesigner.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2017-12-06</div><div class="title">UML工具-PowerDesigner设计数据库</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src= "/img/loading.gif" data-lazy-src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">彩虹马</div><div class="author-info__description">总结个人心得，记录个人知识</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">89</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mx-go"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/mx-go" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:mx_sunny@sina.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">一个收藏回忆与分享技术的地方！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E3%80%81%E4%BA%8C%E4%BB%A3%E8%BF%9E%E6%8E%A5%E6%B1%A0"><span class="toc-number">2.</span> <span class="toc-text">第一、二代连接池</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BD%BB%E5%BA%95%E6%AD%BB%E6%8E%89%E7%9A%84C3P0"><span class="toc-number">3.</span> <span class="toc-text">彻底死掉的C3P0</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%92%B8%E9%B1%BC%E7%BF%BB%E8%BA%AB%E7%9A%84DBCP"><span class="toc-number">4.</span> <span class="toc-text">咸鱼翻身的DBCP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%97%A0%E6%95%8C%E7%9A%84HikariCP"><span class="toc-number">5.</span> <span class="toc-text">性能无敌的HikariCP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E5%85%A8%E9%9D%A2%E7%9A%84Druid"><span class="toc-number">6.</span> <span class="toc-text">功能全面的Druid</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Druid-%E7%9B%B8%E5%AF%B9%E4%BA%8E%E5%85%B6%E4%BB%96%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-number">6.1.</span> <span class="toc-text">Druid 相对于其他数据库连接池的优点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E4%B9%8BCompletableFuture/" title="异步编程之CompletableFuture"><img src= "/img/loading.gif" data-lazy-src="/../../../../images/2021/10-12/completablefuture-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="异步编程之CompletableFuture"/></a><div class="content"><a class="title" href="/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E4%B9%8BCompletableFuture/" title="异步编程之CompletableFuture">异步编程之CompletableFuture</a><time datetime="2021-09-25T15:01:04.000Z" title="发表于 2021-09-25 23:01:04">2021-09-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/" title="Docker常用命令总结"><img src= "/img/loading.gif" data-lazy-src="/../../../../images/2021/7-9/docker-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker常用命令总结"/></a><div class="content"><a class="title" href="/Docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/" title="Docker常用命令总结">Docker常用命令总结</a><time datetime="2021-08-20T12:28:49.000Z" title="发表于 2021-08-20 20:28:49">2021-08-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85docker%E4%B8%8Edocker-compose/" title="离线安装docker与docker-compose"><img src= "/img/loading.gif" data-lazy-src="/../../../../images/2021/10-12/docker-cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="离线安装docker与docker-compose"/></a><div class="content"><a class="title" href="/%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85docker%E4%B8%8Edocker-compose/" title="离线安装docker与docker-compose">离线安装docker与docker-compose</a><time datetime="2021-07-23T07:20:10.000Z" title="发表于 2021-07-23 15:20:10">2021-07-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E8%B8%A9%E5%9D%91/" title="线程池踩坑"><img src= "/img/loading.gif" data-lazy-src="/../../../../images/2018-8/bug.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="线程池踩坑"/></a><div class="content"><a class="title" href="/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E8%B8%A9%E5%9D%91/" title="线程池踩坑">线程池踩坑</a><time datetime="2021-06-04T00:25:58.000Z" title="发表于 2021-06-04 08:25:58">2021-06-04</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/../../../../images/2018-02/dataSource/index.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2017 - 2021 By 彩虹马</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="algolia-search"><div class="search-dialog"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (true){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/algolia.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '8rKac39CM1EjFl9q7i97aDSu-gzGzoHsz',
+      appKey: '5wiSIVcjJCXPwgEwOqK8GaoJ',
+      placeholder: '说点什么吧',
+      avatar: 'monsterid',
+      meta: 'nick,mail'.split(','),
+      pageSize: '20',
+      lang: 'zh-CN',
+      recordIP: true,
+      serverURLs: 'https://8rkac39c.lc-cn-n1-shared.com',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: false,
+      path: window.location.pathname,
+      requiredFields: ["nick"],
+      visitor: true
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
