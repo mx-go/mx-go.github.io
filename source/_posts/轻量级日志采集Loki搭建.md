@@ -30,7 +30,7 @@ cover: ../../../../images/2020/9-12/loki-logo.jpg
 
 4. `Querier`收到HTTP查询请求，并将请求发送至`Ingester`用以获取内存数据 ，`Ingester`收到请求后返回符合条件的数据 ；
 
-如果Ingester没有返回数据，`Querier`会从后端存储加载数据并遍历去重执行查询 ，通过HTTP返回查询结果。
+如果`Ingester`没有返回数据，`Querier`会从后端存储加载数据并遍历去重执行查询 ，通过`HTTP`返回查询结果。
 
 <div align=center><img src="../../../../images/2020/9-12/loki-architecture.jpg" algin="center"/></div>
 
@@ -146,6 +146,7 @@ positions:
   filename: /tmp/positions.yaml
 
 clients:
+    ## loki.host为Loki服务地址
   - url: http://loki.host/loki/api/v1/push
 
 scrape_configs:
@@ -154,9 +155,13 @@ scrape_configs:
   - targets:
       - localhost
     labels:
+      ## 系统编码
       systemcode: ${SYSTEM_CODE}
+      ## 服务名称
       servicename: ${SERVICE_DLE_NAME}
+      ## 实例名称
       instance: ${HOSTNAME}
+      ## 采集日志路径
       __path__: /app/deploy/logs/*-warn.log
 ```
 
@@ -176,7 +181,7 @@ nohup ./promtail -config.expand-env=true -config.file=promtail-config.yaml &
 
 {% label 其中-config.expand-env=true标识可从环境变量中取值。 red %}
 
-脚本自动从`Maven`拉取`zip`包并解压，`zip`包中需包含 **promtail**、**promtail-config.yaml**文件
+脚本自动从`Maven`仓库(可换为其他地址)拉取`zip`包并解压，`zip`包中需包含 **promtail**、**promtail-config.yaml**文件
 
 # 验证
 
