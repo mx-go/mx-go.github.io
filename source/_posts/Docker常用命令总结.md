@@ -114,7 +114,7 @@ docker run -d -p 3000:3000 --name grafana grafana/grafana
 docker run -dp 8848:8848 -e MODE=standalone --name nacos nacos/nacos-server:latest
 ```
 
-## xxl-job
+## Xxl-job
 
 1. 需要在本地新建挂载文件 application.properties。 路径为[https://github.com/xuxueli/xxl-job/blob/master/xxl-job-admin/src/main/resources/application.properties](https://github.com/xuxueli/xxl-job/blob/master/xxl-job-admin/src/main/resources/application.properties)
 1. 修改MySQL的用户名和密码
