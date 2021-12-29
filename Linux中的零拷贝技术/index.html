@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://mx-go.github.io/images/2020/1-4/Zero-Copy.png">
 <meta property="article:published_time" content="2020-02-10T04:02:58.000Z">
-<meta property="article:modified_time" content="2021-12-29T14:12:54.564Z">
+<meta property="article:modified_time" content="2021-12-29T14:39:32.555Z">
 <meta property="article:author" content="彩虹马">
 <meta property="article:tag" content="tips">
 <meta name="twitter:card" content="summary">
@@ -58,7 +58,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2021-12-29 22:12:54'
+  postUpdate: '2021-12-29 22:39:32'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -144,7 +144,7 @@
 <h1 id="零拷贝思想"><a href="#零拷贝思想" class="headerlink" title="零拷贝思想"></a>零拷贝思想</h1><p>零拷贝是一个通过尽量避免拷贝操作来缓解CPU压力的解决方案。Linux下常见的零拷贝技术可以分为两大类：一是针对特定场景，去掉不必要的拷贝；二是去优化整个拷贝的过程。零拷贝并没有真正做到“0”拷贝，它更多是一种思想，很多的零拷贝技术都是基于这个思想去做的优化。</p>
 <h1 id="原始数据拷贝"><a href="#原始数据拷贝" class="headerlink" title="原始数据拷贝"></a>原始数据拷贝</h1><div align=center><img src= "/img/loading.gif" data-lazy-src="../../../../images/2020/1-4/Traditional-copy.jpg" algin="center"/></div>
 
-<p>传统数据拷贝产生了四次数据拷贝，即使使用了**DMA(Direct Memory Access)**处理了硬件的通讯，CPU仍然需要处理两次数据拷贝。同时，CPU在用户态和内核态也发生了多次上下文切换，增加了CPU的负担。在此过程中，如果没有对数据做任何修改，那么在内核态和用户态间来回拷贝数据就是一种浪费。</p>
+<p>传统数据拷贝产生了四次数据拷贝，即使使用了<code>DMA(Direct Memory Access)</code>处理了硬件的通讯，CPU仍然需要处理两次数据拷贝。同时，CPU在用户态和内核态也发生了多次上下文切换，增加了CPU的负担。在此过程中，如果没有对数据做任何修改，那么在内核态和用户态间来回拷贝数据就是一种浪费。</p>
 <h1 id="零拷贝的几种方法"><a href="#零拷贝的几种方法" class="headerlink" title="零拷贝的几种方法"></a>零拷贝的几种方法</h1><h2 id="用户态直接IO"><a href="#用户态直接IO" class="headerlink" title="用户态直接IO"></a>用户态直接IO</h2><div align=center><img src= "/img/loading.gif" data-lazy-src="../../../../images/2020/1-4/Direct-IO.jpg" algin="center"/></div>
 
 <p>对于这种数据传输方式来说，应用程序可以直接访问硬件存储，操作系统内核只是辅助数据传输。这种方式依旧存在用户空间和内核空间的上下文切换，但是硬件上的数据不会拷贝一份到内核空间，而是直接拷贝至了用户空间，因此直接I/O不存在内核空间缓冲区和用户空间缓冲区之间的数据拷贝。</p>
