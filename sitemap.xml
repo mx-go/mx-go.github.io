@@ -676,7 +676,7 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/tools/</loc>
+    <loc>https://mx-go.github.io/tags/tips/</loc>
     <lastmod>2021-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -690,14 +690,14 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/grafana/</loc>
+    <loc>https://mx-go.github.io/tags/tools/</loc>
     <lastmod>2021-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/tips/</loc>
+    <loc>https://mx-go.github.io/tags/grafana/</loc>
     <lastmod>2021-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -711,14 +711,14 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/mysql/</loc>
+    <loc>https://mx-go.github.io/tags/cache/</loc>
     <lastmod>2021-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/cache/</loc>
+    <loc>https://mx-go.github.io/tags/mysql/</loc>
     <lastmod>2021-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -818,14 +818,14 @@
 
   
   <url>
-    <loc>https://mx-go.github.io/categories/%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/</loc>
+    <loc>https://mx-go.github.io/categories/%E5%B7%A5%E5%85%B7/</loc>
     <lastmod>2021-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/categories/%E5%B7%A5%E5%85%B7/</loc>
+    <loc>https://mx-go.github.io/categories/%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/</loc>
     <lastmod>2021-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
