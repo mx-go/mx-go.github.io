@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://mx-go.github.io/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E4%B9%8BCompletableFuture/</loc>
+    <lastmod>2022-01-09</lastmod>
+  </url>
+  <url>
     <loc>https://mx-go.github.io/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E4%B9%8BExecutorCompletionService/</loc>
     <lastmod>2022-01-09</lastmod>
   </url>
@@ -19,10 +23,6 @@
   <url>
     <loc>https://mx-go.github.io/Maven%E4%BE%9D%E8%B5%96%E5%86%B2%E7%AA%81/</loc>
     <lastmod>2022-01-05</lastmod>
-  </url>
-  <url>
-    <loc>https://mx-go.github.io/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E4%B9%8BCompletableFuture/</loc>
-    <lastmod>2022-01-03</lastmod>
   </url>
   <url>
     <loc>https://mx-go.github.io/Linux%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/</loc>
