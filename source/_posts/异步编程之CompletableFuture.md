@@ -7,7 +7,7 @@ img: ../../../../images/2021/10-12/completablefuture-1.png
 cover: ../../../../images/2021/10-12/completablefuture-1.png
 ---
 
-在Java8中新增了`CompletableFuture`类，该类实现了`Future`和`CompletionStage`接口。提供了强大的`Future`扩展功能，简化了异步编程的复杂性，提供了函数式编程的能力。可通过异步回调方式处理结果，还可以对任务进行组合处理。<div align=center><img src="../../../../images/2021/10-12/completablefuture-1.png" algin="center"/></div><!-- more -->
+在Java8中新增了`CompletableFuture`类，该类实现了`Future`和`CompletionStage`接口。提供了强大的`Future`扩展功能，简化了异步编程的复杂性，提供了函数式编程的能力。可通过异步回调方式处理结果，还可以对任务进行组合处理。<!-- more -->
 
 # 概览
 
@@ -70,9 +70,9 @@ private static void supplyAsync() throws Exception {
 // 先将 List<Integer> 转换成 -> List<CompletableFuture<String>>的list 然后对这个list进行join操作
 List<Integer> collect = Lists.newArrayList(2, 1, 3)
         .stream()
-        .map(f -> CompletableFuture.supplyAsync(() -> {
+        .map(i -> CompletableFuture.supplyAsync(() -> {
             Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-            return f;
+            return i;
         }))
         .collect(Collectors.toList())
         .stream()
