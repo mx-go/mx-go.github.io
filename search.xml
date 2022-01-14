@@ -2430,53 +2430,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Nginx日志无法轮转</title>
-    <url>/Nginx%E6%97%A5%E5%BF%97%E6%97%A0%E6%B3%95%E8%BD%AE%E8%BD%AC/</url>
-    <content><![CDATA[<h1 id="症状"><a href="#症状" class="headerlink" title="症状"></a>症状</h1><p>Nginx刚启动后日志记录正常，一段时间后，Nginx会把已产生的日志压缩为<code>.gz</code>文件。但是一旦压缩后，就不再记录新日志到新生成的<code>access.log</code>文件，但日志文件存在，里面却没有任何日志。旧的日志压缩后没有问题，自从压缩后，新的文件再也不记录新日志了(发现Nginx会很消耗内存，估计日志都存在内存里，不写文件了)。</p>
-<div align=center><img src="../../../../images/2021/4-6/nginx_bug_1.png" algin="center"/></div>
-
-<p>我们的Nginx部署在k8s中，查看Nginx的配置没有发现任何问题</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">#user  nobody;</span></span><br><span class="line">worker_processes  4;</span><br><span class="line"></span><br><span class="line">error_log  /app/openresty/nginx/logs/error.log  error;</span><br><span class="line">pid        /app/openresty/nginx/logs/nginx.pid;</span><br><span class="line"><span class="comment">#error_log  logs/error.log;</span></span><br><span class="line"><span class="comment">#error_log  logs/error.log  notice;</span></span><br><span class="line"><span class="comment">#error_log  logs/error.log  info;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections 65536 ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    include       custom_upstream.conf;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    log_format  main  <span class="string">&#x27;$remote_addr|$remote_user|[$time_local]|&quot;$request&quot;&#x27;</span></span><br><span class="line">                      <span class="string">&#x27;|$status|$request_time|$body_bytes_sent|&quot;$http_referer&quot;&#x27;</span></span><br><span class="line">                <span class="string">&#x27;|&quot;$http_user_agent&quot;|&quot;$http_x_forwarded_for&quot;|$upstream_response_time|$upstream_status&#x27;</span>;    </span><br><span class="line">    access_log  /app/openresty/nginx/logs/access.log  main;</span><br><span class="line">    </span><br><span class="line">    server_tokens   off;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    tcp_nopush      on;</span><br><span class="line">    tcp_nodelay     on;</span><br><span class="line">    client_max_body_size 100m;</span><br><span class="line">    client_header_buffer_size 100m;</span><br><span class="line">    keepalive_timeout  60;</span><br><span class="line">    proxy_buffering off;</span><br><span class="line">    gzip on;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        listen 443 ssl;</span><br><span class="line"></span><br><span class="line">        <span class="comment">#charset koi8-r;</span></span><br><span class="line"></span><br><span class="line">        include       custom_location.conf;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># redirect server error pages to the static page /50x.html</span></span><br><span class="line">        <span class="comment">#</span></span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        location = /nstats &#123;</span><br><span class="line">            check_status;</span><br><span class="line">            access_log      off;</span><br><span class="line">            allow           10.116.0.0/16;</span><br><span class="line">            allow           10.110.0.0/16;</span><br><span class="line">            allow           10.117.0.0/16;</span><br><span class="line">            allow           10.150.0.0/16;</span><br><span class="line">            allow           100.0.0.0/8;</span><br><span class="line">            allow           10.0.0.0/8;</span><br><span class="line">            deny            all;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><p>经查询资料在<code>stackoverflow</code>发现了类似的问题，见链接：<a href="https://stackoverflow.com/questions/9552930/nginx-cannot-write-into-access-log">https://stackoverflow.com/questions/9552930/nginx-cannot-write-into-access-log</a></p>
-<p>原因是当Nginx压缩文件后，需要给master进程发送USR1信号后重新打开文件。</p>
-<p>于是查看了Nginx的进程ID为33</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[mwopr@k8s-opc-openapi-nginx-77787494c5-c77s8 logs]$ cat nginx.pid </span><br><span class="line">33</span><br></pre></td></tr></table></figure>
-
-<p>当执行重新打开log文件命令时提示没有权限</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[mwopr@k8s-opc-openapi-nginx-77787494c5-c77s8 logs]$ kill -USR1 33</span><br><span class="line">bash: kill: (33) - Operation not permitted</span><br></pre></td></tr></table></figure>
-
-<p>这个时候恍然大悟，登陆shell的默认用户是<code>mwopr</code>，没有权限执行<code>kill</code>命令，需要用<code>root</code>用户执行，当切换为<code>root</code>用户后，执行<code>kill</code>命令成功且日志可以正常写入。</p>
-<div align=center><img src="../../../../images/2021/4-6/nginx_bug_2.png" algin="center"/></div>
-
-<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>原文：<a href="http://nginx.org/en/docs/control.html">http://nginx.org/en/docs/control.html</a></p>
-<p>Nginx可以通过信号进行控制。对应Linux系统就是用<code>kill</code>命令。</p>
-<p>master进程id默认写入到<code>/nginx/logs/nginx.pid</code>文件中。文件也可以在<code>nginx.conf</code>文件中指定。master进程支持以下信号：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kill -TERM pid # 快速停止master进程。 </span><br><span class="line">kill -QUIT pid # 优雅的停止。 </span><br><span class="line">kill -HUB pid # 改变配置文件。开启一个新的worker进程处理，优雅的停止老的worker进程。相当于nginx -s reload </span><br><span class="line">kill -USR1 pid # 重新打开log文件。-s reopen命令 </span><br><span class="line">kill -USR2 pid # 升级可执行文件。热部署 </span><br><span class="line">kill -WINCH pid # 优雅的关闭worker进程。</span><br></pre></td></tr></table></figure>
-
-<p>每个worker进程也可以接收信号：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kill -TERM pid # 快速关闭worker进程 </span><br><span class="line">kill -QUIT pid # 优雅退出 </span><br><span class="line">kill -USR1 pid # 重新打开日志文件,先mv一个，再去执行这个命令。-s reopen命令</span><br></pre></td></tr></table></figure>
-
-<p>日志轮转</p>
-<ol>
-<li>重命名log文件。</li>
-<li>给master进程发送USR1信号。</li>
-<li>重新打开文件。</li>
-</ol>
-<blockquote>
-<p>Rotating Log-files</p>
-<p>In order to rotate log files, they need to be renamed first. After that USR1 signal should be sent to the master process. The master process will then re-open all currently open log files and assign them an unprivileged user under which the worker processes are running, as an owner. After successful re-opening, the master process closes all open files and sends the message to worker process to ask them to re-open files. Worker processes also open new files and close old files right away. As a result, old files are almost immediately available for post processing, such as compression.</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>踩坑记录</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>nginx</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Mybatis之缓存</title>
     <url>/Mybatis%E4%B9%8B%E7%BC%93%E5%AD%98/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>Mybatis中有一级缓存和二级缓存，默认情况下一级缓存是开启的，而且是不能关闭的。一级缓存是指SqlSession级别的缓存，当在同一个SqlSession中进行相同的SQL语句查询时，第二次以后的查询不会从数据库查询，而是直接从缓存中获取，一级缓存最多缓存1024条SQL。二级缓存是指可以跨SqlSession的缓存。<div align=center><img src="../../../../images/2018-3/Mybatis/cache.png" algin="center"/></div></p>
@@ -2585,6 +2538,53 @@
       <tags>
         <tag>java</tag>
         <tag>mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Nginx日志无法轮转</title>
+    <url>/Nginx%E6%97%A5%E5%BF%97%E6%97%A0%E6%B3%95%E8%BD%AE%E8%BD%AC/</url>
+    <content><![CDATA[<h1 id="症状"><a href="#症状" class="headerlink" title="症状"></a>症状</h1><p>Nginx刚启动后日志记录正常，一段时间后，Nginx会把已产生的日志压缩为<code>.gz</code>文件。但是一旦压缩后，就不再记录新日志到新生成的<code>access.log</code>文件，但日志文件存在，里面却没有任何日志。旧的日志压缩后没有问题，自从压缩后，新的文件再也不记录新日志了(发现Nginx会很消耗内存，估计日志都存在内存里，不写文件了)。</p>
+<div align=center><img src="../../../../images/2021/4-6/nginx_bug_1.png" algin="center"/></div>
+
+<p>我们的Nginx部署在k8s中，查看Nginx的配置没有发现任何问题</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">#user  nobody;</span></span><br><span class="line">worker_processes  4;</span><br><span class="line"></span><br><span class="line">error_log  /app/openresty/nginx/logs/error.log  error;</span><br><span class="line">pid        /app/openresty/nginx/logs/nginx.pid;</span><br><span class="line"><span class="comment">#error_log  logs/error.log;</span></span><br><span class="line"><span class="comment">#error_log  logs/error.log  notice;</span></span><br><span class="line"><span class="comment">#error_log  logs/error.log  info;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections 65536 ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    include       custom_upstream.conf;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    log_format  main  <span class="string">&#x27;$remote_addr|$remote_user|[$time_local]|&quot;$request&quot;&#x27;</span></span><br><span class="line">                      <span class="string">&#x27;|$status|$request_time|$body_bytes_sent|&quot;$http_referer&quot;&#x27;</span></span><br><span class="line">                <span class="string">&#x27;|&quot;$http_user_agent&quot;|&quot;$http_x_forwarded_for&quot;|$upstream_response_time|$upstream_status&#x27;</span>;    </span><br><span class="line">    access_log  /app/openresty/nginx/logs/access.log  main;</span><br><span class="line">    </span><br><span class="line">    server_tokens   off;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    tcp_nopush      on;</span><br><span class="line">    tcp_nodelay     on;</span><br><span class="line">    client_max_body_size 100m;</span><br><span class="line">    client_header_buffer_size 100m;</span><br><span class="line">    keepalive_timeout  60;</span><br><span class="line">    proxy_buffering off;</span><br><span class="line">    gzip on;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        listen 443 ssl;</span><br><span class="line"></span><br><span class="line">        <span class="comment">#charset koi8-r;</span></span><br><span class="line"></span><br><span class="line">        include       custom_location.conf;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># redirect server error pages to the static page /50x.html</span></span><br><span class="line">        <span class="comment">#</span></span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        location = /nstats &#123;</span><br><span class="line">            check_status;</span><br><span class="line">            access_log      off;</span><br><span class="line">            allow           10.116.0.0/16;</span><br><span class="line">            allow           10.110.0.0/16;</span><br><span class="line">            allow           10.117.0.0/16;</span><br><span class="line">            allow           10.150.0.0/16;</span><br><span class="line">            allow           100.0.0.0/8;</span><br><span class="line">            allow           10.0.0.0/8;</span><br><span class="line">            deny            all;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><p>经查询资料在<code>stackoverflow</code>发现了类似的问题，见链接：<a href="https://stackoverflow.com/questions/9552930/nginx-cannot-write-into-access-log">https://stackoverflow.com/questions/9552930/nginx-cannot-write-into-access-log</a></p>
+<p>原因是当Nginx压缩文件后，需要给master进程发送USR1信号后重新打开文件。</p>
+<p>于是查看了Nginx的进程ID为33</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[mwopr@k8s-opc-openapi-nginx-77787494c5-c77s8 logs]$ cat nginx.pid </span><br><span class="line">33</span><br></pre></td></tr></table></figure>
+
+<p>当执行重新打开log文件命令时提示没有权限</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[mwopr@k8s-opc-openapi-nginx-77787494c5-c77s8 logs]$ kill -USR1 33</span><br><span class="line">bash: kill: (33) - Operation not permitted</span><br></pre></td></tr></table></figure>
+
+<p>这个时候恍然大悟，登陆shell的默认用户是<code>mwopr</code>，没有权限执行<code>kill</code>命令，需要用<code>root</code>用户执行，当切换为<code>root</code>用户后，执行<code>kill</code>命令成功且日志可以正常写入。</p>
+<div align=center><img src="../../../../images/2021/4-6/nginx_bug_2.png" algin="center"/></div>
+
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>原文：<a href="http://nginx.org/en/docs/control.html">http://nginx.org/en/docs/control.html</a></p>
+<p>Nginx可以通过信号进行控制。对应Linux系统就是用<code>kill</code>命令。</p>
+<p>master进程id默认写入到<code>/nginx/logs/nginx.pid</code>文件中。文件也可以在<code>nginx.conf</code>文件中指定。master进程支持以下信号：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kill -TERM pid # 快速停止master进程。 </span><br><span class="line">kill -QUIT pid # 优雅的停止。 </span><br><span class="line">kill -HUB pid # 改变配置文件。开启一个新的worker进程处理，优雅的停止老的worker进程。相当于nginx -s reload </span><br><span class="line">kill -USR1 pid # 重新打开log文件。-s reopen命令 </span><br><span class="line">kill -USR2 pid # 升级可执行文件。热部署 </span><br><span class="line">kill -WINCH pid # 优雅的关闭worker进程。</span><br></pre></td></tr></table></figure>
+
+<p>每个worker进程也可以接收信号：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kill -TERM pid # 快速关闭worker进程 </span><br><span class="line">kill -QUIT pid # 优雅退出 </span><br><span class="line">kill -USR1 pid # 重新打开日志文件,先mv一个，再去执行这个命令。-s reopen命令</span><br></pre></td></tr></table></figure>
+
+<p>日志轮转</p>
+<ol>
+<li>重命名log文件。</li>
+<li>给master进程发送USR1信号。</li>
+<li>重新打开文件。</li>
+</ol>
+<blockquote>
+<p>Rotating Log-files</p>
+<p>In order to rotate log files, they need to be renamed first. After that USR1 signal should be sent to the master process. The master process will then re-open all currently open log files and assign them an unprivileged user under which the worker processes are running, as an owner. After successful re-opening, the master process closes all open files and sends the message to worker process to ask them to re-open files. Worker processes also open new files and close old files right away. As a result, old files are almost immediately available for post processing, such as compression.</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>踩坑记录</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>nginx</tag>
       </tags>
   </entry>
   <entry>
@@ -3693,6 +3693,16 @@
         <tag>tools</tag>
         <tag>sql</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>About</title>
+    <url>/about/</url>
+    <content><![CDATA[<p>​                    </p>
+<p>​                    喜欢新鲜的事物，钻研技术，热爱互联网行业🍭。</p>
+<p>​                                做自己喜欢做的事。</p>
+<p>​                            菜鸟程序猿一只，欢迎分享知识。</p>
+<p>​                                                                    From 🌈彩虹马</p>
+]]></content>
   </entry>
   <entry>
     <title>logback推荐配置</title>
@@ -5127,16 +5137,6 @@
       </tags>
   </entry>
   <entry>
-    <title>About</title>
-    <url>/about/</url>
-    <content><![CDATA[<p>​                    </p>
-<p>​                    喜欢新鲜的事物，钻研技术，热爱互联网行业🍭。</p>
-<p>​                                做自己喜欢做的事。</p>
-<p>​                            菜鸟程序猿一只，欢迎分享知识。</p>
-<p>​                                                                    From 🌈彩虹马</p>
-]]></content>
-  </entry>
-  <entry>
     <title>自定义rest代理(二)</title>
     <url>/%E8%87%AA%E5%AE%9A%E4%B9%89rest%E4%BB%A3%E7%90%86-%E4%BA%8C/</url>
     <content><![CDATA[<p>之前用<code>HttpClient</code>实现了rest代理(<a href="http://rainbowhorse.site/%E8%87%AA%E5%AE%9A%E4%B9%89rest%E4%BB%A3%E7%90%86/">自定义rest代理(一)</a>)，从网上看了下资料，同时针对公司已有的框架做了一些封装和改造。用<code>Retrofit2</code>另外实现了一套rest代理工具包。其中基本都是都是基于<code>Retrofit2</code>，自己又做了一层简单的封装。<div align=center><img width="220" height="220" src="../../../../images/2019/1-3/restful.png" algin="center"/></div></p>
@@ -5524,76 +5524,6 @@
       </tags>
   </entry>
   <entry>
-    <title>谈谈日志</title>
-    <url>/%E8%B0%88%E8%B0%88%E6%97%A5%E5%BF%97/</url>
-    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>日志用来记录用户操作、系统运行状态等，是一个系统的重要组成部分。 然而，由于日志通常不属于系统的核心功能，所以常常不被团队成员所重视。<span id="more"></span>对于一些简单的小程序，可能并不需要在如何记录日志的问题上花费太多精力。但是对于作为基础平台为很多产品提供服务的后端程序，就必须要考虑如何依靠良好的日志来保证系统可靠的运行了。</p>
-<div align=center><img width="250" height="220" src="../../../../images/2018-9-12/log.jpeg" algin="center"/>
-</div>
-
-
-
-<h1 id="工程配置"><a href="#工程配置" class="headerlink" title="工程配置"></a>工程配置</h1><p>使用slf4j作为日志门面，logback作为日志实现，把其他日志组件的调用转换到slf4j。</p>
-<p>pom.xml</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">// 可到https://mvnrepository.com获取最新version版本</span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>slf4j-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>ch.qos.logback<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>logback-classic<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- common-logging 实际调用slf4j --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jcl-over-slf4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- java.util.logging 实际调用slf4j --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jul-to-slf4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- log4j实际调用slf4j --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-over-slf4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="logback配置"><a href="#logback配置" class="headerlink" title="logback配置"></a>logback配置</h1><p>详见：<a href="http://mx-go.github.io/logback%E6%8E%A8%E8%8D%90%E9%85%8D%E7%BD%AE/">logback配置</a></p>
-<h1 id="jrebel配置"><a href="#jrebel配置" class="headerlink" title="jrebel配置"></a>jrebel配置</h1><p>在本地开发过程中，希望把日志打印到stdout，需要配合jrebel插件来实现。通过jrebel插件来启动tomcat的时候，就会优先找到 target/test­-classes/logback­-test.xml文件，这样就会把日志信息输出到stdout了。当正式打包的时候，不会打包test目录下的资源信息。这样就能实现线上和线下2套配置，互不影响。</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">application</span> <span class="attr">generated-by</span>=<span class="string">&quot;intellij&quot;</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.zeroturnaround.com&quot;</span> <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.zeroturnaround.com http://update.zeroturnaround.com/jrebel/rebel-2_1.xsd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="tag">&lt;<span class="name">classpath</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 查找资源文件的时候，优先从target/test-classes目录下查找 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dir</span> <span class="attr">name</span>=<span class="string">&quot;/Users/max/Documents/workSpace/open-msg/target/test-classes&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dir</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dir</span> <span class="attr">name</span>=<span class="string">&quot;/Users/max/Documents/workSpace/open-msg/target/classes&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dir</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">classpath</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">web</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">link</span> <span class="attr">target</span>=<span class="string">&quot;/&quot;</span>&gt;</span></span><br><span class="line">    		<span class="tag">&lt;<span class="name">dir</span> <span class="attr">name</span>=<span class="string">&quot;/Users/max/Documents/workSpace/open-msg/src/main/webapp&quot;</span>&gt;</span></span><br><span class="line">    		<span class="tag">&lt;/<span class="name">dir</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;/<span class="name">link</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">web</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="合理的日志级别"><a href="#合理的日志级别" class="headerlink" title="合理的日志级别"></a>合理的日志级别</h1><ol>
-<li>要用异步日志；</li>
-<li>要做日志轮转；</li>
-<li>要有上下文信息；</li>
-<li>不要疯狂打日志。</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>日志级别</th>
-<th>打印建议</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>DEBUG（调试）</td>
-<td>不建议在线上环境打印DEBUG日志，在需要的时候可以通过开关打开DEBUG日志，默认需要关闭DEBUG日志。过多的DEBUG日志，并不是好事，特别反对通过aop把函数调用的参数和返回值信息都记录到DEBUG日志中的做法。</td>
-</tr>
-<tr>
-<td>INFO（通知）</td>
-<td>业务日志用来记录业务的主流程的走向。INFO日志级别主要用于记录系统运行状态等关联信息。该日志级别，常用于反馈系统当前状态给最终用户。所以，在这里输出的信息，应该对最终用户具有实际意义，也就是最终用户要能够看得明白是什么意思才行。</td>
-</tr>
-<tr>
-<td>WARN（警告）</td>
-<td>WARN日志常用来表示系统模块发生问题，但并不影响系统运行。 此时，进行一些修复性的工作，还能把系统恢复到正常的状态。参数验证错误类的可以使用WARN。</td>
-</tr>
-<tr>
-<td>ERROR（错误）</td>
-<td>此信息输出后，主体系统核心模块正常工作，需要修复才能正常工作。</td>
-</tr>
-</tbody></table>
-<h1 id="必要的日志元素"><a href="#必要的日志元素" class="headerlink" title="必要的日志元素"></a>必要的日志元素</h1><p><strong>理想的日志中应该记录不多不少的信息。</strong><br>所谓不多，是指不要在日志中记录无用的信息。实践中常见到的无用的日志有：</p>
-<ul>
-<li>能够放在一条日志里的东西，放在多条日志中输出；</li>
-<li>预期会发生且能够被正常处理的异常，打印出一堆无用的堆栈；</li>
-<li>开发人员在开发过程中为了调试方便而加入的“临时”日志；</li>
-</ul>
-<p>所谓不少，是指对于日志的使用者，能够从日志中得到所有需要的信息。在实践中经常发生日志不够的情况，例如：</p>
-<ul>
-<li>请求出错时不能通过日志直接来定位问题，而需要开发人员再临时增加日志并要求请求的发送者重新发送同样的请求才能定位问题；</li>
-<li>无法确定服务中的后台任务是否按照期望执行；</li>
-<li>无法确定服务的内存数据结构的状态；</li>
-<li>无法确定服务的异常处理逻辑（如重试）是否正确执行；</li>
-<li>无法确定服务启动时配置是否正确加载；</li>
-<li>……</li>
-</ul>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>tips</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>谈谈敏捷开发</title>
     <url>/%E8%B0%88%E8%B0%88%E6%95%8F%E6%8D%B7%E5%BC%80%E5%8F%91/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p><strong>敏捷开发</strong>是一种从上个世纪九十年代开始逐渐引起广泛关注的一些新型软件开发方法，是一种<strong>应对快速变化的需求</strong>的一种软件开发能力。常言道：“<strong>天下武功，唯快不破</strong>”，此言用于形容“敏捷”的威力相当合适。敏捷意思为快，但敏捷思想不仅仅求快，它更多强调“<strong>多快好省</strong>”，产出得多，产出得快，产出得好，同时节省各种成本，既经济又实用。它们更强调<strong>程序员团队与业务专家之间的紧密协作</strong>、<strong>面对面的沟通</strong>（认为比书面的文档更有效）、<strong>频繁交付新的软件版本</strong>、<strong>紧凑而自我组织型的团队</strong>、能够很好地<strong>适应需求变化的代码编写和团队组织方法</strong>，也更<strong>注重软件开发过程中人的作用</strong>。<div align=center><img src="../../../../images/2018-03/scrum/scrum.png" algin="center"/></div><span id="more"></span></p>
@@ -5672,6 +5602,76 @@
       </categories>
       <tags>
         <tag>随笔</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>谈谈日志</title>
+    <url>/%E8%B0%88%E8%B0%88%E6%97%A5%E5%BF%97/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>日志用来记录用户操作、系统运行状态等，是一个系统的重要组成部分。 然而，由于日志通常不属于系统的核心功能，所以常常不被团队成员所重视。<span id="more"></span>对于一些简单的小程序，可能并不需要在如何记录日志的问题上花费太多精力。但是对于作为基础平台为很多产品提供服务的后端程序，就必须要考虑如何依靠良好的日志来保证系统可靠的运行了。</p>
+<div align=center><img width="250" height="220" src="../../../../images/2018-9-12/log.jpeg" algin="center"/>
+</div>
+
+
+
+<h1 id="工程配置"><a href="#工程配置" class="headerlink" title="工程配置"></a>工程配置</h1><p>使用slf4j作为日志门面，logback作为日志实现，把其他日志组件的调用转换到slf4j。</p>
+<p>pom.xml</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">// 可到https://mvnrepository.com获取最新version版本</span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>slf4j-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>ch.qos.logback<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>logback-classic<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- common-logging 实际调用slf4j --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jcl-over-slf4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- java.util.logging 实际调用slf4j --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jul-to-slf4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- log4j实际调用slf4j --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-over-slf4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="logback配置"><a href="#logback配置" class="headerlink" title="logback配置"></a>logback配置</h1><p>详见：<a href="http://mx-go.github.io/logback%E6%8E%A8%E8%8D%90%E9%85%8D%E7%BD%AE/">logback配置</a></p>
+<h1 id="jrebel配置"><a href="#jrebel配置" class="headerlink" title="jrebel配置"></a>jrebel配置</h1><p>在本地开发过程中，希望把日志打印到stdout，需要配合jrebel插件来实现。通过jrebel插件来启动tomcat的时候，就会优先找到 target/test­-classes/logback­-test.xml文件，这样就会把日志信息输出到stdout了。当正式打包的时候，不会打包test目录下的资源信息。这样就能实现线上和线下2套配置，互不影响。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">application</span> <span class="attr">generated-by</span>=<span class="string">&quot;intellij&quot;</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.zeroturnaround.com&quot;</span> <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.zeroturnaround.com http://update.zeroturnaround.com/jrebel/rebel-2_1.xsd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="tag">&lt;<span class="name">classpath</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 查找资源文件的时候，优先从target/test-classes目录下查找 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dir</span> <span class="attr">name</span>=<span class="string">&quot;/Users/max/Documents/workSpace/open-msg/target/test-classes&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dir</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dir</span> <span class="attr">name</span>=<span class="string">&quot;/Users/max/Documents/workSpace/open-msg/target/classes&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dir</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">classpath</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">web</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">link</span> <span class="attr">target</span>=<span class="string">&quot;/&quot;</span>&gt;</span></span><br><span class="line">    		<span class="tag">&lt;<span class="name">dir</span> <span class="attr">name</span>=<span class="string">&quot;/Users/max/Documents/workSpace/open-msg/src/main/webapp&quot;</span>&gt;</span></span><br><span class="line">    		<span class="tag">&lt;/<span class="name">dir</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;/<span class="name">link</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">web</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="合理的日志级别"><a href="#合理的日志级别" class="headerlink" title="合理的日志级别"></a>合理的日志级别</h1><ol>
+<li>要用异步日志；</li>
+<li>要做日志轮转；</li>
+<li>要有上下文信息；</li>
+<li>不要疯狂打日志。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>日志级别</th>
+<th>打印建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DEBUG（调试）</td>
+<td>不建议在线上环境打印DEBUG日志，在需要的时候可以通过开关打开DEBUG日志，默认需要关闭DEBUG日志。过多的DEBUG日志，并不是好事，特别反对通过aop把函数调用的参数和返回值信息都记录到DEBUG日志中的做法。</td>
+</tr>
+<tr>
+<td>INFO（通知）</td>
+<td>业务日志用来记录业务的主流程的走向。INFO日志级别主要用于记录系统运行状态等关联信息。该日志级别，常用于反馈系统当前状态给最终用户。所以，在这里输出的信息，应该对最终用户具有实际意义，也就是最终用户要能够看得明白是什么意思才行。</td>
+</tr>
+<tr>
+<td>WARN（警告）</td>
+<td>WARN日志常用来表示系统模块发生问题，但并不影响系统运行。 此时，进行一些修复性的工作，还能把系统恢复到正常的状态。参数验证错误类的可以使用WARN。</td>
+</tr>
+<tr>
+<td>ERROR（错误）</td>
+<td>此信息输出后，主体系统核心模块正常工作，需要修复才能正常工作。</td>
+</tr>
+</tbody></table>
+<h1 id="必要的日志元素"><a href="#必要的日志元素" class="headerlink" title="必要的日志元素"></a>必要的日志元素</h1><p><strong>理想的日志中应该记录不多不少的信息。</strong><br>所谓不多，是指不要在日志中记录无用的信息。实践中常见到的无用的日志有：</p>
+<ul>
+<li>能够放在一条日志里的东西，放在多条日志中输出；</li>
+<li>预期会发生且能够被正常处理的异常，打印出一堆无用的堆栈；</li>
+<li>开发人员在开发过程中为了调试方便而加入的“临时”日志；</li>
+</ul>
+<p>所谓不少，是指对于日志的使用者，能够从日志中得到所有需要的信息。在实践中经常发生日志不够的情况，例如：</p>
+<ul>
+<li>请求出错时不能通过日志直接来定位问题，而需要开发人员再临时增加日志并要求请求的发送者重新发送同样的请求才能定位问题；</li>
+<li>无法确定服务中的后台任务是否按照期望执行；</li>
+<li>无法确定服务的内存数据结构的状态；</li>
+<li>无法确定服务的异常处理逻辑（如重试）是否正确执行；</li>
+<li>无法确定服务启动时配置是否正确加载；</li>
+<li>……</li>
+</ul>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>tips</tag>
       </tags>
   </entry>
   <entry>
