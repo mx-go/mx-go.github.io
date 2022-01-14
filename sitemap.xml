@@ -704,13 +704,6 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/tools/</loc>
-    <lastmod>2022-01-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://mx-go.github.io/tags/grafana/</loc>
     <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
@@ -718,7 +711,7 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/jvm/</loc>
+    <loc>https://mx-go.github.io/tags/tools/</loc>
     <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -726,6 +719,13 @@
   
   <url>
     <loc>https://mx-go.github.io/tags/cache/</loc>
+    <lastmod>2022-01-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mx-go.github.io/tags/jvm/</loc>
     <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -753,14 +753,14 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/%E5%B7%A5%E5%85%B7/</loc>
+    <loc>https://mx-go.github.io/tags/MongoDB/</loc>
     <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/MongoDB/</loc>
+    <loc>https://mx-go.github.io/tags/%E5%B7%A5%E5%85%B7/</loc>
     <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -809,14 +809,14 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/%E9%9A%8F%E7%AC%94/</loc>
+    <loc>https://mx-go.github.io/tags/bug/</loc>
     <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/bug/</loc>
+    <loc>https://mx-go.github.io/tags/%E9%9A%8F%E7%AC%94/</loc>
     <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
