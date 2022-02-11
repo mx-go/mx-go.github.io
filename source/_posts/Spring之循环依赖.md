@@ -125,7 +125,7 @@ Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Err
 
 对于`prototype`作用域的bean, Spring容器无法完成依赖注入，因为Spring 容器不进行缓存`prototype`作用域的bean ，因此无法提前暴露一个创建中的bean。
 
-网上有的说法是使用`@Lazy`注解解决。这样做启动确实不报错了，但是实际这样是解决不了问题的，**`@Lazy`只是延迟初始化，当真正使用到的时候还是会报异常。**
+网上有的说法是使用`@Lazy`注解解决。这样做启动确实不报错了，但是实际这样是解决不了问题的，`@Lazy`只是延迟初始化，当真正使用到的时候还是会报异常。
 
 ```java
 @Autowired
@@ -138,6 +138,7 @@ private AService aService;
 ### 可解决循环依赖场景
 
 1. 注解注入(field属性)注入循环依赖
+2. setter注入
 
 ### 无法解决循环依赖场景
 
