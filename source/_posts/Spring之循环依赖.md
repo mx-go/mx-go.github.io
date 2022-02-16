@@ -70,6 +70,8 @@ Caused by: org.springframework.beans.factory.BeanCurrentlyInCreationException: E
 **构造器注入无法解决循环依赖问题**，Spring只能抛出`BeanCurrentlyInCreationException`依赖表示循环依赖。
 
 > Spring解决循环依赖是依靠Bean的“中间态“的概念，”中间态“是指Bean已经实例化，但还没有初始化的状态，而构造器注入的是初始化后的对象，所以不能解决循环依赖。
+>
+> Spring解决循环依赖的理论依据基于Java的引用传递，当获得对象的引用时，对象的属性是可以延后设置的。但是构造器必须是在获取引用之前，毕竟引用是靠构造器生成的。
 
 ## 注解注入(field属性注入)
 
