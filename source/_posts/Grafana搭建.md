@@ -114,6 +114,22 @@ systemctl status grafana-server
 6. 配置文件
    /etc/grafana/grafana.ini
 
+# 升级Grafana
+
+官方提供的升级文档：[Upgrading Grafana](https://grafana.com/docs/installation/upgrading/)
+
+1. 下载新版本Grafana
+
+2. 停止旧版本Grafana
+
+3. 执行命令进行升级(兼容性问题请查看官网)
+
+   ```shell
+   rpm -Uvh grafana-latest.rpm
+   ```
+
+   
+
 # Pie插件
 
 安装Pie插件，可使用饼图展示数据。
