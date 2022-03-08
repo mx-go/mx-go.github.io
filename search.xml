@@ -727,104 +727,6 @@
       </tags>
   </entry>
   <entry>
-    <title>JVM类加载机制</title>
-    <url>/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/</url>
-    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>之前的博客说了Java虚拟机的运行时数据区域、GC算法、垃圾回收器等知识。距离深入了解还有一段距离，包括虚拟机的类加载机制、性能调优、线程并发等等还都没有涉及到，一直在看周志明的《深入理解Java虚拟机》，越深入去读发现这本书写的真的是经典，解决了自己很多的疑惑。</p>
-<p>JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内存中，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。<div align=center><img src="../../../../images/2017/12/ClassLoader/0.png" algin="center"/></p>
-</div><span id="more"></span>
-
-<h1 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h1><p>类被加载到虚拟机内存中开始，到卸载出内存为止。它的生命周期分7个阶段，加载（Loading）、验证（Verification）、准备（Preparation）、解析（Resolution）、初始化（Initialization）、使用（Using）、卸载（Unloading）。其中验证、准备、解析三个部分统称为连接（Linking）。</p>
-<div align=center><img src="../../../../images/2017/12/ClassLoader/2.png" algin="center"/></div>
-## 加载
-
-<ol>
-<li>通过一个类的全限定名来获取定义此类的二进制字节流。</li>
-<li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。</li>
-<li>在Java堆中生成一个代表这个类的java.lang.Class对象，作为对方法区中这些数据的访问入口。</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">注意：JVM中的ClassLoader类加载器加载Class发生在此阶段。后面会有描述。</span><br></pre></td></tr></table></figure>
-
-<h2 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h2><h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><p>验证的目的是为了确保Class文件中的字节流包含的信息符合当前虚拟机的要求，而且不会危害虚拟机自身的安全。不同的虚拟机对类验证的实现可能会有所不同，但大致都会完成以下四个阶段的验证：<code>文件格式的验证</code>、<code>元数据的验证</code>、<code>字节码验证</code>和<code>符号引用验证</code>。</p>
-<h4 id="文件格式验证"><a href="#文件格式验证" class="headerlink" title="文件格式验证"></a>文件格式验证</h4><ol>
-<li>主要验证字节流是否符合calss文件格式的规范，如果符合则把字节流加载到方法区中进行存储。</li>
-<li>验证文件头、主次版本等等。</li>
-</ol>
-<h4 id="元数据验证"><a href="#元数据验证" class="headerlink" title="元数据验证"></a>元数据验证</h4><p>主要对字节码描述的信息进行语义分析，保证其描述符合Java语言的要求。</p>
-<ol>
-<li>类是否有父类。</li>
-<li>是否继承了不允许被继承的类（final修饰过的类）。</li>
-<li>如果这个类不是抽象类，是否实现其父类或接口中所有要求实现的方法。</li>
-<li>类中的字段、方法是否与父类产生矛盾（如：覆盖父类final类型的字段，或者不符合个则的方法）。</li>
-</ol>
-<h4 id="字节码验证"><a href="#字节码验证" class="headerlink" title="字节码验证"></a>字节码验证</h4><p>该阶段验证的主要工作是进行数据流和控制流分析，对类的方法体进行校验分析，以保证被校验的类的方法在运行时不会做出危害虚拟机安全的行为。<br>保证被校验类的方法在运行时不会做出危害虚拟机安全的事件。</p>
-<h4 id="符号引用验证"><a href="#符号引用验证" class="headerlink" title="符号引用验证"></a>符号引用验证</h4><ol>
-<li>符号引用中通过字符串描述的全限定名是否能找到对应的类。</li>
-<li>在指定类中是否存在符合方法的字段描述符以及简单名称所描述的方法和字段。</li>
-<li>符号引用中的类、字段、方法的访问性（private、protected、public、default）是否可被当前类访问。</li>
-</ol>
-<h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p><strong>准备阶段是正式为类变量分配内存并设置类变量初始值的阶段，这些内存都将在方法区中分配。</strong>对于该阶段有以下几点需要注意：</p>
-<p>  1、这时候进行内存分配的仅包括类变量（static），而不包括实例变量，实例变量会在对象实例化时随着对象一块分配在Java堆中。</p>
-<p>​    2、这里所设置的初始值通常情况下是数据类型默认的零值（如0、0L、null、false等），而不是被在Java代码中被显式地赋予的值。</p>
-<p>假设一个类变量的定义为：public static int value = 3；</p>
-<p>那么变量value在准备阶段过后的初始值为0，而不是3，因为这时候尚未开始执行任何Java方法，而把value赋值为3的putstatic指令是在程序编译后，存放于类构造器<clinit>（）方法之中的，所以把value赋值为3的动作将在初始化阶段才会执行。</p>
-<p>下表列出了Java中所有基本数据类型以及reference类型的默认零值：</p>
-<div align=center><img src="../../../../images/2017/12/ClassLoader/defaultValue.png"/></div>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">注意：</span><br><span class="line">只设置类中的静态变量（方法区中），不包括实例变量（堆内存中），实例变量是在对象实例化的时候初始化分配值的。</span><br></pre></td></tr></table></figure>
-
-<h3 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h3><p><strong>解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程。</strong></p>
-<ol>
-<li>类或接口的解析：判断所要转化成的直接引用是对数组类型，还是普通的对象类型的引用，从而进行不同的解析。</li>
-<li>字段解析：对字段进行解析时，会先在本类中查找是否包含有简单名称和字段描述符都与目标相匹配的字段，如果有，则查找结束；如果没有，则会按照继承关系从上往下递归搜索该类所实现的各个接口和它们的父接口，还没有，则按照继承关系从上往下递归搜索其父类，直至查找结束。</li>
-<li>类方法解析：对类方法的解析与对字段解析的搜索步骤差不多，只是多了判断该方法所处的是类还是接口的步骤，而且对类方法的匹配搜索，是先搜索父类，再搜索接口。</li>
-<li>接口方法解析：与类方法解析步骤类似，只是接口不会有父类，因此，只递归向上搜索父接口就行了。</li>
-</ol>
-<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p>初始化是类加载过程的最后一步，到了此阶段，才真正开始执行类中定义的Java程序代码。在准备阶段，类变量已经被赋过一次系统要求的初始值，而在初始化阶段，则是<strong>根据程序员通过程序指定的主观计划去初始化类变量和其他资源</strong>，或者可以从另一个角度来表达：初始化阶段是执行类构造器<clinit>()方法的过程。</p>
-<ol>
-<li>执行类构造器<clinit>。</li>
-<li>初始化静态变量、静态块中的数据等（一个类加载器只会初始化一次）。</li>
-<li>子类的<clinit>调用前保证父类的<clinit>被调用。</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">注意：</span><br><span class="line">&lt;clinit&gt;是线程安全的，执行&lt;clinit&gt;的线程需要先获取锁才能进行初始化操作，保证只有一个线程能执行&lt;clinit&gt;(利用此特性可以实现线程安全的懒汉单例模式)。如果在一个类的&lt;clinit&gt;方法中有耗时很长的操作，那就可能造成多个线程阻塞，在实际应用中这种阻塞往往是很隐蔽的。</span><br></pre></td></tr></table></figure>
-
-<h1 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h1><p>类被加载进虚拟机是由类加载器（ClassLoader）来完成的。类加载器虽然只用于实现类的加载动作，但它在Java程序中起到的作用却远远不限于类的加载阶段。对于任意一个类，都需要由它的类加载器和这个类本身一同确定其在就Java虚拟机中的唯一性，也就是说，即使两个类来源于同一个Class文件，只要加载它们的类加载器不同，那这两个类就必定不相等。这里的“相等”包括了代表类的Class对象的equals（）、isAssignableFrom（）、isInstance（）等方法的返回结果，也包括了使用instanceof关键字对对象所属关系的判定结果。只有在两个类被<strong>同一个类加载器</strong>加载的前提下，比较才有意义。否则，即使两个类来自同一个class文件，被同一个JVM加载，但是加载它们的类加载器不同，则这两个类就不相等。这就相当于两个命名空间中的等价类<code>LoaderA::C</code>和<code>LoaderB::C</code>。</p>
-<h2 id="类加载器的种类"><a href="#类加载器的种类" class="headerlink" title="类加载器的种类"></a>类加载器的种类</h2><p>从Java虚拟机的角度来分的话，ClassLoader分为启动类加载器（Bootstrap ClassLoader）和其它的加载器。其中Bootstrap ClassLoader负责加载Java的核心类，该类加载器使用C++语言实现，属于虚拟机自身的一部分。而其它类加载器独立于JVM外部，并且全部继承自抽象类java.lang.ClassLoader。</p>
-<p>站在Java开发人员的角度来分的话，ClassLoader分为：</p>
-<ul>
-<li><p><strong>启动类加载器（Bootstrap ClassLoader）</strong></p>
-<p>负责加载<code>JAVA_HOME\lib</code>目录中并且能被虚拟机识别的类库到JVM内存中（如rt.jar，所有的java.*开头的类均被Bootstrap ClassLoader加载），如果名称不符合的类库即使放在lib目录中也不会被加载。该类加载器无法被Java程序直接引用。</p>
-</li>
-<li><p><strong>扩展类加载器（Extension ClassLoader）</strong></p>
-<p>该加载器主要是负责加载<code>JDK\jre\lib\ext</code>目录中，或者由java.ext.dirs系统变量指定的路径中的所有类库（如javax.*开头的类）。该加载器可以被开发者直接使用。</p>
-</li>
-<li><p><strong>应用程序类加载器（Application ClassLoader）</strong></p>
-<p>该类加载器也称为系统类加载器（System ClassLoader），它负责加载用户类路径（Classpath）上所指定的类库，开发者可以直接使用该类加载器，如果应用程序中没有自定义过自己的类加载器，<code>一般情况下这个就是程序中默认的类加载器</code>。</p>
-</li>
-</ul>
-<p>除此之外，还有自定义的类加载器，它们之间的层次关系被称为类加载器的<strong>双亲委派模型</strong>。该模型要求除了顶层的启动类加载器外，其余的类加载器都应该有自己的父类加载器，而这种父子关系一般通过<strong>组合（Composition）关系</strong>来实现，而不是通过继承（Inheritance）。</p>
-<h1 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h1><div align=center><img src="../../../../images/2017/12/ClassLoader/3.jpg" algin="center"/>
-
-<div align=center><img src="../../../../images/2020/1-4/java-nio.jpg" algin="center"/></div>
-
-<p>如上图所示的类加载器之间的这种层次关系，就称为<strong>类加载器的双亲委派模型</strong>（Parent Delegation Model）。该模型要求除了顶层的启动类加载器外，其余的类加载器都应当有自己的父类加载器。子类加载器和父类加载器不是以继承（Inheritance）的关系来实现，而是通过组合（Composition）关系来复用父加载器的代码。</p>
-<p>双亲委派模型的工作过程为：<strong>如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的加载器都是如此，因此所有的类加载请求都会传给顶层的启动类加载器，只有当父加载器反馈自己无法完成该加载请求（该加载器的搜索范围中没有找到对应的类）时，子加载器才会尝试自己去加载</strong>。</p>
-<p>   使用这种模型来组织类加载器之间的关系的好处是Java类随着它的类加载器一起<strong>具备了一种带有优先级的层次关系</strong>。例如java.lang.Object类，无论哪个类加载器去加载该类，最终都是由启动类加载器进行加载，因此Object类在程序的各种类加载器环境中都是同一个类。否则的话，如果不使用该模型的话，如果用户自定义一个java.lang.Object类且存放在classpath中，那么系统中将会出现多个Object类，应用程序也会变得很混乱。如果我们自定义一个rt.jar中已有类的同名Java类，会发现JVM可以正常编译，但该类永远无法被加载运行。</p>
-<p>   在rt.jar包中的java.lang.ClassLoader类中，我们可以查看类加载实现过程的代码，具体源码如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">synchronized</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)   <span class="keyword">throws</span> ClassNotFoundException&#123;  </span><br><span class="line">    <span class="comment">// First, check if the class has already been loaded  </span></span><br><span class="line">    <span class="comment">//首先检查请求的类是否已经被加载过   </span></span><br><span class="line">    Class c = findLoadedClass(name);  </span><br><span class="line">    <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;  </span><br><span class="line">        <span class="keyword">try</span> &#123;  </span><br><span class="line">          	<span class="comment">//委派父类加载器加载  </span></span><br><span class="line">            <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;  </span><br><span class="line">                c = parent.loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">            <span class="comment">//委派启动类加载器加载  </span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">                c = findBootstrapClassOrNull(name);  </span><br><span class="line">            &#125;  </span><br><span class="line">        <span class="comment">//父类加载器无法完成类加载请求   </span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;  </span><br><span class="line">            <span class="comment">// ClassNotFoundException thrown if class not found  </span></span><br><span class="line">            <span class="comment">// from the non-null parent class loader  </span></span><br><span class="line">        &#125;  </span><br><span class="line">       	<span class="comment">//本身类加载器进行类加载</span></span><br><span class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;  </span><br><span class="line">            <span class="comment">// If still not found, then invoke findClass in order  </span></span><br><span class="line">            <span class="comment">// to find the class.  </span></span><br><span class="line">            c = findClass(name);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">if</span> (resolve) &#123;  </span><br><span class="line">        resolveClass(c);  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> c;  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
-
-<p>通过上面代码可以看出，双亲委派模型是通过loadClass()方法来实现的，根据代码以及代码中的注释可以很清楚地了解整个过程其实非常简单：先检查是否已经被加载过，如果没有则调用父加载器的loadClass()方法，如果父加载器为空则默认使用启动类加载器作为父加载器。如果父类加载器加载失败，则先抛出ClassNotFoundException，然后再调用自己的findClass()方法进行加载。</p>
-<p>注意，双亲委派模型是Java设计者推荐给开发者的类加载器的实现方式，并不是强制规定的。大多数的类加载器都遵循这个模型，但是JDK中也有较大规模破坏双亲模型的情况，例如线程上下文类加载器（Thread Context ClassLoader）的出现。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>整个类加载过程中，除了在加载阶段用户应用程序可以自定义类加载器参与之外，其余所有的动作完全由虚拟机主导和控制。到了初始化才开始执行类中定义的Java程序代码，但这里的执行代码只是个开端，它仅限于<clinit>()方法。类加载过程中主要是将Class文件（准确地讲，应该是类的二进制字节流）加载到虚拟机内存中，真正执行字节码的操作，在加载完成后才真正开始。</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>jvm</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>JVM缓存之Caffeine</title>
     <url>/JVM%E7%BC%93%E5%AD%98%E4%B9%8BCaffeine/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p><a href="https://www.baeldung.com/java-caching-caffeine">Caffeine</a>是一个高性能、高命中率、低内存占用的的本地缓存。它是Guava的加强版，Caffeine使用<em>Window TinyLfu</em> (最近最少频率使用)算法，提供了<strong>近乎最佳的命中率</strong>。<div align=center><img width="400" height="200" src="../../../../images/2020/5-8/caffeine.png" algin="center"/></div><span id="more"></span></p>
@@ -925,6 +827,104 @@
       <tags>
         <tag>java</tag>
         <tag>cache</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JVM类加载机制</title>
+    <url>/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>之前的博客说了Java虚拟机的运行时数据区域、GC算法、垃圾回收器等知识。距离深入了解还有一段距离，包括虚拟机的类加载机制、性能调优、线程并发等等还都没有涉及到，一直在看周志明的《深入理解Java虚拟机》，越深入去读发现这本书写的真的是经典，解决了自己很多的疑惑。</p>
+<p>JVM的类加载机制。虚拟机把描述类的数据从class文件加载到内存中，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。<div align=center><img src="../../../../images/2017/12/ClassLoader/0.png" algin="center"/></p>
+</div><span id="more"></span>
+
+<h1 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h1><p>类被加载到虚拟机内存中开始，到卸载出内存为止。它的生命周期分7个阶段，加载（Loading）、验证（Verification）、准备（Preparation）、解析（Resolution）、初始化（Initialization）、使用（Using）、卸载（Unloading）。其中验证、准备、解析三个部分统称为连接（Linking）。</p>
+<div align=center><img src="../../../../images/2017/12/ClassLoader/2.png" algin="center"/></div>
+## 加载
+
+<ol>
+<li>通过一个类的全限定名来获取定义此类的二进制字节流。</li>
+<li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。</li>
+<li>在Java堆中生成一个代表这个类的java.lang.Class对象，作为对方法区中这些数据的访问入口。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">注意：JVM中的ClassLoader类加载器加载Class发生在此阶段。后面会有描述。</span><br></pre></td></tr></table></figure>
+
+<h2 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h2><h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><p>验证的目的是为了确保Class文件中的字节流包含的信息符合当前虚拟机的要求，而且不会危害虚拟机自身的安全。不同的虚拟机对类验证的实现可能会有所不同，但大致都会完成以下四个阶段的验证：<code>文件格式的验证</code>、<code>元数据的验证</code>、<code>字节码验证</code>和<code>符号引用验证</code>。</p>
+<h4 id="文件格式验证"><a href="#文件格式验证" class="headerlink" title="文件格式验证"></a>文件格式验证</h4><ol>
+<li>主要验证字节流是否符合calss文件格式的规范，如果符合则把字节流加载到方法区中进行存储。</li>
+<li>验证文件头、主次版本等等。</li>
+</ol>
+<h4 id="元数据验证"><a href="#元数据验证" class="headerlink" title="元数据验证"></a>元数据验证</h4><p>主要对字节码描述的信息进行语义分析，保证其描述符合Java语言的要求。</p>
+<ol>
+<li>类是否有父类。</li>
+<li>是否继承了不允许被继承的类（final修饰过的类）。</li>
+<li>如果这个类不是抽象类，是否实现其父类或接口中所有要求实现的方法。</li>
+<li>类中的字段、方法是否与父类产生矛盾（如：覆盖父类final类型的字段，或者不符合个则的方法）。</li>
+</ol>
+<h4 id="字节码验证"><a href="#字节码验证" class="headerlink" title="字节码验证"></a>字节码验证</h4><p>该阶段验证的主要工作是进行数据流和控制流分析，对类的方法体进行校验分析，以保证被校验的类的方法在运行时不会做出危害虚拟机安全的行为。<br>保证被校验类的方法在运行时不会做出危害虚拟机安全的事件。</p>
+<h4 id="符号引用验证"><a href="#符号引用验证" class="headerlink" title="符号引用验证"></a>符号引用验证</h4><ol>
+<li>符号引用中通过字符串描述的全限定名是否能找到对应的类。</li>
+<li>在指定类中是否存在符合方法的字段描述符以及简单名称所描述的方法和字段。</li>
+<li>符号引用中的类、字段、方法的访问性（private、protected、public、default）是否可被当前类访问。</li>
+</ol>
+<h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p><strong>准备阶段是正式为类变量分配内存并设置类变量初始值的阶段，这些内存都将在方法区中分配。</strong>对于该阶段有以下几点需要注意：</p>
+<p>  1、这时候进行内存分配的仅包括类变量（static），而不包括实例变量，实例变量会在对象实例化时随着对象一块分配在Java堆中。</p>
+<p>​    2、这里所设置的初始值通常情况下是数据类型默认的零值（如0、0L、null、false等），而不是被在Java代码中被显式地赋予的值。</p>
+<p>假设一个类变量的定义为：public static int value = 3；</p>
+<p>那么变量value在准备阶段过后的初始值为0，而不是3，因为这时候尚未开始执行任何Java方法，而把value赋值为3的putstatic指令是在程序编译后，存放于类构造器<clinit>（）方法之中的，所以把value赋值为3的动作将在初始化阶段才会执行。</p>
+<p>下表列出了Java中所有基本数据类型以及reference类型的默认零值：</p>
+<div align=center><img src="../../../../images/2017/12/ClassLoader/defaultValue.png"/></div>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">注意：</span><br><span class="line">只设置类中的静态变量（方法区中），不包括实例变量（堆内存中），实例变量是在对象实例化的时候初始化分配值的。</span><br></pre></td></tr></table></figure>
+
+<h3 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h3><p><strong>解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程。</strong></p>
+<ol>
+<li>类或接口的解析：判断所要转化成的直接引用是对数组类型，还是普通的对象类型的引用，从而进行不同的解析。</li>
+<li>字段解析：对字段进行解析时，会先在本类中查找是否包含有简单名称和字段描述符都与目标相匹配的字段，如果有，则查找结束；如果没有，则会按照继承关系从上往下递归搜索该类所实现的各个接口和它们的父接口，还没有，则按照继承关系从上往下递归搜索其父类，直至查找结束。</li>
+<li>类方法解析：对类方法的解析与对字段解析的搜索步骤差不多，只是多了判断该方法所处的是类还是接口的步骤，而且对类方法的匹配搜索，是先搜索父类，再搜索接口。</li>
+<li>接口方法解析：与类方法解析步骤类似，只是接口不会有父类，因此，只递归向上搜索父接口就行了。</li>
+</ol>
+<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p>初始化是类加载过程的最后一步，到了此阶段，才真正开始执行类中定义的Java程序代码。在准备阶段，类变量已经被赋过一次系统要求的初始值，而在初始化阶段，则是<strong>根据程序员通过程序指定的主观计划去初始化类变量和其他资源</strong>，或者可以从另一个角度来表达：初始化阶段是执行类构造器<clinit>()方法的过程。</p>
+<ol>
+<li>执行类构造器<clinit>。</li>
+<li>初始化静态变量、静态块中的数据等（一个类加载器只会初始化一次）。</li>
+<li>子类的<clinit>调用前保证父类的<clinit>被调用。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">注意：</span><br><span class="line">&lt;clinit&gt;是线程安全的，执行&lt;clinit&gt;的线程需要先获取锁才能进行初始化操作，保证只有一个线程能执行&lt;clinit&gt;(利用此特性可以实现线程安全的懒汉单例模式)。如果在一个类的&lt;clinit&gt;方法中有耗时很长的操作，那就可能造成多个线程阻塞，在实际应用中这种阻塞往往是很隐蔽的。</span><br></pre></td></tr></table></figure>
+
+<h1 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h1><p>类被加载进虚拟机是由类加载器（ClassLoader）来完成的。类加载器虽然只用于实现类的加载动作，但它在Java程序中起到的作用却远远不限于类的加载阶段。对于任意一个类，都需要由它的类加载器和这个类本身一同确定其在就Java虚拟机中的唯一性，也就是说，即使两个类来源于同一个Class文件，只要加载它们的类加载器不同，那这两个类就必定不相等。这里的“相等”包括了代表类的Class对象的equals（）、isAssignableFrom（）、isInstance（）等方法的返回结果，也包括了使用instanceof关键字对对象所属关系的判定结果。只有在两个类被<strong>同一个类加载器</strong>加载的前提下，比较才有意义。否则，即使两个类来自同一个class文件，被同一个JVM加载，但是加载它们的类加载器不同，则这两个类就不相等。这就相当于两个命名空间中的等价类<code>LoaderA::C</code>和<code>LoaderB::C</code>。</p>
+<h2 id="类加载器的种类"><a href="#类加载器的种类" class="headerlink" title="类加载器的种类"></a>类加载器的种类</h2><p>从Java虚拟机的角度来分的话，ClassLoader分为启动类加载器（Bootstrap ClassLoader）和其它的加载器。其中Bootstrap ClassLoader负责加载Java的核心类，该类加载器使用C++语言实现，属于虚拟机自身的一部分。而其它类加载器独立于JVM外部，并且全部继承自抽象类java.lang.ClassLoader。</p>
+<p>站在Java开发人员的角度来分的话，ClassLoader分为：</p>
+<ul>
+<li><p><strong>启动类加载器（Bootstrap ClassLoader）</strong></p>
+<p>负责加载<code>JAVA_HOME\lib</code>目录中并且能被虚拟机识别的类库到JVM内存中（如rt.jar，所有的java.*开头的类均被Bootstrap ClassLoader加载），如果名称不符合的类库即使放在lib目录中也不会被加载。该类加载器无法被Java程序直接引用。</p>
+</li>
+<li><p><strong>扩展类加载器（Extension ClassLoader）</strong></p>
+<p>该加载器主要是负责加载<code>JDK\jre\lib\ext</code>目录中，或者由java.ext.dirs系统变量指定的路径中的所有类库（如javax.*开头的类）。该加载器可以被开发者直接使用。</p>
+</li>
+<li><p><strong>应用程序类加载器（Application ClassLoader）</strong></p>
+<p>该类加载器也称为系统类加载器（System ClassLoader），它负责加载用户类路径（Classpath）上所指定的类库，开发者可以直接使用该类加载器，如果应用程序中没有自定义过自己的类加载器，<code>一般情况下这个就是程序中默认的类加载器</code>。</p>
+</li>
+</ul>
+<p>除此之外，还有自定义的类加载器，它们之间的层次关系被称为类加载器的<strong>双亲委派模型</strong>。该模型要求除了顶层的启动类加载器外，其余的类加载器都应该有自己的父类加载器，而这种父子关系一般通过<strong>组合（Composition）关系</strong>来实现，而不是通过继承（Inheritance）。</p>
+<h1 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h1><div align=center><img src="../../../../images/2017/12/ClassLoader/3.jpg" algin="center"/>
+
+<div align=center><img src="../../../../images/2020/1-4/java-nio.jpg" algin="center"/></div>
+
+<p>如上图所示的类加载器之间的这种层次关系，就称为<strong>类加载器的双亲委派模型</strong>（Parent Delegation Model）。该模型要求除了顶层的启动类加载器外，其余的类加载器都应当有自己的父类加载器。子类加载器和父类加载器不是以继承（Inheritance）的关系来实现，而是通过组合（Composition）关系来复用父加载器的代码。</p>
+<p>双亲委派模型的工作过程为：<strong>如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的加载器都是如此，因此所有的类加载请求都会传给顶层的启动类加载器，只有当父加载器反馈自己无法完成该加载请求（该加载器的搜索范围中没有找到对应的类）时，子加载器才会尝试自己去加载</strong>。</p>
+<p>   使用这种模型来组织类加载器之间的关系的好处是Java类随着它的类加载器一起<strong>具备了一种带有优先级的层次关系</strong>。例如java.lang.Object类，无论哪个类加载器去加载该类，最终都是由启动类加载器进行加载，因此Object类在程序的各种类加载器环境中都是同一个类。否则的话，如果不使用该模型的话，如果用户自定义一个java.lang.Object类且存放在classpath中，那么系统中将会出现多个Object类，应用程序也会变得很混乱。如果我们自定义一个rt.jar中已有类的同名Java类，会发现JVM可以正常编译，但该类永远无法被加载运行。</p>
+<p>   在rt.jar包中的java.lang.ClassLoader类中，我们可以查看类加载实现过程的代码，具体源码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">synchronized</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)   <span class="keyword">throws</span> ClassNotFoundException&#123;  </span><br><span class="line">    <span class="comment">// First, check if the class has already been loaded  </span></span><br><span class="line">    <span class="comment">//首先检查请求的类是否已经被加载过   </span></span><br><span class="line">    Class c = findLoadedClass(name);  </span><br><span class="line">    <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;  </span><br><span class="line">        <span class="keyword">try</span> &#123;  </span><br><span class="line">          	<span class="comment">//委派父类加载器加载  </span></span><br><span class="line">            <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;  </span><br><span class="line">                c = parent.loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">            <span class="comment">//委派启动类加载器加载  </span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">                c = findBootstrapClassOrNull(name);  </span><br><span class="line">            &#125;  </span><br><span class="line">        <span class="comment">//父类加载器无法完成类加载请求   </span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;  </span><br><span class="line">            <span class="comment">// ClassNotFoundException thrown if class not found  </span></span><br><span class="line">            <span class="comment">// from the non-null parent class loader  </span></span><br><span class="line">        &#125;  </span><br><span class="line">       	<span class="comment">//本身类加载器进行类加载</span></span><br><span class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;  </span><br><span class="line">            <span class="comment">// If still not found, then invoke findClass in order  </span></span><br><span class="line">            <span class="comment">// to find the class.  </span></span><br><span class="line">            c = findClass(name);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">if</span> (resolve) &#123;  </span><br><span class="line">        resolveClass(c);  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> c;  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+<p>通过上面代码可以看出，双亲委派模型是通过loadClass()方法来实现的，根据代码以及代码中的注释可以很清楚地了解整个过程其实非常简单：先检查是否已经被加载过，如果没有则调用父加载器的loadClass()方法，如果父加载器为空则默认使用启动类加载器作为父加载器。如果父类加载器加载失败，则先抛出ClassNotFoundException，然后再调用自己的findClass()方法进行加载。</p>
+<p>注意，双亲委派模型是Java设计者推荐给开发者的类加载器的实现方式，并不是强制规定的。大多数的类加载器都遵循这个模型，但是JDK中也有较大规模破坏双亲模型的情况，例如线程上下文类加载器（Thread Context ClassLoader）的出现。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>整个类加载过程中，除了在加载阶段用户应用程序可以自定义类加载器参与之外，其余所有的动作完全由虚拟机主导和控制。到了初始化才开始执行类中定义的Java程序代码，但这里的执行代码只是个开端，它仅限于<clinit>()方法。类加载过程中主要是将Class文件（准确地讲，应该是类的二进制字节流）加载到虚拟机内存中，真正执行字节码的操作，在加载完成后才真正开始。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>jvm</tag>
       </tags>
   </entry>
   <entry>
@@ -3402,21 +3402,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Spring反射调用Bean方法</title>
-    <url>/Spring%E5%8F%8D%E5%B0%84%E8%B0%83%E7%94%A8Bean%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<p><code>Spring</code>通过<code>ApplicationContextAware</code>反射调用服Bean方法，<code>ApplicationContextAware</code>常用方法封装。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringReflectUtils</span> <span class="keyword">implements</span> <span class="title">ApplicationContextAware</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Spring容器 spring应用上下文对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ApplicationContext applicationContext;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setApplicationContext</span><span class="params">(ApplicationContext applicationContext)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        SpringReflectUtils.applicationContext = applicationContext;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * bean名称</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> name 要查询的bean的名称</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> true：包含</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">containsBean</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> applicationContext.containsBean(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 通过对象名称获取spring bean对象</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> name bean的名称</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getBean</span><span class="params">(String name)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> applicationContext.getBean(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 返回与给定对象类型唯一匹配的bean实例(如果有)</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> requiredType bean 必须匹配的类型； 可以是接口或超</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 匹配所需类型的单个 bean 的实例</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">T <span class="title">getBean</span><span class="params">(Class&lt;T&gt; requiredType)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> applicationContext.getBean(requiredType);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 返回与给定对象类型（包括子类）匹配的 bean 实例</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> type 要匹配的类或接口</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Map&lt;bean名称, bean实例&gt;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">Map&lt;String, T&gt; <span class="title">getBeansOfType</span><span class="params">(Class&lt;T&gt; type)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> applicationContext.getBeansOfType(type);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据bean名称、方法名反射调用spring bean中的方法</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> serviceName 服务名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> methodName  方法名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> params      参数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">springInvokeMethod</span><span class="params">(String serviceName, String methodName, Object[] params)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Object service = getBean(serviceName);</span><br><span class="line">        Class&lt;? extends Object&gt;[] paramClass = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (params != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> paramsLength = params.length;</span><br><span class="line">            paramClass = <span class="keyword">new</span> Class[paramsLength];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; paramsLength; i++) &#123;</span><br><span class="line">                paramClass[i] = params[i].getClass();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 找到方法</span></span><br><span class="line">        Method method = ReflectionUtils.findMethod(service.getClass(), methodName, paramClass);</span><br><span class="line">        <span class="comment">// 执行方法</span></span><br><span class="line">        <span class="keyword">return</span> ReflectionUtils.invokeMethod(method, service, params);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>后端</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>spring</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Spring之动态代理</title>
     <url>/Spring%E4%B9%8B%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>Spring主要有两大思想，一个是AOP，一个是IOC。对于Spring的核心AOP来说，动态代理机制是其核心，想要明白AOP原理，一定要了解动态代理机制。</p>
@@ -3513,6 +3498,21 @@
 <li>如果要被代理的对象<strong>不是个实现类</strong>，那么Spring会<strong>强制使用CGLib来实现动态代理</strong>。</li>
 </ul>
 <h2 id="Spring中配置动态代理方式"><a href="#Spring中配置动态代理方式" class="headerlink" title="Spring中配置动态代理方式"></a>Spring中配置动态代理方式</h2><p>通过配置Spring的中**<a href="aop:config">aop:config</a>**标签来显示的指定使用动态代理机制 <strong>proxy-target-class=true表示使用CGLib代理，如果为false就是默认使用JDK动态代理</strong>。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring反射调用Bean方法</title>
+    <url>/Spring%E5%8F%8D%E5%B0%84%E8%B0%83%E7%94%A8Bean%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<p><code>Spring</code>通过<code>ApplicationContextAware</code>反射调用服Bean方法，<code>ApplicationContextAware</code>常用方法封装。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringReflectUtils</span> <span class="keyword">implements</span> <span class="title">ApplicationContextAware</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Spring容器 spring应用上下文对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ApplicationContext applicationContext;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setApplicationContext</span><span class="params">(ApplicationContext applicationContext)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        SpringReflectUtils.applicationContext = applicationContext;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * bean名称</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> name 要查询的bean的名称</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> true：包含</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">containsBean</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> applicationContext.containsBean(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 通过对象名称获取spring bean对象</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> name bean的名称</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getBean</span><span class="params">(String name)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> applicationContext.getBean(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 返回与给定对象类型唯一匹配的bean实例(如果有)</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> requiredType bean 必须匹配的类型； 可以是接口或超</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 匹配所需类型的单个 bean 的实例</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">T <span class="title">getBean</span><span class="params">(Class&lt;T&gt; requiredType)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> applicationContext.getBean(requiredType);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 返回与给定对象类型（包括子类）匹配的 bean 实例</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> type 要匹配的类或接口</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Map&lt;bean名称, bean实例&gt;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">Map&lt;String, T&gt; <span class="title">getBeansOfType</span><span class="params">(Class&lt;T&gt; type)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> applicationContext.getBeansOfType(type);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据bean名称、方法名反射调用spring bean中的方法</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> serviceName 服务名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> methodName  方法名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> params      参数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">springInvokeMethod</span><span class="params">(String serviceName, String methodName, Object[] params)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Object service = getBean(serviceName);</span><br><span class="line">        Class&lt;? extends Object&gt;[] paramClass = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (params != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> paramsLength = params.length;</span><br><span class="line">            paramClass = <span class="keyword">new</span> Class[paramsLength];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; paramsLength; i++) &#123;</span><br><span class="line">                paramClass[i] = params[i].getClass();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 找到方法</span></span><br><span class="line">        Method method = ReflectionUtils.findMethod(service.getClass(), methodName, paramClass);</span><br><span class="line">        <span class="comment">// 执行方法</span></span><br><span class="line">        <span class="keyword">return</span> ReflectionUtils.invokeMethod(method, service, params);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>后端</category>
@@ -4613,63 +4613,6 @@
       </tags>
   </entry>
   <entry>
-    <title>浅谈共享单车</title>
-    <url>/%E6%B5%85%E8%B0%88%E5%85%B1%E4%BA%AB%E5%8D%95%E8%BD%A6/</url>
-    <content><![CDATA[<p>​    要说目前最火爆的互联网现象，当属<code>共享单车</code>。这里所谓的共享，本质上指的是需求共享。就骑车的需求，从一个地方骑到另一个地方，就是用户触点（产品投放）、产品操作（骑行过程）、付费模式（支付）的流程，从个体上来讲，这个流程是单向的。但在“共享”的模式下，扫码骑走，停车即走，把不同的人，在不同的时间和地点，相同的骑行需求，通过产品操作节点，形成需求闭环，停车点同时又是骑行出发点，这就是需求共享。</p>
-<div align=center><img width="600" height="280" src="../../../../images/2017-3-24/cover.jpg" algin="center"/></div>
-
-<span id="more"></span>
-
-<blockquote>
-<p>共享单车是指企业与政府合作，在地铁、学校、公交站点、居民区、商业区、公共服务区等提供自行车单车共享服务，是共享经济的一种新形态。</p>
-</blockquote>
-<p>​    2016年底以来，国内共享单车突然就火爆了起来，而在街头，仿佛一夜之间，共享单车已经到了“泛滥”的地步，各大城市路边排满各种颜色的共享单车。</p>
-<h2 id="场景分析"><a href="#场景分析" class="headerlink" title="场景分析"></a>场景分析</h2><p>​    我们站在用户角度，无非就是找车，然后骑车，交钱。</p>
-<p><img src="../../../../images/2017-3-24/%E5%9C%BA%E6%99%AF%E5%88%86%E6%9E%90.jpg" alt="场景分析"></p>
-<p>在“<code>寻车-用车-骑车-还车</code>”的场景闭环中，需要考虑的问题有很多，列举以下若干种：</p>
-<ul>
-<li>什么样的寻车方式更符合大众的日常行为？</li>
-</ul>
-<ul>
-<li>用户与单车之间如何建立一一对应的联系？</li>
-</ul>
-<ul>
-<li>使用何种开锁构件实现远程开锁和上锁？</li>
-</ul>
-<ul>
-<li>计费方式及费用节点、价格、操作流程分别采取什么方案？</li>
-</ul>
-<ul>
-<li>如何对车辆进行远程管理？</li>
-</ul>
-<ul>
-<li>如何防止逃费、盗窃、破坏等衍生问题？</li>
-</ul>
-<p>场景分析的过程，就是解决以上若干问题的过程，针对这些问题，分别提出不同的业务流程和技术方案。</p>
-<h2 id="业务逻辑分析"><a href="#业务逻辑分析" class="headerlink" title="业务逻辑分析"></a>业务逻辑分析</h2><p>以<code>摩拜单车</code>为例，用户-管理平台-单车 之间的关系如下图:</p>
-<p><img src="../../../../images/2017-3-24/%E6%B5%81%E7%A8%8B.jpg" alt="流程"></p>
-<h2 id="技术实现方案"><a href="#技术实现方案" class="headerlink" title="技术实现方案"></a>技术实现方案</h2><p>​    现在共享单车最火的要数*<a href="http://mobike.com/cn/">摩拜单车</a><em>和</em><a href="http://www.ofo.so/?utm_source=baidu&utm_medium=pz">OFO小黄车</a>*了，摩拜采用<strong>智能锁</strong>而ofo采用的是<strong>机械锁</strong>。</p>
-<h3 id="1-机械锁"><a href="#1-机械锁" class="headerlink" title="1  机械锁"></a>1  机械锁</h3><p>​    原理：机械锁的原理很简单，只需要打开软件，输入对应的车牌号就可以了，其实就是后台查询数据库，判断单车是否处于正常状态，返回给用户开锁密码，用户拿着开锁密码开锁。</p>
-<p><img src="../../../../images/2017-3-24/ofo%E5%8E%9F%E7%90%86.jpg" alt="机械锁"></p>
-<h3 id="2-智能锁"><a href="#2-智能锁" class="headerlink" title="2  智能锁"></a>2  智能锁</h3><p>​    原理：对于单车的远程开锁机制，采用远程通信控制机械构件的电磁运动来实现。远程通信可采用传统的SIM卡通信的方式。</p>
-<p>一、手机扫描自行车，获得自行车唯一的ID标志，手机接着会像服务器提交一个请求（提交信息里包含：用户信息，请求动作，车辆ID）；<br>二、服务器收到用户开锁请求，此时会根据请求信息，接着向指定ID的自行车发出开锁指令;<br>三、自行车收到服务器请求，会执行相应的开锁动作。</p>
-<p><em>智能锁是耗费电能的，所以摩拜单车车篮中装有太阳能电池板，减少人力物力维护的成本、简单、高效。</em></p>
-<p><img src="../../../../images/2017-3-24/mobike%E5%8E%9F%E7%90%86.png" alt="mobike原理"></p>
-<p>​    这是一个典型的大容量互联网O2O场景，连结用户、车辆，管理平台进行实时处理效率要求非常高，需制定可靠、高效的网络方案。根据业务流程，我们梳理出网络节点的职能，并从成本考虑使用最优方案：<img src="../../../../images/2017-3-24/%E6%96%B9%E6%A1%88.jpg" alt="方案"></p>
-<p>​    明确流程，界面，那么接下来的任务就是通过用户语言去实现产品流程了，即界面设计与开发实现，这里我们就不阐述了。</p>
-<h2 id="一点感想"><a href="#一点感想" class="headerlink" title="一点感想"></a>一点感想</h2><p>​    从2016年到现在已有近半年时间，共享单车的竞争也愈演愈烈，近几天，共享单车从免费到红包“撒钱” 导致竞争升级，共享单车方便了我们的出行，但是带来的问题也很多，政府也在不断的规范使用。现在都在处于资本投入和烧钱大战中，希望共享单车一直存活下去，同时希望大家能合理、合法使用。</p>
-<blockquote>
-<p>之前有听说过摩拜的扫一扫可以远程使用，假如我需要车又没有注册，我可以拍照给有车的朋友，让他们帮我远程扫就可以开启，<strong>亲测</strong>：不行！还是自己乖乖注册一个吧。</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>杂谈</category>
-      </categories>
-      <tags>
-        <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
     <title></title>
     <url>/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AD%98%E5%82%A8%E6%9E%B6%E6%9E%84/</url>
     <content><![CDATA[<h1 id="存储架构模式"><a href="#存储架构模式" class="headerlink" title="存储架构模式"></a>存储架构模式</h1><h1 id="数据库存储架构"><a href="#数据库存储架构" class="headerlink" title="数据库存储架构"></a>数据库存储架构</h1><h2 id="数据库读写分离架构"><a href="#数据库读写分离架构" class="headerlink" title="数据库读写分离架构"></a>数据库读写分离架构</h2><p><img src="/Users/max/Sunny0715/source/images/2018-8/image-20220303095653542.png" alt="image-20220303095653542"></p>
@@ -4759,6 +4702,63 @@
 <h1 id="复制架构"><a href="#复制架构" class="headerlink" title="复制架构"></a>复制架构</h1><p><img src="/Users/max/Sunny0715/source/images/2018-8/image-20220303162814065.png" alt="image-20220303162814065"></p>
 <h1 id="分片架构与分区架构"><a href="#分片架构与分区架构" class="headerlink" title="分片架构与分区架构"></a>分片架构与分区架构</h1><p><img src="/Users/max/Sunny0715/source/images/2018-8/image-20220303161900333.png" alt="image-20220303161900333"></p>
 <h1 id="设计存储架构"><a href="#设计存储架构" class="headerlink" title="设计存储架构"></a>设计存储架构</h1>]]></content>
+  </entry>
+  <entry>
+    <title>浅谈共享单车</title>
+    <url>/%E6%B5%85%E8%B0%88%E5%85%B1%E4%BA%AB%E5%8D%95%E8%BD%A6/</url>
+    <content><![CDATA[<p>​    要说目前最火爆的互联网现象，当属<code>共享单车</code>。这里所谓的共享，本质上指的是需求共享。就骑车的需求，从一个地方骑到另一个地方，就是用户触点（产品投放）、产品操作（骑行过程）、付费模式（支付）的流程，从个体上来讲，这个流程是单向的。但在“共享”的模式下，扫码骑走，停车即走，把不同的人，在不同的时间和地点，相同的骑行需求，通过产品操作节点，形成需求闭环，停车点同时又是骑行出发点，这就是需求共享。</p>
+<div align=center><img width="600" height="280" src="../../../../images/2017-3-24/cover.jpg" algin="center"/></div>
+
+<span id="more"></span>
+
+<blockquote>
+<p>共享单车是指企业与政府合作，在地铁、学校、公交站点、居民区、商业区、公共服务区等提供自行车单车共享服务，是共享经济的一种新形态。</p>
+</blockquote>
+<p>​    2016年底以来，国内共享单车突然就火爆了起来，而在街头，仿佛一夜之间，共享单车已经到了“泛滥”的地步，各大城市路边排满各种颜色的共享单车。</p>
+<h2 id="场景分析"><a href="#场景分析" class="headerlink" title="场景分析"></a>场景分析</h2><p>​    我们站在用户角度，无非就是找车，然后骑车，交钱。</p>
+<p><img src="../../../../images/2017-3-24/%E5%9C%BA%E6%99%AF%E5%88%86%E6%9E%90.jpg" alt="场景分析"></p>
+<p>在“<code>寻车-用车-骑车-还车</code>”的场景闭环中，需要考虑的问题有很多，列举以下若干种：</p>
+<ul>
+<li>什么样的寻车方式更符合大众的日常行为？</li>
+</ul>
+<ul>
+<li>用户与单车之间如何建立一一对应的联系？</li>
+</ul>
+<ul>
+<li>使用何种开锁构件实现远程开锁和上锁？</li>
+</ul>
+<ul>
+<li>计费方式及费用节点、价格、操作流程分别采取什么方案？</li>
+</ul>
+<ul>
+<li>如何对车辆进行远程管理？</li>
+</ul>
+<ul>
+<li>如何防止逃费、盗窃、破坏等衍生问题？</li>
+</ul>
+<p>场景分析的过程，就是解决以上若干问题的过程，针对这些问题，分别提出不同的业务流程和技术方案。</p>
+<h2 id="业务逻辑分析"><a href="#业务逻辑分析" class="headerlink" title="业务逻辑分析"></a>业务逻辑分析</h2><p>以<code>摩拜单车</code>为例，用户-管理平台-单车 之间的关系如下图:</p>
+<p><img src="../../../../images/2017-3-24/%E6%B5%81%E7%A8%8B.jpg" alt="流程"></p>
+<h2 id="技术实现方案"><a href="#技术实现方案" class="headerlink" title="技术实现方案"></a>技术实现方案</h2><p>​    现在共享单车最火的要数*<a href="http://mobike.com/cn/">摩拜单车</a><em>和</em><a href="http://www.ofo.so/?utm_source=baidu&utm_medium=pz">OFO小黄车</a>*了，摩拜采用<strong>智能锁</strong>而ofo采用的是<strong>机械锁</strong>。</p>
+<h3 id="1-机械锁"><a href="#1-机械锁" class="headerlink" title="1  机械锁"></a>1  机械锁</h3><p>​    原理：机械锁的原理很简单，只需要打开软件，输入对应的车牌号就可以了，其实就是后台查询数据库，判断单车是否处于正常状态，返回给用户开锁密码，用户拿着开锁密码开锁。</p>
+<p><img src="../../../../images/2017-3-24/ofo%E5%8E%9F%E7%90%86.jpg" alt="机械锁"></p>
+<h3 id="2-智能锁"><a href="#2-智能锁" class="headerlink" title="2  智能锁"></a>2  智能锁</h3><p>​    原理：对于单车的远程开锁机制，采用远程通信控制机械构件的电磁运动来实现。远程通信可采用传统的SIM卡通信的方式。</p>
+<p>一、手机扫描自行车，获得自行车唯一的ID标志，手机接着会像服务器提交一个请求（提交信息里包含：用户信息，请求动作，车辆ID）；<br>二、服务器收到用户开锁请求，此时会根据请求信息，接着向指定ID的自行车发出开锁指令;<br>三、自行车收到服务器请求，会执行相应的开锁动作。</p>
+<p><em>智能锁是耗费电能的，所以摩拜单车车篮中装有太阳能电池板，减少人力物力维护的成本、简单、高效。</em></p>
+<p><img src="../../../../images/2017-3-24/mobike%E5%8E%9F%E7%90%86.png" alt="mobike原理"></p>
+<p>​    这是一个典型的大容量互联网O2O场景，连结用户、车辆，管理平台进行实时处理效率要求非常高，需制定可靠、高效的网络方案。根据业务流程，我们梳理出网络节点的职能，并从成本考虑使用最优方案：<img src="../../../../images/2017-3-24/%E6%96%B9%E6%A1%88.jpg" alt="方案"></p>
+<p>​    明确流程，界面，那么接下来的任务就是通过用户语言去实现产品流程了，即界面设计与开发实现，这里我们就不阐述了。</p>
+<h2 id="一点感想"><a href="#一点感想" class="headerlink" title="一点感想"></a>一点感想</h2><p>​    从2016年到现在已有近半年时间，共享单车的竞争也愈演愈烈，近几天，共享单车从免费到红包“撒钱” 导致竞争升级，共享单车方便了我们的出行，但是带来的问题也很多，政府也在不断的规范使用。现在都在处于资本投入和烧钱大战中，希望共享单车一直存活下去，同时希望大家能合理、合法使用。</p>
+<blockquote>
+<p>之前有听说过摩拜的扫一扫可以远程使用，假如我需要车又没有注册，我可以拍照给有车的朋友，让他们帮我远程扫就可以开启，<strong>亲测</strong>：不行！还是自己乖乖注册一个吧。</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>杂谈</category>
+      </categories>
+      <tags>
+        <tag>随笔</tag>
+      </tags>
   </entry>
   <entry>
     <title>浅谈设计文档</title>
@@ -5083,42 +5083,6 @@
       </tags>
   </entry>
   <entry>
-    <title>网址收藏</title>
-    <url>/%E7%BD%91%E5%9D%80%E6%94%B6%E8%97%8F/</url>
-    <content><![CDATA[<h1 id="开发类"><a href="#开发类" class="headerlink" title="开发类"></a>开发类</h1><table>
-<thead>
-<tr>
-<th>名称</th>
-<th>地址</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Jetbrains系列产品重置试用方法</td>
-<td><a href="https://zhile.io/2020/11/18/jetbrains-eval-reset-da33a93d.html">https://zhile.io/2020/11/18/jetbrains-eval-reset-da33a93d.html</a></td>
-</tr>
-</tbody></table>
-<h1 id="手册类"><a href="#手册类" class="headerlink" title="手册类"></a>手册类</h1><table>
-<thead>
-<tr>
-<th>名称</th>
-<th>地址</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Elasticsearch中文文档</td>
-<td><a href="https://doc.codingdict.com/elasticsearch/323/">https://doc.codingdict.com/elasticsearch/323/</a></td>
-</tr>
-<tr>
-<td>Elasticsearch中文文档</td>
-<td><a href="https://learnku.com/docs/elasticsearch73/7.3">https://learnku.com/docs/elasticsearch73/7.3</a></td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-  </entry>
-  <entry>
     <title>自定义StopWatch</title>
     <url>/%E8%87%AA%E5%AE%9A%E4%B9%89StopWatch/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在平时的开发调试工作或线上中，有时会遇到程序执行效率非常慢，通过一般的经验只能判断出部分逻辑有问题，但判断并不直观且效率较低，不知道方法中哪个阶段比较耗时。<span id="more"></span>目前spring-framework提供了一个StopWatch类可以做类似任务执行时间控制，于是利用此思想重新实现了一套自己的逻辑。<div align=center><img width="220" height="220" src="../../../../images/2019/1-3/StopWatch.jpg" algin="center"/></div></p>
@@ -5214,6 +5178,42 @@
       <tags>
         <tag>tips</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>网址收藏</title>
+    <url>/%E7%BD%91%E5%9D%80%E6%94%B6%E8%97%8F/</url>
+    <content><![CDATA[<h1 id="开发类"><a href="#开发类" class="headerlink" title="开发类"></a>开发类</h1><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>地址</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Jetbrains系列产品重置试用方法</td>
+<td><a href="https://zhile.io/2020/11/18/jetbrains-eval-reset-da33a93d.html">https://zhile.io/2020/11/18/jetbrains-eval-reset-da33a93d.html</a></td>
+</tr>
+</tbody></table>
+<h1 id="手册类"><a href="#手册类" class="headerlink" title="手册类"></a>手册类</h1><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>地址</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Elasticsearch中文文档</td>
+<td><a href="https://doc.codingdict.com/elasticsearch/323/">https://doc.codingdict.com/elasticsearch/323/</a></td>
+</tr>
+<tr>
+<td>Elasticsearch中文文档</td>
+<td><a href="https://learnku.com/docs/elasticsearch73/7.3">https://learnku.com/docs/elasticsearch73/7.3</a></td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
   </entry>
   <entry>
     <title>计算密集型 VS IO密集型</title>
@@ -5684,6 +5684,65 @@
       </tags>
   </entry>
   <entry>
+    <title>跨页面(Tab/Window)通信的几种方法</title>
+    <url>/%E8%B7%A8%E9%A1%B5%E9%9D%A2-Tab-Window-%E9%80%9A%E4%BF%A1%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<p>​    今天开发一个功能遇到一个需求，在A页面点击查看详情后打开B页面进行修改或删除，删除后B页面关闭，然后刷新A页面里面的数据。相当于就是两个页面之间进行通讯，作为后端的我第一想法是利用<code>webSocket</code> 进行通讯，之后通过谷歌和百度找出了更为简便的方法。</p>
+<div align=center><img width="450" height="200" src="../../../../images/2017-9-13/additional/html%E9%A1%B5%E9%9D%A2%E4%BC%A0%E5%80%BC.png" algin="center"/></div><span id="more"></span>
+
+<h1 id="利用webSocket进行通讯"><a href="#利用webSocket进行通讯" class="headerlink" title="利用webSocket进行通讯"></a>利用webSocket进行通讯</h1><p>​    第一想法是这个，但是这样的话工作量巨大而且还需要后端支持，太麻烦了，对于我这种懒人直接就放弃了，去寻找有没有更简便的方法。</p>
+<h1 id="定时器不断检查cookies变化"><a href="#定时器不断检查cookies变化" class="headerlink" title="定时器不断检查cookies变化"></a>定时器不断检查cookies变化</h1><p>在<a href="https://stackoverflow.com/">stackoverflow</a>上看到一个方案，大致思路是：</p>
+<ol>
+<li>在页面A设置一个使用 <code>setInterval</code> 定时器不断刷新，检查 <code>Cookies</code> 的值是否发生变化，如果变化就进行刷新的操作。</li>
+<li>由于 <code>Cookies</code> 是在同域可读的，所以在页面 B 审核的时候改变 <code>Cookies</code> 的值，页面 A 自然是可以拿到的。<br>这样做确实可以实现我想要的功能，但是这样的方法相当浪费资源。虽然在这个性能过盛的时代，浪费不浪费也感觉不出来，但是这种实现方案，确实不够优(zhuāng)雅（bī）。</li>
+</ol>
+<h1 id="localStorage的事件"><a href="#localStorage的事件" class="headerlink" title="localStorage的事件"></a>localStorage的事件</h1><p>功夫不负有心人，后来发现 window 有一个 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/StorageEvent">StorageEvent</a> ，每当 <code>localStorage</code> 改变的时候可以触发这个事件。（这个原理就像你给一个<code>DOM</code> 绑定了 <code>click</code> 事件，当你点击它的时候，就会自动触发。）也就是说，我给 <code>window</code> 绑定这个事件后，每当我改变 <code>localStorage</code> 的时候，他都会触发这个事件。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">window.addEventListener(&#x27;storage&#x27;, function (event) &#123;</span><br><span class="line">  console.log(event);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这个回调中的<code>event</code>与普通的<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Event#Properties">EVNET</a>,基本差不多，但是它比其他的<code>event</code>多了如下几个属性:</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>key</td>
+<td>受影响的 <code>localStorage</code> 的 <code>key</code></td>
+</tr>
+<tr>
+<td>newValue</td>
+<td>新的值</td>
+</tr>
+<tr>
+<td>oldValue</td>
+<td>旧的值</td>
+</tr>
+<tr>
+<td>url</td>
+<td>触发此事件的url</td>
+</tr>
+</tbody></table>
+<p>每当一个页面改变了 <code>localStorage</code> 的值，都会触发这个事件。也就是说可以很容易的通过改变 <code>localStorage</code> 的值，来实现浏览器中跨页面( tab / window )之间的通讯。记住这个事件只有在 <code>localStorage</code> 发生<strong>改变</strong>的时候才会被触发，如果没改变则<strong>不会触发</strong>此事件。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">localStorage.setItem(&#x27;delete&#x27;,1); //触发</span><br><span class="line">localStorage.setItem(&#x27;delete&#x27;,1); //不触发</span><br><span class="line">localStorage.setItem(&#x27;delete&#x27;,2); //触发</span><br></pre></td></tr></table></figure>
+
+<p>在使用的时候务必注意这一点。<br>最终实现代码:</p>
+<p><strong>页面A：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//页面 A</span><br><span class="line">window.addEventListener(&#x27;storage&#x27;, function (event) &#123;</span><br><span class="line">    if(event.key === &#x27;delete_verify_list&#x27;)&#123;</span><br><span class="line">        //页面操作</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>页面B：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//页面 B</span><br><span class="line">/**</span><br><span class="line"> *  获取一个随机id</span><br><span class="line"> * @return &#123;String&#125; - 返回一个5位的随机字符串</span><br><span class="line"> */</span><br><span class="line">function randomId() &#123;</span><br><span class="line">    return (Math.random() * 1E18).toString(36).slice(0, 5).toUpperCase();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//每当需要页面A更新时 执行此方法</span><br><span class="line">if (localStorage) &#123;</span><br><span class="line">	//为保证每次页面A都执行，此处我设置里一个随机字符串</span><br><span class="line">    localStorage.setItem(&#x27;delete_verify_list&#x27;, randomId());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>参考：<a href="https://ponyfoo.com/articles/cross-tab-communication">https://ponyfoo.com/articles/cross-tab-communication</a></p>
+]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>tips</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>轻量级日志采集Loki搭建</title>
     <url>/%E8%BD%BB%E9%87%8F%E7%BA%A7%E6%97%A5%E5%BF%97%E9%87%87%E9%9B%86Loki%E6%90%AD%E5%BB%BA/</url>
     <content><![CDATA[<p><code>Loki</code>是受<code>Prometheus</code>启发由Grafana Labs团队开源的水平可扩展，高度可用的多租户日志聚合系统。它的设计具有很高的成本效益，并且易于操作。使用标签来作为索引，而不是对全文进行检索，也就是说，通过这些标签既可以查询日志的内容也可以查询到监控的数据签，极大地降低了日志索引的存储。<div align=center><img src="../../../../images/2020/9-12/loki.png" algin="center"/></div></p>
@@ -5741,65 +5800,6 @@
       <tags>
         <tag>tips</tag>
         <tag>grafana</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>跨页面(Tab/Window)通信的几种方法</title>
-    <url>/%E8%B7%A8%E9%A1%B5%E9%9D%A2-Tab-Window-%E9%80%9A%E4%BF%A1%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<p>​    今天开发一个功能遇到一个需求，在A页面点击查看详情后打开B页面进行修改或删除，删除后B页面关闭，然后刷新A页面里面的数据。相当于就是两个页面之间进行通讯，作为后端的我第一想法是利用<code>webSocket</code> 进行通讯，之后通过谷歌和百度找出了更为简便的方法。</p>
-<div align=center><img width="450" height="200" src="../../../../images/2017-9-13/additional/html%E9%A1%B5%E9%9D%A2%E4%BC%A0%E5%80%BC.png" algin="center"/></div><span id="more"></span>
-
-<h1 id="利用webSocket进行通讯"><a href="#利用webSocket进行通讯" class="headerlink" title="利用webSocket进行通讯"></a>利用webSocket进行通讯</h1><p>​    第一想法是这个，但是这样的话工作量巨大而且还需要后端支持，太麻烦了，对于我这种懒人直接就放弃了，去寻找有没有更简便的方法。</p>
-<h1 id="定时器不断检查cookies变化"><a href="#定时器不断检查cookies变化" class="headerlink" title="定时器不断检查cookies变化"></a>定时器不断检查cookies变化</h1><p>在<a href="https://stackoverflow.com/">stackoverflow</a>上看到一个方案，大致思路是：</p>
-<ol>
-<li>在页面A设置一个使用 <code>setInterval</code> 定时器不断刷新，检查 <code>Cookies</code> 的值是否发生变化，如果变化就进行刷新的操作。</li>
-<li>由于 <code>Cookies</code> 是在同域可读的，所以在页面 B 审核的时候改变 <code>Cookies</code> 的值，页面 A 自然是可以拿到的。<br>这样做确实可以实现我想要的功能，但是这样的方法相当浪费资源。虽然在这个性能过盛的时代，浪费不浪费也感觉不出来，但是这种实现方案，确实不够优(zhuāng)雅（bī）。</li>
-</ol>
-<h1 id="localStorage的事件"><a href="#localStorage的事件" class="headerlink" title="localStorage的事件"></a>localStorage的事件</h1><p>功夫不负有心人，后来发现 window 有一个 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/StorageEvent">StorageEvent</a> ，每当 <code>localStorage</code> 改变的时候可以触发这个事件。（这个原理就像你给一个<code>DOM</code> 绑定了 <code>click</code> 事件，当你点击它的时候，就会自动触发。）也就是说，我给 <code>window</code> 绑定这个事件后，每当我改变 <code>localStorage</code> 的时候，他都会触发这个事件。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">window.addEventListener(&#x27;storage&#x27;, function (event) &#123;</span><br><span class="line">  console.log(event);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>这个回调中的<code>event</code>与普通的<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Event#Properties">EVNET</a>,基本差不多，但是它比其他的<code>event</code>多了如下几个属性:</p>
-<table>
-<thead>
-<tr>
-<th>属性</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>key</td>
-<td>受影响的 <code>localStorage</code> 的 <code>key</code></td>
-</tr>
-<tr>
-<td>newValue</td>
-<td>新的值</td>
-</tr>
-<tr>
-<td>oldValue</td>
-<td>旧的值</td>
-</tr>
-<tr>
-<td>url</td>
-<td>触发此事件的url</td>
-</tr>
-</tbody></table>
-<p>每当一个页面改变了 <code>localStorage</code> 的值，都会触发这个事件。也就是说可以很容易的通过改变 <code>localStorage</code> 的值，来实现浏览器中跨页面( tab / window )之间的通讯。记住这个事件只有在 <code>localStorage</code> 发生<strong>改变</strong>的时候才会被触发，如果没改变则<strong>不会触发</strong>此事件。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">localStorage.setItem(&#x27;delete&#x27;,1); //触发</span><br><span class="line">localStorage.setItem(&#x27;delete&#x27;,1); //不触发</span><br><span class="line">localStorage.setItem(&#x27;delete&#x27;,2); //触发</span><br></pre></td></tr></table></figure>
-
-<p>在使用的时候务必注意这一点。<br>最终实现代码:</p>
-<p><strong>页面A：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//页面 A</span><br><span class="line">window.addEventListener(&#x27;storage&#x27;, function (event) &#123;</span><br><span class="line">    if(event.key === &#x27;delete_verify_list&#x27;)&#123;</span><br><span class="line">        //页面操作</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p><strong>页面B：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//页面 B</span><br><span class="line">/**</span><br><span class="line"> *  获取一个随机id</span><br><span class="line"> * @return &#123;String&#125; - 返回一个5位的随机字符串</span><br><span class="line"> */</span><br><span class="line">function randomId() &#123;</span><br><span class="line">    return (Math.random() * 1E18).toString(36).slice(0, 5).toUpperCase();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//每当需要页面A更新时 执行此方法</span><br><span class="line">if (localStorage) &#123;</span><br><span class="line">	//为保证每次页面A都执行，此处我设置里一个随机字符串</span><br><span class="line">    localStorage.setItem(&#x27;delete_verify_list&#x27;, randomId());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>参考：<a href="https://ponyfoo.com/articles/cross-tab-communication">https://ponyfoo.com/articles/cross-tab-communication</a></p>
-]]></content>
-      <categories>
-        <category>前端</category>
-      </categories>
-      <tags>
-        <tag>tips</tag>
       </tags>
   </entry>
   <entry>
