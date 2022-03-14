@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://mx-go.github.io/images/2022/1-3/6.arch_cover.jpg">
 <meta property="article:published_time" content="2022-03-14T06:53:08.000Z">
-<meta property="article:modified_time" content="2022-03-14T08:17:42.645Z">
+<meta property="article:modified_time" content="2022-03-14T08:29:19.104Z">
 <meta property="article:author" content="彩虹马">
 <meta property="article:tag" content="架构">
 <meta name="twitter:card" content="summary">
@@ -58,7 +58,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2022-03-14 16:17:42'
+  postUpdate: '2022-03-14 16:29:19'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -199,20 +199,24 @@
 <p>【定义】 平均3个开发人员负责一个微服务。 </p>
 <p>【剖析】</p>
 <ol>
-<li><p>为什么不是1个？ </p>
-<pre><code>     因为没有备份，且一个人思维有局限。 
-</code></pre>
-</li>
+<li>为什么不是1个？ </li>
+</ol>
+<ul>
+<li>因为没有备份，且一个人思维有局限。 </li>
+</ul>
+<ol start="2">
 <li><p>为什么不是2个？ </p>
-<p>• 因为异常情况下剩余1个，压力会很大；</p>
-<p> • 2个人负责维护一个微服务，微服务复杂度偏低。 </p>
+<ul>
+<li>因为异常情况下剩余1个，压力会很大；</li>
+<li>2个人负责维护一个微服务，微服务复杂度偏低。 </li>
+</ul>
 </li>
 <li><p>为什么不是4个或者5个？ 如果4个或4个以上，每个人不一定能掌握单个服务所有细节。 </p>
 </li>
 </ol>
 <p>【技巧】 </p>
 <ol>
-<li>微服务数量 = 服务端开发人数 /3 ； </li>
+<li> 微服务数量 = 服务端开发人数 /3 ； </li>
 <li>3 = 1 +2，1个有经验的(P7/P6+)，2个普通的(P5/P6)； </li>
 <li>处于维护期的服务，维护人员为2人。</li>
 </ol>
