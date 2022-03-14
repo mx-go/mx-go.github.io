@@ -809,14 +809,14 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/pg/</loc>
+    <loc>https://mx-go.github.io/tags/redis/</loc>
     <lastmod>2022-03-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/redis/</loc>
+    <loc>https://mx-go.github.io/tags/pg/</loc>
     <lastmod>2022-03-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
