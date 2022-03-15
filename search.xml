@@ -1328,92 +1328,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Linux下安装Nginx</title>
-    <url>/Linux%E4%B8%8B%E5%AE%89%E8%A3%85Nginx/</url>
-    <content><![CDATA[<p>记录下Linux下安装Nginx。</p>
-<div align=center><img width="400" height="200" src="../../../../images/2018-01/linux_nginx/index.jpg" algin="center"/></div><span id="more"></span>
-
-<h1 id="Nginx安装环境"><a href="#Nginx安装环境" class="headerlink" title="Nginx安装环境"></a>Nginx安装环境</h1><p>Nginx是C语言开发，建议在Linxu上运行，下面操作实在Centos6.5上的安装环境。</p>
-<ol>
-<li><strong>gcc</strong></li>
-</ol>
-<p>安装nginx需要先将官网下载的源码进行编译，编译依赖gcc环境，如果没有gcc环境，需要安装gcc。</p>
-<p>安装命令：<strong>yum install gcc-c++</strong> </p>
-<ol start="2">
-<li><strong>PCRE</strong></li>
-</ol>
-<p>PCRE(Perl Compatible Regular Expressions)是一个Perl库，包括 perl 兼容的正则表达式库。nginx的http模块使用pcre来解析正则表达式，所以需要在linux上安装pcre库。</p>
-<p>安装命令：<strong>yum install -y pcre pcre-devel</strong></p>
-<ol start="3">
-<li>zlib</li>
-</ol>
-<p>zlib库提供了很多种压缩和解压缩的方式，nginx使用zlib对http包的内容进行gzip，所以需要在linux上安装zlib库。</p>
-<p>安装命令：<strong>yum install -y zlib zlib-devel</strong></p>
-<ol start="4">
-<li>openssl</li>
-</ol>
-<p>OpenSSL 是一个强大的安全套接字层密码库，囊括主要的密码算法、常用的密钥和证书封装管理功能及SSL协议，并提供丰富的应用程序供测试或其它目的使用。nginx不仅支持http协议，还支持https（即在ssl协议上传输http），所以需要在linux安装openssl库。</p>
-<p>安装命令：<strong>yum install -y openssl openssl-devel</strong></p>
-<h1 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h1><p>将nginx-1.8.0.tar.gz拷贝至Linux服务器后解压。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">tar -zxvf nginx-<span class="number">1.8</span><span class="number">.0</span>.tar.gz</span><br><span class="line">cd nginx-<span class="number">1.8</span><span class="number">.0</span></span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>configure</li>
-</ol>
-<p>./configure –help查询详细参数。参数设置如下：</p>
-<p><strong>注意：下边将临时文件目录指定为/var/temp/nginx，需要在/var下创建temp及nginx目录</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">./configure \</span><br><span class="line">--prefix=/usr/local/nginx \</span><br><span class="line">--pid-path=/<span class="keyword">var</span>/run/nginx/nginx.pid \</span><br><span class="line">--lock-path=/<span class="keyword">var</span>/lock/nginx.lock \</span><br><span class="line">--error-log-path=/<span class="keyword">var</span>/log/nginx/error.log \</span><br><span class="line">--http-log-path=/<span class="keyword">var</span>/log/nginx/access.log \</span><br><span class="line">--with-http_gzip_static_module \</span><br><span class="line">--http-client-body-temp-path=/<span class="keyword">var</span>/temp/nginx/client \</span><br><span class="line">--http-proxy-temp-path=/<span class="keyword">var</span>/temp/nginx/proxy \</span><br><span class="line">--http-fastcgi-temp-path=/<span class="keyword">var</span>/temp/nginx/fastcgi \</span><br><span class="line">--http-uwsgi-temp-path=/<span class="keyword">var</span>/temp/nginx/uwsgi \</span><br><span class="line">--http-scgi-temp-path=/<span class="keyword">var</span>/temp/nginx/scgi</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>编译安装</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">make</span><br><span class="line">make  install</span><br></pre></td></tr></table></figure>
-
-<div align=center><img width="700" height="200" src="../../../../images/2018-01/linux_nginx/install.png" algin="center"/>
-
-</div>
-
-<h1 id="启动Nginx"><a href="#启动Nginx" class="headerlink" title="启动Nginx"></a>启动Nginx</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">cd /usr/local/nginx/sbin/</span><br><span class="line">./nginx</span><br><span class="line"><span class="comment">// 查询nginx进程命令</span></span><br><span class="line">ps aux|grep nginx</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意：执行./nginx启动nginx，这里可以-c指定加载的nginx配置文件，如下：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./nginx -c /usr/soft/nginx-1.8.0/conf/nginx.conf</span><br></pre></td></tr></table></figure>
-
-<p><strong>如果不指定-c，nginx在启动时默认加载/usr/local/nginx/conf/nginx.conf文件，此文件的地址也可以在编译安装nginx时指定./configure的参数（–conf-path= 指向配置文件（nginx.conf））</strong></p>
-<div align=center><img width="700" height="200" src="../../../../images/2018-01/linux_nginx/start.png" algin="center"/>
-
-</div>
-
-<h1 id="重启Nginx"><a href="#重启Nginx" class="headerlink" title="重启Nginx"></a>重启Nginx</h1><ol>
-<li><p>先停止再启动（建议使用）</p>
-<p>对nginx进行重启相当于先停止nginx再启动nginx，即先执行停止命令再执行启动命令。</p>
-</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./nginx -s quit</span><br><span class="line">./nginx</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li><p>重新加载配置文件</p>
-<p>当nginx的配置文件nginx.conf修改后，要想让配置生效需要重启nginx，使用-s reload不用先停止nginx再启动nginx即可将配置信息在nginx中生效。</p>
-</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./nginx -s reload</span><br></pre></td></tr></table></figure>
-
-<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>nginx安装成功，启动nginx，即可访问虚拟机上的nginx</p>
-<div align=center><img width="700" height="200" src="../../../../images/2018-01/linux_nginx/ok.png" algin="center"/>
-
-</div>
-
-<p>到这说明nginx上安装成功。</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-        <category>安装</category>
-      </categories>
-      <tags>
-        <tag>tips</tag>
-        <tag>nginx</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Linux中的零拷贝技术</title>
     <url>/Linux%E4%B8%AD%E7%9A%84%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p><code>零拷贝(Zero-Copy</code>)技术指在计算机执行操作时，CPU不需要先将数据从一个内存区域复制到另一个内存区域，从而可以减少上下文切换以及CPU的拷贝时间。作用是在数据从网络设备到用户程序空间传递的过程中，减少数据拷贝次数，减少系统调用，实现CPU的零参与，消除CPU在这方面的负载。<div align=center><img src="../../../../images/2020/1-4/Zero-Copy.png" algin="center"/></div><span id="more"></span></p>
@@ -3523,16 +3437,6 @@
       </tags>
   </entry>
   <entry>
-    <title>About</title>
-    <url>/about/</url>
-    <content><![CDATA[<p>​                    </p>
-<p>​                    喜欢新鲜的事物，钻研技术，热爱互联网行业🍭。</p>
-<p>​                                做自己喜欢做的事。</p>
-<p>​                            菜鸟程序猿一只，欢迎分享知识。</p>
-<p>​                                                                    From 🌈彩虹马</p>
-]]></content>
-  </entry>
-  <entry>
     <title>UML工具-PowerDesigner设计数据库</title>
     <url>/UML%E5%B7%A5%E5%85%B7-PowerDesigner%E8%AE%BE%E8%AE%A1%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在数据库的开发设计中，PowerDesiger（PD）是一个较为常用的UML工具。PowerDesiger为各类数据模型提供了直观的符号表示，不仅使设计人员能更方便、更快捷地使非计算机专业技术人员展示数据库设计和应用系统设计，使系统设计人员与使用系统的业务人员更易于相互理解和交流，同时也使项目组内的交流更为直观、准确，更便于协调工作，从而加速系统的设计和开发过程。PowerDesiger设计完成后的数据库可直接生成SQL语句。<div align=center><img width="200" height="100" src="../../../../images/2017/12/PowerDesigner/logo-powerdesigner.png" algin="center"/></div><span id="more"></span></p>
@@ -3623,6 +3527,16 @@
       </tags>
   </entry>
   <entry>
+    <title>About</title>
+    <url>/about/</url>
+    <content><![CDATA[<p>​                    </p>
+<p>​                    喜欢新鲜的事物，钻研技术，热爱互联网行业🍭。</p>
+<p>​                                做自己喜欢做的事。</p>
+<p>​                            菜鸟程序猿一只，欢迎分享知识。</p>
+<p>​                                                                    From 🌈彩虹马</p>
+]]></content>
+  </entry>
+  <entry>
     <title>logback推荐配置</title>
     <url>/logback%E6%8E%A8%E8%8D%90%E9%85%8D%E7%BD%AE/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>大约从16年，不管是我参与别人已搭建好的项目还是自己单独搭建的项目，日志框架基本都换成了logback。</p>
@@ -3710,6 +3624,41 @@
       </tags>
   </entry>
   <entry>
+    <title>logback行号输出问号问题</title>
+    <url>/logback%E8%A1%8C%E5%8F%B7%E8%BE%93%E5%87%BA%E9%97%AE%E5%8F%B7%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>Logback日志输出使用 <code>AsyncAppender</code> 时，输出的文件行号信息是 <strong>?:?</strong> ，问题产生原因及解决方案。<span id="more"></span></p>
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>在 <a href="http://rainbowhorse.site/logback%E6%8E%A8%E8%8D%90%E9%85%8D%E7%BD%AE/">logback推荐配置</a> 一文中，列举了logback常用的几种配置，使用的是logback异步输出日志AsyncAppender。但在实际的开发中，遇到了日志没有输出类和行号，而输出的文件行号信息是 **?:?**。</p>
+<p>输出的日志类似于这种：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">framework-server-demo 2017-07-17 14:15:11,876 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [?:?] - Located managed bean &#x27;refreshScope&#x27;: registering with JMX server as MBean [org.springframework.cloud.context.scope.refresh:name=refreshScope,type=RefreshScope]</span><br><span class="line">framework-server-demo 2017-07-17 14:15:11,881 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [?:?] - Located managed bean &#x27;configurationPropertiesRebinder&#x27;: registering with JMX server as MBean [org.springframework.cloud.context.properties:name=configurationPropertiesRebinder,context=43f2f92d,type=ConfigurationPropertiesRebinder]</span><br><span class="line">framework-server-demo 2017-07-17 14:15:11,887 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [?:?] - Located managed bean &#x27;refreshEndpoint&#x27;: registering with JMX server as MBean [org.springframework.cloud.endpoint:name=refreshEndpoint,type=RefreshEndpoint]</span><br><span class="line">framework-server-demo 2017-07-17 14:15:11,888 INFO [main] o.s.b.a.e.j.EndpointMBeanExporter [?:?] - Registering beans for JMX exposure on startup</span><br><span class="line">framework-server-demo 2017-07-17 14:15:12,709 INFO [main] application [?:?] - jolokia: No access restrictor found, access to any MBean is allowed</span><br><span class="line">framework-server-demo 2017-07-17 14:15:12,714 INFO [main] application [?:?] - jolokia: jolokia:type=Config is already registered. Adding it with jolokia:type=Config,uuid=43140813-0dc0-413d-96c0-5de1799eadd3, but you should revise your setup in order to either use a qualifier or ensure, that only a single agent gets registered (otherwise history functionality might not work)</span><br><span class="line">framework-server-demo 2017-07-17 14:15:12,714 INFO [main] application [?:?] - jolokia: Cannot register (legacy) MBean handler for config store with name jmx4perl:type=Config since it already exists. This is the case if another agent has been already started within the same JVM. The registration is skipped.</span><br><span class="line">framework-server-demo 2017-07-17 14:15:12,715 INFO [main] application [?:?] - jolokia: Jolokia Discovery MBean registration is skipped because there is already one registered.</span><br></pre></td></tr></table></figure>
+
+<h1 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h1><p>输出文件以及行号信息需要 <code>stacktrace</code> 获取 <code>callerdata</code>，<strong>因为性能原因 logback 的 AsyncAppender 默认是不记录该信息。即默认为false</strong>。</p>
+<p>官方文档： <a href="https://logback.qos.ch/manual/appenders.html#AsyncAppender">https://logback.qos.ch/manual/appenders.html#AsyncAppender</a></p>
+<table>
+<thead>
+<tr>
+<th>Property Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>includeCallerData</td>
+<td>boolean</td>
+<td>Extracting caller data can be rather expensive. To improve performance, by default, caller data associated with an event is not extracted when the event added to the event queue. By default, only “cheap” data like the thread name and the MDC are copied. You can direct this appender to include caller data by setting the includeCallerData property to true.</td>
+</tr>
+</tbody></table>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>如文档说明，只需要在 <strong>logback</strong> 配置文件里 <strong>AsyncAppender</strong> 中添加 <strong>includeCallerData</strong> 并设置为 <strong>true</strong> 。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;includeCallerData&gt;true&lt;/includeCallerData&gt; </span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>踩坑记录</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>protostuff序列化</title>
     <url>/protostuff%E5%BA%8F%E5%88%97%E5%8C%96/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>HTTP通信离不开对象的序列化和反序列化。通过序列化技术，可以跨语言实现数据的传输，将对象转换为字节序列，然后在网络上传送；通过反序列化，可以将字节序列转换为对象。<span id="more"></span> 基本原理和网络通信是一致的，通过特殊的编码方式，写入数据将对象以及其内部数据编码，存在在数组或者文件里面然后发送到目的地后，在进行解码，读出数据。</p>
@@ -3743,41 +3692,6 @@
       </categories>
       <tags>
         <tag>tips</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>logback行号输出问号问题</title>
-    <url>/logback%E8%A1%8C%E5%8F%B7%E8%BE%93%E5%87%BA%E9%97%AE%E5%8F%B7%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>Logback日志输出使用 <code>AsyncAppender</code> 时，输出的文件行号信息是 <strong>?:?</strong> ，问题产生原因及解决方案。<span id="more"></span></p>
-<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>在 <a href="http://rainbowhorse.site/logback%E6%8E%A8%E8%8D%90%E9%85%8D%E7%BD%AE/">logback推荐配置</a> 一文中，列举了logback常用的几种配置，使用的是logback异步输出日志AsyncAppender。但在实际的开发中，遇到了日志没有输出类和行号，而输出的文件行号信息是 **?:?**。</p>
-<p>输出的日志类似于这种：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">framework-server-demo 2017-07-17 14:15:11,876 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [?:?] - Located managed bean &#x27;refreshScope&#x27;: registering with JMX server as MBean [org.springframework.cloud.context.scope.refresh:name=refreshScope,type=RefreshScope]</span><br><span class="line">framework-server-demo 2017-07-17 14:15:11,881 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [?:?] - Located managed bean &#x27;configurationPropertiesRebinder&#x27;: registering with JMX server as MBean [org.springframework.cloud.context.properties:name=configurationPropertiesRebinder,context=43f2f92d,type=ConfigurationPropertiesRebinder]</span><br><span class="line">framework-server-demo 2017-07-17 14:15:11,887 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [?:?] - Located managed bean &#x27;refreshEndpoint&#x27;: registering with JMX server as MBean [org.springframework.cloud.endpoint:name=refreshEndpoint,type=RefreshEndpoint]</span><br><span class="line">framework-server-demo 2017-07-17 14:15:11,888 INFO [main] o.s.b.a.e.j.EndpointMBeanExporter [?:?] - Registering beans for JMX exposure on startup</span><br><span class="line">framework-server-demo 2017-07-17 14:15:12,709 INFO [main] application [?:?] - jolokia: No access restrictor found, access to any MBean is allowed</span><br><span class="line">framework-server-demo 2017-07-17 14:15:12,714 INFO [main] application [?:?] - jolokia: jolokia:type=Config is already registered. Adding it with jolokia:type=Config,uuid=43140813-0dc0-413d-96c0-5de1799eadd3, but you should revise your setup in order to either use a qualifier or ensure, that only a single agent gets registered (otherwise history functionality might not work)</span><br><span class="line">framework-server-demo 2017-07-17 14:15:12,714 INFO [main] application [?:?] - jolokia: Cannot register (legacy) MBean handler for config store with name jmx4perl:type=Config since it already exists. This is the case if another agent has been already started within the same JVM. The registration is skipped.</span><br><span class="line">framework-server-demo 2017-07-17 14:15:12,715 INFO [main] application [?:?] - jolokia: Jolokia Discovery MBean registration is skipped because there is already one registered.</span><br></pre></td></tr></table></figure>
-
-<h1 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h1><p>输出文件以及行号信息需要 <code>stacktrace</code> 获取 <code>callerdata</code>，<strong>因为性能原因 logback 的 AsyncAppender 默认是不记录该信息。即默认为false</strong>。</p>
-<p>官方文档： <a href="https://logback.qos.ch/manual/appenders.html#AsyncAppender">https://logback.qos.ch/manual/appenders.html#AsyncAppender</a></p>
-<table>
-<thead>
-<tr>
-<th>Property Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>includeCallerData</td>
-<td>boolean</td>
-<td>Extracting caller data can be rather expensive. To improve performance, by default, caller data associated with an event is not extracted when the event added to the event queue. By default, only “cheap” data like the thread name and the MDC are copied. You can direct this appender to include caller data by setting the includeCallerData property to true.</td>
-</tr>
-</tbody></table>
-<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>如文档说明，只需要在 <strong>logback</strong> 配置文件里 <strong>AsyncAppender</strong> 中添加 <strong>includeCallerData</strong> 并设置为 <strong>true</strong> 。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;includeCallerData&gt;true&lt;/includeCallerData&gt; </span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>踩坑记录</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -4915,60 +4829,6 @@
       </tags>
   </entry>
   <entry>
-    <title>离线安装docker与docker-compose</title>
-    <url>/%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85docker%E4%B8%8Edocker-compose/</url>
-    <content><![CDATA[<p>在线安装<code>docker</code>官方详细教程：<a href="https://docs.docker.com/engine/install/centos/">https://docs.docker.com/engine/install/centos/</a></p>
-<p>在线安装<code>docker-compose</code>官方详细教程：<a href="https://docs.docker.com/compose/install/#install-compose">https://docs.docker.com/compose/install/#install-compose</a> <span id="more"></span></p>
-<h1 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h1><h2 id="下载安装包"><a href="#下载安装包" class="headerlink" title="下载安装包"></a>下载安装包</h2><p>官方离线安装包下载地址：<a href="https://download.docker.com/linux/static/stable/x86_64/">https://download.docker.com/linux/static/stable/x86_64/</a></p>
-<p>目前最新版本为：<code>docker-18.06.3-ce.tgz</code> </p>
-<h2 id="脚本准备"><a href="#脚本准备" class="headerlink" title="脚本准备"></a>脚本准备</h2><h3 id="docker-service"><a href="#docker-service" class="headerlink" title="docker.service"></a>docker.service</h3><blockquote>
-<p>作用：安装和卸载docker脚本需要用到此脚本</p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Docker Application Container Engine</span><br><span class="line">Documentation=https://docs.docker.com</span><br><span class="line">After=network-online.target firewalld.service</span><br><span class="line">Wants=network-online.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=notify</span><br><span class="line"># the default is not to use systemd for cgroups because the delegate issues still</span><br><span class="line"># exists and systemd currently does not support the cgroup feature set required</span><br><span class="line"># for containers run by docker</span><br><span class="line">ExecStart=/usr/bin/dockerd</span><br><span class="line">ExecReload=/bin/kill -s HUP $MAINPID</span><br><span class="line"># Having non-zero Limit*s causes performance problems due to accounting overhead</span><br><span class="line"># in the kernel. We recommend using cgroups to do container-local accounting.</span><br><span class="line">LimitNOFILE=infinity</span><br><span class="line">LimitNPROC=infinity</span><br><span class="line">LimitCORE=infinity</span><br><span class="line"># Uncomment TasksMax if your systemd version supports it.</span><br><span class="line"># Only systemd 226 and above support this version.</span><br><span class="line">#TasksMax=infinity</span><br><span class="line">TimeoutStartSec=0</span><br><span class="line"># set delegate yes so that systemd does not reset the cgroups of docker containers</span><br><span class="line">Delegate=yes</span><br><span class="line"># kill only the docker process, not all processes in the cgroup</span><br><span class="line">KillMode=process</span><br><span class="line"># restart the docker process if it exits prematurely</span><br><span class="line">Restart=on-failure</span><br><span class="line">StartLimitBurst=3</span><br><span class="line">StartLimitInterval=60s</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
-
-<h3 id="安装脚本-install-sh"><a href="#安装脚本-install-sh" class="headerlink" title="安装脚本 install.sh"></a>安装脚本 <code>install.sh</code></h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line">echo &#x27;解压tar包...&#x27;</span><br><span class="line">tar -xvf $1</span><br><span class="line"></span><br><span class="line">echo &#x27;将docker目录移到/usr/bin目录下...&#x27;</span><br><span class="line">cp docker/* /usr/bin/</span><br><span class="line"></span><br><span class="line">echo &#x27;将docker.service 移到/etc/systemd/system/ 目录...&#x27;</span><br><span class="line">cp docker.service /etc/systemd/system/</span><br><span class="line"></span><br><span class="line">echo &#x27;添加文件权限...&#x27;</span><br><span class="line">chmod +x /etc/systemd/system/docker.service</span><br><span class="line"></span><br><span class="line">echo &#x27;重新加载配置文件...&#x27;</span><br><span class="line">systemctl daemon-reload</span><br><span class="line"></span><br><span class="line">echo &#x27;启动docker...&#x27;</span><br><span class="line">systemctl start docker</span><br><span class="line"></span><br><span class="line">echo &#x27;设置开机自启...&#x27;</span><br><span class="line">systemctl enable docker.service</span><br><span class="line"></span><br><span class="line">echo &#x27;docker安装成功...&#x27;</span><br><span class="line">docker -v</span><br></pre></td></tr></table></figure>
-
-<h3 id="卸载脚本-uninstall-sh"><a href="#卸载脚本-uninstall-sh" class="headerlink" title="卸载脚本 uninstall.sh"></a>卸载脚本 <code>uninstall.sh</code></h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line">echo &#x27;删除docker.service...&#x27;</span><br><span class="line">rm -f /etc/systemd/system/docker.service</span><br><span class="line"></span><br><span class="line">echo &#x27;删除docker文件...&#x27;</span><br><span class="line">rm -rf /usr/bin/docker*</span><br><span class="line"></span><br><span class="line">echo &#x27;重新加载配置文件&#x27;</span><br><span class="line">systemctl daemon-reload</span><br><span class="line"></span><br><span class="line">echo &#x27;卸载成功...&#x27;</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>目录中至少包含<code>docker-18.06.3-ce.tgz</code>、<code>docker.service</code>、<code>install.sh</code>、<code>uninstall.sh</code>文件</p>
-<div align=center><img src="../../../../images/2021/10-12/docker-install_1.png" algin="center"/></div>
-
-<h3 id="执行安装脚本"><a href="#执行安装脚本" class="headerlink" title="执行安装脚本"></a>执行安装脚本</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 安装docker</span></span><br><span class="line">sh install.sh docker-18.06.3-ce.tgz</span><br></pre></td></tr></table></figure>
-
-<div align=center><img src="../../../../images/2021/10-12/docker-install_2.png" algin="center"/></div>
-
-<h3 id="查看docker版本"><a href="#查看docker版本" class="headerlink" title="查看docker版本"></a>查看docker版本</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看docker版本</span></span><br><span class="line">docker -v</span><br></pre></td></tr></table></figure>
-
-<div align=center><img src="../../../../images/2021/10-12/docker-install_3.png" algin="center"/></div>
-
-<h2 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 卸载docker</span></span><br><span class="line">sh uninstall.sh</span><br></pre></td></tr></table></figure>
-
-<div align=center><img src="../../../../images/2021/10-12/docker-install_4.png" algin="center"/></div>
-
-<h1 id="安装docker-compose"><a href="#安装docker-compose" class="headerlink" title="安装docker-compose"></a>安装docker-compose</h1><h2 id="下载安装包-1"><a href="#下载安装包-1" class="headerlink" title="下载安装包"></a>下载安装包</h2><p>官方离线安装包下载地址：<a href="https://github.com/docker/compose/releases">https://github.com/docker/compose/releases</a></p>
-<p>目前最新版本为<code>v2.0.1</code>：<code>docker-compose-linux-x86_64</code></p>
-<h2 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h2><p>进入到<code>docker-compose-linux-x86_64</code>所在文件目录</p>
-<h3 id="安装脚本-install-compose-sh"><a href="#安装脚本-install-compose-sh" class="headerlink" title="安装脚本 install-compose.sh"></a>安装脚本 <code>install-compose.sh</code></h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line"></span><br><span class="line">echo &#x27;拷贝文件到/usr/local/bin目录...&#x27;</span><br><span class="line">cp docker-compose-Linux-x86_64 /usr/local/bin/docker-compose</span><br><span class="line"></span><br><span class="line">cd /usr/local/bin</span><br><span class="line"></span><br><span class="line">echo &#x27;授权docker-compose...&#x27;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 执行授权</span></span><br><span class="line">sudo chmod +x docker-compose</span><br><span class="line"></span><br><span class="line">echo &#x27;安装成功&#x27;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 安装docker-compose</span></span><br><span class="line">sh install-compose.sh</span><br></pre></td></tr></table></figure>
-
-<div align=center><img src="../../../../images/2021/10-12/docker-compose-install_1.png" algin="center"/></div>
-
-<h3 id="查看docker-compose版本"><a href="#查看docker-compose版本" class="headerlink" title="查看docker-compose版本"></a>查看docker-compose版本</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker-compose --version</span><br></pre></td></tr></table></figure>
-
-<div align=center><img src="../../../../images/2021/10-12/docker-compose-install_2.png" algin="center"/></div>
-
-]]></content>
-      <categories>
-        <category>工具</category>
-        <category>Linux</category>
-        <category>安装</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>系统中功能点的版本控制</title>
     <url>/%E7%B3%BB%E7%BB%9F%E4%B8%AD%E5%8A%9F%E8%83%BD%E7%82%B9%E7%9A%84%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>​    开发过程中我们会使用<code>版本控制工具</code>，如SVN、Git等。但是我们一样会遇到一种情形：在一套试题系统中，有新建题目、编辑题目、删除题目等功能，且题目可以被多个人修改，每人修改一次即是一个版本。现在的需求就是需要<code>记录每一次修改的详细信息</code>，<code>每次版本之间的差异</code>，甚至还可以<code>版本回滚</code>。</p>
@@ -5368,180 +5228,6 @@
       </tags>
   </entry>
   <entry>
-    <title>设计合理的架构</title>
-    <url>/%E8%AE%BE%E8%AE%A1%E5%90%88%E7%90%86%E7%9A%84%E6%9E%B6%E6%9E%84/</url>
-    <content><![CDATA[<h1 id="架构师职责"><a href="#架构师职责" class="headerlink" title="架构师职责"></a><a href="https://www.mubucm.com/doc/5jhFgPTD_Zp">架构师职责</a></h1><mark class="hl-label red">架构师是业务与技术之间的桥梁。</mark> 
-
-<h2 id="核心能力"><a href="#核心能力" class="headerlink" title="核心能力"></a>核心能力</h2><ul>
-<li>判断-确定性思维</li>
-<li>拆解-创造性思维</li>
-<li>取舍-系统性思维</li>
-</ul>
-<h2 id="主要职责"><a href="#主要职责" class="headerlink" title="主要职责"></a>主要职责</h2><h3 id="架构设计前期"><a href="#架构设计前期" class="headerlink" title="架构设计前期"></a>架构设计前期</h3><ul>
-<li>澄清不确定性</li>
-<li>识别复杂需求</li>
-<li>与业务方交流</li>
-<li>与利益干系人交流</li>
-<li>业务架构图</li>
-<li>核心场景流程</li>
-</ul>
-<h3 id="架构设计中期"><a href="#架构设计中期" class="headerlink" title="架构设计中期"></a>架构设计中期</h3><ul>
-<li>选择、设计备选方案</li>
-<li>架构小组讨论</li>
-<li>方案评估</li>
-<li>方案汇报</li>
-</ul>
-<h3 id="架构设计后期"><a href="#架构设计后期" class="headerlink" title="架构设计后期"></a>架构设计后期</h3><ul>
-<li>细化架构</li>
-<li>完善架构</li>
-<li>写文档</li>
-<li>架构宣讲</li>
-<li>最终的架构文档</li>
-</ul>
-<div align=center><img src="../../../../images/2022/1-3/3.1_architect_ responsibilities.png" algin="center"/></div>
-
-<h1 id="架构设计前期-1"><a href="#架构设计前期-1" class="headerlink" title="架构设计前期"></a><a href="https://www.mubucm.com/doc/2SasZqNwyZp">架构设计前期</a></h1><div align=center><img src="../../../../images/2022/1-3/3.2_arch_prophase.png" algin="center"/></div>
-
-<h1 id="架构设计中期-1"><a href="#架构设计中期-1" class="headerlink" title="架构设计中期"></a><a href="https://www.mubucm.com/doc/7FhHnbjLDdp">架构设计中期</a></h1><div align=center><img src="../../../../images/2022/1-3/3.3_arch_metaphase.png" algin="center"/></div>
-
-<h1 id="架构设计后期-1"><a href="#架构设计后期-1" class="headerlink" title="架构设计后期"></a><a href="https://www.mubucm.com/doc/2C5tQ9wHvdp">架构设计后期</a></h1><h2 id="架构设计文档"><a href="#架构设计文档" class="headerlink" title="架构设计文档"></a>架构设计文档</h2><ol>
-<li>业务背景</li>
-<li>约束&amp;限制</li>
-<li>总体架构设计</li>
-<li>详细架构设计</li>
-<li>架构质量设计</li>
-<li>架构演进规则</li>
-</ol>
-<h2 id="详细架构设计"><a href="#详细架构设计" class="headerlink" title="详细架构设计"></a>详细架构设计</h2><ul>
-<li>架构规范</li>
-<li>架构质量</li>
-</ul>
-<div align=center><img src="../../../../images/2022/1-3/3.4_arch_anaphase.png" algin="center"/></div>
-]]></content>
-      <categories>
-        <category>架构</category>
-        <category>设计</category>
-      </categories>
-      <tags>
-        <tag>架构</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>详解MongoDB执行计划</title>
-    <url>/%E8%AF%A6%E8%A7%A3MongoDB%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92/</url>
-    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在RDBMS(Relational Database Management System)中，无论哪种数据库，都提供了SQL剖析工具，用来解决SQL效率低下的问题。在MongoDB中，也有相应的策略来实现剖析。MongoDB提供了**db.collection.explain()<strong>、</strong>cursor.explain()**方法和<code>explain</code>命令返回查询计划信息和查询计划的执行统计信息。<div align=center><img width="420" height="220" src="../../../../images/2019/4-6/MongoDB-explain.png" algin="center"/></div><span id="more"></span></p>
-<h1 id="db-collection-explain-简介"><a href="#db-collection-explain-简介" class="headerlink" title="db.collection.explain()简介"></a>db.collection.explain()简介</h1><h2 id="支持的操作"><a href="#支持的操作" class="headerlink" title="支持的操作"></a>支持的操作</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">aggregate(); count(); distinct(); find(); group(); remove(); update() </span><br><span class="line"></span><br><span class="line">cursor.explain(verbosity) 为一个游标返回其查询执行计划(Reports on the query execution plan for a cursor)</span><br><span class="line">cursor.explain(verbosity) 最通常的行式为db.collection.find().explain()。其中verbosity说明返回信息的粒度。</span><br></pre></td></tr></table></figure>
-
-<p><strong>explain()写操作(remove和update)时，返回是删除和更新操作的信息，并不将修改应用至数据库。</strong></p>
-<p>通过<code>db.collection.explain().help()</code>可以获取支持的操作</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&gt;</span> db.collection.explain().help()</span><br><span class="line">Explainable operations</span><br><span class="line">	.aggregate(...) <span class="operator">-</span> explain an aggregation operation</span><br><span class="line">	.<span class="built_in">count</span>(...) <span class="operator">-</span> explain a count operation</span><br><span class="line">	.<span class="keyword">distinct</span>(...) <span class="operator">-</span> explain a <span class="keyword">distinct</span> operation</span><br><span class="line">	.find(...) <span class="operator">-</span> <span class="keyword">get</span> an explainable query</span><br><span class="line">	.findAndModify(...) <span class="operator">-</span> explain a findAndModify operation</span><br><span class="line">	.<span class="keyword">group</span>(...) <span class="operator">-</span> explain a <span class="keyword">group</span> operation</span><br><span class="line">	.remove(...) <span class="operator">-</span> explain a remove operation</span><br><span class="line">	.update(...) <span class="operator">-</span> explain an update operation</span><br><span class="line">Explainable collection methods</span><br><span class="line">	.getCollection()</span><br><span class="line">	.getVerbosity()</span><br><span class="line">	.setVerbosity(verbosity)</span><br></pre></td></tr></table></figure>
-
-<h2 id="执行模式"><a href="#执行模式" class="headerlink" title="执行模式"></a>执行模式</h2><p><strong>db.collection.find().explain(<em>verbose</em>)</strong></p>
-<ul>
-<li>explain(）输出一个以文档形式展现的执行计划，可以包括统计信息(可选)。</li>
-<li>verbose：可选参数。<strong>缺省值为queryPlanner</strong>，用于查看指定执行计划的特定部分。即给定不同的参数则输出信息的详细程度不同。常用的有<strong>queryPlanner</strong>、<strong>executionStats</strong>、<strong>allPlansExecution。</strong></li>
-</ul>
-<h3 id="queryPlanner"><a href="#queryPlanner" class="headerlink" title="queryPlanner"></a>queryPlanner</h3><p><strong>缺省模式</strong>。MongoDB运行查询优化器对当前的查询进行评估并选择一个最佳的查询计划。</p>
-<h3 id="executionStats"><a href="#executionStats" class="headerlink" title="executionStats"></a>executionStats</h3><p>MongoDB运行查询优化器对当前的查询进行评估并选择一个最佳的查询计划进行执行。在执行完毕后返回这个最佳执行计划执行完成时的相关统计信息。<strong>对于写操作db.collection.explain()返回关于更新和删除操作的信息，但是并不将修改应用到数据库</strong>。对于那些被拒绝的执行计划(<code>rejectedPlans</code>)，不返回其统计信息。</p>
-<h3 id="allPlansExecution"><a href="#allPlansExecution" class="headerlink" title="allPlansExecution"></a>allPlansExecution</h3><p>该模式是前2种模式的更细化，即会包括上述2种模式的所有信息。<br>即按照最佳的执行计划执行以及列出统计信息，而且还会列出一些候选的执行计划。<br>如果有多个查询计划，<code>executionStats</code>信息包括这些执行计划的部分统计信息。</p>
-<h1 id="相关用法"><a href="#相关用法" class="headerlink" title="相关用法"></a>相关用法</h1><p>先在集合中插入一条数据</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt; db.student.insert(&#123;&quot;age&quot; : 90.0,&quot;name&quot; : &quot;rainbowhorse&quot;,&quot;score&quot; : 90.0,&quot;sex&quot; : &quot;M&quot;&#125;);</span><br><span class="line">WriteResult(&#123; &quot;nInserted&quot; : 1 &#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="演示db-collection-explain-update"><a href="#演示db-collection-explain-update" class="headerlink" title="演示db.collection.explain().update()"></a>演示db.collection.explain().update()</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&gt;</span> db.student.explain(&quot;allPlansExecution&quot;).update(&#123;&quot;name&quot;:&quot;rainbowhorse&quot;&#125;,&#123;$<span class="keyword">set</span>:&#123;&quot;score&quot;:<span class="number">99</span>&#125;&#125;);</span><br><span class="line">&#123;</span><br><span class="line">	&quot;queryPlanner&quot; : &#123;</span><br><span class="line">		&quot;plannerVersion&quot; : <span class="number">1</span>,</span><br><span class="line">		&quot;namespace&quot; : &quot;TEST.student&quot;,</span><br><span class="line">		&quot;indexFilterSet&quot; : <span class="literal">false</span>,</span><br><span class="line">		&quot;parsedQuery&quot; : &#123;</span><br><span class="line">			&quot;name&quot; : &#123;</span><br><span class="line">				&quot;$eq&quot; : &quot;rainbowhorse&quot;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,</span><br><span class="line">		&quot;winningPlan&quot; : &#123;</span><br><span class="line">			&quot;stage&quot; : &quot;UPDATE&quot;,</span><br><span class="line">			&quot;inputStage&quot; : &#123;</span><br><span class="line">				&quot;stage&quot; : &quot;COLLSCAN&quot;,</span><br><span class="line">				&quot;filter&quot; : &#123;</span><br><span class="line">					&quot;name&quot; : &#123;</span><br><span class="line">						&quot;$eq&quot; : &quot;rainbowhorse&quot;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;,</span><br><span class="line">				&quot;direction&quot; : &quot;forward&quot;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,</span><br><span class="line">		&quot;rejectedPlans&quot; : [ ]</span><br><span class="line">	&#125;,</span><br><span class="line">	&quot;executionStats&quot; : &#123;</span><br><span class="line">		&quot;executionSuccess&quot; : <span class="literal">true</span>,</span><br><span class="line">		&quot;nReturned&quot; : <span class="number">0</span>,</span><br><span class="line">		&quot;executionTimeMillis&quot; : <span class="number">0</span>,</span><br><span class="line">		&quot;totalKeysExamined&quot; : <span class="number">0</span>,</span><br><span class="line">		&quot;totalDocsExamined&quot; : <span class="number">11</span>,</span><br><span class="line">		&quot;executionStages&quot; : &#123;</span><br><span class="line">			&quot;stage&quot; : &quot;UPDATE&quot;,</span><br><span class="line">			&quot;nReturned&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;executionTimeMillisEstimate&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;works&quot; : <span class="number">13</span>,</span><br><span class="line">			&quot;advanced&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;needTime&quot; : <span class="number">12</span>,</span><br><span class="line">			&quot;needYield&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;saveState&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;restoreState&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;isEOF&quot; : <span class="number">1</span>,</span><br><span class="line">			&quot;invalidates&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;nMatched&quot; : <span class="number">1</span>,</span><br><span class="line">			&quot;nWouldModify&quot; : <span class="number">1</span>,</span><br><span class="line">			&quot;nInvalidateSkips&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;wouldInsert&quot; : <span class="literal">false</span>,</span><br><span class="line">			&quot;fastmodinsert&quot; : <span class="literal">false</span>,</span><br><span class="line">			&quot;inputStage&quot; : &#123;</span><br><span class="line">				&quot;stage&quot; : &quot;COLLSCAN&quot;,</span><br><span class="line">				&quot;filter&quot; : &#123;</span><br><span class="line">					&quot;name&quot; : &#123;</span><br><span class="line">						&quot;$eq&quot; : &quot;rainbowhorse&quot;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;,</span><br><span class="line">				&quot;nReturned&quot; : <span class="number">1</span>,</span><br><span class="line">				&quot;executionTimeMillisEstimate&quot; : <span class="number">0</span>,</span><br><span class="line">				&quot;works&quot; : <span class="number">12</span>,</span><br><span class="line">				&quot;advanced&quot; : <span class="number">1</span>,</span><br><span class="line">				&quot;needTime&quot; : <span class="number">11</span>,</span><br><span class="line">				&quot;needYield&quot; : <span class="number">0</span>,</span><br><span class="line">				&quot;saveState&quot; : <span class="number">1</span>,</span><br><span class="line">				&quot;restoreState&quot; : <span class="number">1</span>,</span><br><span class="line">				&quot;isEOF&quot; : <span class="number">0</span>,</span><br><span class="line">				&quot;invalidates&quot; : <span class="number">0</span>,</span><br><span class="line">				&quot;direction&quot; : &quot;forward&quot;,</span><br><span class="line">				&quot;docsExamined&quot; : <span class="number">11</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,</span><br><span class="line">		&quot;allPlansExecution&quot; : [ ]</span><br><span class="line">	&#125;,</span><br><span class="line">	&quot;serverInfo&quot; : &#123;</span><br><span class="line">		&quot;host&quot; : &quot;rainbowhorse&quot;,</span><br><span class="line">		&quot;port&quot; : <span class="number">27017</span>,</span><br><span class="line">		&quot;version&quot; : &quot;4.0.3&quot;,</span><br><span class="line">		&quot;gitVersion&quot; : &quot;7ea530946fa7880364d88c8d8b6026bbc9ffa48c&quot;</span><br><span class="line">	&#125;,</span><br><span class="line">	&quot;ok&quot; : <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>再次查看文档，文档并没有被更新。正如前文所述，该方式并不将修改应用到数据库。</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&gt;</span> db.student.find(&#123;&quot;name&quot;:&quot;rainbowhorse&quot;&#125;);</span><br><span class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5cbbd841525ed310c440610a&quot;), &quot;age&quot; : <span class="number">90</span>, &quot;name&quot; : &quot;rainbowhorse&quot;, &quot;score&quot; : <span class="number">90</span>, &quot;sex&quot; : &quot;M&quot; &#125;</span><br></pre></td></tr></table></figure>
-
-<p>注意：将explain()放置到update()之后则会提示错误。</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&gt;</span> db.student.update(&#123;&quot;name&quot;:&quot;rainbowhorse&quot;&#125;,&#123;$<span class="keyword">set</span>:&#123;&quot;score&quot;:<span class="number">99</span>&#125;&#125;).explain(&quot;allPlansExecution&quot;);</span><br><span class="line"><span class="number">2019</span><span class="number">-04</span><span class="number">-21</span>T10:<span class="number">53</span>:<span class="number">40.824</span><span class="operator">+</span><span class="number">0800</span> E QUERY    [js] TypeError: db.student.update(...).explain <span class="keyword">is</span> <span class="keyword">not</span> a <span class="keyword">function</span> :</span><br><span class="line">@(shell):<span class="number">1</span>:<span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<p>在执行计划中，部分操作符需要放至<code>explain()</code>之前，部分需要放到<code>explain()</code>之后才能正确执行。</p>
-<p>聚合查询中使用：<code>collection.explain().aggregate(...)</code></p>
-<h2 id="执行计划相关描述"><a href="#执行计划相关描述" class="headerlink" title="执行计划相关描述"></a>执行计划相关描述</h2><p>缺省情况下，explain包括2个部分，<code>queryPlanner</code>和<code>serverInfo</code>。如果使用了<code>executionStats</code>或者<code>allPlansExecution</code>，则还会返回<code>executionStats</code>信息。</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&gt;</span> db.student.find(&#123;&quot;name&quot;:&quot;rainbowhorse&quot;&#125;).explain(&quot;allPlansExecution&quot;);</span><br><span class="line">&#123;</span><br><span class="line">	&quot;queryPlanner&quot; : &#123;</span><br><span class="line">		&quot;plannerVersion&quot; : <span class="number">1</span>,		<span class="operator">/</span><span class="operator">/</span>查询计划版本</span><br><span class="line">		&quot;namespace&quot; : &quot;TEST.student&quot;,		<span class="operator">/</span><span class="operator">/</span>被查询对象</span><br><span class="line">		&quot;indexFilterSet&quot; : <span class="literal">false</span>,		<span class="operator">/</span><span class="operator">/</span>是否使用到了索引过滤</span><br><span class="line">		&quot;parsedQuery&quot; : &#123;			<span class="operator">/</span><span class="operator">/</span>解析查询，即过滤条件是什么</span><br><span class="line">			&quot;name&quot; : &#123;		<span class="operator">/</span><span class="operator">/</span>此处为name<span class="operator">=</span>rainbowhorse</span><br><span class="line">				&quot;$eq&quot; : &quot;rainbowhorse&quot;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,</span><br><span class="line">		&quot;winningPlan&quot; : &#123;		<span class="operator">/</span><span class="operator">/</span>最佳的执行计划</span><br><span class="line">			&quot;stage&quot; : &quot;COLLSCAN&quot;,		<span class="operator">/</span><span class="operator">/</span>COLLSCAN为集合扫描</span><br><span class="line">			&quot;filter&quot; : &#123;		<span class="operator">/</span><span class="operator">/</span>过滤条件</span><br><span class="line">				&quot;name&quot; : &#123;</span><br><span class="line">					&quot;$eq&quot; : &quot;rainbowhorse&quot;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;,</span><br><span class="line">			&quot;direction&quot; : &quot;forward&quot;		<span class="operator">/</span><span class="operator">/</span>方向：forward</span><br><span class="line">		&#125;,</span><br><span class="line">		&quot;rejectedPlans&quot; : [ ]		<span class="operator">/</span><span class="operator">/</span>拒绝的执行计划，此处没有</span><br><span class="line">	&#125;,</span><br><span class="line">	&quot;executionStats&quot; : &#123;		<span class="operator">/</span><span class="operator">/</span>执行计划相关统计信息</span><br><span class="line">		&quot;executionSuccess&quot; : <span class="literal">true</span>,		<span class="operator">/</span><span class="operator">/</span>执行成功的状态</span><br><span class="line">		&quot;nReturned&quot; : <span class="number">1</span>,		<span class="operator">/</span><span class="operator">/</span>返回结果集数目</span><br><span class="line">		&quot;executionTimeMillis&quot; : <span class="number">0</span>,		<span class="operator">/</span><span class="operator">/</span>执行所需的时间,毫秒</span><br><span class="line">		&quot;totalKeysExamined&quot; : <span class="number">0</span>,		<span class="operator">/</span><span class="operator">/</span>索引检查的时间</span><br><span class="line">		&quot;totalDocsExamined&quot; : <span class="number">11</span>,		<span class="operator">/</span><span class="operator">/</span>检查文档总数</span><br><span class="line">		&quot;executionStages&quot; : &#123;</span><br><span class="line">			&quot;stage&quot; : &quot;COLLSCAN&quot;,		<span class="operator">/</span><span class="operator">/</span>使用集合扫描方式</span><br><span class="line">			&quot;filter&quot; : &#123;		<span class="operator">/</span><span class="operator">/</span>过滤条件</span><br><span class="line">				&quot;name&quot; : &#123;</span><br><span class="line">					&quot;$eq&quot; : &quot;rainbowhorse&quot;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;,</span><br><span class="line">			&quot;nReturned&quot; : <span class="number">1</span>,		<span class="operator">/</span><span class="operator">/</span>返回结果集数目</span><br><span class="line">			&quot;executionTimeMillisEstimate&quot; : <span class="number">0</span>,		<span class="operator">/</span><span class="operator">/</span>预估的执行时间，毫秒</span><br><span class="line">			&quot;works&quot; : <span class="number">13</span>,		<span class="operator">/</span><span class="operator">/</span>工作单元数，一个查询会被派生为一些小的工作单元</span><br><span class="line">			&quot;advanced&quot; : <span class="number">1</span>,		<span class="operator">/</span><span class="operator">/</span>优先返回的结果数目</span><br><span class="line">			&quot;needTime&quot; : <span class="number">11</span>,</span><br><span class="line">			&quot;needYield&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;saveState&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;restoreState&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;isEOF&quot; : <span class="number">1</span>,</span><br><span class="line">			&quot;invalidates&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;direction&quot; : &quot;forward&quot;,</span><br><span class="line">			&quot;docsExamined&quot; : <span class="number">11</span>		<span class="operator">/</span><span class="operator">/</span>文档检查数目</span><br><span class="line">		&#125;,</span><br><span class="line">		&quot;allPlansExecution&quot; : [ ]</span><br><span class="line">	&#125;,</span><br><span class="line">	&quot;serverInfo&quot; : &#123;		<span class="operator">/</span><span class="operator">/</span>服务器信息，包括主机名，端口，版本等。</span><br><span class="line">		&quot;host&quot; : &quot;rainbowhorse&quot;,</span><br><span class="line">		&quot;port&quot; : <span class="number">27017</span>,</span><br><span class="line">		&quot;version&quot; : &quot;4.0.3&quot;,</span><br><span class="line">		&quot;gitVersion&quot; : &quot;7ea530946fa7880364d88c8d8b6026bbc9ffa48c&quot;</span><br><span class="line">	&#125;,</span><br><span class="line">	&quot;ok&quot; : <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>更详细的描述可以参考官方文档：<a href="https://docs.mongodb.com/manual/reference/explain-results/#executionstats">https://docs.mongodb.com/manual/reference/explain-results/#executionstats</a></p>
-<h3 id="Stage状态分析"><a href="#Stage状态分析" class="headerlink" title="Stage状态分析"></a>Stage状态分析</h3><table>
-<thead>
-<tr>
-<th align="center"><strong>stage</strong></th>
-<th align="left">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">COLLSCAN</td>
-<td align="left">全表扫描</td>
-</tr>
-<tr>
-<td align="center">IXSCAN</td>
-<td align="left">扫描索引</td>
-</tr>
-<tr>
-<td align="center">FETCH</td>
-<td align="left">根据索引去检索指定document</td>
-</tr>
-<tr>
-<td align="center">SHARD_MERGE</td>
-<td align="left">将各个分片返回数据进行merge</td>
-</tr>
-<tr>
-<td align="center">SORT</td>
-<td align="left">表明在内存中进行了排序</td>
-</tr>
-<tr>
-<td align="center">LIMIT</td>
-<td align="left">使用limit限制返回数</td>
-</tr>
-<tr>
-<td align="center">SKIP</td>
-<td align="left">使用skip进行跳过</td>
-</tr>
-<tr>
-<td align="center">IDHACK</td>
-<td align="left">针对_id进行查询</td>
-</tr>
-<tr>
-<td align="center">SHARDING_FILTER</td>
-<td align="left">通过mongos对分片数据进行查询</td>
-</tr>
-<tr>
-<td align="center">COUNT</td>
-<td align="left">利用db.coll.explain().count()之类进行count运算</td>
-</tr>
-<tr>
-<td align="center">COUNTSCAN</td>
-<td align="left">count不使用Index进行count时的stage返回</td>
-</tr>
-<tr>
-<td align="center">COUNT_SCAN</td>
-<td align="left">count使用了Index进行count时的stage返回</td>
-</tr>
-<tr>
-<td align="center">SUBPLA</td>
-<td align="left">未使用到索引的$or查询的stage返回</td>
-</tr>
-<tr>
-<td align="center">TEXT</td>
-<td align="left">使用全文索引进行查询时候的stage返回</td>
-</tr>
-<tr>
-<td align="center">PROJECTION</td>
-<td align="left">限定返回字段时候stage的返回</td>
-</tr>
-</tbody></table>
-<h2 id="比较运算符"><a href="#比较运算符" class="headerlink" title="比较运算符"></a>比较运算符</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">$eq    =               <span class="string">&quot;=&quot;</span></span><br><span class="line">$gt   (greater than )  &gt;</span><br><span class="line">$gte                   &gt;=  (equal)</span><br><span class="line">$lt   (less than)      &lt;</span><br><span class="line">$lte                   &lt;=  (equal)</span><br><span class="line">$ne   (not equal)      !=</span><br><span class="line">$in                    <span class="keyword">in</span></span><br><span class="line">$nin  (not <span class="keyword">in</span>)         !<span class="keyword">in</span></span><br><span class="line"></span><br><span class="line">重点：所有的比较运算符都是出现在键与值得中间，示例如下</span><br><span class="line">&#123; &lt;field_name&gt;: &#123; <span class="attr">$operator</span>: &lt;value&gt; &#125; &#125;</span><br><span class="line">&#123; &lt;ename&gt;: &#123; <span class="attr">$eq</span>: <span class="string">&quot;robin&quot;</span> &#125; &#125;</span><br><span class="line">&#123; &lt;qty&gt;: &#123; <span class="attr">$gt</span>: <span class="number">20</span> &#125; &#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://www.voidcn.com/article/p-gxwefchh-bgt.html">MongoDB执行计划获取(db.collection.explain())</a></p>
-<p><a href="https://docs.mongodb.com/manual/reference/explain-results/#executionstats">https://docs.mongodb.com/manual/reference/explain-results/#executionstats</a></p>
-]]></content>
-      <categories>
-        <category>数据库</category>
-      </categories>
-      <tags>
-        <tag>MongoDB</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>详解Tomcat连接池与连接数</title>
     <url>/%E8%AF%A6%E8%A7%A3Tomcat%E8%BF%9E%E6%8E%A5%E6%B1%A0%E4%B8%8E%E8%BF%9E%E6%8E%A5%E6%95%B0/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在使用Tomcat时，经常会遇到连接数、线程数之类的配置，然后自己就去谷歌、百度，没有真正理解Tomcat配置的作用及当前业务环境、服务器配置等情况下Tomcat最优配置。</p>
@@ -5631,155 +5317,6 @@
       </tags>
   </entry>
   <entry>
-    <title>说说JSON和JSONP</title>
-    <url>/%E8%AF%B4%E8%AF%B4JSON%E5%92%8CJSONP/</url>
-    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>说到AJAX就会不可避免的面临两个问题，<strong>第一个是AJAX以何种格式来交换数据？第二个是跨域的需求如何解决？</strong>这两个问题目前都有不同的解决方案，比如数据可以用自定义字符串或者用XML来描述，跨域可以通过服务器端代理来解决。</p>
-<p>JSON和JSONP虽然只有一个字母的差别，但其实他们根本不是一回事：JSON是一种数据交换格式，而JSONP是一种依靠开发人员的聪明才智创造出的一种<code>非官方跨域数据交互协议</code>。我们拿最近比较火的谍战片来打个比方，JSON是地下党们用来书写和交换情报的“暗号”，而JSONP则是把用暗号书写的情报传递给自己同志时使用的接头方式。看到没？一个是描述信息的格式，一个是信息传递双方约定的方法。<div align=center><img width="450" height="200" src="../../../../images/2018-01/JSON_JSONP/jsonp-json-with-padding.gif" algin="center"/></div><span id="more"></span></p>
-<h1 id="什么是JSON"><a href="#什么是JSON" class="headerlink" title="什么是JSON"></a>什么是JSON</h1><p>前面简单说了一下，JSON是一种基于文本的数据交换方式，或者叫做数据描述格式，你是否该选用他首先肯定要关注它所拥有的优点。</p>
-<h2 id="JSON的优点"><a href="#JSON的优点" class="headerlink" title="JSON的优点"></a>JSON的优点</h2><ol>
-<li>基于纯文本，跨平台传递极其简单；</li>
-<li>JavaScript原生支持，后台语言几乎全部支持；</li>
-<li>轻量级数据格式，占用字符数量极少，特别适合互联网传递；</li>
-<li>可读性较强，虽然比不上XML那么一目了然，但在合理的依次缩进之后还是很容易识别的；</li>
-<li>容易编写和解析，当然前提是你要知道数据结构；</li>
-</ol>
-<p>JSON的缺点当然也有，但在作者看来实在是无关紧要的东西，所以不再单独说明。</p>
-<h2 id="JSON的格式或者叫规则"><a href="#JSON的格式或者叫规则" class="headerlink" title="JSON的格式或者叫规则"></a>JSON的格式或者叫规则</h2><p>JSON能够以非常简单的方式来描述数据结构，XML能做的它都能做，因此在跨平台方面两者完全不分伯仲。</p>
-<ol>
-<li>JSON只有两种数据类型描述符，大括号{}和方括号[]，其余英文冒号:是映射符，英文逗号,是分隔符，英文双引号””是定义符。</li>
-<li>大括号{}用来描述一组“不同类型的无序键值对集合”（每个键值对可以理解为OOP的属性描述），方括号[]用来描述一组“相同类型的有序数据集合”（可对应OOP的数组）。</li>
-<li>上述两种集合中若有多个子项，则通过英文逗号,进行分隔。</li>
-<li>键值对以英文冒号:进行分隔，并且建议键名都加上英文双引号””，以便于不同语言的解析。</li>
-<li>JSON内部常用数据类型无非就是字符串、数字、布尔、日期、null 这么几个，字符串必须用双引号引起来，其余的都不用，日期类型比较特殊，这里就不展开讲述了，只是建议如果客户端没有按日期排序功能需求的话，那么把日期时间直接作为字符串传递就好，可以省去很多麻烦。</li>
-</ol>
-<h2 id="JSON的实例"><a href="#JSON的实例" class="headerlink" title="JSON的实例"></a>JSON的实例</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 描述一个人</span></span><br><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">    <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;Bob&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Age&quot;</span>: <span class="number">32</span>,</span><br><span class="line">    <span class="string">&quot;Company&quot;</span>: <span class="string">&quot;IBM&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Engineer&quot;</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取这个人的信息</span></span><br><span class="line"><span class="keyword">var</span> personAge = person.Age;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 描述几个人</span></span><br><span class="line"><span class="keyword">var</span> members = [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;Bob&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Age&quot;</span>: <span class="number">32</span>,</span><br><span class="line">        <span class="string">&quot;Company&quot;</span>: <span class="string">&quot;IBM&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Engineer&quot;</span>: <span class="literal">true</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;John&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Age&quot;</span>: <span class="number">20</span>,</span><br><span class="line">        <span class="string">&quot;Company&quot;</span>: <span class="string">&quot;Oracle&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Engineer&quot;</span>: <span class="literal">false</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;Henry&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Age&quot;</span>: <span class="number">45</span>,</span><br><span class="line">        <span class="string">&quot;Company&quot;</span>: <span class="string">&quot;Microsoft&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Engineer&quot;</span>: <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取其中John的公司名称</span></span><br><span class="line"><span class="keyword">var</span> johnsCompany = members[<span class="number">1</span>].Company;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 描述一次会议</span></span><br><span class="line"><span class="keyword">var</span> conference = &#123;</span><br><span class="line">    <span class="string">&quot;Conference&quot;</span>: <span class="string">&quot;Future Marketing&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Date&quot;</span>: <span class="string">&quot;2012-6-1&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Address&quot;</span>: <span class="string">&quot;Beijing&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Members&quot;</span>: </span><br><span class="line">    [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;Bob&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Age&quot;</span>: <span class="number">32</span>,</span><br><span class="line">            <span class="string">&quot;Company&quot;</span>: <span class="string">&quot;IBM&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Engineer&quot;</span>: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;John&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Age&quot;</span>: <span class="number">20</span>,</span><br><span class="line">            <span class="string">&quot;Company&quot;</span>: <span class="string">&quot;Oracle&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Engineer&quot;</span>: <span class="literal">false</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;Henry&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Age&quot;</span>: <span class="number">45</span>,</span><br><span class="line">            <span class="string">&quot;Company&quot;</span>: <span class="string">&quot;Microsoft&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Engineer&quot;</span>: <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取参会者Henry是否工程师</span></span><br><span class="line"><span class="keyword">var</span> henryIsAnEngineer = conference.Members[<span class="number">2</span>].Engineer;</span><br></pre></td></tr></table></figure>
-
-<p>关于JSON，就说这么多，更多细节请在开发过程中查阅资料深入学习。</p>
-<h1 id="什么是JSONP"><a href="#什么是JSONP" class="headerlink" title="什么是JSONP"></a>什么是JSONP</h1><h2 id="JSONP的产生"><a href="#JSONP的产生" class="headerlink" title="JSONP的产生"></a>JSONP的产生</h2><p>其实网上关于JSONP的讲解有很多，但却千篇一律，而且云里雾里，对于很多刚接触的人来讲理解起来有些困难，试着用自己的方式来阐释一下这个问题。</p>
-<p>1、一个众所周知的问题，Ajax直接请求普通文件存在跨域无权限访问的问题，甭管你是静态页面、动态网页、web服务、WCF，只要是跨域请求，一律不准；</p>
-<p>2、不过我们又发现，Web页面上<code>调用js文件时则不受是否跨域的影响</code>（不仅如此，我们还发现凡是拥有”src”这个属性的标签都拥有跨域的能力，比如<code>&lt;script&gt;</code>、<code>&lt;img&gt;</code>、<code>&lt;iframe&gt;</code>）；</p>
-<p>3、于是可以判断，当前阶段如果想通过纯web端（ActiveX控件、服务端代理、属于未来的HTML5之Websocket等方式不算）跨域访问数据就只有一种可能，那就是在远程服务器上设法把数据装进js格式的文件里，供客户端调用和进一步处理；</p>
-<p>4、恰巧我们已经知道有一种叫做JSON的纯字符数据格式可以简洁的描述复杂数据，更妙的是JSON还被js原生支持，所以在客户端几乎可以随心所欲的处理这种格式的数据；</p>
-<p>5、这样子解决方案就呼之欲出了，web客户端通过与调用脚本一模一样的方式，来调用跨域服务器上动态生成的js格式文件（一般以JSON为后缀），显而易见，服务器之所以要动态生成JSON文件，目的就在于把客户端需要的数据装入进去。</p>
-<p>6、客户端在对JSON文件调用成功之后，也就获得了自己所需的数据，剩下的就是按照自己需求进行处理和展现了，这种获取远程数据的方式看起来非常像AJAX，但其实并不一样。</p>
-<p>7、为了便于客户端使用数据，逐渐形成了一种非正式传输协议，人们把它称作JSONP，该协议的一个要点就是允许用户传递一个callback参数给服务端，然后服务端返回数据时会将这个callback参数作为函数名来包裹住JSON数据，这样客户端就可以随意定制自己的函数来自动处理返回数据了。</p>
-<h2 id="JSONP的客户端具体实现"><a href="#JSONP的客户端具体实现" class="headerlink" title="JSONP的客户端具体实现"></a>JSONP的客户端具体实现</h2><p>不管jQuery也好，extjs也罢，又或者是其他支持jsonp的框架，他们幕后所做的工作都是一样的，下面我来循序渐进的说明一下jsonp在客户端的实现：</p>
-<p>1、我们知道，哪怕跨域js文件中的代码（当然指符合web脚本安全策略的），web页面也是可以无条件执行的。</p>
-<p>远程服务器remoteserver.com根目录下有个remote.js文件代码如下：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">alert(<span class="string">&#x27;我是远程文件&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>本地服务器localserver.com下有个jsonp.html页面代码如下：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;</span> <span class="meta-string">&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;http://remoteserver.com/remote.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>毫无疑问，页面将会弹出一个提示窗体，显示跨域调用成功。</p>
-<p>2、现在我们在jsonp.html页面定义一个函数，然后在远程remote.js中传入数据进行调用。</p>
-<p>jsonp.html页面代码如下：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;</span> <span class="meta-string">&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> localHandler = <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        alert(<span class="string">&#x27;我是本地函数，可以被跨域的remote.js文件调用，远程js带来的数据是：&#x27;</span> + data.result);</span></span><br><span class="line"><span class="javascript">    &#125;;</span></span><br><span class="line"><span class="javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;http://remoteserver.com/remote.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>remote.js文件代码如下：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">localHandler(&#123;<span class="string">&quot;result&quot;</span>:<span class="string">&quot;我是远程js带来的数据&quot;</span>&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>运行之后查看结果，页面成功弹出提示窗口，显示本地函数被跨域的远程js调用成功，并且还接收到了远程js带来的数据。很欣喜，跨域远程获取数据的目的基本实现了，但是又一个问题出现了，我怎么让远程js知道它应该调用的本地函数叫什么名字呢？毕竟是jsonp的服务者都要面对很多服务对象，而这些服务对象各自的本地函数都不相同啊？我们接着往下看。</p>
-<p>3、聪明的开发者很容易想到，只要服务端提供的js脚本是动态生成的就行了呗，这样调用者可以传一个参数过去告诉服务端“我想要一段调用XXX函数的js代码，请你返回给我”，于是服务器就可以按照客户端的需求来生成js脚本并响应了。</p>
-<p>看jsonp.html页面的代码：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;</span> <span class="meta-string">&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">    <span class="comment">// 得到航班信息查询结果后的回调函数</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> flightHandler = <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        alert(<span class="string">&#x27;你查询的航班结果是：票价 &#x27;</span> + data.price + <span class="string">&#x27; 元，&#x27;</span> + <span class="string">&#x27;余票 &#x27;</span> + data.tickets + <span class="string">&#x27; 张。&#x27;</span>);</span></span><br><span class="line"><span class="javascript">    &#125;;</span></span><br><span class="line"><span class="javascript">    <span class="comment">// 提供jsonp服务的url地址（不管是什么类型的地址，最终生成的返回值都是一段javascript代码）</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> url = <span class="string">&quot;http://flightQuery.com/jsonp/flightResult.aspx?code=CA1998&amp;callback=flightHandler&quot;</span>;</span></span><br><span class="line"><span class="javascript">    <span class="comment">// 创建script标签，设置其属性</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">&#x27;script&#x27;</span>);</span></span><br><span class="line"><span class="javascript">    script.setAttribute(<span class="string">&#x27;src&#x27;</span>, url);</span></span><br><span class="line"><span class="javascript">    <span class="comment">// 把script标签加入head，此时调用开始</span></span></span><br><span class="line"><span class="javascript">    <span class="built_in">document</span>.getElementsByTagName(<span class="string">&#x27;head&#x27;</span>)[<span class="number">0</span>].appendChild(script); </span></span><br><span class="line"><span class="javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>这次的代码变化比较大，不再直接把远程js文件写死，而是编码实现动态查询，而这也正是jsonp客户端实现的核心部分，本例中的重点也就在于如何完成jsonp调用的全过程。</p>
-<p>我们看到调用的url中传递了一个code参数，告诉服务器我要查的是CA1998次航班的信息，而callback参数则告诉服务器，我的本地回调函数叫做flightHandler，所以请把查询结果传入这个函数中进行调用。</p>
-<p>OK，服务器很聪明，这个叫做flightResult.aspx的页面生成了一段这样的代码提供给jsonp.html（服务端的实现这里就不演示了，与你选用的语言无关，说到底就是拼接字符串）：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">flightHandler(&#123;</span><br><span class="line">    <span class="string">&quot;code&quot;</span>: <span class="string">&quot;CA1998&quot;</span>,</span><br><span class="line">    <span class="string">&quot;price&quot;</span>: <span class="number">1780</span>,</span><br><span class="line">    <span class="string">&quot;tickets&quot;</span>: <span class="number">5</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>我们看到，传递给flightHandler函数的是一个json，它描述了航班的基本信息。运行一下页面，成功弹出提示窗口，jsonp的执行全过程顺利完成！</p>
-<p>4、到这里为止的话，相信你已经能够理解jsonp的客户端实现原理了吧？剩下的就是如何把代码封装一下，以便于与用户界面交互，从而实现多次和重复调用。</p>
-<p>什么？你用的是jQuery，想知道jQuery如何实现jsonp调用？好吧，那我就好人做到底，再给你一段jQuery使用jsonp的代码（我们依然沿用上面那个航班信息查询的例子，假定返回jsonp结果不变）：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;</span> <span class="meta-string">&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span> &gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">title</span>&gt;</span>Untitled Page<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">jquery.min.js</span>&quot;&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">     jQuery(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123; </span></span><br><span class="line"><span class="javascript">        $.ajax(&#123;</span></span><br><span class="line"><span class="javascript">             <span class="attr">type</span>: <span class="string">&quot;get&quot;</span>,</span></span><br><span class="line"><span class="javascript">             <span class="attr">async</span>: <span class="literal">false</span>,</span></span><br><span class="line"><span class="javascript">             <span class="attr">url</span>: <span class="string">&quot;http://flightQuery.com/jsonp/flightResult.aspx?code=CA1998&quot;</span>,</span></span><br><span class="line"><span class="javascript">             <span class="attr">dataType</span>: <span class="string">&quot;jsonp&quot;</span>,</span></span><br><span class="line"><span class="javascript">             <span class="attr">jsonp</span>: <span class="string">&quot;callback&quot;</span>,<span class="comment">//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(一般默认为:callback)</span></span></span><br><span class="line"><span class="javascript">             <span class="attr">jsonpCallback</span>:<span class="string">&quot;flightHandler&quot;</span>,<span class="comment">//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名，也可以写&quot;?&quot;，jQuery会自动为你处理数据</span></span></span><br><span class="line"><span class="javascript">             <span class="attr">success</span>: <span class="function"><span class="keyword">function</span>(<span class="params">json</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                 alert(<span class="string">&#x27;您查询到航班信息：票价： &#x27;</span> + json.price + <span class="string">&#x27; 元，余票： &#x27;</span> + json.tickets + <span class="string">&#x27; 张。&#x27;</span>);</span></span><br><span class="line"><span class="javascript">             &#125;,</span></span><br><span class="line"><span class="javascript">             <span class="attr">error</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                 alert(<span class="string">&#x27;fail&#x27;</span>);</span></span><br><span class="line"><span class="javascript">             &#125;</span></span><br><span class="line"><span class="javascript">         &#125;);</span></span><br><span class="line"><span class="javascript">     &#125;);</span></span><br><span class="line"><span class="javascript">     </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>是不是有点奇怪？为什么我这次没有写flightHandler这个函数呢？而且竟然也运行成功了！哈哈，这就是jQuery的功劳了，jquery在处理jsonp类型的ajax时（还是忍不住吐槽，虽然jquery也把jsonp归入了ajax，但其实它们真的不是一回事儿），自动帮你生成回调函数并把数据取出来供success属性方法来调用，是不是很爽呀？</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>1、ajax和jsonp这两种技术在调用方式上“看起来”很像，目的也一样，都是请求一个url，然后把服务器返回的数据进行处理，因此jquery和ext等框架都把jsonp作为ajax的一种形式进行了封装；</p>
-<p>2、但ajax和jsonp其实本质上是不同的东西。ajax的核心是通过XmlHttpRequest获取非本页内容，而<strong>jsonp的核心则是动态添加<code>&lt;script&gt;</code>标签来调用服务器提供的js脚本</strong>。</p>
-<p>3、所以说，其实ajax与jsonp的区别不在于是否跨域，ajax通过服务端代理一样可以实现跨域，jsonp本身也不排斥同域的数据的获取。</p>
-<p>4、还有就是，jsonp是一种方式或者说非强制性协议，如同ajax一样，它也不一定非要用json格式来传递数据，如果你愿意，字符串都行，只不过这样不利于用jsonp提供公开服务。</p>
-<p>总而言之，jsonp不是ajax的一个特例，哪怕jquery等巨头把jsonp封装进了ajax，也不能改变着一点！</p>
-<p>转自：<a href="http://www.cnblogs.com/dowinning/archive/2012/04/19/json-jsonp-jquery.html"><em>说说JSON和JSONP，也许你会豁然开朗，含jQuery用例</em></a></p>
-]]></content>
-      <categories>
-        <category>前端</category>
-      </categories>
-      <tags>
-        <tag>tips</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>谈谈日志</title>
-    <url>/%E8%B0%88%E8%B0%88%E6%97%A5%E5%BF%97/</url>
-    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>日志用来记录用户操作、系统运行状态等，是一个系统的重要组成部分。 然而，由于日志通常不属于系统的核心功能，所以常常不被团队成员所重视。<span id="more"></span>对于一些简单的小程序，可能并不需要在如何记录日志的问题上花费太多精力。但是对于作为基础平台为很多产品提供服务的后端程序，就必须要考虑如何依靠良好的日志来保证系统可靠的运行了。</p>
-<div align=center><img width="250" height="220" src="../../../../images/2018-9-12/log.jpeg" algin="center"/>
-</div>
-
-
-
-<h1 id="工程配置"><a href="#工程配置" class="headerlink" title="工程配置"></a>工程配置</h1><p>使用slf4j作为日志门面，logback作为日志实现，把其他日志组件的调用转换到slf4j。</p>
-<p>pom.xml</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">// 可到https://mvnrepository.com获取最新version版本</span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>slf4j-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>ch.qos.logback<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>logback-classic<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- common-logging 实际调用slf4j --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jcl-over-slf4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- java.util.logging 实际调用slf4j --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jul-to-slf4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- log4j实际调用slf4j --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-over-slf4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="logback配置"><a href="#logback配置" class="headerlink" title="logback配置"></a>logback配置</h1><p>详见：<a href="http://mx-go.github.io/logback%E6%8E%A8%E8%8D%90%E9%85%8D%E7%BD%AE/">logback配置</a></p>
-<h1 id="jrebel配置"><a href="#jrebel配置" class="headerlink" title="jrebel配置"></a>jrebel配置</h1><p>在本地开发过程中，希望把日志打印到stdout，需要配合jrebel插件来实现。通过jrebel插件来启动tomcat的时候，就会优先找到 target/test­-classes/logback­-test.xml文件，这样就会把日志信息输出到stdout了。当正式打包的时候，不会打包test目录下的资源信息。这样就能实现线上和线下2套配置，互不影响。</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">application</span> <span class="attr">generated-by</span>=<span class="string">&quot;intellij&quot;</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.zeroturnaround.com&quot;</span> <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.zeroturnaround.com http://update.zeroturnaround.com/jrebel/rebel-2_1.xsd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="tag">&lt;<span class="name">classpath</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 查找资源文件的时候，优先从target/test-classes目录下查找 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dir</span> <span class="attr">name</span>=<span class="string">&quot;/Users/max/Documents/workSpace/open-msg/target/test-classes&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dir</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dir</span> <span class="attr">name</span>=<span class="string">&quot;/Users/max/Documents/workSpace/open-msg/target/classes&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dir</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">classpath</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">web</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">link</span> <span class="attr">target</span>=<span class="string">&quot;/&quot;</span>&gt;</span></span><br><span class="line">    		<span class="tag">&lt;<span class="name">dir</span> <span class="attr">name</span>=<span class="string">&quot;/Users/max/Documents/workSpace/open-msg/src/main/webapp&quot;</span>&gt;</span></span><br><span class="line">    		<span class="tag">&lt;/<span class="name">dir</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;/<span class="name">link</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">web</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="合理的日志级别"><a href="#合理的日志级别" class="headerlink" title="合理的日志级别"></a>合理的日志级别</h1><ol>
-<li>要用异步日志；</li>
-<li>要做日志轮转；</li>
-<li>要有上下文信息；</li>
-<li>不要疯狂打日志。</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>日志级别</th>
-<th>打印建议</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>DEBUG（调试）</td>
-<td>不建议在线上环境打印DEBUG日志，在需要的时候可以通过开关打开DEBUG日志，默认需要关闭DEBUG日志。过多的DEBUG日志，并不是好事，特别反对通过aop把函数调用的参数和返回值信息都记录到DEBUG日志中的做法。</td>
-</tr>
-<tr>
-<td>INFO（通知）</td>
-<td>业务日志用来记录业务的主流程的走向。INFO日志级别主要用于记录系统运行状态等关联信息。该日志级别，常用于反馈系统当前状态给最终用户。所以，在这里输出的信息，应该对最终用户具有实际意义，也就是最终用户要能够看得明白是什么意思才行。</td>
-</tr>
-<tr>
-<td>WARN（警告）</td>
-<td>WARN日志常用来表示系统模块发生问题，但并不影响系统运行。 此时，进行一些修复性的工作，还能把系统恢复到正常的状态。参数验证错误类的可以使用WARN。</td>
-</tr>
-<tr>
-<td>ERROR（错误）</td>
-<td>此信息输出后，主体系统核心模块正常工作，需要修复才能正常工作。</td>
-</tr>
-</tbody></table>
-<h1 id="必要的日志元素"><a href="#必要的日志元素" class="headerlink" title="必要的日志元素"></a>必要的日志元素</h1><p><strong>理想的日志中应该记录不多不少的信息。</strong><br>所谓不多，是指不要在日志中记录无用的信息。实践中常见到的无用的日志有：</p>
-<ul>
-<li>能够放在一条日志里的东西，放在多条日志中输出；</li>
-<li>预期会发生且能够被正常处理的异常，打印出一堆无用的堆栈；</li>
-<li>开发人员在开发过程中为了调试方便而加入的“临时”日志；</li>
-</ul>
-<p>所谓不少，是指对于日志的使用者，能够从日志中得到所有需要的信息。在实践中经常发生日志不够的情况，例如：</p>
-<ul>
-<li>请求出错时不能通过日志直接来定位问题，而需要开发人员再临时增加日志并要求请求的发送者重新发送同样的请求才能定位问题；</li>
-<li>无法确定服务中的后台任务是否按照期望执行；</li>
-<li>无法确定服务的内存数据结构的状态；</li>
-<li>无法确定服务的异常处理逻辑（如重试）是否正确执行；</li>
-<li>无法确定服务启动时配置是否正确加载；</li>
-<li>……</li>
-</ul>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>tips</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>谈谈敏捷开发</title>
     <url>/%E8%B0%88%E8%B0%88%E6%95%8F%E6%8D%B7%E5%BC%80%E5%8F%91/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p><strong>敏捷开发</strong>是一种从上个世纪九十年代开始逐渐引起广泛关注的一些新型软件开发方法，是一种<strong>应对快速变化的需求</strong>的一种软件开发能力。常言道：“<strong>天下武功，唯快不破</strong>”，此言用于形容“敏捷”的威力相当合适。敏捷意思为快，但敏捷思想不仅仅求快，它更多强调“<strong>多快好省</strong>”，产出得多，产出得快，产出得好，同时节省各种成本，既经济又实用。它们更强调<strong>程序员团队与业务专家之间的紧密协作</strong>、<strong>面对面的沟通</strong>（认为比书面的文档更有效）、<strong>频繁交付新的软件版本</strong>、<strong>紧凑而自我组织型的团队</strong>、能够很好地<strong>适应需求变化的代码编写和团队组织方法</strong>，也更<strong>注重软件开发过程中人的作用</strong>。<div align=center><img src="../../../../images/2018-03/scrum/scrum.png" algin="center"/></div><span id="more"></span></p>
@@ -5858,6 +5395,76 @@
       </categories>
       <tags>
         <tag>随笔</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>谈谈日志</title>
+    <url>/%E8%B0%88%E8%B0%88%E6%97%A5%E5%BF%97/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>日志用来记录用户操作、系统运行状态等，是一个系统的重要组成部分。 然而，由于日志通常不属于系统的核心功能，所以常常不被团队成员所重视。<span id="more"></span>对于一些简单的小程序，可能并不需要在如何记录日志的问题上花费太多精力。但是对于作为基础平台为很多产品提供服务的后端程序，就必须要考虑如何依靠良好的日志来保证系统可靠的运行了。</p>
+<div align=center><img width="250" height="220" src="../../../../images/2018-9-12/log.jpeg" algin="center"/>
+</div>
+
+
+
+<h1 id="工程配置"><a href="#工程配置" class="headerlink" title="工程配置"></a>工程配置</h1><p>使用slf4j作为日志门面，logback作为日志实现，把其他日志组件的调用转换到slf4j。</p>
+<p>pom.xml</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">// 可到https://mvnrepository.com获取最新version版本</span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>slf4j-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>ch.qos.logback<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>logback-classic<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- common-logging 实际调用slf4j --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jcl-over-slf4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- java.util.logging 实际调用slf4j --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jul-to-slf4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- log4j实际调用slf4j --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-over-slf4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="logback配置"><a href="#logback配置" class="headerlink" title="logback配置"></a>logback配置</h1><p>详见：<a href="http://mx-go.github.io/logback%E6%8E%A8%E8%8D%90%E9%85%8D%E7%BD%AE/">logback配置</a></p>
+<h1 id="jrebel配置"><a href="#jrebel配置" class="headerlink" title="jrebel配置"></a>jrebel配置</h1><p>在本地开发过程中，希望把日志打印到stdout，需要配合jrebel插件来实现。通过jrebel插件来启动tomcat的时候，就会优先找到 target/test­-classes/logback­-test.xml文件，这样就会把日志信息输出到stdout了。当正式打包的时候，不会打包test目录下的资源信息。这样就能实现线上和线下2套配置，互不影响。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">application</span> <span class="attr">generated-by</span>=<span class="string">&quot;intellij&quot;</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.zeroturnaround.com&quot;</span> <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.zeroturnaround.com http://update.zeroturnaround.com/jrebel/rebel-2_1.xsd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="tag">&lt;<span class="name">classpath</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 查找资源文件的时候，优先从target/test-classes目录下查找 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dir</span> <span class="attr">name</span>=<span class="string">&quot;/Users/max/Documents/workSpace/open-msg/target/test-classes&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dir</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dir</span> <span class="attr">name</span>=<span class="string">&quot;/Users/max/Documents/workSpace/open-msg/target/classes&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dir</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">classpath</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">web</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">link</span> <span class="attr">target</span>=<span class="string">&quot;/&quot;</span>&gt;</span></span><br><span class="line">    		<span class="tag">&lt;<span class="name">dir</span> <span class="attr">name</span>=<span class="string">&quot;/Users/max/Documents/workSpace/open-msg/src/main/webapp&quot;</span>&gt;</span></span><br><span class="line">    		<span class="tag">&lt;/<span class="name">dir</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;/<span class="name">link</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">web</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="合理的日志级别"><a href="#合理的日志级别" class="headerlink" title="合理的日志级别"></a>合理的日志级别</h1><ol>
+<li>要用异步日志；</li>
+<li>要做日志轮转；</li>
+<li>要有上下文信息；</li>
+<li>不要疯狂打日志。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>日志级别</th>
+<th>打印建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DEBUG（调试）</td>
+<td>不建议在线上环境打印DEBUG日志，在需要的时候可以通过开关打开DEBUG日志，默认需要关闭DEBUG日志。过多的DEBUG日志，并不是好事，特别反对通过aop把函数调用的参数和返回值信息都记录到DEBUG日志中的做法。</td>
+</tr>
+<tr>
+<td>INFO（通知）</td>
+<td>业务日志用来记录业务的主流程的走向。INFO日志级别主要用于记录系统运行状态等关联信息。该日志级别，常用于反馈系统当前状态给最终用户。所以，在这里输出的信息，应该对最终用户具有实际意义，也就是最终用户要能够看得明白是什么意思才行。</td>
+</tr>
+<tr>
+<td>WARN（警告）</td>
+<td>WARN日志常用来表示系统模块发生问题，但并不影响系统运行。 此时，进行一些修复性的工作，还能把系统恢复到正常的状态。参数验证错误类的可以使用WARN。</td>
+</tr>
+<tr>
+<td>ERROR（错误）</td>
+<td>此信息输出后，主体系统核心模块正常工作，需要修复才能正常工作。</td>
+</tr>
+</tbody></table>
+<h1 id="必要的日志元素"><a href="#必要的日志元素" class="headerlink" title="必要的日志元素"></a>必要的日志元素</h1><p><strong>理想的日志中应该记录不多不少的信息。</strong><br>所谓不多，是指不要在日志中记录无用的信息。实践中常见到的无用的日志有：</p>
+<ul>
+<li>能够放在一条日志里的东西，放在多条日志中输出；</li>
+<li>预期会发生且能够被正常处理的异常，打印出一堆无用的堆栈；</li>
+<li>开发人员在开发过程中为了调试方便而加入的“临时”日志；</li>
+</ul>
+<p>所谓不少，是指对于日志的使用者，能够从日志中得到所有需要的信息。在实践中经常发生日志不够的情况，例如：</p>
+<ul>
+<li>请求出错时不能通过日志直接来定位问题，而需要开发人员再临时增加日志并要求请求的发送者重新发送同样的请求才能定位问题；</li>
+<li>无法确定服务中的后台任务是否按照期望执行；</li>
+<li>无法确定服务的内存数据结构的状态；</li>
+<li>无法确定服务的异常处理逻辑（如重试）是否正确执行；</li>
+<li>无法确定服务启动时配置是否正确加载；</li>
+<li>……</li>
+</ul>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>tips</tag>
       </tags>
   </entry>
   <entry>
@@ -6136,6 +5743,146 @@
       </categories>
       <tags>
         <tag>架构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux下安装Nginx</title>
+    <url>/Linux%E4%B8%8B%E5%AE%89%E8%A3%85Nginx/</url>
+    <content><![CDATA[<p>记录下Linux下安装Nginx。</p>
+<div align=center><img width="400" height="200" src="../../../../images/2018-01/linux_nginx/index.jpg" algin="center"/></div><span id="more"></span>
+
+<h1 id="Nginx安装环境"><a href="#Nginx安装环境" class="headerlink" title="Nginx安装环境"></a>Nginx安装环境</h1><p>Nginx是C语言开发，建议在Linxu上运行，下面操作实在Centos6.5上的安装环境。</p>
+<ol>
+<li><strong>gcc</strong></li>
+</ol>
+<p>安装nginx需要先将官网下载的源码进行编译，编译依赖gcc环境，如果没有gcc环境，需要安装gcc。</p>
+<p>安装命令：<strong>yum install gcc-c++</strong> </p>
+<ol start="2">
+<li><strong>PCRE</strong></li>
+</ol>
+<p>PCRE(Perl Compatible Regular Expressions)是一个Perl库，包括 perl 兼容的正则表达式库。nginx的http模块使用pcre来解析正则表达式，所以需要在linux上安装pcre库。</p>
+<p>安装命令：<strong>yum install -y pcre pcre-devel</strong></p>
+<ol start="3">
+<li>zlib</li>
+</ol>
+<p>zlib库提供了很多种压缩和解压缩的方式，nginx使用zlib对http包的内容进行gzip，所以需要在linux上安装zlib库。</p>
+<p>安装命令：<strong>yum install -y zlib zlib-devel</strong></p>
+<ol start="4">
+<li>openssl</li>
+</ol>
+<p>OpenSSL 是一个强大的安全套接字层密码库，囊括主要的密码算法、常用的密钥和证书封装管理功能及SSL协议，并提供丰富的应用程序供测试或其它目的使用。nginx不仅支持http协议，还支持https（即在ssl协议上传输http），所以需要在linux安装openssl库。</p>
+<p>安装命令：<strong>yum install -y openssl openssl-devel</strong></p>
+<h1 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h1><p>将nginx-1.8.0.tar.gz拷贝至Linux服务器后解压。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">tar -zxvf nginx-<span class="number">1.8</span><span class="number">.0</span>.tar.gz</span><br><span class="line">cd nginx-<span class="number">1.8</span><span class="number">.0</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>configure</li>
+</ol>
+<p>./configure –help查询详细参数。参数设置如下：</p>
+<p><strong>注意：下边将临时文件目录指定为/var/temp/nginx，需要在/var下创建temp及nginx目录</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">./configure \</span><br><span class="line">--prefix=/usr/local/nginx \</span><br><span class="line">--pid-path=/<span class="keyword">var</span>/run/nginx/nginx.pid \</span><br><span class="line">--lock-path=/<span class="keyword">var</span>/lock/nginx.lock \</span><br><span class="line">--error-log-path=/<span class="keyword">var</span>/log/nginx/error.log \</span><br><span class="line">--http-log-path=/<span class="keyword">var</span>/log/nginx/access.log \</span><br><span class="line">--with-http_gzip_static_module \</span><br><span class="line">--http-client-body-temp-path=/<span class="keyword">var</span>/temp/nginx/client \</span><br><span class="line">--http-proxy-temp-path=/<span class="keyword">var</span>/temp/nginx/proxy \</span><br><span class="line">--http-fastcgi-temp-path=/<span class="keyword">var</span>/temp/nginx/fastcgi \</span><br><span class="line">--http-uwsgi-temp-path=/<span class="keyword">var</span>/temp/nginx/uwsgi \</span><br><span class="line">--http-scgi-temp-path=/<span class="keyword">var</span>/temp/nginx/scgi</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>编译安装</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">make</span><br><span class="line">make  install</span><br></pre></td></tr></table></figure>
+
+<div align=center><img width="700" height="200" src="../../../../images/2018-01/linux_nginx/install.png" algin="center"/>
+
+</div>
+
+<h1 id="启动Nginx"><a href="#启动Nginx" class="headerlink" title="启动Nginx"></a>启动Nginx</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">cd /usr/local/nginx/sbin/</span><br><span class="line">./nginx</span><br><span class="line"><span class="comment">// 查询nginx进程命令</span></span><br><span class="line">ps aux|grep nginx</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：执行./nginx启动nginx，这里可以-c指定加载的nginx配置文件，如下：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./nginx -c /usr/soft/nginx-1.8.0/conf/nginx.conf</span><br></pre></td></tr></table></figure>
+
+<p><strong>如果不指定-c，nginx在启动时默认加载/usr/local/nginx/conf/nginx.conf文件，此文件的地址也可以在编译安装nginx时指定./configure的参数（–conf-path= 指向配置文件（nginx.conf））</strong></p>
+<div align=center><img width="700" height="200" src="../../../../images/2018-01/linux_nginx/start.png" algin="center"/>
+
+</div>
+
+<h1 id="重启Nginx"><a href="#重启Nginx" class="headerlink" title="重启Nginx"></a>重启Nginx</h1><ol>
+<li><p>先停止再启动（建议使用）</p>
+<p>对nginx进行重启相当于先停止nginx再启动nginx，即先执行停止命令再执行启动命令。</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./nginx -s quit</span><br><span class="line">./nginx</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>重新加载配置文件</p>
+<p>当nginx的配置文件nginx.conf修改后，要想让配置生效需要重启nginx，使用-s reload不用先停止nginx再启动nginx即可将配置信息在nginx中生效。</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./nginx -s reload</span><br></pre></td></tr></table></figure>
+
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>nginx安装成功，启动nginx，即可访问虚拟机上的nginx</p>
+<div align=center><img width="700" height="200" src="../../../../images/2018-01/linux_nginx/ok.png" algin="center"/>
+
+</div>
+
+<p>到这说明nginx上安装成功。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+        <category>安装</category>
+      </categories>
+      <tags>
+        <tag>tips</tag>
+        <tag>nginx</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>离线安装docker与docker-compose</title>
+    <url>/%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85docker%E4%B8%8Edocker-compose/</url>
+    <content><![CDATA[<p>在线安装<code>docker</code>官方详细教程：<a href="https://docs.docker.com/engine/install/centos/">https://docs.docker.com/engine/install/centos/</a></p>
+<p>在线安装<code>docker-compose</code>官方详细教程：<a href="https://docs.docker.com/compose/install/#install-compose">https://docs.docker.com/compose/install/#install-compose</a> <span id="more"></span></p>
+<h1 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h1><h2 id="下载安装包"><a href="#下载安装包" class="headerlink" title="下载安装包"></a>下载安装包</h2><p>官方离线安装包下载地址：<a href="https://download.docker.com/linux/static/stable/x86_64/">https://download.docker.com/linux/static/stable/x86_64/</a></p>
+<p>目前最新版本为：<code>docker-18.06.3-ce.tgz</code> </p>
+<h2 id="脚本准备"><a href="#脚本准备" class="headerlink" title="脚本准备"></a>脚本准备</h2><h3 id="docker-service"><a href="#docker-service" class="headerlink" title="docker.service"></a>docker.service</h3><blockquote>
+<p>作用：安装和卸载docker脚本需要用到此脚本</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Docker Application Container Engine</span><br><span class="line">Documentation=https://docs.docker.com</span><br><span class="line">After=network-online.target firewalld.service</span><br><span class="line">Wants=network-online.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=notify</span><br><span class="line"># the default is not to use systemd for cgroups because the delegate issues still</span><br><span class="line"># exists and systemd currently does not support the cgroup feature set required</span><br><span class="line"># for containers run by docker</span><br><span class="line">ExecStart=/usr/bin/dockerd</span><br><span class="line">ExecReload=/bin/kill -s HUP $MAINPID</span><br><span class="line"># Having non-zero Limit*s causes performance problems due to accounting overhead</span><br><span class="line"># in the kernel. We recommend using cgroups to do container-local accounting.</span><br><span class="line">LimitNOFILE=infinity</span><br><span class="line">LimitNPROC=infinity</span><br><span class="line">LimitCORE=infinity</span><br><span class="line"># Uncomment TasksMax if your systemd version supports it.</span><br><span class="line"># Only systemd 226 and above support this version.</span><br><span class="line">#TasksMax=infinity</span><br><span class="line">TimeoutStartSec=0</span><br><span class="line"># set delegate yes so that systemd does not reset the cgroups of docker containers</span><br><span class="line">Delegate=yes</span><br><span class="line"># kill only the docker process, not all processes in the cgroup</span><br><span class="line">KillMode=process</span><br><span class="line"># restart the docker process if it exits prematurely</span><br><span class="line">Restart=on-failure</span><br><span class="line">StartLimitBurst=3</span><br><span class="line">StartLimitInterval=60s</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装脚本-install-sh"><a href="#安装脚本-install-sh" class="headerlink" title="安装脚本 install.sh"></a>安装脚本 <code>install.sh</code></h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line">echo &#x27;解压tar包...&#x27;</span><br><span class="line">tar -xvf $1</span><br><span class="line"></span><br><span class="line">echo &#x27;将docker目录移到/usr/bin目录下...&#x27;</span><br><span class="line">cp docker/* /usr/bin/</span><br><span class="line"></span><br><span class="line">echo &#x27;将docker.service 移到/etc/systemd/system/ 目录...&#x27;</span><br><span class="line">cp docker.service /etc/systemd/system/</span><br><span class="line"></span><br><span class="line">echo &#x27;添加文件权限...&#x27;</span><br><span class="line">chmod +x /etc/systemd/system/docker.service</span><br><span class="line"></span><br><span class="line">echo &#x27;重新加载配置文件...&#x27;</span><br><span class="line">systemctl daemon-reload</span><br><span class="line"></span><br><span class="line">echo &#x27;启动docker...&#x27;</span><br><span class="line">systemctl start docker</span><br><span class="line"></span><br><span class="line">echo &#x27;设置开机自启...&#x27;</span><br><span class="line">systemctl enable docker.service</span><br><span class="line"></span><br><span class="line">echo &#x27;docker安装成功...&#x27;</span><br><span class="line">docker -v</span><br></pre></td></tr></table></figure>
+
+<h3 id="卸载脚本-uninstall-sh"><a href="#卸载脚本-uninstall-sh" class="headerlink" title="卸载脚本 uninstall.sh"></a>卸载脚本 <code>uninstall.sh</code></h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line">echo &#x27;删除docker.service...&#x27;</span><br><span class="line">rm -f /etc/systemd/system/docker.service</span><br><span class="line"></span><br><span class="line">echo &#x27;删除docker文件...&#x27;</span><br><span class="line">rm -rf /usr/bin/docker*</span><br><span class="line"></span><br><span class="line">echo &#x27;重新加载配置文件&#x27;</span><br><span class="line">systemctl daemon-reload</span><br><span class="line"></span><br><span class="line">echo &#x27;卸载成功...&#x27;</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>目录中至少包含<code>docker-18.06.3-ce.tgz</code>、<code>docker.service</code>、<code>install.sh</code>、<code>uninstall.sh</code>文件</p>
+<div align=center><img src="../../../../images/2021/10-12/docker-install_1.png" algin="center"/></div>
+
+<h3 id="执行安装脚本"><a href="#执行安装脚本" class="headerlink" title="执行安装脚本"></a>执行安装脚本</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 安装docker</span></span><br><span class="line">sh install.sh docker-18.06.3-ce.tgz</span><br></pre></td></tr></table></figure>
+
+<div align=center><img src="../../../../images/2021/10-12/docker-install_2.png" algin="center"/></div>
+
+<h3 id="查看docker版本"><a href="#查看docker版本" class="headerlink" title="查看docker版本"></a>查看docker版本</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看docker版本</span></span><br><span class="line">docker -v</span><br></pre></td></tr></table></figure>
+
+<div align=center><img src="../../../../images/2021/10-12/docker-install_3.png" algin="center"/></div>
+
+<h2 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 卸载docker</span></span><br><span class="line">sh uninstall.sh</span><br></pre></td></tr></table></figure>
+
+<div align=center><img src="../../../../images/2021/10-12/docker-install_4.png" algin="center"/></div>
+
+<h1 id="安装docker-compose"><a href="#安装docker-compose" class="headerlink" title="安装docker-compose"></a>安装docker-compose</h1><h2 id="下载安装包-1"><a href="#下载安装包-1" class="headerlink" title="下载安装包"></a>下载安装包</h2><p>官方离线安装包下载地址：<a href="https://github.com/docker/compose/releases">https://github.com/docker/compose/releases</a></p>
+<p>目前最新版本为<code>v2.0.1</code>：<code>docker-compose-linux-x86_64</code></p>
+<h2 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h2><p>进入到<code>docker-compose-linux-x86_64</code>所在文件目录</p>
+<h3 id="安装脚本-install-compose-sh"><a href="#安装脚本-install-compose-sh" class="headerlink" title="安装脚本 install-compose.sh"></a>安装脚本 <code>install-compose.sh</code></h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line"></span><br><span class="line">echo &#x27;拷贝文件到/usr/local/bin目录...&#x27;</span><br><span class="line">cp docker-compose-Linux-x86_64 /usr/local/bin/docker-compose</span><br><span class="line"></span><br><span class="line">cd /usr/local/bin</span><br><span class="line"></span><br><span class="line">echo &#x27;授权docker-compose...&#x27;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 执行授权</span></span><br><span class="line">sudo chmod +x docker-compose</span><br><span class="line"></span><br><span class="line">echo &#x27;安装成功&#x27;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 安装docker-compose</span></span><br><span class="line">sh install-compose.sh</span><br></pre></td></tr></table></figure>
+
+<div align=center><img src="../../../../images/2021/10-12/docker-compose-install_1.png" algin="center"/></div>
+
+<h3 id="查看docker-compose版本"><a href="#查看docker-compose版本" class="headerlink" title="查看docker-compose版本"></a>查看docker-compose版本</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker-compose --version</span><br></pre></td></tr></table></figure>
+
+<div align=center><img src="../../../../images/2021/10-12/docker-compose-install_2.png" algin="center"/></div>
+
+]]></content>
+      <categories>
+        <category>工具</category>
+        <category>Linux</category>
+        <category>安装</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
       </tags>
   </entry>
   <entry>
@@ -7645,6 +7392,259 @@
       <tags>
         <tag>java</tag>
         <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>详解MongoDB执行计划</title>
+    <url>/%E8%AF%A6%E8%A7%A3MongoDB%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在RDBMS(Relational Database Management System)中，无论哪种数据库，都提供了SQL剖析工具，用来解决SQL效率低下的问题。在MongoDB中，也有相应的策略来实现剖析。MongoDB提供了**db.collection.explain()<strong>、</strong>cursor.explain()**方法和<code>explain</code>命令返回查询计划信息和查询计划的执行统计信息。<div align=center><img width="420" height="220" src="../../../../images/2019/4-6/MongoDB-explain.png" algin="center"/></div><span id="more"></span></p>
+<h1 id="db-collection-explain-简介"><a href="#db-collection-explain-简介" class="headerlink" title="db.collection.explain()简介"></a>db.collection.explain()简介</h1><h2 id="支持的操作"><a href="#支持的操作" class="headerlink" title="支持的操作"></a>支持的操作</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">aggregate(); count(); distinct(); find(); group(); remove(); update() </span><br><span class="line"></span><br><span class="line">cursor.explain(verbosity) 为一个游标返回其查询执行计划(Reports on the query execution plan for a cursor)</span><br><span class="line">cursor.explain(verbosity) 最通常的行式为db.collection.find().explain()。其中verbosity说明返回信息的粒度。</span><br></pre></td></tr></table></figure>
+
+<p><strong>explain()写操作(remove和update)时，返回是删除和更新操作的信息，并不将修改应用至数据库。</strong></p>
+<p>通过<code>db.collection.explain().help()</code>可以获取支持的操作</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&gt;</span> db.collection.explain().help()</span><br><span class="line">Explainable operations</span><br><span class="line">	.aggregate(...) <span class="operator">-</span> explain an aggregation operation</span><br><span class="line">	.<span class="built_in">count</span>(...) <span class="operator">-</span> explain a count operation</span><br><span class="line">	.<span class="keyword">distinct</span>(...) <span class="operator">-</span> explain a <span class="keyword">distinct</span> operation</span><br><span class="line">	.find(...) <span class="operator">-</span> <span class="keyword">get</span> an explainable query</span><br><span class="line">	.findAndModify(...) <span class="operator">-</span> explain a findAndModify operation</span><br><span class="line">	.<span class="keyword">group</span>(...) <span class="operator">-</span> explain a <span class="keyword">group</span> operation</span><br><span class="line">	.remove(...) <span class="operator">-</span> explain a remove operation</span><br><span class="line">	.update(...) <span class="operator">-</span> explain an update operation</span><br><span class="line">Explainable collection methods</span><br><span class="line">	.getCollection()</span><br><span class="line">	.getVerbosity()</span><br><span class="line">	.setVerbosity(verbosity)</span><br></pre></td></tr></table></figure>
+
+<h2 id="执行模式"><a href="#执行模式" class="headerlink" title="执行模式"></a>执行模式</h2><p><strong>db.collection.find().explain(<em>verbose</em>)</strong></p>
+<ul>
+<li>explain(）输出一个以文档形式展现的执行计划，可以包括统计信息(可选)。</li>
+<li>verbose：可选参数。<strong>缺省值为queryPlanner</strong>，用于查看指定执行计划的特定部分。即给定不同的参数则输出信息的详细程度不同。常用的有<strong>queryPlanner</strong>、<strong>executionStats</strong>、<strong>allPlansExecution。</strong></li>
+</ul>
+<h3 id="queryPlanner"><a href="#queryPlanner" class="headerlink" title="queryPlanner"></a>queryPlanner</h3><p><strong>缺省模式</strong>。MongoDB运行查询优化器对当前的查询进行评估并选择一个最佳的查询计划。</p>
+<h3 id="executionStats"><a href="#executionStats" class="headerlink" title="executionStats"></a>executionStats</h3><p>MongoDB运行查询优化器对当前的查询进行评估并选择一个最佳的查询计划进行执行。在执行完毕后返回这个最佳执行计划执行完成时的相关统计信息。<strong>对于写操作db.collection.explain()返回关于更新和删除操作的信息，但是并不将修改应用到数据库</strong>。对于那些被拒绝的执行计划(<code>rejectedPlans</code>)，不返回其统计信息。</p>
+<h3 id="allPlansExecution"><a href="#allPlansExecution" class="headerlink" title="allPlansExecution"></a>allPlansExecution</h3><p>该模式是前2种模式的更细化，即会包括上述2种模式的所有信息。<br>即按照最佳的执行计划执行以及列出统计信息，而且还会列出一些候选的执行计划。<br>如果有多个查询计划，<code>executionStats</code>信息包括这些执行计划的部分统计信息。</p>
+<h1 id="相关用法"><a href="#相关用法" class="headerlink" title="相关用法"></a>相关用法</h1><p>先在集合中插入一条数据</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt; db.student.insert(&#123;&quot;age&quot; : 90.0,&quot;name&quot; : &quot;rainbowhorse&quot;,&quot;score&quot; : 90.0,&quot;sex&quot; : &quot;M&quot;&#125;);</span><br><span class="line">WriteResult(&#123; &quot;nInserted&quot; : 1 &#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="演示db-collection-explain-update"><a href="#演示db-collection-explain-update" class="headerlink" title="演示db.collection.explain().update()"></a>演示db.collection.explain().update()</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&gt;</span> db.student.explain(&quot;allPlansExecution&quot;).update(&#123;&quot;name&quot;:&quot;rainbowhorse&quot;&#125;,&#123;$<span class="keyword">set</span>:&#123;&quot;score&quot;:<span class="number">99</span>&#125;&#125;);</span><br><span class="line">&#123;</span><br><span class="line">	&quot;queryPlanner&quot; : &#123;</span><br><span class="line">		&quot;plannerVersion&quot; : <span class="number">1</span>,</span><br><span class="line">		&quot;namespace&quot; : &quot;TEST.student&quot;,</span><br><span class="line">		&quot;indexFilterSet&quot; : <span class="literal">false</span>,</span><br><span class="line">		&quot;parsedQuery&quot; : &#123;</span><br><span class="line">			&quot;name&quot; : &#123;</span><br><span class="line">				&quot;$eq&quot; : &quot;rainbowhorse&quot;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,</span><br><span class="line">		&quot;winningPlan&quot; : &#123;</span><br><span class="line">			&quot;stage&quot; : &quot;UPDATE&quot;,</span><br><span class="line">			&quot;inputStage&quot; : &#123;</span><br><span class="line">				&quot;stage&quot; : &quot;COLLSCAN&quot;,</span><br><span class="line">				&quot;filter&quot; : &#123;</span><br><span class="line">					&quot;name&quot; : &#123;</span><br><span class="line">						&quot;$eq&quot; : &quot;rainbowhorse&quot;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;,</span><br><span class="line">				&quot;direction&quot; : &quot;forward&quot;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,</span><br><span class="line">		&quot;rejectedPlans&quot; : [ ]</span><br><span class="line">	&#125;,</span><br><span class="line">	&quot;executionStats&quot; : &#123;</span><br><span class="line">		&quot;executionSuccess&quot; : <span class="literal">true</span>,</span><br><span class="line">		&quot;nReturned&quot; : <span class="number">0</span>,</span><br><span class="line">		&quot;executionTimeMillis&quot; : <span class="number">0</span>,</span><br><span class="line">		&quot;totalKeysExamined&quot; : <span class="number">0</span>,</span><br><span class="line">		&quot;totalDocsExamined&quot; : <span class="number">11</span>,</span><br><span class="line">		&quot;executionStages&quot; : &#123;</span><br><span class="line">			&quot;stage&quot; : &quot;UPDATE&quot;,</span><br><span class="line">			&quot;nReturned&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;executionTimeMillisEstimate&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;works&quot; : <span class="number">13</span>,</span><br><span class="line">			&quot;advanced&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;needTime&quot; : <span class="number">12</span>,</span><br><span class="line">			&quot;needYield&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;saveState&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;restoreState&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;isEOF&quot; : <span class="number">1</span>,</span><br><span class="line">			&quot;invalidates&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;nMatched&quot; : <span class="number">1</span>,</span><br><span class="line">			&quot;nWouldModify&quot; : <span class="number">1</span>,</span><br><span class="line">			&quot;nInvalidateSkips&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;wouldInsert&quot; : <span class="literal">false</span>,</span><br><span class="line">			&quot;fastmodinsert&quot; : <span class="literal">false</span>,</span><br><span class="line">			&quot;inputStage&quot; : &#123;</span><br><span class="line">				&quot;stage&quot; : &quot;COLLSCAN&quot;,</span><br><span class="line">				&quot;filter&quot; : &#123;</span><br><span class="line">					&quot;name&quot; : &#123;</span><br><span class="line">						&quot;$eq&quot; : &quot;rainbowhorse&quot;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;,</span><br><span class="line">				&quot;nReturned&quot; : <span class="number">1</span>,</span><br><span class="line">				&quot;executionTimeMillisEstimate&quot; : <span class="number">0</span>,</span><br><span class="line">				&quot;works&quot; : <span class="number">12</span>,</span><br><span class="line">				&quot;advanced&quot; : <span class="number">1</span>,</span><br><span class="line">				&quot;needTime&quot; : <span class="number">11</span>,</span><br><span class="line">				&quot;needYield&quot; : <span class="number">0</span>,</span><br><span class="line">				&quot;saveState&quot; : <span class="number">1</span>,</span><br><span class="line">				&quot;restoreState&quot; : <span class="number">1</span>,</span><br><span class="line">				&quot;isEOF&quot; : <span class="number">0</span>,</span><br><span class="line">				&quot;invalidates&quot; : <span class="number">0</span>,</span><br><span class="line">				&quot;direction&quot; : &quot;forward&quot;,</span><br><span class="line">				&quot;docsExamined&quot; : <span class="number">11</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,</span><br><span class="line">		&quot;allPlansExecution&quot; : [ ]</span><br><span class="line">	&#125;,</span><br><span class="line">	&quot;serverInfo&quot; : &#123;</span><br><span class="line">		&quot;host&quot; : &quot;rainbowhorse&quot;,</span><br><span class="line">		&quot;port&quot; : <span class="number">27017</span>,</span><br><span class="line">		&quot;version&quot; : &quot;4.0.3&quot;,</span><br><span class="line">		&quot;gitVersion&quot; : &quot;7ea530946fa7880364d88c8d8b6026bbc9ffa48c&quot;</span><br><span class="line">	&#125;,</span><br><span class="line">	&quot;ok&quot; : <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再次查看文档，文档并没有被更新。正如前文所述，该方式并不将修改应用到数据库。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&gt;</span> db.student.find(&#123;&quot;name&quot;:&quot;rainbowhorse&quot;&#125;);</span><br><span class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5cbbd841525ed310c440610a&quot;), &quot;age&quot; : <span class="number">90</span>, &quot;name&quot; : &quot;rainbowhorse&quot;, &quot;score&quot; : <span class="number">90</span>, &quot;sex&quot; : &quot;M&quot; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：将explain()放置到update()之后则会提示错误。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&gt;</span> db.student.update(&#123;&quot;name&quot;:&quot;rainbowhorse&quot;&#125;,&#123;$<span class="keyword">set</span>:&#123;&quot;score&quot;:<span class="number">99</span>&#125;&#125;).explain(&quot;allPlansExecution&quot;);</span><br><span class="line"><span class="number">2019</span><span class="number">-04</span><span class="number">-21</span>T10:<span class="number">53</span>:<span class="number">40.824</span><span class="operator">+</span><span class="number">0800</span> E QUERY    [js] TypeError: db.student.update(...).explain <span class="keyword">is</span> <span class="keyword">not</span> a <span class="keyword">function</span> :</span><br><span class="line">@(shell):<span class="number">1</span>:<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>在执行计划中，部分操作符需要放至<code>explain()</code>之前，部分需要放到<code>explain()</code>之后才能正确执行。</p>
+<p>聚合查询中使用：<code>collection.explain().aggregate(...)</code></p>
+<h2 id="执行计划相关描述"><a href="#执行计划相关描述" class="headerlink" title="执行计划相关描述"></a>执行计划相关描述</h2><p>缺省情况下，explain包括2个部分，<code>queryPlanner</code>和<code>serverInfo</code>。如果使用了<code>executionStats</code>或者<code>allPlansExecution</code>，则还会返回<code>executionStats</code>信息。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&gt;</span> db.student.find(&#123;&quot;name&quot;:&quot;rainbowhorse&quot;&#125;).explain(&quot;allPlansExecution&quot;);</span><br><span class="line">&#123;</span><br><span class="line">	&quot;queryPlanner&quot; : &#123;</span><br><span class="line">		&quot;plannerVersion&quot; : <span class="number">1</span>,		<span class="operator">/</span><span class="operator">/</span>查询计划版本</span><br><span class="line">		&quot;namespace&quot; : &quot;TEST.student&quot;,		<span class="operator">/</span><span class="operator">/</span>被查询对象</span><br><span class="line">		&quot;indexFilterSet&quot; : <span class="literal">false</span>,		<span class="operator">/</span><span class="operator">/</span>是否使用到了索引过滤</span><br><span class="line">		&quot;parsedQuery&quot; : &#123;			<span class="operator">/</span><span class="operator">/</span>解析查询，即过滤条件是什么</span><br><span class="line">			&quot;name&quot; : &#123;		<span class="operator">/</span><span class="operator">/</span>此处为name<span class="operator">=</span>rainbowhorse</span><br><span class="line">				&quot;$eq&quot; : &quot;rainbowhorse&quot;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,</span><br><span class="line">		&quot;winningPlan&quot; : &#123;		<span class="operator">/</span><span class="operator">/</span>最佳的执行计划</span><br><span class="line">			&quot;stage&quot; : &quot;COLLSCAN&quot;,		<span class="operator">/</span><span class="operator">/</span>COLLSCAN为集合扫描</span><br><span class="line">			&quot;filter&quot; : &#123;		<span class="operator">/</span><span class="operator">/</span>过滤条件</span><br><span class="line">				&quot;name&quot; : &#123;</span><br><span class="line">					&quot;$eq&quot; : &quot;rainbowhorse&quot;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;,</span><br><span class="line">			&quot;direction&quot; : &quot;forward&quot;		<span class="operator">/</span><span class="operator">/</span>方向：forward</span><br><span class="line">		&#125;,</span><br><span class="line">		&quot;rejectedPlans&quot; : [ ]		<span class="operator">/</span><span class="operator">/</span>拒绝的执行计划，此处没有</span><br><span class="line">	&#125;,</span><br><span class="line">	&quot;executionStats&quot; : &#123;		<span class="operator">/</span><span class="operator">/</span>执行计划相关统计信息</span><br><span class="line">		&quot;executionSuccess&quot; : <span class="literal">true</span>,		<span class="operator">/</span><span class="operator">/</span>执行成功的状态</span><br><span class="line">		&quot;nReturned&quot; : <span class="number">1</span>,		<span class="operator">/</span><span class="operator">/</span>返回结果集数目</span><br><span class="line">		&quot;executionTimeMillis&quot; : <span class="number">0</span>,		<span class="operator">/</span><span class="operator">/</span>执行所需的时间,毫秒</span><br><span class="line">		&quot;totalKeysExamined&quot; : <span class="number">0</span>,		<span class="operator">/</span><span class="operator">/</span>索引检查的时间</span><br><span class="line">		&quot;totalDocsExamined&quot; : <span class="number">11</span>,		<span class="operator">/</span><span class="operator">/</span>检查文档总数</span><br><span class="line">		&quot;executionStages&quot; : &#123;</span><br><span class="line">			&quot;stage&quot; : &quot;COLLSCAN&quot;,		<span class="operator">/</span><span class="operator">/</span>使用集合扫描方式</span><br><span class="line">			&quot;filter&quot; : &#123;		<span class="operator">/</span><span class="operator">/</span>过滤条件</span><br><span class="line">				&quot;name&quot; : &#123;</span><br><span class="line">					&quot;$eq&quot; : &quot;rainbowhorse&quot;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;,</span><br><span class="line">			&quot;nReturned&quot; : <span class="number">1</span>,		<span class="operator">/</span><span class="operator">/</span>返回结果集数目</span><br><span class="line">			&quot;executionTimeMillisEstimate&quot; : <span class="number">0</span>,		<span class="operator">/</span><span class="operator">/</span>预估的执行时间，毫秒</span><br><span class="line">			&quot;works&quot; : <span class="number">13</span>,		<span class="operator">/</span><span class="operator">/</span>工作单元数，一个查询会被派生为一些小的工作单元</span><br><span class="line">			&quot;advanced&quot; : <span class="number">1</span>,		<span class="operator">/</span><span class="operator">/</span>优先返回的结果数目</span><br><span class="line">			&quot;needTime&quot; : <span class="number">11</span>,</span><br><span class="line">			&quot;needYield&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;saveState&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;restoreState&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;isEOF&quot; : <span class="number">1</span>,</span><br><span class="line">			&quot;invalidates&quot; : <span class="number">0</span>,</span><br><span class="line">			&quot;direction&quot; : &quot;forward&quot;,</span><br><span class="line">			&quot;docsExamined&quot; : <span class="number">11</span>		<span class="operator">/</span><span class="operator">/</span>文档检查数目</span><br><span class="line">		&#125;,</span><br><span class="line">		&quot;allPlansExecution&quot; : [ ]</span><br><span class="line">	&#125;,</span><br><span class="line">	&quot;serverInfo&quot; : &#123;		<span class="operator">/</span><span class="operator">/</span>服务器信息，包括主机名，端口，版本等。</span><br><span class="line">		&quot;host&quot; : &quot;rainbowhorse&quot;,</span><br><span class="line">		&quot;port&quot; : <span class="number">27017</span>,</span><br><span class="line">		&quot;version&quot; : &quot;4.0.3&quot;,</span><br><span class="line">		&quot;gitVersion&quot; : &quot;7ea530946fa7880364d88c8d8b6026bbc9ffa48c&quot;</span><br><span class="line">	&#125;,</span><br><span class="line">	&quot;ok&quot; : <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>更详细的描述可以参考官方文档：<a href="https://docs.mongodb.com/manual/reference/explain-results/#executionstats">https://docs.mongodb.com/manual/reference/explain-results/#executionstats</a></p>
+<h3 id="Stage状态分析"><a href="#Stage状态分析" class="headerlink" title="Stage状态分析"></a>Stage状态分析</h3><table>
+<thead>
+<tr>
+<th align="center"><strong>stage</strong></th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">COLLSCAN</td>
+<td align="left">全表扫描</td>
+</tr>
+<tr>
+<td align="center">IXSCAN</td>
+<td align="left">扫描索引</td>
+</tr>
+<tr>
+<td align="center">FETCH</td>
+<td align="left">根据索引去检索指定document</td>
+</tr>
+<tr>
+<td align="center">SHARD_MERGE</td>
+<td align="left">将各个分片返回数据进行merge</td>
+</tr>
+<tr>
+<td align="center">SORT</td>
+<td align="left">表明在内存中进行了排序</td>
+</tr>
+<tr>
+<td align="center">LIMIT</td>
+<td align="left">使用limit限制返回数</td>
+</tr>
+<tr>
+<td align="center">SKIP</td>
+<td align="left">使用skip进行跳过</td>
+</tr>
+<tr>
+<td align="center">IDHACK</td>
+<td align="left">针对_id进行查询</td>
+</tr>
+<tr>
+<td align="center">SHARDING_FILTER</td>
+<td align="left">通过mongos对分片数据进行查询</td>
+</tr>
+<tr>
+<td align="center">COUNT</td>
+<td align="left">利用db.coll.explain().count()之类进行count运算</td>
+</tr>
+<tr>
+<td align="center">COUNTSCAN</td>
+<td align="left">count不使用Index进行count时的stage返回</td>
+</tr>
+<tr>
+<td align="center">COUNT_SCAN</td>
+<td align="left">count使用了Index进行count时的stage返回</td>
+</tr>
+<tr>
+<td align="center">SUBPLA</td>
+<td align="left">未使用到索引的$or查询的stage返回</td>
+</tr>
+<tr>
+<td align="center">TEXT</td>
+<td align="left">使用全文索引进行查询时候的stage返回</td>
+</tr>
+<tr>
+<td align="center">PROJECTION</td>
+<td align="left">限定返回字段时候stage的返回</td>
+</tr>
+</tbody></table>
+<h2 id="比较运算符"><a href="#比较运算符" class="headerlink" title="比较运算符"></a>比较运算符</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">$eq    =               <span class="string">&quot;=&quot;</span></span><br><span class="line">$gt   (greater than )  &gt;</span><br><span class="line">$gte                   &gt;=  (equal)</span><br><span class="line">$lt   (less than)      &lt;</span><br><span class="line">$lte                   &lt;=  (equal)</span><br><span class="line">$ne   (not equal)      !=</span><br><span class="line">$in                    <span class="keyword">in</span></span><br><span class="line">$nin  (not <span class="keyword">in</span>)         !<span class="keyword">in</span></span><br><span class="line"></span><br><span class="line">重点：所有的比较运算符都是出现在键与值得中间，示例如下</span><br><span class="line">&#123; &lt;field_name&gt;: &#123; <span class="attr">$operator</span>: &lt;value&gt; &#125; &#125;</span><br><span class="line">&#123; &lt;ename&gt;: &#123; <span class="attr">$eq</span>: <span class="string">&quot;robin&quot;</span> &#125; &#125;</span><br><span class="line">&#123; &lt;qty&gt;: &#123; <span class="attr">$gt</span>: <span class="number">20</span> &#125; &#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://www.voidcn.com/article/p-gxwefchh-bgt.html">MongoDB执行计划获取(db.collection.explain())</a></p>
+<p><a href="https://docs.mongodb.com/manual/reference/explain-results/#executionstats">https://docs.mongodb.com/manual/reference/explain-results/#executionstats</a></p>
+]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>MongoDB</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>设计合理的架构</title>
+    <url>/%E8%AE%BE%E8%AE%A1%E5%90%88%E7%90%86%E7%9A%84%E6%9E%B6%E6%9E%84/</url>
+    <content><![CDATA[<h1 id="架构师职责"><a href="#架构师职责" class="headerlink" title="架构师职责"></a><a href="https://www.mubucm.com/doc/5jhFgPTD_Zp">架构师职责</a></h1><mark class="hl-label red">架构师是业务与技术之间的桥梁。</mark> 
+
+<h2 id="核心能力"><a href="#核心能力" class="headerlink" title="核心能力"></a>核心能力</h2><ul>
+<li>判断-确定性思维</li>
+<li>拆解-创造性思维</li>
+<li>取舍-系统性思维</li>
+</ul>
+<h2 id="主要职责"><a href="#主要职责" class="headerlink" title="主要职责"></a>主要职责</h2><h3 id="架构设计前期"><a href="#架构设计前期" class="headerlink" title="架构设计前期"></a>架构设计前期</h3><ul>
+<li>澄清不确定性</li>
+<li>识别复杂需求</li>
+<li>与业务方交流</li>
+<li>与利益干系人交流</li>
+<li>业务架构图</li>
+<li>核心场景流程</li>
+</ul>
+<h3 id="架构设计中期"><a href="#架构设计中期" class="headerlink" title="架构设计中期"></a>架构设计中期</h3><ul>
+<li>选择、设计备选方案</li>
+<li>架构小组讨论</li>
+<li>方案评估</li>
+<li>方案汇报</li>
+</ul>
+<h3 id="架构设计后期"><a href="#架构设计后期" class="headerlink" title="架构设计后期"></a>架构设计后期</h3><ul>
+<li>细化架构</li>
+<li>完善架构</li>
+<li>写文档</li>
+<li>架构宣讲</li>
+<li>最终的架构文档</li>
+</ul>
+<div align=center><img src="../../../../images/2022/1-3/3.1_architect_ responsibilities.png" algin="center"/></div>
+
+<h1 id="架构设计前期-1"><a href="#架构设计前期-1" class="headerlink" title="架构设计前期"></a><a href="https://www.mubucm.com/doc/2SasZqNwyZp">架构设计前期</a></h1><div align=center><img src="../../../../images/2022/1-3/3.2_arch_prophase.png" algin="center"/></div>
+
+<h1 id="架构设计中期-1"><a href="#架构设计中期-1" class="headerlink" title="架构设计中期"></a><a href="https://www.mubucm.com/doc/7FhHnbjLDdp">架构设计中期</a></h1><div align=center><img src="../../../../images/2022/1-3/3.3_arch_metaphase.png" algin="center"/></div>
+
+<h1 id="架构设计后期-1"><a href="#架构设计后期-1" class="headerlink" title="架构设计后期"></a><a href="https://www.mubucm.com/doc/2C5tQ9wHvdp">架构设计后期</a></h1><h2 id="架构设计文档"><a href="#架构设计文档" class="headerlink" title="架构设计文档"></a>架构设计文档</h2><ol>
+<li>业务背景</li>
+<li>约束&amp;限制</li>
+<li>总体架构设计</li>
+<li>详细架构设计</li>
+<li>架构质量设计</li>
+<li>架构演进规则</li>
+</ol>
+<h2 id="详细架构设计"><a href="#详细架构设计" class="headerlink" title="详细架构设计"></a>详细架构设计</h2><ul>
+<li>架构规范</li>
+<li>架构质量</li>
+</ul>
+<div align=center><img src="../../../../images/2022/1-3/3.4_arch_anaphase.png" algin="center"/></div>
+]]></content>
+      <categories>
+        <category>架构</category>
+        <category>设计</category>
+      </categories>
+      <tags>
+        <tag>架构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>说说JSON和JSONP</title>
+    <url>/%E8%AF%B4%E8%AF%B4JSON%E5%92%8CJSONP/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>说到AJAX就会不可避免的面临两个问题，<strong>第一个是AJAX以何种格式来交换数据？第二个是跨域的需求如何解决？</strong>这两个问题目前都有不同的解决方案，比如数据可以用自定义字符串或者用XML来描述，跨域可以通过服务器端代理来解决。</p>
+<p>JSON和JSONP虽然只有一个字母的差别，但其实他们根本不是一回事：JSON是一种数据交换格式，而JSONP是一种依靠开发人员的聪明才智创造出的一种<code>非官方跨域数据交互协议</code>。我们拿最近比较火的谍战片来打个比方，JSON是地下党们用来书写和交换情报的“暗号”，而JSONP则是把用暗号书写的情报传递给自己同志时使用的接头方式。看到没？一个是描述信息的格式，一个是信息传递双方约定的方法。<div align=center><img width="450" height="200" src="../../../../images/2018-01/JSON_JSONP/jsonp-json-with-padding.gif" algin="center"/></div><span id="more"></span></p>
+<h1 id="什么是JSON"><a href="#什么是JSON" class="headerlink" title="什么是JSON"></a>什么是JSON</h1><p>前面简单说了一下，JSON是一种基于文本的数据交换方式，或者叫做数据描述格式，你是否该选用他首先肯定要关注它所拥有的优点。</p>
+<h2 id="JSON的优点"><a href="#JSON的优点" class="headerlink" title="JSON的优点"></a>JSON的优点</h2><ol>
+<li>基于纯文本，跨平台传递极其简单；</li>
+<li>JavaScript原生支持，后台语言几乎全部支持；</li>
+<li>轻量级数据格式，占用字符数量极少，特别适合互联网传递；</li>
+<li>可读性较强，虽然比不上XML那么一目了然，但在合理的依次缩进之后还是很容易识别的；</li>
+<li>容易编写和解析，当然前提是你要知道数据结构；</li>
+</ol>
+<p>JSON的缺点当然也有，但在作者看来实在是无关紧要的东西，所以不再单独说明。</p>
+<h2 id="JSON的格式或者叫规则"><a href="#JSON的格式或者叫规则" class="headerlink" title="JSON的格式或者叫规则"></a>JSON的格式或者叫规则</h2><p>JSON能够以非常简单的方式来描述数据结构，XML能做的它都能做，因此在跨平台方面两者完全不分伯仲。</p>
+<ol>
+<li>JSON只有两种数据类型描述符，大括号{}和方括号[]，其余英文冒号:是映射符，英文逗号,是分隔符，英文双引号””是定义符。</li>
+<li>大括号{}用来描述一组“不同类型的无序键值对集合”（每个键值对可以理解为OOP的属性描述），方括号[]用来描述一组“相同类型的有序数据集合”（可对应OOP的数组）。</li>
+<li>上述两种集合中若有多个子项，则通过英文逗号,进行分隔。</li>
+<li>键值对以英文冒号:进行分隔，并且建议键名都加上英文双引号””，以便于不同语言的解析。</li>
+<li>JSON内部常用数据类型无非就是字符串、数字、布尔、日期、null 这么几个，字符串必须用双引号引起来，其余的都不用，日期类型比较特殊，这里就不展开讲述了，只是建议如果客户端没有按日期排序功能需求的话，那么把日期时间直接作为字符串传递就好，可以省去很多麻烦。</li>
+</ol>
+<h2 id="JSON的实例"><a href="#JSON的实例" class="headerlink" title="JSON的实例"></a>JSON的实例</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 描述一个人</span></span><br><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">    <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;Bob&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Age&quot;</span>: <span class="number">32</span>,</span><br><span class="line">    <span class="string">&quot;Company&quot;</span>: <span class="string">&quot;IBM&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Engineer&quot;</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取这个人的信息</span></span><br><span class="line"><span class="keyword">var</span> personAge = person.Age;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 描述几个人</span></span><br><span class="line"><span class="keyword">var</span> members = [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;Bob&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Age&quot;</span>: <span class="number">32</span>,</span><br><span class="line">        <span class="string">&quot;Company&quot;</span>: <span class="string">&quot;IBM&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Engineer&quot;</span>: <span class="literal">true</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;John&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Age&quot;</span>: <span class="number">20</span>,</span><br><span class="line">        <span class="string">&quot;Company&quot;</span>: <span class="string">&quot;Oracle&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Engineer&quot;</span>: <span class="literal">false</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;Henry&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Age&quot;</span>: <span class="number">45</span>,</span><br><span class="line">        <span class="string">&quot;Company&quot;</span>: <span class="string">&quot;Microsoft&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Engineer&quot;</span>: <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取其中John的公司名称</span></span><br><span class="line"><span class="keyword">var</span> johnsCompany = members[<span class="number">1</span>].Company;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 描述一次会议</span></span><br><span class="line"><span class="keyword">var</span> conference = &#123;</span><br><span class="line">    <span class="string">&quot;Conference&quot;</span>: <span class="string">&quot;Future Marketing&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Date&quot;</span>: <span class="string">&quot;2012-6-1&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Address&quot;</span>: <span class="string">&quot;Beijing&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Members&quot;</span>: </span><br><span class="line">    [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;Bob&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Age&quot;</span>: <span class="number">32</span>,</span><br><span class="line">            <span class="string">&quot;Company&quot;</span>: <span class="string">&quot;IBM&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Engineer&quot;</span>: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;John&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Age&quot;</span>: <span class="number">20</span>,</span><br><span class="line">            <span class="string">&quot;Company&quot;</span>: <span class="string">&quot;Oracle&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Engineer&quot;</span>: <span class="literal">false</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;Henry&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Age&quot;</span>: <span class="number">45</span>,</span><br><span class="line">            <span class="string">&quot;Company&quot;</span>: <span class="string">&quot;Microsoft&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Engineer&quot;</span>: <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取参会者Henry是否工程师</span></span><br><span class="line"><span class="keyword">var</span> henryIsAnEngineer = conference.Members[<span class="number">2</span>].Engineer;</span><br></pre></td></tr></table></figure>
+
+<p>关于JSON，就说这么多，更多细节请在开发过程中查阅资料深入学习。</p>
+<h1 id="什么是JSONP"><a href="#什么是JSONP" class="headerlink" title="什么是JSONP"></a>什么是JSONP</h1><h2 id="JSONP的产生"><a href="#JSONP的产生" class="headerlink" title="JSONP的产生"></a>JSONP的产生</h2><p>其实网上关于JSONP的讲解有很多，但却千篇一律，而且云里雾里，对于很多刚接触的人来讲理解起来有些困难，试着用自己的方式来阐释一下这个问题。</p>
+<p>1、一个众所周知的问题，Ajax直接请求普通文件存在跨域无权限访问的问题，甭管你是静态页面、动态网页、web服务、WCF，只要是跨域请求，一律不准；</p>
+<p>2、不过我们又发现，Web页面上<code>调用js文件时则不受是否跨域的影响</code>（不仅如此，我们还发现凡是拥有”src”这个属性的标签都拥有跨域的能力，比如<code>&lt;script&gt;</code>、<code>&lt;img&gt;</code>、<code>&lt;iframe&gt;</code>）；</p>
+<p>3、于是可以判断，当前阶段如果想通过纯web端（ActiveX控件、服务端代理、属于未来的HTML5之Websocket等方式不算）跨域访问数据就只有一种可能，那就是在远程服务器上设法把数据装进js格式的文件里，供客户端调用和进一步处理；</p>
+<p>4、恰巧我们已经知道有一种叫做JSON的纯字符数据格式可以简洁的描述复杂数据，更妙的是JSON还被js原生支持，所以在客户端几乎可以随心所欲的处理这种格式的数据；</p>
+<p>5、这样子解决方案就呼之欲出了，web客户端通过与调用脚本一模一样的方式，来调用跨域服务器上动态生成的js格式文件（一般以JSON为后缀），显而易见，服务器之所以要动态生成JSON文件，目的就在于把客户端需要的数据装入进去。</p>
+<p>6、客户端在对JSON文件调用成功之后，也就获得了自己所需的数据，剩下的就是按照自己需求进行处理和展现了，这种获取远程数据的方式看起来非常像AJAX，但其实并不一样。</p>
+<p>7、为了便于客户端使用数据，逐渐形成了一种非正式传输协议，人们把它称作JSONP，该协议的一个要点就是允许用户传递一个callback参数给服务端，然后服务端返回数据时会将这个callback参数作为函数名来包裹住JSON数据，这样客户端就可以随意定制自己的函数来自动处理返回数据了。</p>
+<h2 id="JSONP的客户端具体实现"><a href="#JSONP的客户端具体实现" class="headerlink" title="JSONP的客户端具体实现"></a>JSONP的客户端具体实现</h2><p>不管jQuery也好，extjs也罢，又或者是其他支持jsonp的框架，他们幕后所做的工作都是一样的，下面我来循序渐进的说明一下jsonp在客户端的实现：</p>
+<p>1、我们知道，哪怕跨域js文件中的代码（当然指符合web脚本安全策略的），web页面也是可以无条件执行的。</p>
+<p>远程服务器remoteserver.com根目录下有个remote.js文件代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">alert(<span class="string">&#x27;我是远程文件&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>本地服务器localserver.com下有个jsonp.html页面代码如下：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;</span> <span class="meta-string">&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;http://remoteserver.com/remote.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>毫无疑问，页面将会弹出一个提示窗体，显示跨域调用成功。</p>
+<p>2、现在我们在jsonp.html页面定义一个函数，然后在远程remote.js中传入数据进行调用。</p>
+<p>jsonp.html页面代码如下：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;</span> <span class="meta-string">&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> localHandler = <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        alert(<span class="string">&#x27;我是本地函数，可以被跨域的remote.js文件调用，远程js带来的数据是：&#x27;</span> + data.result);</span></span><br><span class="line"><span class="javascript">    &#125;;</span></span><br><span class="line"><span class="javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;http://remoteserver.com/remote.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>remote.js文件代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">localHandler(&#123;<span class="string">&quot;result&quot;</span>:<span class="string">&quot;我是远程js带来的数据&quot;</span>&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>运行之后查看结果，页面成功弹出提示窗口，显示本地函数被跨域的远程js调用成功，并且还接收到了远程js带来的数据。很欣喜，跨域远程获取数据的目的基本实现了，但是又一个问题出现了，我怎么让远程js知道它应该调用的本地函数叫什么名字呢？毕竟是jsonp的服务者都要面对很多服务对象，而这些服务对象各自的本地函数都不相同啊？我们接着往下看。</p>
+<p>3、聪明的开发者很容易想到，只要服务端提供的js脚本是动态生成的就行了呗，这样调用者可以传一个参数过去告诉服务端“我想要一段调用XXX函数的js代码，请你返回给我”，于是服务器就可以按照客户端的需求来生成js脚本并响应了。</p>
+<p>看jsonp.html页面的代码：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;</span> <span class="meta-string">&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">    <span class="comment">// 得到航班信息查询结果后的回调函数</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> flightHandler = <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        alert(<span class="string">&#x27;你查询的航班结果是：票价 &#x27;</span> + data.price + <span class="string">&#x27; 元，&#x27;</span> + <span class="string">&#x27;余票 &#x27;</span> + data.tickets + <span class="string">&#x27; 张。&#x27;</span>);</span></span><br><span class="line"><span class="javascript">    &#125;;</span></span><br><span class="line"><span class="javascript">    <span class="comment">// 提供jsonp服务的url地址（不管是什么类型的地址，最终生成的返回值都是一段javascript代码）</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> url = <span class="string">&quot;http://flightQuery.com/jsonp/flightResult.aspx?code=CA1998&amp;callback=flightHandler&quot;</span>;</span></span><br><span class="line"><span class="javascript">    <span class="comment">// 创建script标签，设置其属性</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">&#x27;script&#x27;</span>);</span></span><br><span class="line"><span class="javascript">    script.setAttribute(<span class="string">&#x27;src&#x27;</span>, url);</span></span><br><span class="line"><span class="javascript">    <span class="comment">// 把script标签加入head，此时调用开始</span></span></span><br><span class="line"><span class="javascript">    <span class="built_in">document</span>.getElementsByTagName(<span class="string">&#x27;head&#x27;</span>)[<span class="number">0</span>].appendChild(script); </span></span><br><span class="line"><span class="javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这次的代码变化比较大，不再直接把远程js文件写死，而是编码实现动态查询，而这也正是jsonp客户端实现的核心部分，本例中的重点也就在于如何完成jsonp调用的全过程。</p>
+<p>我们看到调用的url中传递了一个code参数，告诉服务器我要查的是CA1998次航班的信息，而callback参数则告诉服务器，我的本地回调函数叫做flightHandler，所以请把查询结果传入这个函数中进行调用。</p>
+<p>OK，服务器很聪明，这个叫做flightResult.aspx的页面生成了一段这样的代码提供给jsonp.html（服务端的实现这里就不演示了，与你选用的语言无关，说到底就是拼接字符串）：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">flightHandler(&#123;</span><br><span class="line">    <span class="string">&quot;code&quot;</span>: <span class="string">&quot;CA1998&quot;</span>,</span><br><span class="line">    <span class="string">&quot;price&quot;</span>: <span class="number">1780</span>,</span><br><span class="line">    <span class="string">&quot;tickets&quot;</span>: <span class="number">5</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>我们看到，传递给flightHandler函数的是一个json，它描述了航班的基本信息。运行一下页面，成功弹出提示窗口，jsonp的执行全过程顺利完成！</p>
+<p>4、到这里为止的话，相信你已经能够理解jsonp的客户端实现原理了吧？剩下的就是如何把代码封装一下，以便于与用户界面交互，从而实现多次和重复调用。</p>
+<p>什么？你用的是jQuery，想知道jQuery如何实现jsonp调用？好吧，那我就好人做到底，再给你一段jQuery使用jsonp的代码（我们依然沿用上面那个航班信息查询的例子，假定返回jsonp结果不变）：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;</span> <span class="meta-string">&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span> &gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">title</span>&gt;</span>Untitled Page<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">jquery.min.js</span>&quot;&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">     jQuery(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123; </span></span><br><span class="line"><span class="javascript">        $.ajax(&#123;</span></span><br><span class="line"><span class="javascript">             <span class="attr">type</span>: <span class="string">&quot;get&quot;</span>,</span></span><br><span class="line"><span class="javascript">             <span class="attr">async</span>: <span class="literal">false</span>,</span></span><br><span class="line"><span class="javascript">             <span class="attr">url</span>: <span class="string">&quot;http://flightQuery.com/jsonp/flightResult.aspx?code=CA1998&quot;</span>,</span></span><br><span class="line"><span class="javascript">             <span class="attr">dataType</span>: <span class="string">&quot;jsonp&quot;</span>,</span></span><br><span class="line"><span class="javascript">             <span class="attr">jsonp</span>: <span class="string">&quot;callback&quot;</span>,<span class="comment">//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(一般默认为:callback)</span></span></span><br><span class="line"><span class="javascript">             <span class="attr">jsonpCallback</span>:<span class="string">&quot;flightHandler&quot;</span>,<span class="comment">//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名，也可以写&quot;?&quot;，jQuery会自动为你处理数据</span></span></span><br><span class="line"><span class="javascript">             <span class="attr">success</span>: <span class="function"><span class="keyword">function</span>(<span class="params">json</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                 alert(<span class="string">&#x27;您查询到航班信息：票价： &#x27;</span> + json.price + <span class="string">&#x27; 元，余票： &#x27;</span> + json.tickets + <span class="string">&#x27; 张。&#x27;</span>);</span></span><br><span class="line"><span class="javascript">             &#125;,</span></span><br><span class="line"><span class="javascript">             <span class="attr">error</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                 alert(<span class="string">&#x27;fail&#x27;</span>);</span></span><br><span class="line"><span class="javascript">             &#125;</span></span><br><span class="line"><span class="javascript">         &#125;);</span></span><br><span class="line"><span class="javascript">     &#125;);</span></span><br><span class="line"><span class="javascript">     </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>是不是有点奇怪？为什么我这次没有写flightHandler这个函数呢？而且竟然也运行成功了！哈哈，这就是jQuery的功劳了，jquery在处理jsonp类型的ajax时（还是忍不住吐槽，虽然jquery也把jsonp归入了ajax，但其实它们真的不是一回事儿），自动帮你生成回调函数并把数据取出来供success属性方法来调用，是不是很爽呀？</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>1、ajax和jsonp这两种技术在调用方式上“看起来”很像，目的也一样，都是请求一个url，然后把服务器返回的数据进行处理，因此jquery和ext等框架都把jsonp作为ajax的一种形式进行了封装；</p>
+<p>2、但ajax和jsonp其实本质上是不同的东西。ajax的核心是通过XmlHttpRequest获取非本页内容，而<strong>jsonp的核心则是动态添加<code>&lt;script&gt;</code>标签来调用服务器提供的js脚本</strong>。</p>
+<p>3、所以说，其实ajax与jsonp的区别不在于是否跨域，ajax通过服务端代理一样可以实现跨域，jsonp本身也不排斥同域的数据的获取。</p>
+<p>4、还有就是，jsonp是一种方式或者说非强制性协议，如同ajax一样，它也不一定非要用json格式来传递数据，如果你愿意，字符串都行，只不过这样不利于用jsonp提供公开服务。</p>
+<p>总而言之，jsonp不是ajax的一个特例，哪怕jquery等巨头把jsonp封装进了ajax，也不能改变着一点！</p>
+<p>转自：<a href="http://www.cnblogs.com/dowinning/archive/2012/04/19/json-jsonp-jquery.html"><em>说说JSON和JSONP，也许你会豁然开朗，含jQuery用例</em></a></p>
+]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>tips</tag>
       </tags>
   </entry>
 </search>
