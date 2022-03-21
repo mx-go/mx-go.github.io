@@ -753,6 +753,13 @@
   </url>
   
   <url>
+    <loc>https://mx-go.github.io/tags/docker/</loc>
+    <lastmod>2022-03-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://mx-go.github.io/tags/tools/</loc>
     <lastmod>2022-03-21</lastmod>
     <changefreq>daily</changefreq>
@@ -767,14 +774,14 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/cache/</loc>
+    <loc>https://mx-go.github.io/tags/jvm/</loc>
     <lastmod>2022-03-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/jvm/</loc>
+    <loc>https://mx-go.github.io/tags/cache/</loc>
     <lastmod>2022-03-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -816,21 +823,7 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/docker/</loc>
-    <lastmod>2022-03-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://mx-go.github.io/tags/mybatis/</loc>
-    <lastmod>2022-03-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mx-go.github.io/tags/redis/</loc>
     <lastmod>2022-03-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -844,7 +837,7 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/spring/</loc>
+    <loc>https://mx-go.github.io/tags/redis/</loc>
     <lastmod>2022-03-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -852,6 +845,13 @@
   
   <url>
     <loc>https://mx-go.github.io/tags/RocketMQ/</loc>
+    <lastmod>2022-03-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mx-go.github.io/tags/spring/</loc>
     <lastmod>2022-03-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -879,14 +879,14 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/%E6%9E%B6%E6%9E%84/</loc>
+    <loc>https://mx-go.github.io/tags/%E7%A7%BB%E5%8A%A8%E7%AB%AF/</loc>
     <lastmod>2022-03-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/%E7%A7%BB%E5%8A%A8%E7%AB%AF/</loc>
+    <loc>https://mx-go.github.io/tags/%E6%9E%B6%E6%9E%84/</loc>
     <lastmod>2022-03-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -923,13 +923,6 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/</loc>
-    <lastmod>2022-03-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://mx-go.github.io/categories/Linux/%E5%AE%89%E8%A3%85/</loc>
     <lastmod>2022-03-21</lastmod>
     <changefreq>daily</changefreq>
@@ -952,6 +945,13 @@
   
   <url>
     <loc>https://mx-go.github.io/categories/%E7%BB%84%E4%BB%B6/</loc>
+    <lastmod>2022-03-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mx-go.github.io/categories/%E6%96%B9%E6%B3%95%E8%AE%BA/</loc>
     <lastmod>2022-03-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
