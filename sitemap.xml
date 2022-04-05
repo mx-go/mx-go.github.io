@@ -830,13 +830,6 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/pg/</loc>
-    <lastmod>2022-04-05</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://mx-go.github.io/tags/redis/</loc>
     <lastmod>2022-04-05</lastmod>
     <changefreq>daily</changefreq>
@@ -845,6 +838,13 @@
   
   <url>
     <loc>https://mx-go.github.io/tags/RocketMQ/</loc>
+    <lastmod>2022-04-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mx-go.github.io/tags/pg/</loc>
     <lastmod>2022-04-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
