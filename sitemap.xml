@@ -788,6 +788,13 @@
   </url>
   
   <url>
+    <loc>https://mx-go.github.io/tags/tomcat/</loc>
+    <lastmod>2022-04-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://mx-go.github.io/tags/mysql/</loc>
     <lastmod>2022-04-30</lastmod>
     <changefreq>daily</changefreq>
@@ -796,13 +803,6 @@
   
   <url>
     <loc>https://mx-go.github.io/tags/nginx/</loc>
-    <lastmod>2022-04-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mx-go.github.io/tags/tomcat/</loc>
     <lastmod>2022-04-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
