@@ -865,13 +865,6 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/%E9%9A%8F%E7%AC%94/</loc>
-    <lastmod>2022-06-05</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://mx-go.github.io/tags/bug/</loc>
     <lastmod>2022-06-05</lastmod>
     <changefreq>daily</changefreq>
@@ -879,7 +872,7 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/%E6%9E%B6%E6%9E%84/</loc>
+    <loc>https://mx-go.github.io/tags/%E9%9A%8F%E7%AC%94/</loc>
     <lastmod>2022-06-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -887,6 +880,13 @@
   
   <url>
     <loc>https://mx-go.github.io/tags/%E7%A7%BB%E5%8A%A8%E7%AB%AF/</loc>
+    <lastmod>2022-06-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mx-go.github.io/tags/%E6%9E%B6%E6%9E%84/</loc>
     <lastmod>2022-06-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
