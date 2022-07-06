@@ -456,6 +456,33 @@
       </tags>
   </entry>
   <entry>
+    <title>HttpClient后台跨域</title>
+    <url>/HttpClient%E5%90%8E%E5%8F%B0%E8%B7%A8%E5%9F%9F/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>跨域可以说是一个经常遇到的问题，最近在联调一个身份证识别接口，该接口由python语言编写，Java语言调用，刚开始采用了CORS（Cross-Origin Resource Sharing）跨域，在IE8上一直出现兼容性问题，固定的思维容易出现错误，自己一直想着前端Ajax跨域而忽略了后台HttpClient的跨域，最后还是用HttpClient顺利解决问题，避免了浏览器跨域带来的兼容性问题。<div align=center><img width="700" height="200" src="../../../../images/2018-01-20/HTTPClient.png" algin="center"/></div><span id="more"></span></p>
+<h1 id="HttpClient-VS-Jsonp"><a href="#HttpClient-VS-Jsonp" class="headerlink" title="HttpClient VS Jsonp"></a>HttpClient VS Jsonp</h1><p>之前的博客有说过Jsonp的跨域方式，<strong>jsonp的核心则是动态添加<code>&lt;script&gt;</code>标签来调用服务器提供的js脚本</strong>。相比于HttpClient，Jsonp有两个很大的缺点：</p>
+<p>1、它只能发送get请求，如果发送post请求会造成无法解析获取不到数据的问题。</p>
+<p>2、如果返回的数据没有经过配置相应的编码文件来处理，拿到的数据可能会是一堆乱码。</p>
+<p>问题总是能解决，HttpClient则没那么多约束，HttpClient封装了http协议的jar包，基本的请求方法get、post、put、 delete都能实现，当然得在web.xml文件中配置相应的filter拦截器拦截请求后再设好编码，一般返回的参数都是Json字符串，而我们只需要导入Jackson或者fastJson或者别的jar包来解析这对象把他转换成你所需要的数据即可。</p>
+<h1 id="整合Spring"><a href="#整合Spring" class="headerlink" title="整合Spring"></a>整合Spring</h1><h2 id="添加依赖"><a href="#添加依赖" class="headerlink" title="添加依赖"></a>添加依赖</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.httpcomponents<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>httpclient<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>4.5.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="封装方法"><a href="#封装方法" class="headerlink" title="封装方法"></a>封装方法</h2><p>新建HttpClientUtil工具类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HttpClientUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doGet</span><span class="params">(String url, Map&lt;String, String&gt; param)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 创建Httpclient对象</span></span><br><span class="line">		CloseableHttpClient httpclient = HttpClients.createDefault();</span><br><span class="line"></span><br><span class="line">		String resultString = <span class="string">&quot;&quot;</span>;</span><br><span class="line">		CloseableHttpResponse response = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// 创建uri</span></span><br><span class="line">			URIBuilder builder = <span class="keyword">new</span> URIBuilder(url);</span><br><span class="line">			<span class="keyword">if</span> (param != <span class="keyword">null</span>) &#123;</span><br><span class="line">				<span class="keyword">for</span> (String key : param.keySet()) &#123;</span><br><span class="line">					builder.addParameter(key, param.get(key));</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			URI uri = builder.build();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 创建http GET请求</span></span><br><span class="line">			HttpGet httpGet = <span class="keyword">new</span> HttpGet(uri);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 执行请求</span></span><br><span class="line">			response = httpclient.execute(httpGet);</span><br><span class="line">			<span class="comment">// 判断返回状态是否为200</span></span><br><span class="line">			<span class="keyword">if</span> (response.getStatusLine().getStatusCode() == <span class="number">200</span>) &#123;</span><br><span class="line">				resultString = EntityUtils.toString(response.getEntity(), <span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="keyword">if</span> (response != <span class="keyword">null</span>) &#123;</span><br><span class="line">					response.close();</span><br><span class="line">				&#125;</span><br><span class="line">				httpclient.close();</span><br><span class="line">			&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> resultString;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doGet</span><span class="params">(String url)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> doGet(url, <span class="keyword">null</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doPost</span><span class="params">(String url, Map&lt;String, String&gt; param)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 创建Httpclient对象</span></span><br><span class="line">		CloseableHttpClient httpClient = HttpClients.createDefault();</span><br><span class="line">		CloseableHttpResponse response = <span class="keyword">null</span>;</span><br><span class="line">		String resultString = <span class="string">&quot;&quot;</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// 创建Http Post请求</span></span><br><span class="line">			HttpPost httpPost = <span class="keyword">new</span> HttpPost(url);</span><br><span class="line">			<span class="comment">// 创建参数列表</span></span><br><span class="line">			<span class="keyword">if</span> (param != <span class="keyword">null</span>) &#123;</span><br><span class="line">				List&lt;NameValuePair&gt; paramList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">				<span class="keyword">for</span> (String key : param.keySet()) &#123;</span><br><span class="line">					paramList.add(<span class="keyword">new</span> BasicNameValuePair(key, param.get(key)));</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">// 模拟表单</span></span><br><span class="line">				UrlEncodedFormEntity entity = <span class="keyword">new</span> UrlEncodedFormEntity(paramList);</span><br><span class="line">				httpPost.setEntity(entity);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">// 执行http请求</span></span><br><span class="line">			response = httpClient.execute(httpPost);</span><br><span class="line">			resultString = EntityUtils.toString(response.getEntity(), <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				response.close();</span><br><span class="line">			&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">				<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> resultString;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doPost</span><span class="params">(String url)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> doPost(url, <span class="keyword">null</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doPostJson</span><span class="params">(String url, String json)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 创建Httpclient对象</span></span><br><span class="line">		CloseableHttpClient httpClient = HttpClients.createDefault();</span><br><span class="line">		CloseableHttpResponse response = <span class="keyword">null</span>;</span><br><span class="line">		String resultString = <span class="string">&quot;&quot;</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// 创建Http Post请求</span></span><br><span class="line">			HttpPost httpPost = <span class="keyword">new</span> HttpPost(url);</span><br><span class="line">			<span class="comment">// 创建请求内容</span></span><br><span class="line">			StringEntity entity = <span class="keyword">new</span> StringEntity(json, ContentType.APPLICATION_JSON);</span><br><span class="line">			httpPost.setEntity(entity);</span><br><span class="line">			<span class="comment">// 执行http请求</span></span><br><span class="line">			response = httpClient.execute(httpPost);</span><br><span class="line">			resultString = EntityUtils.toString(response.getEntity(), <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				response.close();</span><br><span class="line">			&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">				<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> resultString;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HttpClientTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		<span class="comment">//创建一个httpclient对象</span></span><br><span class="line">		CloseableHttpClient httpClient = HttpClients.createDefault();</span><br><span class="line">		<span class="comment">//创建一个GET对象</span></span><br><span class="line">		HttpGet get = <span class="keyword">new</span> HttpGet(<span class="string">&quot;http://www.sogou.com&quot;</span>);</span><br><span class="line">		<span class="comment">//执行请求</span></span><br><span class="line">		CloseableHttpResponse response = httpClient.execute(get);</span><br><span class="line">		<span class="comment">//取响应的结果</span></span><br><span class="line">		<span class="keyword">int</span> statusCode = response.getStatusLine().getStatusCode();</span><br><span class="line">		System.out.println(statusCode);</span><br><span class="line">		HttpEntity entity = response.getEntity();</span><br><span class="line">		String string = EntityUtils.toString(entity, <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">		System.out.println(string);</span><br><span class="line">		<span class="comment">//关闭httpclient</span></span><br><span class="line">		response.close();</span><br><span class="line">		httpClient.close();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doGetWithParam</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">		<span class="comment">//创建一个httpclient对象</span></span><br><span class="line">		CloseableHttpClient httpClient = HttpClients.createDefault();</span><br><span class="line">		<span class="comment">//创建一个uri对象</span></span><br><span class="line">		URIBuilder uriBuilder = <span class="keyword">new</span> URIBuilder(<span class="string">&quot;http://www.sogou.com/web&quot;</span>);</span><br><span class="line">		uriBuilder.addParameter(<span class="string">&quot;query&quot;</span>, <span class="string">&quot;花千骨&quot;</span>);</span><br><span class="line">		HttpGet get = <span class="keyword">new</span> HttpGet(uriBuilder.build());</span><br><span class="line">		<span class="comment">//执行请求</span></span><br><span class="line">		CloseableHttpResponse response = httpClient.execute(get);</span><br><span class="line">		<span class="comment">//取响应的结果</span></span><br><span class="line">		<span class="keyword">int</span> statusCode = response.getStatusLine().getStatusCode();</span><br><span class="line">		System.out.println(statusCode);</span><br><span class="line">		HttpEntity entity = response.getEntity();</span><br><span class="line">		String string = EntityUtils.toString(entity, <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">		System.out.println(string);</span><br><span class="line">		<span class="comment">//关闭httpclient</span></span><br><span class="line">		response.close();</span><br><span class="line">		httpClient.close();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		CloseableHttpClient httpClient = HttpClients.createDefault();</span><br><span class="line"></span><br><span class="line">		<span class="comment">//创建一个post对象</span></span><br><span class="line">		HttpPost post = <span class="keyword">new</span> HttpPost(<span class="string">&quot;http://localhost:8082/httpclient/post.action&quot;</span>);</span><br><span class="line">		<span class="comment">//执行post请求</span></span><br><span class="line">		CloseableHttpResponse response = httpClient.execute(post);</span><br><span class="line">		String string = EntityUtils.toString(response.getEntity());</span><br><span class="line">		System.out.println(string);</span><br><span class="line">		response.close();</span><br><span class="line">		httpClient.close();</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doPostWithParam</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">		CloseableHttpClient httpClient = HttpClients.createDefault();</span><br><span class="line">	 </span><br><span class="line">		<span class="comment">//创建一个post对象  </span></span><br><span class="line">		HttpPost post = <span class="keyword">new</span> HttpPost(<span class="string">&quot;http://localhost:8082/httpclient/post.action&quot;</span>);</span><br><span class="line">		<span class="comment">//创建一个Entity。模拟一个表单</span></span><br><span class="line">		List&lt;NameValuePair&gt; kvList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">		kvList.add(<span class="keyword">new</span> BasicNameValuePair(<span class="string">&quot;username&quot;</span>, <span class="string">&quot;张三&quot;</span>));</span><br><span class="line">		kvList.add(<span class="keyword">new</span> BasicNameValuePair(<span class="string">&quot;password&quot;</span>, <span class="string">&quot;123&quot;</span>));</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//包装成一个Entity对象 </span></span><br><span class="line">		StringEntity entity = <span class="keyword">new</span> UrlEncodedFormEntity(kvList, <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">		<span class="comment">//设置请求的内容 </span></span><br><span class="line">		post.setEntity(entity);</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//执行post请求</span></span><br><span class="line">		CloseableHttpResponse response = httpClient.execute(post);</span><br><span class="line">		String string = EntityUtils.toString(response.getEntity());</span><br><span class="line">		System.out.println(string);</span><br><span class="line">		response.close();</span><br><span class="line">		httpClient.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="项目实例"><a href="#项目实例" class="headerlink" title="项目实例"></a>项目实例</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 订单处理Service</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Title: OrderServiceImpl&lt;/p&gt;</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Description: &lt;/p&gt;</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OrderServiceImpl</span> <span class="keyword">implements</span> <span class="title">OrderService</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Value(&quot;$&#123;ORDER_BASE_URL&#125;&quot;)</span></span><br><span class="line">	<span class="keyword">private</span> String ORDER_BASE_URL;</span><br><span class="line">	<span class="meta">@Value(&quot;$&#123;ORDER_CREATE_URL&#125;&quot;)</span></span><br><span class="line">	<span class="keyword">private</span> String ORDER_CREATE_URL;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">createOrder</span><span class="params">(Order order)</span> </span>&#123;</span><br><span class="line">		<span class="comment">//调用order的服务提交订单。</span></span><br><span class="line">		String json = HttpClientUtil.doPostJson(ORDER_BASE_URL + ORDER_CREATE_URL, JsonUtils.objectToJson(order));</span><br><span class="line">		<span class="comment">//把json转换成taotaoResult</span></span><br><span class="line">		TaotaoResult taotaoResult = TaotaoResult.format(json);</span><br><span class="line">		<span class="keyword">if</span> (taotaoResult.getStatus() == <span class="number">200</span>) &#123;</span><br><span class="line">			Object orderId = taotaoResult.getData();</span><br><span class="line">			<span class="keyword">return</span> orderId.toString();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>HttpClient与Jsonp能够轻易的解决跨域问题，从而得到自己想要的数据(来自不同IP，协议，端口)，唯一的不同点是，HttpClient是在后台Java代码中进行跨域访问，而Jsonp是在前台js中进行跨域访问。跨域还有一级跨域，二级跨域，更多内容值得研究。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>tips</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>HTTPS协议</title>
     <url>/HTTPS%E5%8D%8F%E8%AE%AE/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>HTTP和HTTPS协议是互联网上应用最为广泛的网络协议，现在为了安全，很多网站从HTTP的阵营转向HTTPS。近两年，Google、Baidu、Facebook 等这样的互联网巨头，不谋而合地开始大力推行 HTTPS， 国内外的大型互联网公司很多也都已经启用了全站 HTTPS，这也是未来互联网发展的趋势。<div align=center><img src="../../../../images/2018-5/HTTPS/https.jpg" algin="center"/></p>
@@ -525,33 +552,6 @@
         <category>方法论</category>
       </categories>
       <tags>
-        <tag>tips</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>HttpClient后台跨域</title>
-    <url>/HttpClient%E5%90%8E%E5%8F%B0%E8%B7%A8%E5%9F%9F/</url>
-    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>跨域可以说是一个经常遇到的问题，最近在联调一个身份证识别接口，该接口由python语言编写，Java语言调用，刚开始采用了CORS（Cross-Origin Resource Sharing）跨域，在IE8上一直出现兼容性问题，固定的思维容易出现错误，自己一直想着前端Ajax跨域而忽略了后台HttpClient的跨域，最后还是用HttpClient顺利解决问题，避免了浏览器跨域带来的兼容性问题。<div align=center><img width="700" height="200" src="../../../../images/2018-01-20/HTTPClient.png" algin="center"/></div><span id="more"></span></p>
-<h1 id="HttpClient-VS-Jsonp"><a href="#HttpClient-VS-Jsonp" class="headerlink" title="HttpClient VS Jsonp"></a>HttpClient VS Jsonp</h1><p>之前的博客有说过Jsonp的跨域方式，<strong>jsonp的核心则是动态添加<code>&lt;script&gt;</code>标签来调用服务器提供的js脚本</strong>。相比于HttpClient，Jsonp有两个很大的缺点：</p>
-<p>1、它只能发送get请求，如果发送post请求会造成无法解析获取不到数据的问题。</p>
-<p>2、如果返回的数据没有经过配置相应的编码文件来处理，拿到的数据可能会是一堆乱码。</p>
-<p>问题总是能解决，HttpClient则没那么多约束，HttpClient封装了http协议的jar包，基本的请求方法get、post、put、 delete都能实现，当然得在web.xml文件中配置相应的filter拦截器拦截请求后再设好编码，一般返回的参数都是Json字符串，而我们只需要导入Jackson或者fastJson或者别的jar包来解析这对象把他转换成你所需要的数据即可。</p>
-<h1 id="整合Spring"><a href="#整合Spring" class="headerlink" title="整合Spring"></a>整合Spring</h1><h2 id="添加依赖"><a href="#添加依赖" class="headerlink" title="添加依赖"></a>添加依赖</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.httpcomponents<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>httpclient<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>4.5.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="封装方法"><a href="#封装方法" class="headerlink" title="封装方法"></a>封装方法</h2><p>新建HttpClientUtil工具类</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HttpClientUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doGet</span><span class="params">(String url, Map&lt;String, String&gt; param)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 创建Httpclient对象</span></span><br><span class="line">		CloseableHttpClient httpclient = HttpClients.createDefault();</span><br><span class="line"></span><br><span class="line">		String resultString = <span class="string">&quot;&quot;</span>;</span><br><span class="line">		CloseableHttpResponse response = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// 创建uri</span></span><br><span class="line">			URIBuilder builder = <span class="keyword">new</span> URIBuilder(url);</span><br><span class="line">			<span class="keyword">if</span> (param != <span class="keyword">null</span>) &#123;</span><br><span class="line">				<span class="keyword">for</span> (String key : param.keySet()) &#123;</span><br><span class="line">					builder.addParameter(key, param.get(key));</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			URI uri = builder.build();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 创建http GET请求</span></span><br><span class="line">			HttpGet httpGet = <span class="keyword">new</span> HttpGet(uri);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 执行请求</span></span><br><span class="line">			response = httpclient.execute(httpGet);</span><br><span class="line">			<span class="comment">// 判断返回状态是否为200</span></span><br><span class="line">			<span class="keyword">if</span> (response.getStatusLine().getStatusCode() == <span class="number">200</span>) &#123;</span><br><span class="line">				resultString = EntityUtils.toString(response.getEntity(), <span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="keyword">if</span> (response != <span class="keyword">null</span>) &#123;</span><br><span class="line">					response.close();</span><br><span class="line">				&#125;</span><br><span class="line">				httpclient.close();</span><br><span class="line">			&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> resultString;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doGet</span><span class="params">(String url)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> doGet(url, <span class="keyword">null</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doPost</span><span class="params">(String url, Map&lt;String, String&gt; param)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 创建Httpclient对象</span></span><br><span class="line">		CloseableHttpClient httpClient = HttpClients.createDefault();</span><br><span class="line">		CloseableHttpResponse response = <span class="keyword">null</span>;</span><br><span class="line">		String resultString = <span class="string">&quot;&quot;</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// 创建Http Post请求</span></span><br><span class="line">			HttpPost httpPost = <span class="keyword">new</span> HttpPost(url);</span><br><span class="line">			<span class="comment">// 创建参数列表</span></span><br><span class="line">			<span class="keyword">if</span> (param != <span class="keyword">null</span>) &#123;</span><br><span class="line">				List&lt;NameValuePair&gt; paramList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">				<span class="keyword">for</span> (String key : param.keySet()) &#123;</span><br><span class="line">					paramList.add(<span class="keyword">new</span> BasicNameValuePair(key, param.get(key)));</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">// 模拟表单</span></span><br><span class="line">				UrlEncodedFormEntity entity = <span class="keyword">new</span> UrlEncodedFormEntity(paramList);</span><br><span class="line">				httpPost.setEntity(entity);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">// 执行http请求</span></span><br><span class="line">			response = httpClient.execute(httpPost);</span><br><span class="line">			resultString = EntityUtils.toString(response.getEntity(), <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				response.close();</span><br><span class="line">			&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">				<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> resultString;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doPost</span><span class="params">(String url)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> doPost(url, <span class="keyword">null</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doPostJson</span><span class="params">(String url, String json)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 创建Httpclient对象</span></span><br><span class="line">		CloseableHttpClient httpClient = HttpClients.createDefault();</span><br><span class="line">		CloseableHttpResponse response = <span class="keyword">null</span>;</span><br><span class="line">		String resultString = <span class="string">&quot;&quot;</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// 创建Http Post请求</span></span><br><span class="line">			HttpPost httpPost = <span class="keyword">new</span> HttpPost(url);</span><br><span class="line">			<span class="comment">// 创建请求内容</span></span><br><span class="line">			StringEntity entity = <span class="keyword">new</span> StringEntity(json, ContentType.APPLICATION_JSON);</span><br><span class="line">			httpPost.setEntity(entity);</span><br><span class="line">			<span class="comment">// 执行http请求</span></span><br><span class="line">			response = httpClient.execute(httpPost);</span><br><span class="line">			resultString = EntityUtils.toString(response.getEntity(), <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				response.close();</span><br><span class="line">			&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">				<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> resultString;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HttpClientTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		<span class="comment">//创建一个httpclient对象</span></span><br><span class="line">		CloseableHttpClient httpClient = HttpClients.createDefault();</span><br><span class="line">		<span class="comment">//创建一个GET对象</span></span><br><span class="line">		HttpGet get = <span class="keyword">new</span> HttpGet(<span class="string">&quot;http://www.sogou.com&quot;</span>);</span><br><span class="line">		<span class="comment">//执行请求</span></span><br><span class="line">		CloseableHttpResponse response = httpClient.execute(get);</span><br><span class="line">		<span class="comment">//取响应的结果</span></span><br><span class="line">		<span class="keyword">int</span> statusCode = response.getStatusLine().getStatusCode();</span><br><span class="line">		System.out.println(statusCode);</span><br><span class="line">		HttpEntity entity = response.getEntity();</span><br><span class="line">		String string = EntityUtils.toString(entity, <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">		System.out.println(string);</span><br><span class="line">		<span class="comment">//关闭httpclient</span></span><br><span class="line">		response.close();</span><br><span class="line">		httpClient.close();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doGetWithParam</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">		<span class="comment">//创建一个httpclient对象</span></span><br><span class="line">		CloseableHttpClient httpClient = HttpClients.createDefault();</span><br><span class="line">		<span class="comment">//创建一个uri对象</span></span><br><span class="line">		URIBuilder uriBuilder = <span class="keyword">new</span> URIBuilder(<span class="string">&quot;http://www.sogou.com/web&quot;</span>);</span><br><span class="line">		uriBuilder.addParameter(<span class="string">&quot;query&quot;</span>, <span class="string">&quot;花千骨&quot;</span>);</span><br><span class="line">		HttpGet get = <span class="keyword">new</span> HttpGet(uriBuilder.build());</span><br><span class="line">		<span class="comment">//执行请求</span></span><br><span class="line">		CloseableHttpResponse response = httpClient.execute(get);</span><br><span class="line">		<span class="comment">//取响应的结果</span></span><br><span class="line">		<span class="keyword">int</span> statusCode = response.getStatusLine().getStatusCode();</span><br><span class="line">		System.out.println(statusCode);</span><br><span class="line">		HttpEntity entity = response.getEntity();</span><br><span class="line">		String string = EntityUtils.toString(entity, <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">		System.out.println(string);</span><br><span class="line">		<span class="comment">//关闭httpclient</span></span><br><span class="line">		response.close();</span><br><span class="line">		httpClient.close();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		CloseableHttpClient httpClient = HttpClients.createDefault();</span><br><span class="line"></span><br><span class="line">		<span class="comment">//创建一个post对象</span></span><br><span class="line">		HttpPost post = <span class="keyword">new</span> HttpPost(<span class="string">&quot;http://localhost:8082/httpclient/post.action&quot;</span>);</span><br><span class="line">		<span class="comment">//执行post请求</span></span><br><span class="line">		CloseableHttpResponse response = httpClient.execute(post);</span><br><span class="line">		String string = EntityUtils.toString(response.getEntity());</span><br><span class="line">		System.out.println(string);</span><br><span class="line">		response.close();</span><br><span class="line">		httpClient.close();</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doPostWithParam</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">		CloseableHttpClient httpClient = HttpClients.createDefault();</span><br><span class="line">	 </span><br><span class="line">		<span class="comment">//创建一个post对象  </span></span><br><span class="line">		HttpPost post = <span class="keyword">new</span> HttpPost(<span class="string">&quot;http://localhost:8082/httpclient/post.action&quot;</span>);</span><br><span class="line">		<span class="comment">//创建一个Entity。模拟一个表单</span></span><br><span class="line">		List&lt;NameValuePair&gt; kvList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">		kvList.add(<span class="keyword">new</span> BasicNameValuePair(<span class="string">&quot;username&quot;</span>, <span class="string">&quot;张三&quot;</span>));</span><br><span class="line">		kvList.add(<span class="keyword">new</span> BasicNameValuePair(<span class="string">&quot;password&quot;</span>, <span class="string">&quot;123&quot;</span>));</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//包装成一个Entity对象 </span></span><br><span class="line">		StringEntity entity = <span class="keyword">new</span> UrlEncodedFormEntity(kvList, <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">		<span class="comment">//设置请求的内容 </span></span><br><span class="line">		post.setEntity(entity);</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//执行post请求</span></span><br><span class="line">		CloseableHttpResponse response = httpClient.execute(post);</span><br><span class="line">		String string = EntityUtils.toString(response.getEntity());</span><br><span class="line">		System.out.println(string);</span><br><span class="line">		response.close();</span><br><span class="line">		httpClient.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="项目实例"><a href="#项目实例" class="headerlink" title="项目实例"></a>项目实例</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 订单处理Service</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Title: OrderServiceImpl&lt;/p&gt;</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Description: &lt;/p&gt;</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OrderServiceImpl</span> <span class="keyword">implements</span> <span class="title">OrderService</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Value(&quot;$&#123;ORDER_BASE_URL&#125;&quot;)</span></span><br><span class="line">	<span class="keyword">private</span> String ORDER_BASE_URL;</span><br><span class="line">	<span class="meta">@Value(&quot;$&#123;ORDER_CREATE_URL&#125;&quot;)</span></span><br><span class="line">	<span class="keyword">private</span> String ORDER_CREATE_URL;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">createOrder</span><span class="params">(Order order)</span> </span>&#123;</span><br><span class="line">		<span class="comment">//调用order的服务提交订单。</span></span><br><span class="line">		String json = HttpClientUtil.doPostJson(ORDER_BASE_URL + ORDER_CREATE_URL, JsonUtils.objectToJson(order));</span><br><span class="line">		<span class="comment">//把json转换成taotaoResult</span></span><br><span class="line">		TaotaoResult taotaoResult = TaotaoResult.format(json);</span><br><span class="line">		<span class="keyword">if</span> (taotaoResult.getStatus() == <span class="number">200</span>) &#123;</span><br><span class="line">			Object orderId = taotaoResult.getData();</span><br><span class="line">			<span class="keyword">return</span> orderId.toString();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>HttpClient与Jsonp能够轻易的解决跨域问题，从而得到自己想要的数据(来自不同IP，协议，端口)，唯一的不同点是，HttpClient是在后台Java代码中进行跨域访问，而Jsonp是在前台js中进行跨域访问。跨域还有一级跨域，二级跨域，更多内容值得研究。</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
         <tag>tips</tag>
       </tags>
   </entry>
@@ -825,6 +825,99 @@
       </tags>
   </entry>
   <entry>
+    <title>Java String intern方法</title>
+    <url>/Java-String-intern%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。</p>
+<p>intern()方法设计的初衷，就是重用String对象，以节省内存消耗。<div align=center><img width="700" height="200" src="../../../../images/2017-12-7/String_intern/creating-java-strings.jpg" algin="center"/></p>
+</div><span id="more"></span>
+
+<h1 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="keyword">new</span> String(<span class="string">&quot;rainbow&quot;</span>) + <span class="keyword">new</span> String(<span class="string">&quot;horse&quot;</span>);</span><br><span class="line">System.out.println(str1.intern() == str1);</span><br><span class="line">System.out.println(str1 == <span class="string">&quot;rainbowhorse&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在<strong>JDK1.7</strong>下输出结果为：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">true</span></span><br><span class="line"><span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+
+<p>再将上面的例子加上一行代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str2 = <span class="string">&quot;rainbowhorse&quot;</span>;	<span class="comment">//新加的一行代码，其余不变  </span></span><br><span class="line">String str1 = <span class="keyword">new</span> String(<span class="string">&quot;rainbow&quot;</span>) + <span class="keyword">new</span> String(<span class="string">&quot;horse&quot;</span>);</span><br><span class="line">System.out.println(str1.intern() == str1);</span><br><span class="line">System.out.println(str1 == <span class="string">&quot;rainbowhorse&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>再运行，结果为：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">false</span></span><br><span class="line"><span class="keyword">false</span></span><br></pre></td></tr></table></figure>
+
+<p>在JVM运行时数据区中的方法区有一个常量池，但是发现在JDK1.6以后常量池被放置在了堆空间，因此常量池位置的不同影响到了String的intern()方法的表现。</p>
+<h1 id="为什么使用intern-方法"><a href="#为什么使用intern-方法" class="headerlink" title="为什么使用intern()方法"></a>为什么使用intern()方法</h1><p>就如引言所说的，<strong>intern()方法设计的初衷，就是重用String对象，以节省内存消耗</strong>。下面通过例子来说明：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">	<span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX = <span class="number">100000</span>;</span><br><span class="line">	<span class="keyword">static</span> <span class="keyword">final</span> String[] arr = <span class="keyword">new</span> String[MAX];</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		<span class="comment">// 为长度为10的Integer数组随机赋值</span></span><br><span class="line">		Integer[] sample = <span class="keyword">new</span> Integer[<span class="number">10</span>];</span><br><span class="line">		Random random = <span class="keyword">new</span> Random(<span class="number">1000</span>);</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; sample.length; i++) &#123;</span><br><span class="line">			sample[i] = random.nextInt();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 记录程序开始时间</span></span><br><span class="line">		<span class="keyword">long</span> t = System.currentTimeMillis();</span><br><span class="line">		<span class="comment">// 使用/不使用intern方法为10万个String赋值，值来自于Integer数组的10个数</span></span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; MAX; i++) &#123;</span><br><span class="line">			arr[i] = <span class="keyword">new</span> String(String.valueOf(sample[i % sample.length]));</span><br><span class="line">			<span class="comment">// arr[i] = new String(String.valueOf(sample[i % sample.length])).intern();</span></span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println((System.currentTimeMillis() - t) + <span class="string">&quot;ms&quot;</span>);</span><br><span class="line">		System.gc();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个主要是为了证明<code>使用intern()比不使用intern()消耗的内存更少</code>。</p>
+<p>先定义一个长度为10的Integer数组，并随机为其赋值，在通过for循环为长度为10万的String对象依次赋值，这些值都来自于Integer数组。两种情况分别运行，可通过Window —&gt; Preferences –&gt; Java –&gt; Installed JREs设置JVM启动参数为-agentlib:hprof=heap=dump,format=b，将程序运行完后的hprof置于工程目录下。再通过<a href="http://download.eclipse.org/mat/">MAT</a>插件查看该hprof文件。</p>
+<p>不使用intern()方法</p>
+<div align=center><img width="700" height="200" src="../../../../images/2017-12-7/String_intern/no-intern.png" algin="center"/>
+
+</div>
+
+<p>使用intern()方法</p>
+<div align=center><img width="700" height="200" src="../../../../images/2017-12-7/String_intern/use-intern.png" algin="center"/>
+
+</div>
+
+<p>从运行结果来看，不使用intern()的情况下，程序生成了101762个String对象，而使用了intern()方法时，程序仅生成了1772个String对象。证明了intern()节省内存的结论。</p>
+<p>但是会发现使用了intern()方法后程序运行时间有所增加。这是因为程序中每次都是用了new String后又进行intern()操作的耗时时间，但是不使用intern()占用内存空间导致GC的时间是要远远大于这点时间的。 </p>
+<h1 id="深入理解intern-方法"><a href="#深入理解intern-方法" class="headerlink" title="深入理解intern()方法"></a>深入理解intern()方法</h1><p><strong>JDK1.7后，常量池被放入到堆空间中，这导致intern()函数的功能不同。这点很重要。</strong></p>
+<p>看看下面代码，这个例子是网上流传较广的一个例子，我也是照抄过来的。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s = <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>);  </span><br><span class="line">s.intern();  </span><br><span class="line">String s2 = <span class="string">&quot;1&quot;</span>;  </span><br><span class="line">System.out.println(s == s2);  </span><br><span class="line">  </span><br><span class="line">String s3 = <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>) + <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>);  </span><br><span class="line">s3.intern();  </span><br><span class="line">String s4 = <span class="string">&quot;11&quot;</span>;  </span><br><span class="line">System.out.println(s3 == s4);  </span><br></pre></td></tr></table></figure>
+
+<p>输出结果为：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JDK1<span class="number">.6</span>以及以下：<span class="keyword">false</span> <span class="keyword">false</span>  </span><br><span class="line">JDK1<span class="number">.7</span>以及以上：<span class="keyword">false</span> <span class="keyword">true</span>  </span><br></pre></td></tr></table></figure>
+
+<p>再分别调整上面代码2、3行，7、8行的顺序：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s = <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>);  </span><br><span class="line">String s2 = <span class="string">&quot;1&quot;</span>;  </span><br><span class="line">s.intern();  </span><br><span class="line">System.out.println(s == s2);  </span><br><span class="line">  </span><br><span class="line">String s3 = <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>) + <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>);  </span><br><span class="line">String s4 = <span class="string">&quot;11&quot;</span>;  </span><br><span class="line">s3.intern();  </span><br><span class="line">System.out.println(s3 == s4);  </span><br></pre></td></tr></table></figure>
+
+<p>输出结果为：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JDK1<span class="number">.6</span>以及以下：<span class="keyword">false</span> <span class="keyword">false</span>  </span><br><span class="line">JDK1<span class="number">.7</span>以及以上：<span class="keyword">false</span> <span class="keyword">false</span>  </span><br></pre></td></tr></table></figure>
+
+<h2 id="JDK1-6"><a href="#JDK1-6" class="headerlink" title="JDK1.6"></a><strong>JDK1.6</strong></h2><div align=center><img width="700" height="200" src="../../../../images/2017-12-04/JVM/jdk1.6.png" algin="center"/>
+
+</div>
+
+<p>在JDK1.6中所有的输出结果都是 false，因为JDK1.6以及以前版本中，常量池是放在 Perm 区（属于方法区）中的，Perm区是和堆区完全分开的。</p>
+<p>使用<strong>引号声明的字符串都是会直接在字符串常量池中生成</strong>的，而<strong>new 出来的String对象是放在堆空间中</strong>的。所以两者的内存地址肯定是不相同的，即使调用了intern()方法也是不影响的。</p>
+<p>intern()方法在JDK1.6中的作用是：比如String s = new String(“rainbowhorse”)，再调用s.intern()，此时返回值还是字符串”rainbowhorse”，表面上看起来好像这个方法没什么用处。但实际上，在JDK1.6中它做了个小动作：检查字符串池里是否存在”rainbowhorse”这么一个字符串，如果存在，就返回池里的字符串；如果不存在，该方法把”rainbowhorse”添加到字符串池中，然后再返回它的引用。</p>
+<h2 id="JDK1-7"><a href="#JDK1-7" class="headerlink" title="JDK1.7"></a>JDK1.7</h2><h3 id="例一分析"><a href="#例一分析" class="headerlink" title="例一分析"></a>例一分析</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s = <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>);  </span><br><span class="line">s.intern();  </span><br><span class="line">String s2 = <span class="string">&quot;1&quot;</span>;  </span><br><span class="line">System.out.println(s == s2);  </span><br><span class="line">  </span><br><span class="line">String s3 = <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>) + <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>);  </span><br><span class="line">s3.intern();  </span><br><span class="line">String s4 = <span class="string">&quot;11&quot;</span>;  </span><br><span class="line">System.out.println(s3 == s4); </span><br></pre></td></tr></table></figure>
+
+<div align=center><img width="700" height="200" src="../../../../images/2017-12-04/JVM/jdk1.7.png" algin="center"/>
+
+</div>
+
+<p>String s = newString(“1”)，<strong>生成了常量池中的“1” 和堆空间中的字符串对象</strong>。</p>
+<p>s.intern()，这一行的作用是s对象去常量池中寻找后发现”1”<strong>已经存在于常量池中了</strong>。</p>
+<p>String s2 = “1”，这行代码是生成一个s2的引用<strong>指向常量池中的“1”对象</strong>。</p>
+<p>结果就是 s 和 s2 的引用地址明显不同。因此返回了false。</p>
+<p>String s3 = new String(“1”) + newString(“1”)，这行代码<strong>在字符串常量池中生成“1” ，并在堆空间中生成s3引用指向的对象（内容为”11”）</strong>。注意<strong>此时常量池中是没有 “11”对象</strong>的。</p>
+<p>s3.intern()，这一行代码，是将 s3中的<strong>“11”字符串放入 String 常量池中</strong>，此时常量池中不存在“11”字符串，JDK1.6的做法是直接在常量池中生成一个 “11” 的对象。</p>
+<p><strong>但是在JDK1.7中，常量池中不需要再存储一份对象了，可以直接存储堆中的引用</strong>。这份引用直接指向 s3 引用的对象，也就是说s3.intern() ==s3会返回true。</p>
+<p>String s4 = “11”， 这一行代码会<strong>直接去常量池中创建</strong>，但是发现已经有这个对象了，此时也就是<strong>指向 s3 引用对象的一个引用</strong>。因此s3 == s4返回了true。</p>
+<h3 id="例二分析"><a href="#例二分析" class="headerlink" title="例二分析"></a>例二分析</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s = <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>);  </span><br><span class="line">String s2 = <span class="string">&quot;1&quot;</span>;  </span><br><span class="line">s.intern();  </span><br><span class="line">System.out.println(s == s2);  </span><br><span class="line">  </span><br><span class="line">String s3 = <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>) + <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>);  </span><br><span class="line">String s4 = <span class="string">&quot;11&quot;</span>;  </span><br><span class="line">s3.intern();  </span><br><span class="line">System.out.println(s3 == s4); </span><br></pre></td></tr></table></figure>
+
+<div align=center><img width="700" height="200" src="../../../../images/2017-12-7/String_intern/jdk1.7-2.png" algin="center"/>
+
+</div>
+
+<p>String s = newString(“1”)，生成了<strong>常量池中的“1” 和堆空间中的字符串对象</strong>。</p>
+<p>String s2 = “1”，这行代码是生成一个s2的<strong>引用指向常量池中的“1”对象，但是发现已经存在了，那么就直接指向了它</strong>。</p>
+<p>s.intern()，这一行在这里就没什么实际作用了。因为”1”已经存在了。</p>
+<p>结果就是 s 和 s2 的引用地址明显不同。因此返回了false。</p>
+<p>String s3 = new String(“1”) + newString(“1”)，这行代码<strong>在字符串常量池中生成“1” ，并在堆空间中生成s3引用指向的对象（内容为”11”）</strong>。注意此时常量池中是没有 “11”对象的。</p>
+<p>String s4 = “11”， 这一行代码会**直接去生成常量池中的”11”**。</p>
+<p>s3.intern()，这一行在这里就没什么实际作用了。因为”11”已经存在了。</p>
+<p>结果就是 s3 和 s4 的引用地址明显不同。因此返回了false。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>从JDK 1.7后，HotSpot 将常量池从永久代移到了元空间，正因为如此，JDK 1.7 后的intern方法在实现上发生了比较大的改变，JDK 1.7后，intern方法还是会先去查询常量池中是否有已经存在，如果存在，则返回常量池中的引用，这一点与之前没有区别，区别在于，<strong>如果在常量池找不到对应的字符串，则不会再将字符串拷贝到常量池，而只是在常量池中生成一个对原字符串的引用</strong>。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JVM缓存之Caffeine</title>
     <url>/JVM%E7%BC%93%E5%AD%98%E4%B9%8BCaffeine/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p><a href="https://www.baeldung.com/java-caching-caffeine">Caffeine</a>是一个高性能、高命中率、低内存占用的的本地缓存。它是Guava的加强版，Caffeine使用<em>Window TinyLfu</em> (最近最少频率使用)算法，提供了<strong>近乎最佳的命中率</strong>。<div align=center><img width="400" height="200" src="../../../../images/2020/5-8/caffeine.png" algin="center"/></div><span id="more"></span></p>
@@ -925,99 +1018,6 @@
       <tags>
         <tag>java</tag>
         <tag>cache</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java String intern方法</title>
-    <url>/Java-String-intern%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>String类我们经常使用，但是它的intern()方法之前还真的不太了解，通过谷歌百度一番之后终于搞明白了。</p>
-<p>intern()方法设计的初衷，就是重用String对象，以节省内存消耗。<div align=center><img width="700" height="200" src="../../../../images/2017-12-7/String_intern/creating-java-strings.jpg" algin="center"/></p>
-</div><span id="more"></span>
-
-<h1 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="keyword">new</span> String(<span class="string">&quot;rainbow&quot;</span>) + <span class="keyword">new</span> String(<span class="string">&quot;horse&quot;</span>);</span><br><span class="line">System.out.println(str1.intern() == str1);</span><br><span class="line">System.out.println(str1 == <span class="string">&quot;rainbowhorse&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>在<strong>JDK1.7</strong>下输出结果为：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">true</span></span><br><span class="line"><span class="keyword">true</span></span><br></pre></td></tr></table></figure>
-
-<p>再将上面的例子加上一行代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str2 = <span class="string">&quot;rainbowhorse&quot;</span>;	<span class="comment">//新加的一行代码，其余不变  </span></span><br><span class="line">String str1 = <span class="keyword">new</span> String(<span class="string">&quot;rainbow&quot;</span>) + <span class="keyword">new</span> String(<span class="string">&quot;horse&quot;</span>);</span><br><span class="line">System.out.println(str1.intern() == str1);</span><br><span class="line">System.out.println(str1 == <span class="string">&quot;rainbowhorse&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>再运行，结果为：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">false</span></span><br><span class="line"><span class="keyword">false</span></span><br></pre></td></tr></table></figure>
-
-<p>在JVM运行时数据区中的方法区有一个常量池，但是发现在JDK1.6以后常量池被放置在了堆空间，因此常量池位置的不同影响到了String的intern()方法的表现。</p>
-<h1 id="为什么使用intern-方法"><a href="#为什么使用intern-方法" class="headerlink" title="为什么使用intern()方法"></a>为什么使用intern()方法</h1><p>就如引言所说的，<strong>intern()方法设计的初衷，就是重用String对象，以节省内存消耗</strong>。下面通过例子来说明：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">	<span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX = <span class="number">100000</span>;</span><br><span class="line">	<span class="keyword">static</span> <span class="keyword">final</span> String[] arr = <span class="keyword">new</span> String[MAX];</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		<span class="comment">// 为长度为10的Integer数组随机赋值</span></span><br><span class="line">		Integer[] sample = <span class="keyword">new</span> Integer[<span class="number">10</span>];</span><br><span class="line">		Random random = <span class="keyword">new</span> Random(<span class="number">1000</span>);</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; sample.length; i++) &#123;</span><br><span class="line">			sample[i] = random.nextInt();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 记录程序开始时间</span></span><br><span class="line">		<span class="keyword">long</span> t = System.currentTimeMillis();</span><br><span class="line">		<span class="comment">// 使用/不使用intern方法为10万个String赋值，值来自于Integer数组的10个数</span></span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; MAX; i++) &#123;</span><br><span class="line">			arr[i] = <span class="keyword">new</span> String(String.valueOf(sample[i % sample.length]));</span><br><span class="line">			<span class="comment">// arr[i] = new String(String.valueOf(sample[i % sample.length])).intern();</span></span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println((System.currentTimeMillis() - t) + <span class="string">&quot;ms&quot;</span>);</span><br><span class="line">		System.gc();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个主要是为了证明<code>使用intern()比不使用intern()消耗的内存更少</code>。</p>
-<p>先定义一个长度为10的Integer数组，并随机为其赋值，在通过for循环为长度为10万的String对象依次赋值，这些值都来自于Integer数组。两种情况分别运行，可通过Window —&gt; Preferences –&gt; Java –&gt; Installed JREs设置JVM启动参数为-agentlib:hprof=heap=dump,format=b，将程序运行完后的hprof置于工程目录下。再通过<a href="http://download.eclipse.org/mat/">MAT</a>插件查看该hprof文件。</p>
-<p>不使用intern()方法</p>
-<div align=center><img width="700" height="200" src="../../../../images/2017-12-7/String_intern/no-intern.png" algin="center"/>
-
-</div>
-
-<p>使用intern()方法</p>
-<div align=center><img width="700" height="200" src="../../../../images/2017-12-7/String_intern/use-intern.png" algin="center"/>
-
-</div>
-
-<p>从运行结果来看，不使用intern()的情况下，程序生成了101762个String对象，而使用了intern()方法时，程序仅生成了1772个String对象。证明了intern()节省内存的结论。</p>
-<p>但是会发现使用了intern()方法后程序运行时间有所增加。这是因为程序中每次都是用了new String后又进行intern()操作的耗时时间，但是不使用intern()占用内存空间导致GC的时间是要远远大于这点时间的。 </p>
-<h1 id="深入理解intern-方法"><a href="#深入理解intern-方法" class="headerlink" title="深入理解intern()方法"></a>深入理解intern()方法</h1><p><strong>JDK1.7后，常量池被放入到堆空间中，这导致intern()函数的功能不同。这点很重要。</strong></p>
-<p>看看下面代码，这个例子是网上流传较广的一个例子，我也是照抄过来的。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s = <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>);  </span><br><span class="line">s.intern();  </span><br><span class="line">String s2 = <span class="string">&quot;1&quot;</span>;  </span><br><span class="line">System.out.println(s == s2);  </span><br><span class="line">  </span><br><span class="line">String s3 = <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>) + <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>);  </span><br><span class="line">s3.intern();  </span><br><span class="line">String s4 = <span class="string">&quot;11&quot;</span>;  </span><br><span class="line">System.out.println(s3 == s4);  </span><br></pre></td></tr></table></figure>
-
-<p>输出结果为：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JDK1<span class="number">.6</span>以及以下：<span class="keyword">false</span> <span class="keyword">false</span>  </span><br><span class="line">JDK1<span class="number">.7</span>以及以上：<span class="keyword">false</span> <span class="keyword">true</span>  </span><br></pre></td></tr></table></figure>
-
-<p>再分别调整上面代码2、3行，7、8行的顺序：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s = <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>);  </span><br><span class="line">String s2 = <span class="string">&quot;1&quot;</span>;  </span><br><span class="line">s.intern();  </span><br><span class="line">System.out.println(s == s2);  </span><br><span class="line">  </span><br><span class="line">String s3 = <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>) + <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>);  </span><br><span class="line">String s4 = <span class="string">&quot;11&quot;</span>;  </span><br><span class="line">s3.intern();  </span><br><span class="line">System.out.println(s3 == s4);  </span><br></pre></td></tr></table></figure>
-
-<p>输出结果为：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JDK1<span class="number">.6</span>以及以下：<span class="keyword">false</span> <span class="keyword">false</span>  </span><br><span class="line">JDK1<span class="number">.7</span>以及以上：<span class="keyword">false</span> <span class="keyword">false</span>  </span><br></pre></td></tr></table></figure>
-
-<h2 id="JDK1-6"><a href="#JDK1-6" class="headerlink" title="JDK1.6"></a><strong>JDK1.6</strong></h2><div align=center><img width="700" height="200" src="../../../../images/2017-12-04/JVM/jdk1.6.png" algin="center"/>
-
-</div>
-
-<p>在JDK1.6中所有的输出结果都是 false，因为JDK1.6以及以前版本中，常量池是放在 Perm 区（属于方法区）中的，Perm区是和堆区完全分开的。</p>
-<p>使用<strong>引号声明的字符串都是会直接在字符串常量池中生成</strong>的，而<strong>new 出来的String对象是放在堆空间中</strong>的。所以两者的内存地址肯定是不相同的，即使调用了intern()方法也是不影响的。</p>
-<p>intern()方法在JDK1.6中的作用是：比如String s = new String(“rainbowhorse”)，再调用s.intern()，此时返回值还是字符串”rainbowhorse”，表面上看起来好像这个方法没什么用处。但实际上，在JDK1.6中它做了个小动作：检查字符串池里是否存在”rainbowhorse”这么一个字符串，如果存在，就返回池里的字符串；如果不存在，该方法把”rainbowhorse”添加到字符串池中，然后再返回它的引用。</p>
-<h2 id="JDK1-7"><a href="#JDK1-7" class="headerlink" title="JDK1.7"></a>JDK1.7</h2><h3 id="例一分析"><a href="#例一分析" class="headerlink" title="例一分析"></a>例一分析</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s = <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>);  </span><br><span class="line">s.intern();  </span><br><span class="line">String s2 = <span class="string">&quot;1&quot;</span>;  </span><br><span class="line">System.out.println(s == s2);  </span><br><span class="line">  </span><br><span class="line">String s3 = <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>) + <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>);  </span><br><span class="line">s3.intern();  </span><br><span class="line">String s4 = <span class="string">&quot;11&quot;</span>;  </span><br><span class="line">System.out.println(s3 == s4); </span><br></pre></td></tr></table></figure>
-
-<div align=center><img width="700" height="200" src="../../../../images/2017-12-04/JVM/jdk1.7.png" algin="center"/>
-
-</div>
-
-<p>String s = newString(“1”)，<strong>生成了常量池中的“1” 和堆空间中的字符串对象</strong>。</p>
-<p>s.intern()，这一行的作用是s对象去常量池中寻找后发现”1”<strong>已经存在于常量池中了</strong>。</p>
-<p>String s2 = “1”，这行代码是生成一个s2的引用<strong>指向常量池中的“1”对象</strong>。</p>
-<p>结果就是 s 和 s2 的引用地址明显不同。因此返回了false。</p>
-<p>String s3 = new String(“1”) + newString(“1”)，这行代码<strong>在字符串常量池中生成“1” ，并在堆空间中生成s3引用指向的对象（内容为”11”）</strong>。注意<strong>此时常量池中是没有 “11”对象</strong>的。</p>
-<p>s3.intern()，这一行代码，是将 s3中的<strong>“11”字符串放入 String 常量池中</strong>，此时常量池中不存在“11”字符串，JDK1.6的做法是直接在常量池中生成一个 “11” 的对象。</p>
-<p><strong>但是在JDK1.7中，常量池中不需要再存储一份对象了，可以直接存储堆中的引用</strong>。这份引用直接指向 s3 引用的对象，也就是说s3.intern() ==s3会返回true。</p>
-<p>String s4 = “11”， 这一行代码会<strong>直接去常量池中创建</strong>，但是发现已经有这个对象了，此时也就是<strong>指向 s3 引用对象的一个引用</strong>。因此s3 == s4返回了true。</p>
-<h3 id="例二分析"><a href="#例二分析" class="headerlink" title="例二分析"></a>例二分析</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s = <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>);  </span><br><span class="line">String s2 = <span class="string">&quot;1&quot;</span>;  </span><br><span class="line">s.intern();  </span><br><span class="line">System.out.println(s == s2);  </span><br><span class="line">  </span><br><span class="line">String s3 = <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>) + <span class="keyword">new</span> String(<span class="string">&quot;1&quot;</span>);  </span><br><span class="line">String s4 = <span class="string">&quot;11&quot;</span>;  </span><br><span class="line">s3.intern();  </span><br><span class="line">System.out.println(s3 == s4); </span><br></pre></td></tr></table></figure>
-
-<div align=center><img width="700" height="200" src="../../../../images/2017-12-7/String_intern/jdk1.7-2.png" algin="center"/>
-
-</div>
-
-<p>String s = newString(“1”)，生成了<strong>常量池中的“1” 和堆空间中的字符串对象</strong>。</p>
-<p>String s2 = “1”，这行代码是生成一个s2的<strong>引用指向常量池中的“1”对象，但是发现已经存在了，那么就直接指向了它</strong>。</p>
-<p>s.intern()，这一行在这里就没什么实际作用了。因为”1”已经存在了。</p>
-<p>结果就是 s 和 s2 的引用地址明显不同。因此返回了false。</p>
-<p>String s3 = new String(“1”) + newString(“1”)，这行代码<strong>在字符串常量池中生成“1” ，并在堆空间中生成s3引用指向的对象（内容为”11”）</strong>。注意此时常量池中是没有 “11”对象的。</p>
-<p>String s4 = “11”， 这一行代码会**直接去生成常量池中的”11”**。</p>
-<p>s3.intern()，这一行在这里就没什么实际作用了。因为”11”已经存在了。</p>
-<p>结果就是 s3 和 s4 的引用地址明显不同。因此返回了false。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>从JDK 1.7后，HotSpot 将常量池从永久代移到了元空间，正因为如此，JDK 1.7 后的intern方法在实现上发生了比较大的改变，JDK 1.7后，intern方法还是会先去查询常量池中是否有已经存在，如果存在，则返回常量池中的引用，这一点与之前没有区别，区别在于，<strong>如果在常量池找不到对应的字符串，则不会再将字符串拷贝到常量池，而只是在常量池中生成一个对原字符串的引用</strong>。</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -1636,51 +1636,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Maven依赖冲突</title>
-    <url>/Maven%E4%BE%9D%E8%B5%96%E5%86%B2%E7%AA%81/</url>
-    <content><![CDATA[<p>在开发中，比较常用的项目构建工具有<code>Maven</code>、<code>Gradle</code>，自动构建工具可以帮助我们管理项目的外部依赖包、项目编译、打包等。而依赖包冲突又是一个不得不面对的问题，所以了解依赖包的关系传递和构建工具对冲突包的版本选择就很重要了，本文主要介绍下<code>Maven</code>依赖冲突的解决方法。</p>
-<mark class="hl-label blue">在Maven中，同一个groupId和artifactId只能使用一个版本。</mark> 
-
-<h1 id="直接依赖"><a href="#直接依赖" class="headerlink" title="直接依赖"></a>直接依赖</h1><p>若相同类型但版本不同的依赖存在于同一个<code>pom</code>文件，靠后引用的<code>Jar</code>的版本会覆盖前面的版本，最终会引入最后一个声明的依赖。</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.ben-manes.caffeine<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>caffeine<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.ben-manes.caffeine<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>caffeine<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.8.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>如上引入依赖的顺序，项目会使用 <strong>2.8.8</strong> 版本的<code>caffeine</code></p>
-<h1 id="间接依赖"><a href="#间接依赖" class="headerlink" title="间接依赖"></a>间接依赖</h1><h2 id="依赖传递"><a href="#依赖传递" class="headerlink" title="依赖传递"></a>依赖传递</h2><p>直接依赖的逻辑比较简单，出现冲突也比较好发现。而项目中比较常见的错误 ClassNotFoundException、NoSuchMethodError往往是因为间接依赖导致的。</p>
-<p>依赖传递有两种方式：</p>
-<ul>
-<li>模块之间的继承关系。在继承父模块后继承了父模块中的依赖，可通过<code>&lt;/dependencyManagement&gt;</code>机制让子模块可选。</li>
-<li>引入包时附带引入其他的依赖包。这种是依赖冲突的常见方式。</li>
-</ul>
-<div align=center><img src="../../../../images/2020/5-8/maven-order.png" algin="center"/></div>
-
-<ul>
-<li>A → B → D 1.0</li>
-<li>A → D → D 2.0</li>
-</ul>
-<p>例如上述依赖关系图，项目A引入了B和C依赖，但是B和C又依赖了不同版本的D。此时<code>Maven</code>只能选择D其中一个版本进行解析，但是会选择哪个版本进行解析就需要分析一下了。</p>
-<h2 id="依赖选择"><a href="#依赖选择" class="headerlink" title="依赖选择"></a>依赖选择</h2><mark class="hl-label red">Maven依赖调解遵循两大原则：最短路径优先、声明顺序优先。</mark> 
-
-<h3 id="最短路径优先"><a href="#最短路径优先" class="headerlink" title="最短路径优先"></a>最短路径优先</h3><div align=center><img style="width: 400px;" src="../../../../images/2020/5-8/maven-dist.jpg" algin="center"/></div>
-
-<p>如图所示，把当前当成顶层模块，直接依赖的包作为次层模块，依次类推。最后形成一颗依赖树，其中需要比较的就是冲突依赖到顶层模块的路径，<code>Maven</code>会选择路径短的作为依赖。图中会选择 D 1.0 作为依赖。</p>
-<h3 id="第一声明顺序优先"><a href="#第一声明顺序优先" class="headerlink" title="第一声明顺序优先"></a>第一声明顺序优先</h3><p>如果冲突依赖的层次相同，那么第一原则就不起作用了，如下图所示：</p>
-<div align=center><img src="../../../../images/2020/5-8/maven-order.png" algin="center"/></div>
-
-<p>当路径相同时，则需要根据A直接依赖包在<code>pom.xml</code>文件中的先后顺序来判定使用哪条依赖路径，如果次级模块相同则向下级模块推，直至可以判断先后位置为止。</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- A pom.xml --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        B</span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        C</span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>假设在A的<code>pom.xml</code>中，B的依赖位置靠前，C在B之后，则<code>Maven</code>最终引入依赖的版本为 D 1.0</p>
-<h1 id="解决依赖冲突"><a href="#解决依赖冲突" class="headerlink" title="解决依赖冲突"></a>解决依赖冲突</h1><p>在IDEA中可以使用<code>Maven Helper</code>插件查看冲突依赖并进行解决。解决依赖冲突的方法，就是使用<code>Maven</code>提供的<code>&lt;exclusion&gt;</code>标签，<code>&lt;exclusion&gt;</code>标签需要放在<code>&lt;exclusions&gt;</code>标签内部。</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.ben-manes.caffeine<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>caffeine<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.minidev<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>accessors-smart<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>组件</category>
-      </categories>
-      <tags>
-        <tag>工具</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Markdown语法指南</title>
     <url>/Markdown%E8%AF%AD%E6%B3%95/</url>
     <content><![CDATA[<p>花了一段时间把自己的个人博客搭建好了，但是博客必须是要用Markdown书写，所以查了一下Markdown编辑器的语法，在这里做个记录。<div align=center><img width="700" height="300" src="../../../../images/2017-3-23/markdown.png" algin="center"/></div><span id="more"></span></p>
@@ -1766,6 +1721,51 @@
 ]]></content>
       <tags>
         <tag>tips</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Maven依赖冲突</title>
+    <url>/Maven%E4%BE%9D%E8%B5%96%E5%86%B2%E7%AA%81/</url>
+    <content><![CDATA[<p>在开发中，比较常用的项目构建工具有<code>Maven</code>、<code>Gradle</code>，自动构建工具可以帮助我们管理项目的外部依赖包、项目编译、打包等。而依赖包冲突又是一个不得不面对的问题，所以了解依赖包的关系传递和构建工具对冲突包的版本选择就很重要了，本文主要介绍下<code>Maven</code>依赖冲突的解决方法。</p>
+<mark class="hl-label blue">在Maven中，同一个groupId和artifactId只能使用一个版本。</mark> 
+
+<h1 id="直接依赖"><a href="#直接依赖" class="headerlink" title="直接依赖"></a>直接依赖</h1><p>若相同类型但版本不同的依赖存在于同一个<code>pom</code>文件，靠后引用的<code>Jar</code>的版本会覆盖前面的版本，最终会引入最后一个声明的依赖。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.ben-manes.caffeine<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>caffeine<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.ben-manes.caffeine<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>caffeine<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.8.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如上引入依赖的顺序，项目会使用 <strong>2.8.8</strong> 版本的<code>caffeine</code></p>
+<h1 id="间接依赖"><a href="#间接依赖" class="headerlink" title="间接依赖"></a>间接依赖</h1><h2 id="依赖传递"><a href="#依赖传递" class="headerlink" title="依赖传递"></a>依赖传递</h2><p>直接依赖的逻辑比较简单，出现冲突也比较好发现。而项目中比较常见的错误 ClassNotFoundException、NoSuchMethodError往往是因为间接依赖导致的。</p>
+<p>依赖传递有两种方式：</p>
+<ul>
+<li>模块之间的继承关系。在继承父模块后继承了父模块中的依赖，可通过<code>&lt;/dependencyManagement&gt;</code>机制让子模块可选。</li>
+<li>引入包时附带引入其他的依赖包。这种是依赖冲突的常见方式。</li>
+</ul>
+<div align=center><img src="../../../../images/2020/5-8/maven-order.png" algin="center"/></div>
+
+<ul>
+<li>A → B → D 1.0</li>
+<li>A → D → D 2.0</li>
+</ul>
+<p>例如上述依赖关系图，项目A引入了B和C依赖，但是B和C又依赖了不同版本的D。此时<code>Maven</code>只能选择D其中一个版本进行解析，但是会选择哪个版本进行解析就需要分析一下了。</p>
+<h2 id="依赖选择"><a href="#依赖选择" class="headerlink" title="依赖选择"></a>依赖选择</h2><mark class="hl-label red">Maven依赖调解遵循两大原则：最短路径优先、声明顺序优先。</mark> 
+
+<h3 id="最短路径优先"><a href="#最短路径优先" class="headerlink" title="最短路径优先"></a>最短路径优先</h3><div align=center><img style="width: 400px;" src="../../../../images/2020/5-8/maven-dist.jpg" algin="center"/></div>
+
+<p>如图所示，把当前当成顶层模块，直接依赖的包作为次层模块，依次类推。最后形成一颗依赖树，其中需要比较的就是冲突依赖到顶层模块的路径，<code>Maven</code>会选择路径短的作为依赖。图中会选择 D 1.0 作为依赖。</p>
+<h3 id="第一声明顺序优先"><a href="#第一声明顺序优先" class="headerlink" title="第一声明顺序优先"></a>第一声明顺序优先</h3><p>如果冲突依赖的层次相同，那么第一原则就不起作用了，如下图所示：</p>
+<div align=center><img src="../../../../images/2020/5-8/maven-order.png" algin="center"/></div>
+
+<p>当路径相同时，则需要根据A直接依赖包在<code>pom.xml</code>文件中的先后顺序来判定使用哪条依赖路径，如果次级模块相同则向下级模块推，直至可以判断先后位置为止。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- A pom.xml --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        B</span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        C</span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>假设在A的<code>pom.xml</code>中，B的依赖位置靠前，C在B之后，则<code>Maven</code>最终引入依赖的版本为 D 1.0</p>
+<h1 id="解决依赖冲突"><a href="#解决依赖冲突" class="headerlink" title="解决依赖冲突"></a>解决依赖冲突</h1><p>在IDEA中可以使用<code>Maven Helper</code>插件查看冲突依赖并进行解决。解决依赖冲突的方法，就是使用<code>Maven</code>提供的<code>&lt;exclusion&gt;</code>标签，<code>&lt;exclusion&gt;</code>标签需要放在<code>&lt;exclusions&gt;</code>标签内部。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.ben-manes.caffeine<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>caffeine<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.minidev<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>accessors-smart<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>组件</category>
+      </categories>
+      <tags>
+        <tag>工具</tag>
       </tags>
   </entry>
   <entry>
@@ -2300,46 +2300,6 @@
       </tags>
   </entry>
   <entry>
-    <title>MySQL清除表空间碎片</title>
-    <url>/MySQL%E6%B8%85%E9%99%A4%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%A2%8E%E7%89%87/</url>
-    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>MySQL在数据表使用很长时间后，表上的B-Tree索引可能会碎片化，会降低查询的效率。碎片化的索引可能会以很差或者无序的方式存储在磁盘上，这时就需要对表进行碎片化整理。<span id="more"></span></p>
-<h1 id="碎片产生原因"><a href="#碎片产生原因" class="headerlink" title="碎片产生原因"></a>碎片产生原因</h1><p>1、表的存储会出现碎片化，每当删除了一行内容，该段空间就会变为空白、被留空，而在一段时间内的大量删除操作，会使这种留空的空间变得比存储列表内容所使用的空间更大；</p>
-<p>2、当执行插入操作时，MySQL会尝试使用空白空间，但如果某个空白空间一直没有被大小合适的数据占用，仍然无法将其彻底占用，就形成了碎片；</p>
-<p>3、当MySQL对数据进行扫描时，它扫描的对象实际是列表的容量需求上限，也就是数据被写入的区域中处于峰值位置的部分；</p>
-<blockquote>
-<p>例：<em>一个表有1万行，每行10字节，会占用10万字节存储空间，执行删除操作，只留一行，实际内容只剩下10字节，但MySQL在读取时，仍看做是10万字节的表进行处理，所以，碎片越多，就会越来越影响查询性能。</em></p>
-</blockquote>
-<h1 id="查看表碎片大小"><a href="#查看表碎片大小" class="headerlink" title="查看表碎片大小"></a>查看表碎片大小</h1><p>1、查看某个表的碎片大小</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SHOW TABLE STATUS LIKE &#x27;表名&#x27;;</span><br></pre></td></tr></table></figure>
-
-<p>结果中’<strong>Data_free</strong>’列的值就是碎片大小</p>
-<div align=center><img src="../../../../images/2018-5/mysql%E7%A2%8E%E7%89%87%E4%BC%98%E5%8C%96/show-status.png" algin="center"/>
-
-</div>
-
-<p>2、列出所有已经产生碎片的表</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select table_schema db, table_name, data_free, engine     </span><br><span class="line">from information_schema.tables </span><br><span class="line">where table_schema not in (&#x27;information_schema&#x27;, &#x27;mysql&#x27;)  and data_free &gt; 0;</span><br></pre></td></tr></table></figure>
-
-<h1 id="清除表碎片"><a href="#清除表碎片" class="headerlink" title="清除表碎片"></a>清除表碎片</h1><p>1、MyISAM表</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">OPTIMIZE TABLE 表名;</span><br></pre></td></tr></table></figure>
-
-<p>2、InnoDB表</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ALTER TABLE 表名 ENGINE INNODB;</span><br></pre></td></tr></table></figure>
-
-<p>这其实是一个<em>NULL</em>操作，表面上看什么也不做，实际上重新整理碎片了。当执行优化操作时，实际执行的是一个空的 <em>ALTER</em> 命令，但是这个命令也会起到优化的作用，它会重建整个表，删掉未使用的空白空间。</p>
-<p>Engine不同，<em>OPTIMIZE</em> 的操作也不一样。MyISAM 因为索引和数据是分开的，所以 <em>OPTIMIZE</em> 可以整理数据文件，并重排索引。如果针对 <em>INNODB</em> 的表做 <em>OPTIMIZE TABLE</em> 的操作，系统将返回：<em>Table does not support optimize, doing recreate + analyze instead</em>。</p>
-<p><strong>OPTIMIZE 操作会暂时锁住表，而且数据量越大，耗费的时间也越长。</strong>它毕竟不是简单查询操作，所以把 OPTIMIZE 命令放在程序中是不妥当的。不管设置的命中率多低，当访问量增大的时候，整体命中率也会上升，这样肯定会对程序的运行效率造成很大影响，比较好的方式就是做个shell，定期检查MySQL中 <code>information_schema</code>.<code>TABLES</code>字段，查看 <em>DATA_FREE</em> 字段，大于0话就表示有碎片。</p>
-<h1 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h1><p>清除碎片操作会暂时锁表，数据量越大，耗费的时间越长，可以做个脚本，定期在访问低谷时间执行，例如每月1号凌晨，检查 <em>DATA_FREE</em> 字段，大于自己认为的警戒值的话，就清理一次。</p>
-<p><a href="https://blog.csdn.net/xlgen157387/article/details/50728737"><em><strong>MySQL 清除表空间碎片</strong></em></a></p>
-]]></content>
-      <categories>
-        <category>数据库</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>MySQL执行计划</title>
     <url>/MySQL%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>MySQL执行计划，简单的来说，是SQL在数据库中执行时的表现情况，通常用于SQL性能分析，优化等场景。在MySQL使用 <strong>explain</strong> 关键字来查看SQL的执行计划。<div align=center><img src="../../../../images/2018-4/MySQL_explain/mysql-explain.png" algin="center"/></div></p>
@@ -2441,50 +2401,43 @@
       </tags>
   </entry>
   <entry>
-    <title>Nginx日志无法轮转</title>
-    <url>/Nginx%E6%97%A5%E5%BF%97%E6%97%A0%E6%B3%95%E8%BD%AE%E8%BD%AC/</url>
-    <content><![CDATA[<h1 id="症状"><a href="#症状" class="headerlink" title="症状"></a>症状</h1><p>Nginx刚启动后日志记录正常，一段时间后，Nginx会把已产生的日志压缩为<code>.gz</code>文件。但是一旦压缩后，就不再记录新日志到新生成的<code>access.log</code>文件，但日志文件存在，里面却没有任何日志。旧的日志压缩后没有问题，自从压缩后，新的文件再也不记录新日志了(发现Nginx会很消耗内存，估计日志都存在内存里，不写文件了)。</p>
-<div align=center><img src="../../../../images/2021/4-6/nginx_bug_1.png" algin="center"/></div>
-
-<p>我们的Nginx部署在k8s中，查看Nginx的配置没有发现任何问题</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">#user  nobody;</span></span><br><span class="line">worker_processes  4;</span><br><span class="line"></span><br><span class="line">error_log  /app/openresty/nginx/logs/error.log  error;</span><br><span class="line">pid        /app/openresty/nginx/logs/nginx.pid;</span><br><span class="line"><span class="comment">#error_log  logs/error.log;</span></span><br><span class="line"><span class="comment">#error_log  logs/error.log  notice;</span></span><br><span class="line"><span class="comment">#error_log  logs/error.log  info;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections 65536 ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    include       custom_upstream.conf;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    log_format  main  <span class="string">&#x27;$remote_addr|$remote_user|[$time_local]|&quot;$request&quot;&#x27;</span></span><br><span class="line">                      <span class="string">&#x27;|$status|$request_time|$body_bytes_sent|&quot;$http_referer&quot;&#x27;</span></span><br><span class="line">                <span class="string">&#x27;|&quot;$http_user_agent&quot;|&quot;$http_x_forwarded_for&quot;|$upstream_response_time|$upstream_status&#x27;</span>;    </span><br><span class="line">    access_log  /app/openresty/nginx/logs/access.log  main;</span><br><span class="line">    </span><br><span class="line">    server_tokens   off;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    tcp_nopush      on;</span><br><span class="line">    tcp_nodelay     on;</span><br><span class="line">    client_max_body_size 100m;</span><br><span class="line">    client_header_buffer_size 100m;</span><br><span class="line">    keepalive_timeout  60;</span><br><span class="line">    proxy_buffering off;</span><br><span class="line">    gzip on;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        listen 443 ssl;</span><br><span class="line"></span><br><span class="line">        <span class="comment">#charset koi8-r;</span></span><br><span class="line"></span><br><span class="line">        include       custom_location.conf;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># redirect server error pages to the static page /50x.html</span></span><br><span class="line">        <span class="comment">#</span></span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        location = /nstats &#123;</span><br><span class="line">            check_status;</span><br><span class="line">            access_log      off;</span><br><span class="line">            allow           10.116.0.0/16;</span><br><span class="line">            allow           10.110.0.0/16;</span><br><span class="line">            allow           10.117.0.0/16;</span><br><span class="line">            allow           10.150.0.0/16;</span><br><span class="line">            allow           100.0.0.0/8;</span><br><span class="line">            allow           10.0.0.0/8;</span><br><span class="line">            deny            all;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><p>经查询资料在<code>stackoverflow</code>发现了类似的问题，见链接：<a href="https://stackoverflow.com/questions/9552930/nginx-cannot-write-into-access-log">https://stackoverflow.com/questions/9552930/nginx-cannot-write-into-access-log</a></p>
-<p>原因是当Nginx压缩文件后，需要给master进程发送USR1信号后重新打开文件。</p>
-<p>于是查看了Nginx的进程ID为33</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[mwopr@k8s-opc-openapi-nginx-77787494c5-c77s8 logs]$ cat nginx.pid </span><br><span class="line">33</span><br></pre></td></tr></table></figure>
-
-<p>当执行重新打开log文件命令时提示没有权限</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[mwopr@k8s-opc-openapi-nginx-77787494c5-c77s8 logs]$ kill -USR1 33</span><br><span class="line">bash: kill: (33) - Operation not permitted</span><br></pre></td></tr></table></figure>
-
-<p>这个时候恍然大悟，登陆shell的默认用户是<code>mwopr</code>，没有权限执行<code>kill</code>命令，需要用<code>root</code>用户执行，当切换为<code>root</code>用户后，执行<code>kill</code>命令成功且日志可以正常写入。</p>
-<div align=center><img src="../../../../images/2021/4-6/nginx_bug_2.png" algin="center"/></div>
-
-<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>原文：<a href="http://nginx.org/en/docs/control.html">http://nginx.org/en/docs/control.html</a></p>
-<p>Nginx可以通过信号进行控制。对应Linux系统就是用<code>kill</code>命令。</p>
-<p>master进程id默认写入到<code>/nginx/logs/nginx.pid</code>文件中。文件也可以在<code>nginx.conf</code>文件中指定。master进程支持以下信号：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kill -TERM pid # 快速停止master进程。 </span><br><span class="line">kill -QUIT pid # 优雅的停止。 </span><br><span class="line">kill -HUB pid # 改变配置文件。开启一个新的worker进程处理，优雅的停止老的worker进程。相当于nginx -s reload </span><br><span class="line">kill -USR1 pid # 重新打开log文件。-s reopen命令 </span><br><span class="line">kill -USR2 pid # 升级可执行文件。热部署 </span><br><span class="line">kill -WINCH pid # 优雅的关闭worker进程。</span><br></pre></td></tr></table></figure>
-
-<p>每个worker进程也可以接收信号：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kill -TERM pid # 快速关闭worker进程 </span><br><span class="line">kill -QUIT pid # 优雅退出 </span><br><span class="line">kill -USR1 pid # 重新打开日志文件,先mv一个，再去执行这个命令。-s reopen命令</span><br></pre></td></tr></table></figure>
-
-<p>日志轮转</p>
-<ol>
-<li>重命名log文件。</li>
-<li>给master进程发送USR1信号。</li>
-<li>重新打开文件。</li>
-</ol>
+    <title>MySQL清除表空间碎片</title>
+    <url>/MySQL%E6%B8%85%E9%99%A4%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%A2%8E%E7%89%87/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>MySQL在数据表使用很长时间后，表上的B-Tree索引可能会碎片化，会降低查询的效率。碎片化的索引可能会以很差或者无序的方式存储在磁盘上，这时就需要对表进行碎片化整理。<span id="more"></span></p>
+<h1 id="碎片产生原因"><a href="#碎片产生原因" class="headerlink" title="碎片产生原因"></a>碎片产生原因</h1><p>1、表的存储会出现碎片化，每当删除了一行内容，该段空间就会变为空白、被留空，而在一段时间内的大量删除操作，会使这种留空的空间变得比存储列表内容所使用的空间更大；</p>
+<p>2、当执行插入操作时，MySQL会尝试使用空白空间，但如果某个空白空间一直没有被大小合适的数据占用，仍然无法将其彻底占用，就形成了碎片；</p>
+<p>3、当MySQL对数据进行扫描时，它扫描的对象实际是列表的容量需求上限，也就是数据被写入的区域中处于峰值位置的部分；</p>
 <blockquote>
-<p>Rotating Log-files</p>
-<p>In order to rotate log files, they need to be renamed first. After that USR1 signal should be sent to the master process. The master process will then re-open all currently open log files and assign them an unprivileged user under which the worker processes are running, as an owner. After successful re-opening, the master process closes all open files and sends the message to worker process to ask them to re-open files. Worker processes also open new files and close old files right away. As a result, old files are almost immediately available for post processing, such as compression.</p>
+<p>例：<em>一个表有1万行，每行10字节，会占用10万字节存储空间，执行删除操作，只留一行，实际内容只剩下10字节，但MySQL在读取时，仍看做是10万字节的表进行处理，所以，碎片越多，就会越来越影响查询性能。</em></p>
 </blockquote>
+<h1 id="查看表碎片大小"><a href="#查看表碎片大小" class="headerlink" title="查看表碎片大小"></a>查看表碎片大小</h1><p>1、查看某个表的碎片大小</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SHOW TABLE STATUS LIKE &#x27;表名&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>结果中’<strong>Data_free</strong>’列的值就是碎片大小</p>
+<div align=center><img src="../../../../images/2018-5/mysql%E7%A2%8E%E7%89%87%E4%BC%98%E5%8C%96/show-status.png" algin="center"/>
+
+</div>
+
+<p>2、列出所有已经产生碎片的表</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select table_schema db, table_name, data_free, engine     </span><br><span class="line">from information_schema.tables </span><br><span class="line">where table_schema not in (&#x27;information_schema&#x27;, &#x27;mysql&#x27;)  and data_free &gt; 0;</span><br></pre></td></tr></table></figure>
+
+<h1 id="清除表碎片"><a href="#清除表碎片" class="headerlink" title="清除表碎片"></a>清除表碎片</h1><p>1、MyISAM表</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">OPTIMIZE TABLE 表名;</span><br></pre></td></tr></table></figure>
+
+<p>2、InnoDB表</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ALTER TABLE 表名 ENGINE INNODB;</span><br></pre></td></tr></table></figure>
+
+<p>这其实是一个<em>NULL</em>操作，表面上看什么也不做，实际上重新整理碎片了。当执行优化操作时，实际执行的是一个空的 <em>ALTER</em> 命令，但是这个命令也会起到优化的作用，它会重建整个表，删掉未使用的空白空间。</p>
+<p>Engine不同，<em>OPTIMIZE</em> 的操作也不一样。MyISAM 因为索引和数据是分开的，所以 <em>OPTIMIZE</em> 可以整理数据文件，并重排索引。如果针对 <em>INNODB</em> 的表做 <em>OPTIMIZE TABLE</em> 的操作，系统将返回：<em>Table does not support optimize, doing recreate + analyze instead</em>。</p>
+<p><strong>OPTIMIZE 操作会暂时锁住表，而且数据量越大，耗费的时间也越长。</strong>它毕竟不是简单查询操作，所以把 OPTIMIZE 命令放在程序中是不妥当的。不管设置的命中率多低，当访问量增大的时候，整体命中率也会上升，这样肯定会对程序的运行效率造成很大影响，比较好的方式就是做个shell，定期检查MySQL中 <code>information_schema</code>.<code>TABLES</code>字段，查看 <em>DATA_FREE</em> 字段，大于0话就表示有碎片。</p>
+<h1 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h1><p>清除碎片操作会暂时锁表，数据量越大，耗费的时间越长，可以做个脚本，定期在访问低谷时间执行，例如每月1号凌晨，检查 <em>DATA_FREE</em> 字段，大于自己认为的警戒值的话，就清理一次。</p>
+<p><a href="https://blog.csdn.net/xlgen157387/article/details/50728737"><em><strong>MySQL 清除表空间碎片</strong></em></a></p>
 ]]></content>
       <categories>
-        <category>踩坑记录</category>
+        <category>数据库</category>
       </categories>
       <tags>
-        <tag>java</tag>
-        <tag>nginx</tag>
+        <tag>mysql</tag>
       </tags>
   </entry>
   <entry>
@@ -2596,6 +2549,53 @@
       <tags>
         <tag>java</tag>
         <tag>mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Nginx日志无法轮转</title>
+    <url>/Nginx%E6%97%A5%E5%BF%97%E6%97%A0%E6%B3%95%E8%BD%AE%E8%BD%AC/</url>
+    <content><![CDATA[<h1 id="症状"><a href="#症状" class="headerlink" title="症状"></a>症状</h1><p>Nginx刚启动后日志记录正常，一段时间后，Nginx会把已产生的日志压缩为<code>.gz</code>文件。但是一旦压缩后，就不再记录新日志到新生成的<code>access.log</code>文件，但日志文件存在，里面却没有任何日志。旧的日志压缩后没有问题，自从压缩后，新的文件再也不记录新日志了(发现Nginx会很消耗内存，估计日志都存在内存里，不写文件了)。</p>
+<div align=center><img src="../../../../images/2021/4-6/nginx_bug_1.png" algin="center"/></div>
+
+<p>我们的Nginx部署在k8s中，查看Nginx的配置没有发现任何问题</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">#user  nobody;</span></span><br><span class="line">worker_processes  4;</span><br><span class="line"></span><br><span class="line">error_log  /app/openresty/nginx/logs/error.log  error;</span><br><span class="line">pid        /app/openresty/nginx/logs/nginx.pid;</span><br><span class="line"><span class="comment">#error_log  logs/error.log;</span></span><br><span class="line"><span class="comment">#error_log  logs/error.log  notice;</span></span><br><span class="line"><span class="comment">#error_log  logs/error.log  info;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections 65536 ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    include       custom_upstream.conf;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    log_format  main  <span class="string">&#x27;$remote_addr|$remote_user|[$time_local]|&quot;$request&quot;&#x27;</span></span><br><span class="line">                      <span class="string">&#x27;|$status|$request_time|$body_bytes_sent|&quot;$http_referer&quot;&#x27;</span></span><br><span class="line">                <span class="string">&#x27;|&quot;$http_user_agent&quot;|&quot;$http_x_forwarded_for&quot;|$upstream_response_time|$upstream_status&#x27;</span>;    </span><br><span class="line">    access_log  /app/openresty/nginx/logs/access.log  main;</span><br><span class="line">    </span><br><span class="line">    server_tokens   off;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    tcp_nopush      on;</span><br><span class="line">    tcp_nodelay     on;</span><br><span class="line">    client_max_body_size 100m;</span><br><span class="line">    client_header_buffer_size 100m;</span><br><span class="line">    keepalive_timeout  60;</span><br><span class="line">    proxy_buffering off;</span><br><span class="line">    gzip on;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        listen 443 ssl;</span><br><span class="line"></span><br><span class="line">        <span class="comment">#charset koi8-r;</span></span><br><span class="line"></span><br><span class="line">        include       custom_location.conf;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># redirect server error pages to the static page /50x.html</span></span><br><span class="line">        <span class="comment">#</span></span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        location = /nstats &#123;</span><br><span class="line">            check_status;</span><br><span class="line">            access_log      off;</span><br><span class="line">            allow           10.116.0.0/16;</span><br><span class="line">            allow           10.110.0.0/16;</span><br><span class="line">            allow           10.117.0.0/16;</span><br><span class="line">            allow           10.150.0.0/16;</span><br><span class="line">            allow           100.0.0.0/8;</span><br><span class="line">            allow           10.0.0.0/8;</span><br><span class="line">            deny            all;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><p>经查询资料在<code>stackoverflow</code>发现了类似的问题，见链接：<a href="https://stackoverflow.com/questions/9552930/nginx-cannot-write-into-access-log">https://stackoverflow.com/questions/9552930/nginx-cannot-write-into-access-log</a></p>
+<p>原因是当Nginx压缩文件后，需要给master进程发送USR1信号后重新打开文件。</p>
+<p>于是查看了Nginx的进程ID为33</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[mwopr@k8s-opc-openapi-nginx-77787494c5-c77s8 logs]$ cat nginx.pid </span><br><span class="line">33</span><br></pre></td></tr></table></figure>
+
+<p>当执行重新打开log文件命令时提示没有权限</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[mwopr@k8s-opc-openapi-nginx-77787494c5-c77s8 logs]$ kill -USR1 33</span><br><span class="line">bash: kill: (33) - Operation not permitted</span><br></pre></td></tr></table></figure>
+
+<p>这个时候恍然大悟，登陆shell的默认用户是<code>mwopr</code>，没有权限执行<code>kill</code>命令，需要用<code>root</code>用户执行，当切换为<code>root</code>用户后，执行<code>kill</code>命令成功且日志可以正常写入。</p>
+<div align=center><img src="../../../../images/2021/4-6/nginx_bug_2.png" algin="center"/></div>
+
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>原文：<a href="http://nginx.org/en/docs/control.html">http://nginx.org/en/docs/control.html</a></p>
+<p>Nginx可以通过信号进行控制。对应Linux系统就是用<code>kill</code>命令。</p>
+<p>master进程id默认写入到<code>/nginx/logs/nginx.pid</code>文件中。文件也可以在<code>nginx.conf</code>文件中指定。master进程支持以下信号：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kill -TERM pid # 快速停止master进程。 </span><br><span class="line">kill -QUIT pid # 优雅的停止。 </span><br><span class="line">kill -HUB pid # 改变配置文件。开启一个新的worker进程处理，优雅的停止老的worker进程。相当于nginx -s reload </span><br><span class="line">kill -USR1 pid # 重新打开log文件。-s reopen命令 </span><br><span class="line">kill -USR2 pid # 升级可执行文件。热部署 </span><br><span class="line">kill -WINCH pid # 优雅的关闭worker进程。</span><br></pre></td></tr></table></figure>
+
+<p>每个worker进程也可以接收信号：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kill -TERM pid # 快速关闭worker进程 </span><br><span class="line">kill -QUIT pid # 优雅退出 </span><br><span class="line">kill -USR1 pid # 重新打开日志文件,先mv一个，再去执行这个命令。-s reopen命令</span><br></pre></td></tr></table></figure>
+
+<p>日志轮转</p>
+<ol>
+<li>重命名log文件。</li>
+<li>给master进程发送USR1信号。</li>
+<li>重新打开文件。</li>
+</ol>
+<blockquote>
+<p>Rotating Log-files</p>
+<p>In order to rotate log files, they need to be renamed first. After that USR1 signal should be sent to the master process. The master process will then re-open all currently open log files and assign them an unprivileged user under which the worker processes are running, as an owner. After successful re-opening, the master process closes all open files and sends the message to worker process to ask them to re-open files. Worker processes also open new files and close old files right away. As a result, old files are almost immediately available for post processing, such as compression.</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>踩坑记录</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>nginx</tag>
       </tags>
   </entry>
   <entry>
@@ -3613,16 +3613,6 @@
       </tags>
   </entry>
   <entry>
-    <title>About</title>
-    <url>/about/</url>
-    <content><![CDATA[<p>​                    </p>
-<p>​                    喜欢新鲜的事物，钻研技术，热爱互联网行业🍭。</p>
-<p>​                                做自己喜欢做的事。</p>
-<p>​                            菜鸟程序猿一只，欢迎分享知识。</p>
-<p>​                                                                    From 🌈彩虹马</p>
-]]></content>
-  </entry>
-  <entry>
     <title>logback推荐配置</title>
     <url>/logback%E6%8E%A8%E8%8D%90%E9%85%8D%E7%BD%AE/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>大约从16年，不管是我参与别人已搭建好的项目还是自己单独搭建的项目，日志框架基本都换成了logback。</p>
@@ -3710,39 +3700,14 @@
       </tags>
   </entry>
   <entry>
-    <title>logback行号输出问号问题</title>
-    <url>/logback%E8%A1%8C%E5%8F%B7%E8%BE%93%E5%87%BA%E9%97%AE%E5%8F%B7%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>Logback日志输出使用 <code>AsyncAppender</code> 时，输出的文件行号信息是 <strong>?:?</strong> ，问题产生原因及解决方案。<span id="more"></span></p>
-<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>在 <a href="http://rainbowhorse.site/logback%E6%8E%A8%E8%8D%90%E9%85%8D%E7%BD%AE/">logback推荐配置</a> 一文中，列举了logback常用的几种配置，使用的是logback异步输出日志AsyncAppender。但在实际的开发中，遇到了日志没有输出类和行号，而输出的文件行号信息是 **?:?**。</p>
-<p>输出的日志类似于这种：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">framework-server-demo 2017-07-17 14:15:11,876 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [?:?] - Located managed bean &#x27;refreshScope&#x27;: registering with JMX server as MBean [org.springframework.cloud.context.scope.refresh:name=refreshScope,type=RefreshScope]</span><br><span class="line">framework-server-demo 2017-07-17 14:15:11,881 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [?:?] - Located managed bean &#x27;configurationPropertiesRebinder&#x27;: registering with JMX server as MBean [org.springframework.cloud.context.properties:name=configurationPropertiesRebinder,context=43f2f92d,type=ConfigurationPropertiesRebinder]</span><br><span class="line">framework-server-demo 2017-07-17 14:15:11,887 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [?:?] - Located managed bean &#x27;refreshEndpoint&#x27;: registering with JMX server as MBean [org.springframework.cloud.endpoint:name=refreshEndpoint,type=RefreshEndpoint]</span><br><span class="line">framework-server-demo 2017-07-17 14:15:11,888 INFO [main] o.s.b.a.e.j.EndpointMBeanExporter [?:?] - Registering beans for JMX exposure on startup</span><br><span class="line">framework-server-demo 2017-07-17 14:15:12,709 INFO [main] application [?:?] - jolokia: No access restrictor found, access to any MBean is allowed</span><br><span class="line">framework-server-demo 2017-07-17 14:15:12,714 INFO [main] application [?:?] - jolokia: jolokia:type=Config is already registered. Adding it with jolokia:type=Config,uuid=43140813-0dc0-413d-96c0-5de1799eadd3, but you should revise your setup in order to either use a qualifier or ensure, that only a single agent gets registered (otherwise history functionality might not work)</span><br><span class="line">framework-server-demo 2017-07-17 14:15:12,714 INFO [main] application [?:?] - jolokia: Cannot register (legacy) MBean handler for config store with name jmx4perl:type=Config since it already exists. This is the case if another agent has been already started within the same JVM. The registration is skipped.</span><br><span class="line">framework-server-demo 2017-07-17 14:15:12,715 INFO [main] application [?:?] - jolokia: Jolokia Discovery MBean registration is skipped because there is already one registered.</span><br></pre></td></tr></table></figure>
-
-<h1 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h1><p>输出文件以及行号信息需要 <code>stacktrace</code> 获取 <code>callerdata</code>，<strong>因为性能原因 logback 的 AsyncAppender 默认是不记录该信息。即默认为false</strong>。</p>
-<p>官方文档： <a href="https://logback.qos.ch/manual/appenders.html#AsyncAppender">https://logback.qos.ch/manual/appenders.html#AsyncAppender</a></p>
-<table>
-<thead>
-<tr>
-<th>Property Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>includeCallerData</td>
-<td>boolean</td>
-<td>Extracting caller data can be rather expensive. To improve performance, by default, caller data associated with an event is not extracted when the event added to the event queue. By default, only “cheap” data like the thread name and the MDC are copied. You can direct this appender to include caller data by setting the includeCallerData property to true.</td>
-</tr>
-</tbody></table>
-<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>如文档说明，只需要在 <strong>logback</strong> 配置文件里 <strong>AsyncAppender</strong> 中添加 <strong>includeCallerData</strong> 并设置为 <strong>true</strong> 。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;includeCallerData&gt;true&lt;/includeCallerData&gt; </span><br></pre></td></tr></table></figure>
-
+    <title>About</title>
+    <url>/about/</url>
+    <content><![CDATA[<p>​                    </p>
+<p>​                    喜欢新鲜的事物，钻研技术，热爱互联网行业🍭。</p>
+<p>​                                做自己喜欢做的事。</p>
+<p>​                            菜鸟程序猿一只，欢迎分享知识。</p>
+<p>​                                                                    From 🌈彩虹马</p>
 ]]></content>
-      <categories>
-        <category>踩坑记录</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-      </tags>
   </entry>
   <entry>
     <title>protostuff序列化</title>
@@ -3778,6 +3743,41 @@
       </categories>
       <tags>
         <tag>tips</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>logback行号输出问号问题</title>
+    <url>/logback%E8%A1%8C%E5%8F%B7%E8%BE%93%E5%87%BA%E9%97%AE%E5%8F%B7%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>Logback日志输出使用 <code>AsyncAppender</code> 时，输出的文件行号信息是 <strong>?:?</strong> ，问题产生原因及解决方案。<span id="more"></span></p>
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>在 <a href="http://rainbowhorse.site/logback%E6%8E%A8%E8%8D%90%E9%85%8D%E7%BD%AE/">logback推荐配置</a> 一文中，列举了logback常用的几种配置，使用的是logback异步输出日志AsyncAppender。但在实际的开发中，遇到了日志没有输出类和行号，而输出的文件行号信息是 **?:?**。</p>
+<p>输出的日志类似于这种：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">framework-server-demo 2017-07-17 14:15:11,876 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [?:?] - Located managed bean &#x27;refreshScope&#x27;: registering with JMX server as MBean [org.springframework.cloud.context.scope.refresh:name=refreshScope,type=RefreshScope]</span><br><span class="line">framework-server-demo 2017-07-17 14:15:11,881 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [?:?] - Located managed bean &#x27;configurationPropertiesRebinder&#x27;: registering with JMX server as MBean [org.springframework.cloud.context.properties:name=configurationPropertiesRebinder,context=43f2f92d,type=ConfigurationPropertiesRebinder]</span><br><span class="line">framework-server-demo 2017-07-17 14:15:11,887 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [?:?] - Located managed bean &#x27;refreshEndpoint&#x27;: registering with JMX server as MBean [org.springframework.cloud.endpoint:name=refreshEndpoint,type=RefreshEndpoint]</span><br><span class="line">framework-server-demo 2017-07-17 14:15:11,888 INFO [main] o.s.b.a.e.j.EndpointMBeanExporter [?:?] - Registering beans for JMX exposure on startup</span><br><span class="line">framework-server-demo 2017-07-17 14:15:12,709 INFO [main] application [?:?] - jolokia: No access restrictor found, access to any MBean is allowed</span><br><span class="line">framework-server-demo 2017-07-17 14:15:12,714 INFO [main] application [?:?] - jolokia: jolokia:type=Config is already registered. Adding it with jolokia:type=Config,uuid=43140813-0dc0-413d-96c0-5de1799eadd3, but you should revise your setup in order to either use a qualifier or ensure, that only a single agent gets registered (otherwise history functionality might not work)</span><br><span class="line">framework-server-demo 2017-07-17 14:15:12,714 INFO [main] application [?:?] - jolokia: Cannot register (legacy) MBean handler for config store with name jmx4perl:type=Config since it already exists. This is the case if another agent has been already started within the same JVM. The registration is skipped.</span><br><span class="line">framework-server-demo 2017-07-17 14:15:12,715 INFO [main] application [?:?] - jolokia: Jolokia Discovery MBean registration is skipped because there is already one registered.</span><br></pre></td></tr></table></figure>
+
+<h1 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h1><p>输出文件以及行号信息需要 <code>stacktrace</code> 获取 <code>callerdata</code>，<strong>因为性能原因 logback 的 AsyncAppender 默认是不记录该信息。即默认为false</strong>。</p>
+<p>官方文档： <a href="https://logback.qos.ch/manual/appenders.html#AsyncAppender">https://logback.qos.ch/manual/appenders.html#AsyncAppender</a></p>
+<table>
+<thead>
+<tr>
+<th>Property Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>includeCallerData</td>
+<td>boolean</td>
+<td>Extracting caller data can be rather expensive. To improve performance, by default, caller data associated with an event is not extracted when the event added to the event queue. By default, only “cheap” data like the thread name and the MDC are copied. You can direct this appender to include caller data by setting the includeCallerData property to true.</td>
+</tr>
+</tbody></table>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>如文档说明，只需要在 <strong>logback</strong> 配置文件里 <strong>AsyncAppender</strong> 中添加 <strong>includeCallerData</strong> 并设置为 <strong>true</strong> 。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;includeCallerData&gt;true&lt;/includeCallerData&gt; </span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>踩坑记录</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -3864,56 +3864,6 @@
       </tags>
   </entry>
   <entry>
-    <title>关于服务监控的思考</title>
-    <url>/%E5%85%B3%E4%BA%8E%E6%9C%8D%E5%8A%A1%E7%9B%91%E6%8E%A7%E7%9A%84%E6%80%9D%E8%80%83/</url>
-    <content><![CDATA[<p>目前开源的组件如<code>Skywalking</code>、<code>Zipkin</code>只能做到横向监控，没法针对某一时间段方法纵向监控和告警。基于这种痛点和对一些组件的了解，自己写了一套可满足自己业务需求的服务监控组件，结合了<code>Grafana</code>、<code>Loki</code>、<code>Promtail</code>、<code>Elasticsearch</code>、<code>Kafka</code>等，可实现<strong>服务接口级监控、监控告警、告警日志在线查看</strong>等特性。<span id="more"></span></p>
-<h1 id="基础组件"><a href="#基础组件" class="headerlink" title="基础组件"></a>基础组件</h1><ul>
-<li><code>Grafana</code>：<a href="http://rainbowhorse.site/Grafana%E6%90%AD%E5%BB%BA/">Grafana 搭建</a></li>
-<li><code>Loki</code>：<a href="http://rainbowhorse.site/%E8%BD%BB%E9%87%8F%E7%BA%A7%E6%97%A5%E5%BF%97%E9%87%87%E9%9B%86Loki%E6%90%AD%E5%BB%BA/">轻量级日志采集Loki搭建</a></li>
-<li><code>Elasticsearch</code>：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.0/getting-started.html">介绍及使用文档</a></li>
-<li>消息中间件：<code>kafka</code></li>
-<li>服务监控组件(未开源)：<code>service-profiler</code></li>
-</ul>
-<h1 id="设计思想"><a href="#设计思想" class="headerlink" title="设计思想"></a>设计思想</h1><ol>
-<li><code>Client</code>收集服务调用信息后生成数据快照(<code>Snapshot</code>)，通过<code>Kafka</code>定时上报到<code>Server</code>端。<code>Client</code>通过<code>Promtail</code>采集错误日志上报到<code>Loki</code>服务器。</li>
-<li><code>Server</code>端统计聚合<code>Client</code>端上报的信息后落库<code>ES</code>。<code>Loki</code>服务端接收到<code>Client</code>端上报的日志后存储至磁盘并生成索引。</li>
-<li>通过<code>Grafana</code>整合统计信息和错误日志，通过丰富的仪表盘实时展示相关指标与分析结果。</li>
-<li>当相关指标超过自定义阈值时，通过通知平台告警到相关研发人员，及时处理告警。</li>
-</ol>
-<div align=center><img src="../../../../images/2021/10-12/m4.png" algin="center"/></div><!-- more -->
-
-<h1 id="日志采集"><a href="#日志采集" class="headerlink" title="日志采集"></a>日志采集</h1><p>日志采集使用的是较为轻量级的<code>Loki</code>。<code>Loki</code>的搭建和使用可参考<a href="http://rainbowhorse.site/%E8%BD%BB%E9%87%8F%E7%BA%A7%E6%97%A5%E5%BF%97%E9%87%87%E9%9B%86Loki%E6%90%AD%E5%BB%BA/">轻量级日志采集Loki搭建</a>。</p>
-<p>需要在<code>Grafana</code>中配置<code>Loki</code>的信息，然后在<code>Explore</code>中展示日志。</p>
-<div align=center><img src="../../../../images/2021/10-12/m5.png" algin="center"/></div>
-
-<h1 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h1><p>下面展示图是实际应用到项目中的大屏和监控效果图。</p>
-<div align=center><img src="../../../../images/2021/10-12/m3.png" algin="center"/></div>
-
-<div align=center><img src="../../../../images/2021/10-12/m2.png" algin="center"/></div>
-
-<div align=center><img src="../../../../images/2021/10-12/m1.png" algin="center"/></div>
-
-<div align=center><img src="../../../../images/2021/10-12/m6.jpg" algin="center"/></div>
-
-<p>在调用链路视图中，可以查看到整个调用分析中，每一个应用的<strong>调用类型</strong>、<strong>服务名</strong>、<strong>方法名称</strong>、<strong>实例名称</strong>、耗时区间，以及<strong>平均耗时</strong>等。能一步定位到哪一个方法存在性能瓶颈。</p>
-<p>借助于<code>Grafana</code>的特性，可让数据大屏展示更丰富：</p>
-<ol>
-<li>解决服务黑盒问题，让服务调用可视化，纵向分析服务调用；</li>
-<li>可及时发现服务调用失败、超时信息并告警，并可进行性能指标分析，让研发人员及时发现并解决问题；</li>
-<li>全方位、立体化、可视化监控。可选择具体系统编码、应用、方法进行查看，可根据各列进行排序。无需手动刷新，系统动态进行刷新（刷新时间可自定义）；</li>
-<li>可动态调整超时时间设置(应用无需重启)，可自定义设置单个方法的超时时间；</li>
-<li>结合<code>Grafana</code>特性可自定义告警阈值。可根据业务调整告警阈值。</li>
-</ol>
-<h1 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h1><p>服务监控组件通过切面捕获服务调用信息，<strong>捕获数据后异步存储后通过消息中间件上报到服务端，客户端无阻塞</strong>，正常情况下性损极小(微秒级)。</p>
-]]></content>
-      <categories>
-        <category>监控</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>分布式下ID生成算法 SnowFlake</title>
     <url>/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%8BID%E7%94%9F%E6%88%90%E7%AE%97%E6%B3%95-SnowFlake/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在做系统开发时，系统唯一ID是我们在设计一个系统的时候经常遇到的问题，也常常为这个问题纠结。生成ID的方法有很多，适应不同的场景、需求及性能要求。所以有些比较复杂的系统会有多个ID生成策略。在这里总结一下常用到的ID生成策略。<div align=center><img width="700" height="300" src="../../../../images/2017-9-21/%E8%87%AA%E5%A2%9EID/index.png" algin="center"/></div><span id="more"></span></p>
@@ -3968,6 +3918,56 @@
 ]]></content>
       <categories>
         <category>后端</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>关于服务监控的思考</title>
+    <url>/%E5%85%B3%E4%BA%8E%E6%9C%8D%E5%8A%A1%E7%9B%91%E6%8E%A7%E7%9A%84%E6%80%9D%E8%80%83/</url>
+    <content><![CDATA[<p>目前开源的组件如<code>Skywalking</code>、<code>Zipkin</code>只能做到横向监控，没法针对某一时间段方法纵向监控和告警。基于这种痛点和对一些组件的了解，自己写了一套可满足自己业务需求的服务监控组件，结合了<code>Grafana</code>、<code>Loki</code>、<code>Promtail</code>、<code>Elasticsearch</code>、<code>Kafka</code>等，可实现<strong>服务接口级监控、监控告警、告警日志在线查看</strong>等特性。<span id="more"></span></p>
+<h1 id="基础组件"><a href="#基础组件" class="headerlink" title="基础组件"></a>基础组件</h1><ul>
+<li><code>Grafana</code>：<a href="http://rainbowhorse.site/Grafana%E6%90%AD%E5%BB%BA/">Grafana 搭建</a></li>
+<li><code>Loki</code>：<a href="http://rainbowhorse.site/%E8%BD%BB%E9%87%8F%E7%BA%A7%E6%97%A5%E5%BF%97%E9%87%87%E9%9B%86Loki%E6%90%AD%E5%BB%BA/">轻量级日志采集Loki搭建</a></li>
+<li><code>Elasticsearch</code>：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.0/getting-started.html">介绍及使用文档</a></li>
+<li>消息中间件：<code>kafka</code></li>
+<li>服务监控组件(未开源)：<code>service-profiler</code></li>
+</ul>
+<h1 id="设计思想"><a href="#设计思想" class="headerlink" title="设计思想"></a>设计思想</h1><ol>
+<li><code>Client</code>收集服务调用信息后生成数据快照(<code>Snapshot</code>)，通过<code>Kafka</code>定时上报到<code>Server</code>端。<code>Client</code>通过<code>Promtail</code>采集错误日志上报到<code>Loki</code>服务器。</li>
+<li><code>Server</code>端统计聚合<code>Client</code>端上报的信息后落库<code>ES</code>。<code>Loki</code>服务端接收到<code>Client</code>端上报的日志后存储至磁盘并生成索引。</li>
+<li>通过<code>Grafana</code>整合统计信息和错误日志，通过丰富的仪表盘实时展示相关指标与分析结果。</li>
+<li>当相关指标超过自定义阈值时，通过通知平台告警到相关研发人员，及时处理告警。</li>
+</ol>
+<div align=center><img src="../../../../images/2021/10-12/m4.png" algin="center"/></div><!-- more -->
+
+<h1 id="日志采集"><a href="#日志采集" class="headerlink" title="日志采集"></a>日志采集</h1><p>日志采集使用的是较为轻量级的<code>Loki</code>。<code>Loki</code>的搭建和使用可参考<a href="http://rainbowhorse.site/%E8%BD%BB%E9%87%8F%E7%BA%A7%E6%97%A5%E5%BF%97%E9%87%87%E9%9B%86Loki%E6%90%AD%E5%BB%BA/">轻量级日志采集Loki搭建</a>。</p>
+<p>需要在<code>Grafana</code>中配置<code>Loki</code>的信息，然后在<code>Explore</code>中展示日志。</p>
+<div align=center><img src="../../../../images/2021/10-12/m5.png" algin="center"/></div>
+
+<h1 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h1><p>下面展示图是实际应用到项目中的大屏和监控效果图。</p>
+<div align=center><img src="../../../../images/2021/10-12/m3.png" algin="center"/></div>
+
+<div align=center><img src="../../../../images/2021/10-12/m2.png" algin="center"/></div>
+
+<div align=center><img src="../../../../images/2021/10-12/m1.png" algin="center"/></div>
+
+<div align=center><img src="../../../../images/2021/10-12/m6.jpg" algin="center"/></div>
+
+<p>在调用链路视图中，可以查看到整个调用分析中，每一个应用的<strong>调用类型</strong>、<strong>服务名</strong>、<strong>方法名称</strong>、<strong>实例名称</strong>、耗时区间，以及<strong>平均耗时</strong>等。能一步定位到哪一个方法存在性能瓶颈。</p>
+<p>借助于<code>Grafana</code>的特性，可让数据大屏展示更丰富：</p>
+<ol>
+<li>解决服务黑盒问题，让服务调用可视化，纵向分析服务调用；</li>
+<li>可及时发现服务调用失败、超时信息并告警，并可进行性能指标分析，让研发人员及时发现并解决问题；</li>
+<li>全方位、立体化、可视化监控。可选择具体系统编码、应用、方法进行查看，可根据各列进行排序。无需手动刷新，系统动态进行刷新（刷新时间可自定义）；</li>
+<li>可动态调整超时时间设置(应用无需重启)，可自定义设置单个方法的超时时间；</li>
+<li>结合<code>Grafana</code>特性可自定义告警阈值。可根据业务调整告警阈值。</li>
+</ol>
+<h1 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h1><p>服务监控组件通过切面捕获服务调用信息，<strong>捕获数据后异步存储后通过消息中间件上报到服务端，客户端无阻塞</strong>，正常情况下性损极小(微秒级)。</p>
+]]></content>
+      <categories>
+        <category>监控</category>
       </categories>
       <tags>
         <tag>java</tag>
@@ -4099,23 +4099,6 @@
       </tags>
   </entry>
   <entry>
-    <title>博客建成第一天</title>
-    <url>/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E6%88%90%E7%AC%AC%E4%B8%80%E5%A4%A9/</url>
-    <content><![CDATA[<blockquote>
-<p>经过几天的努力，自己的博客终于搭建起来了，打心里很开心。</p>
-<p>这不是贴吧，不是豆瓣，不是CSDN，这是我自己在互联网上的一小点领地。</p>
-<p>从开始博客基本样式，到域名，自己一步一步摸索搭建起来的，我相信自己可以做的更好，加油!</p>
-</blockquote>
-<div align=center><img width="300" height="300" src="../../../../images/avatar.jpg" algin="center"/></div>
-]]></content>
-      <categories>
-        <category>生活</category>
-      </categories>
-      <tags>
-        <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>命中SpringCloudGateway组件BUG</title>
     <url>/%E5%91%BD%E4%B8%ADSpringCloudGateway%E7%BB%84%E4%BB%B6BUG/</url>
     <content><![CDATA[<p>生产环境网关模块偶发的<code>OutOfDirectMemoryError</code>错误排查起来困难且曲折，2021-02-05号也出现过此问题，起初以为是JVM堆内存过小(当时是2g)导致，后调整到8g(2月5号调整)。但是经过上次调整后5月7号又出现此问题，于是猜测可能是由于网关模块存在内存泄露导致。</p>
@@ -4190,6 +4173,23 @@
       </categories>
       <tags>
         <tag>bug</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>博客建成第一天</title>
+    <url>/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E6%88%90%E7%AC%AC%E4%B8%80%E5%A4%A9/</url>
+    <content><![CDATA[<blockquote>
+<p>经过几天的努力，自己的博客终于搭建起来了，打心里很开心。</p>
+<p>这不是贴吧，不是豆瓣，不是CSDN，这是我自己在互联网上的一小点领地。</p>
+<p>从开始博客基本样式，到域名，自己一步一步摸索搭建起来的，我相信自己可以做的更好，加油!</p>
+</blockquote>
+<div align=center><img width="300" height="300" src="../../../../images/avatar.jpg" algin="center"/></div>
+]]></content>
+      <categories>
+        <category>生活</category>
+      </categories>
+      <tags>
+        <tag>随笔</tag>
       </tags>
   </entry>
   <entry>
@@ -4613,86 +4613,6 @@
       </tags>
   </entry>
   <entry>
-    <title>数据库主从不一致</title>
-    <url>/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%BB%E4%BB%8E%E4%B8%8D%E4%B8%80%E8%87%B4/</url>
-    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在开发过程中，进场遇到数据库主从分离来降低读写的压力，但是数据库主从同步是有延时的，这里聊一聊数据库主库与从库的一致性问题。<div align=center><img width="700" height="300" src="../../../../images/2018-7/%E4%B8%BB%E4%BB%8E%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/index.png" algin="center"/></p>
-</div><span id="more"></span>
-
-<h1 id="常见的数据库集群架构"><a href="#常见的数据库集群架构" class="headerlink" title="常见的数据库集群架构"></a>常见的数据库集群架构</h1><p><strong>一主多从，主从同步，读写分离</strong></p>
-<div align=center><img width="1000" height="300" src="../../../../images/2018-7/%E4%B8%BB%E4%BB%8E%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/1.png" algin="center"/></div>
-
-<p>如上图所示</p>
-<ul>
-<li>一个主库提供写服务</li>
-<li>多个从库提供读服务，可以增加从库提升读性能</li>
-<li>主从之间同步</li>
-</ul>
-<blockquote>
-<p>任何方案不要忘了本心，增加从库的本心是提升读性能</p>
-</blockquote>
-<h1 id="为什么会出现不一致"><a href="#为什么会出现不一致" class="headerlink" title="为什么会出现不一致"></a>为什么会出现不一致</h1><p><strong>主从同步有时延</strong>，这个时延期间读从库，可能读到不一致的数据。</p>
-<div align=center><img width="1000" height="300" src="../../../../images/2018-7/%E4%B8%BB%E4%BB%8E%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/2.png" algin="center"/></div>
-
-<p>如上图</p>
-<ol>
-<li>服务发齐了一个写请求</li>
-<li>服务又发起了一个读请求，此时同步未完成，读到一个不一致的脏数据</li>
-<li>数据库主从同步最后才完成</li>
-</ol>
-<blockquote>
-<p>任何数据冗余，必将引发一致性问题。</p>
-</blockquote>
-<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><h2 id="忽略"><a href="#忽略" class="headerlink" title="忽略"></a>忽略</h2><p>任何脱离业务的架构设计都是耍流氓，绝大部分业务，例如：百度搜索，淘宝订单，QQ消息，58帖子都允许短时间不一致。</p>
-<blockquote>
-<p>如果业务能接受，最推崇此法。</p>
-</blockquote>
-<p><strong>如果业务能够接受，别把系统架构搞得太复杂。</strong></p>
-<h2 id="强制读主"><a href="#强制读主" class="headerlink" title="强制读主"></a>强制读主</h2><div align=center><img width="1000" height="300" src="../../../../images/2018-7/%E4%B8%BB%E4%BB%8E%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/3.png" algin="center"/></div>
-
-<p>如上图</p>
-<ol>
-<li>使用一个<strong>高可用主库</strong>提供数据库服务</li>
-<li>读和写都落到主库上</li>
-<li>采用<strong>缓存来提升系统读性能</strong></li>
-</ol>
-<p>这是很常见的微服务架构，可以避免数据库主从一致性问题。</p>
-<h2 id="选择性读主"><a href="#选择性读主" class="headerlink" title="选择性读主"></a>选择性读主</h2><p>强制读主过于粗暴，毕竟只有少量写请求，很短时间，可能读取到脏数据。</p>
-<p>有没有可能实现，<strong>只有这一段时间，可能读到从库脏数据的读请求读主</strong>，平时读从呢？</p>
-<p>可以利用一个缓存记录必须读主的数据。</p>
-<div align=center><img width="1000" height="300" src="../../../../images/2018-7/%E4%B8%BB%E4%BB%8E%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/4.png" algin="center"/></div>
-
-<p>如上图，当写请求发生时：</p>
-<ol>
-<li>写主库</li>
-<li>将哪个库，哪个表，哪个主键三个信息拼装一个key设置到cache里，这条记录的超时时间，设置为“主从同步时延”</li>
-</ol>
-<blockquote>
-<p>key的格式为“db:table:PK”，假设主从延时为1s，这个key的cache超时时间也为1s。</p>
-</blockquote>
-<div align=center><img width="1000" height="300" src="../../../../images/2018-7/%E4%B8%BB%E4%BB%8E%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/5.png" algin="center"/></div>
-
-<p>如上图，当读请求发生时：</p>
-<p>这是要读哪个库，哪个表，哪个主键的数据呢，也将这三个信息拼装一个key，到cache里去查询，如果：</p>
-<ol>
-<li><strong>cache里有这个key</strong>，说明1s内刚发生过写请求，数据库主从同步可能还没有完成，此时就应该<strong>去主库查询</strong>。</li>
-<li><strong>cache里没有这个key</strong>，说明最近没有发生过写请求，此时就可以<strong>去从库查询</strong>。</li>
-</ol>
-<p>以此，保证读到的一定不是不一致的脏数据。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>数据库主库和从库不一致，常见有这么几种优化方案：</p>
-<ol>
-<li>业务可以接受，系统不优化；</li>
-<li>强制读主，高可用主库，用缓存提高读性能；</li>
-<li>在cache里记录哪些记录发生过写请求，来路由读主还是读从。</li>
-</ol>
-]]></content>
-      <categories>
-        <category>后端</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>微服务架构设计</title>
     <url>/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</url>
     <content><![CDATA[<h1 id="微服务架构详解"><a href="#微服务架构详解" class="headerlink" title="微服务架构详解"></a><a href="https://www.mubucm.com/doc/sUZSGEXM8p">微服务架构详解</a></h1><h2 id="微服务VS-SOA"><a href="#微服务VS-SOA" class="headerlink" title="微服务VS SOA"></a>微服务VS SOA</h2><div align=center><img src="../../../../images/2022/1-3/6.1_compare.jpg" algin="center"/></div>
@@ -4779,6 +4699,86 @@
       </categories>
       <tags>
         <tag>架构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库主从不一致</title>
+    <url>/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%BB%E4%BB%8E%E4%B8%8D%E4%B8%80%E8%87%B4/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在开发过程中，进场遇到数据库主从分离来降低读写的压力，但是数据库主从同步是有延时的，这里聊一聊数据库主库与从库的一致性问题。<div align=center><img width="700" height="300" src="../../../../images/2018-7/%E4%B8%BB%E4%BB%8E%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/index.png" algin="center"/></p>
+</div><span id="more"></span>
+
+<h1 id="常见的数据库集群架构"><a href="#常见的数据库集群架构" class="headerlink" title="常见的数据库集群架构"></a>常见的数据库集群架构</h1><p><strong>一主多从，主从同步，读写分离</strong></p>
+<div align=center><img width="1000" height="300" src="../../../../images/2018-7/%E4%B8%BB%E4%BB%8E%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/1.png" algin="center"/></div>
+
+<p>如上图所示</p>
+<ul>
+<li>一个主库提供写服务</li>
+<li>多个从库提供读服务，可以增加从库提升读性能</li>
+<li>主从之间同步</li>
+</ul>
+<blockquote>
+<p>任何方案不要忘了本心，增加从库的本心是提升读性能</p>
+</blockquote>
+<h1 id="为什么会出现不一致"><a href="#为什么会出现不一致" class="headerlink" title="为什么会出现不一致"></a>为什么会出现不一致</h1><p><strong>主从同步有时延</strong>，这个时延期间读从库，可能读到不一致的数据。</p>
+<div align=center><img width="1000" height="300" src="../../../../images/2018-7/%E4%B8%BB%E4%BB%8E%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/2.png" algin="center"/></div>
+
+<p>如上图</p>
+<ol>
+<li>服务发齐了一个写请求</li>
+<li>服务又发起了一个读请求，此时同步未完成，读到一个不一致的脏数据</li>
+<li>数据库主从同步最后才完成</li>
+</ol>
+<blockquote>
+<p>任何数据冗余，必将引发一致性问题。</p>
+</blockquote>
+<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><h2 id="忽略"><a href="#忽略" class="headerlink" title="忽略"></a>忽略</h2><p>任何脱离业务的架构设计都是耍流氓，绝大部分业务，例如：百度搜索，淘宝订单，QQ消息，58帖子都允许短时间不一致。</p>
+<blockquote>
+<p>如果业务能接受，最推崇此法。</p>
+</blockquote>
+<p><strong>如果业务能够接受，别把系统架构搞得太复杂。</strong></p>
+<h2 id="强制读主"><a href="#强制读主" class="headerlink" title="强制读主"></a>强制读主</h2><div align=center><img width="1000" height="300" src="../../../../images/2018-7/%E4%B8%BB%E4%BB%8E%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/3.png" algin="center"/></div>
+
+<p>如上图</p>
+<ol>
+<li>使用一个<strong>高可用主库</strong>提供数据库服务</li>
+<li>读和写都落到主库上</li>
+<li>采用<strong>缓存来提升系统读性能</strong></li>
+</ol>
+<p>这是很常见的微服务架构，可以避免数据库主从一致性问题。</p>
+<h2 id="选择性读主"><a href="#选择性读主" class="headerlink" title="选择性读主"></a>选择性读主</h2><p>强制读主过于粗暴，毕竟只有少量写请求，很短时间，可能读取到脏数据。</p>
+<p>有没有可能实现，<strong>只有这一段时间，可能读到从库脏数据的读请求读主</strong>，平时读从呢？</p>
+<p>可以利用一个缓存记录必须读主的数据。</p>
+<div align=center><img width="1000" height="300" src="../../../../images/2018-7/%E4%B8%BB%E4%BB%8E%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/4.png" algin="center"/></div>
+
+<p>如上图，当写请求发生时：</p>
+<ol>
+<li>写主库</li>
+<li>将哪个库，哪个表，哪个主键三个信息拼装一个key设置到cache里，这条记录的超时时间，设置为“主从同步时延”</li>
+</ol>
+<blockquote>
+<p>key的格式为“db:table:PK”，假设主从延时为1s，这个key的cache超时时间也为1s。</p>
+</blockquote>
+<div align=center><img width="1000" height="300" src="../../../../images/2018-7/%E4%B8%BB%E4%BB%8E%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98/5.png" algin="center"/></div>
+
+<p>如上图，当读请求发生时：</p>
+<p>这是要读哪个库，哪个表，哪个主键的数据呢，也将这三个信息拼装一个key，到cache里去查询，如果：</p>
+<ol>
+<li><strong>cache里有这个key</strong>，说明1s内刚发生过写请求，数据库主从同步可能还没有完成，此时就应该<strong>去主库查询</strong>。</li>
+<li><strong>cache里没有这个key</strong>，说明最近没有发生过写请求，此时就可以<strong>去从库查询</strong>。</li>
+</ol>
+<p>以此，保证读到的一定不是不一致的脏数据。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>数据库主库和从库不一致，常见有这么几种优化方案：</p>
+<ol>
+<li>业务可以接受，系统不优化；</li>
+<li>强制读主，高可用主库，用缓存提高读性能；</li>
+<li>在cache里记录哪些记录发生过写请求，来路由读主还是读从。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
       </tags>
   </entry>
   <entry>
