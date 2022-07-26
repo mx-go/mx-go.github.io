@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://mx-go.github.io/%E5%A2%9E%E5%BC%BA%E5%BC%8FSnowFlake-%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2022-07-26</lastmod>
+  </url>
+  <url>
+    <loc>https://mx-go.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</loc>
+    <lastmod>2022-07-26</lastmod>
+  </url>
+  <url>
     <loc>https://mx-go.github.io/%E7%BD%91%E5%9D%80%E6%94%B6%E8%97%8F/</loc>
     <lastmod>2022-07-16</lastmod>
   </url>
   <url>
     <loc>https://mx-go.github.io/%E5%BC%82%E5%9C%B0%E5%A4%9A%E6%B4%BB%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</loc>
     <lastmod>2022-04-02</lastmod>
-  </url>
-  <url>
-    <loc>https://mx-go.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</loc>
-    <lastmod>2022-03-19</lastmod>
   </url>
   <url>
     <loc>https://mx-go.github.io/Java%E6%B7%B7%E6%B7%86%E5%B7%A5%E5%85%B7-ProGuard/</loc>
