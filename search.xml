@@ -56,6 +56,33 @@
       </tags>
   </entry>
   <entry>
+    <title>Bug简记-Spring返回字符串加引号</title>
+    <url>/Bug%E7%AE%80%E8%AE%B0-Spring%E8%BF%94%E5%9B%9E%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8A%A0%E5%BC%95%E5%8F%B7/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在开发过程中会遇到这种各样的bug，也是自己吃过的亏。以后在这里会把自己遇到的bug记录下来，吸取教训，避免犯同样的错误。<div align=center><img width="220" height="160" src="../../../../images/2018-8/bug.jpg" algin="center"/></div><span id="more"></span></p>
+<h1 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h1><p>在与第三方对接的接口中，对方推送消息接口定义如果接收成功返回<em>success</em>，反之返回其他字符串，如果不是<em>success</em>字符串就会再重复推送三次。自己在代码中为：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value = &quot;&quot;, method = RequestMethod.POST)</span></span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">callBack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//...something</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码自我感觉没问题，但是线上发现即使返回的是<em>success</em>字符串也会重复推送。让对方排查了下，对方说我们推送的不是<em>success</em>字符串。WTF？看了日志*result[success]*没问题啊，直到自己亲自调试了下接口：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 请求自己接口获取返回值</span></span><br><span class="line">String result = getResult();</span><br><span class="line"><span class="comment">// 返回true</span></span><br><span class="line">System.out.println(<span class="string">&quot;&quot;</span>\success\<span class="string">&quot;&quot;</span>.equals(result));</span><br></pre></td></tr></table></figure>
+
+<p>发现接口返回值<em>success</em>被加上了双引号。</p>
+<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><p><strong>在SpringMVC中使用@ResponseBody注解时会强制返回json格式，在返回字符串时会默认加上双引号</strong>。这才导致返回的字符串多了双引号。</p>
+<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><p>解决方法也很简单。只需要添加字符串解析器，避免String类型直接解析成JSON。</p>
+<p>方法一：jackson</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mvc:annotation-driven</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mvc:message-converters</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 避免string类型直接解析成json--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">ref</span>=<span class="string">&quot;utf8charset&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;writeAcceptCharset&quot;</span> <span class="attr">value</span>=<span class="string">&quot;false&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;org.springframework.http.converter.json.MappingJackson2HttpMessageConverter&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;objectMapper&quot;</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;com.fasterxml.jackson.databind.ObjectMapper&quot;</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;serializationInclusion&quot;</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">value</span> <span class="attr">type</span>=<span class="string">&quot;com.fasterxml.jackson.annotation.JsonInclude.Include&quot;</span>&gt;</span>NON_NULL<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">mvc:message-converters</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mvc:annotation-driven</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>方法二：fastjson</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mvc:annotation-driven</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mvc:message-converters</span> <span class="attr">register-defaults</span>=<span class="string">&quot;false&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 避免String类型直接解析成json--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;</span>/&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 避免IE执行AJAX时,返回JSON出现下载文件 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;fastJsonHttpMessageConverter&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;supportedMediaTypes&quot;</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">list</span>&gt;</span></span><br><span class="line">                        <span class="comment">&lt;!-- 这里顺序不能反，一定先写text/html,不然ie下出现下载提示 --&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">value</span>&gt;</span>text/html;charset=UTF-8<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">value</span>&gt;</span>application/json;charset=UTF-8<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">list</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">mvc:message-converters</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mvc:annotation-driven</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>踩坑记录</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Bug简记-长轮训Response</title>
     <url>/Bug%E7%AE%80%E8%AE%B0-%E9%95%BF%E8%BD%AE%E8%AE%ADResponse/</url>
     <content><![CDATA[<p>客服系统服务中使用Servlet3.0异步长轮训，服务压力大时，导致消息错乱。</p>
@@ -641,33 +668,6 @@
       <tags>
         <tag>java</tag>
         <tag>tips</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Bug简记-Spring返回字符串加引号</title>
-    <url>/Bug%E7%AE%80%E8%AE%B0-Spring%E8%BF%94%E5%9B%9E%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8A%A0%E5%BC%95%E5%8F%B7/</url>
-    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在开发过程中会遇到这种各样的bug，也是自己吃过的亏。以后在这里会把自己遇到的bug记录下来，吸取教训，避免犯同样的错误。<div align=center><img width="220" height="160" src="../../../../images/2018-8/bug.jpg" algin="center"/></div><span id="more"></span></p>
-<h1 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h1><p>在与第三方对接的接口中，对方推送消息接口定义如果接收成功返回<em>success</em>，反之返回其他字符串，如果不是<em>success</em>字符串就会再重复推送三次。自己在代码中为：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value = &quot;&quot;, method = RequestMethod.POST)</span></span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">callBack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//...something</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这段代码自我感觉没问题，但是线上发现即使返回的是<em>success</em>字符串也会重复推送。让对方排查了下，对方说我们推送的不是<em>success</em>字符串。WTF？看了日志*result[success]*没问题啊，直到自己亲自调试了下接口：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 请求自己接口获取返回值</span></span><br><span class="line">String result = getResult();</span><br><span class="line"><span class="comment">// 返回true</span></span><br><span class="line">System.out.println(<span class="string">&quot;&quot;</span>\success\<span class="string">&quot;&quot;</span>.equals(result));</span><br></pre></td></tr></table></figure>
-
-<p>发现接口返回值<em>success</em>被加上了双引号。</p>
-<h1 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h1><p><strong>在SpringMVC中使用@ResponseBody注解时会强制返回json格式，在返回字符串时会默认加上双引号</strong>。这才导致返回的字符串多了双引号。</p>
-<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><p>解决方法也很简单。只需要添加字符串解析器，避免String类型直接解析成JSON。</p>
-<p>方法一：jackson</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mvc:annotation-driven</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mvc:message-converters</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 避免string类型直接解析成json--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">ref</span>=<span class="string">&quot;utf8charset&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;writeAcceptCharset&quot;</span> <span class="attr">value</span>=<span class="string">&quot;false&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;org.springframework.http.converter.json.MappingJackson2HttpMessageConverter&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;objectMapper&quot;</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;com.fasterxml.jackson.databind.ObjectMapper&quot;</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;serializationInclusion&quot;</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">value</span> <span class="attr">type</span>=<span class="string">&quot;com.fasterxml.jackson.annotation.JsonInclude.Include&quot;</span>&gt;</span>NON_NULL<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">mvc:message-converters</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mvc:annotation-driven</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>方法二：fastjson</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mvc:annotation-driven</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mvc:message-converters</span> <span class="attr">register-defaults</span>=<span class="string">&quot;false&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 避免String类型直接解析成json--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;</span>/&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 避免IE执行AJAX时,返回JSON出现下载文件 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;fastJsonHttpMessageConverter&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;supportedMediaTypes&quot;</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">list</span>&gt;</span></span><br><span class="line">                        <span class="comment">&lt;!-- 这里顺序不能反，一定先写text/html,不然ie下出现下载提示 --&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">value</span>&gt;</span>text/html;charset=UTF-8<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">value</span>&gt;</span>application/json;charset=UTF-8<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">list</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">mvc:message-converters</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mvc:annotation-driven</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>踩坑记录</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -1766,6 +1766,214 @@
       </categories>
       <tags>
         <tag>工具</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MongoDB中的索引(一)</title>
+    <url>/MongoDB%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在 MongoDB 典型的数据库查询场景中，索引 index 扮演着非常重要的作用，如果没有索引，MongoDB 需要为了找到一个匹配的文档而扫描整个 collection，代价非常高昂。<div align=center><img width="220" height="220" src="../../../../images/2019/1-3/MongoDB-1.jpg" algin="center"/></div><span id="more"></span></p>
+<h1 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h1><p>MongoDB 的索引使用的 B-tree 这一特殊的数据结构，借助索引 MongoDB 可以高效的匹配到需要查询的数据，以下图来为例(来自官方)：</p>
+<div align=center><img src="../../../../images/2019/1-3/MongoDB-2.jpg" algin="center"/></div>
+
+<p>score 索引不但可以高效的支持 range 查询，此外也可以让 MongoDB 高效地返回排序之后的数据，MongoDB 的索引同其它数据库系统很相似，MongoDB 的索引是定义在 collection 级别的，支持对任何单个 field 以及任何 sub-field 建立索引。</p>
+<h1 id="默认的-id-index"><a href="#默认的-id-index" class="headerlink" title="默认的 _id index"></a>默认的 <code>_id</code> index</h1><p>MongoDB 在 collection 创建时会默认建立一个基于<code>_id</code>的唯一性索引作为 document 的 primary key，这个 index 无法被删除。</p>
+<p>Mongodb 支持多种方式创建索引，具体创建方式见官方文档 <a href="https://docs.mongodb.com/manual/indexes/#create-an-index">https://docs.mongodb.com/manual/indexes/#create-an-index</a></p>
+<h1 id="Single-field-index-单索引"><a href="#Single-field-index-单索引" class="headerlink" title="Single field index - 单索引"></a>Single field index - 单索引</h1><p>Single field index 是 MongoDB 最简单的索引类型，不同于 MySQL，MongoDB 的索引是有序的 ascending 或 descending。</p>
+<div align=center><img src="../../../../images/2019/1-3/MongoDB-3.jpg" algin="center"/></div>
+
+<p>但是对于 single field index 来说，索引的顺序无关紧要，因为 MongoDB 支持任意顺序遍历 single field index。</p>
+<p>在此创建一个 records collection：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;_id&quot;</span>: ObjectId(<span class="string">&quot;570c04a4ad233577f97dc459&quot;</span>),</span><br><span class="line">  <span class="attr">&quot;score&quot;</span>: <span class="number">1034</span>,</span><br><span class="line">  <span class="attr">&quot;location&quot;</span>: &#123; state: <span class="string">&quot;NY&quot;</span>, city: <span class="string">&quot;New York&quot;</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后创建一个 single field index：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.records.createIndex( &#123; score: <span class="number">1</span> &#125; )</span><br></pre></td></tr></table></figure>
+
+<p>上面的语句在 collection 的 score field 上创建了一个 ascending 索引，这个索引支持以下查询：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.records.find( &#123; score: <span class="number">2</span> &#125; )</span><br><span class="line">db.records.find( &#123; score: &#123; $gt: <span class="number">10</span> &#125; &#125; )</span><br></pre></td></tr></table></figure>
+
+<p>可以使用 MongoDB 的 <em>explain</em> 来对以上两个查询进行分析：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.records.find(&#123;score:<span class="number">2</span>&#125;).explain(&#x27;executionStats&#x27;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="single-index-on-embedded-field-内嵌字段上的单索引"><a href="#single-index-on-embedded-field-内嵌字段上的单索引" class="headerlink" title="single index on embedded field - 内嵌字段上的单索引"></a>single index on embedded field - 内嵌字段上的单索引</h2><p>此外 MongoDB 还支持对 embedded field 进行索引创建：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.records.createIndex( &#123; <span class="attr">&quot;location.state&quot;</span>: <span class="number">1</span> &#125; )</span><br></pre></td></tr></table></figure>
+
+<p>上面的 embedded index 支持以下查询：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.records.find( &#123; <span class="attr">&quot;location.state&quot;</span>: <span class="string">&quot;CA&quot;</span> &#125; )</span><br><span class="line">db.records.find( &#123; <span class="attr">&quot;location.city&quot;</span>: <span class="string">&quot;Albany&quot;</span>, <span class="attr">&quot;location.state&quot;</span>: <span class="string">&quot;NY&quot;</span> &#125; )</span><br></pre></td></tr></table></figure>
+
+<h2 id="sort-on-single-index-单索引的排序"><a href="#sort-on-single-index-单索引的排序" class="headerlink" title="sort on single index - 单索引的排序"></a>sort on single index - 单索引的排序</h2><p>对于 single index 来说，由于 MongoDB index 本身支持顺序查找，所以对于single index 来说:</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.records.find().sort( &#123; score: <span class="number">1</span> &#125; )</span><br><span class="line">db.records.find().sort( &#123; score: <span class="number">-1</span> &#125; )</span><br><span class="line">db.records.find(&#123;score:&#123;$lte:<span class="number">100</span>&#125;&#125;).sort( &#123; score: <span class="number">-1</span> &#125; )</span><br></pre></td></tr></table></figure>
+
+<p>这些查询语句都是满足使用 index 的。</p>
+<h1 id="Compound-index-组合索引"><a href="#Compound-index-组合索引" class="headerlink" title="Compound index - 组合索引"></a>Compound index - 组合索引</h1><p>Mongodb 支持对多个 field 建立索引，称之为 <em>compound index</em>。<em>Compound index</em> 中 field 的顺序对索引的性能有至关重要的影响，比如索引 <em><strong>{userid:1, score:-1}</strong></em> 首先根据 userid 排序，然后再在每个 userid 中根据 score 排序。</p>
+<div align=center><img src="../../../../images/2019/1-3/MongoDB-4.jpg" algin="center"/></div>
+
+<h2 id="创建-Compound-index"><a href="#创建-Compound-index" class="headerlink" title="创建 Compound index"></a>创建 Compound index</h2><p>在此创建一个 products collection：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> <span class="attr">&quot;_id&quot;</span>: ObjectId(...),</span><br><span class="line"> <span class="attr">&quot;item&quot;</span>: <span class="string">&quot;Banana&quot;</span>,</span><br><span class="line"> <span class="attr">&quot;category&quot;</span>: [<span class="string">&quot;food&quot;</span>, <span class="string">&quot;produce&quot;</span>, <span class="string">&quot;grocery&quot;</span>],</span><br><span class="line"> <span class="attr">&quot;location&quot;</span>: <span class="string">&quot;4th Street Store&quot;</span>,</span><br><span class="line"> <span class="attr">&quot;stock&quot;</span>: <span class="number">4</span>,</span><br><span class="line"> <span class="attr">&quot;type&quot;</span>: <span class="string">&quot;cases&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后创建一个 compound index：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.products.createIndex( &#123; <span class="attr">&quot;item&quot;</span>: <span class="number">1</span>, <span class="attr">&quot;stock&quot;</span>: <span class="number">1</span> &#125; )</span><br></pre></td></tr></table></figure>
+
+<p>这个 index 引用的 document 首先会根据 item 排序，然后在 每个 item 中，又会根据 stock 排序，以下语句都满足该索引：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.products.find( &#123; item: <span class="string">&quot;Banana&quot;</span> &#125; )</span><br><span class="line">db.products.find( &#123; item: <span class="string">&quot;Banana&quot;</span>, stock: &#123; $gt: <span class="number">5</span> &#125; &#125; )</span><br></pre></td></tr></table></figure>
+
+<p>条件 {item: “Banana”} 满足是因为这个 query 满足 prefix 原则。</p>
+<h2 id="使用-compound-index-需要满足-prefix-原则"><a href="#使用-compound-index-需要满足-prefix-原则" class="headerlink" title="使用 compound index 需要满足 prefix 原则"></a>使用 compound index 需要满足 prefix 原则</h2><p>Index prefix 是指 index fields 的左前缀子集，考虑以下索引：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123; <span class="attr">&quot;item&quot;</span>: <span class="number">1</span>, <span class="attr">&quot;location&quot;</span>: <span class="number">1</span>, <span class="attr">&quot;stock&quot;</span>: <span class="number">1</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个索引包含以下 index prefix：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123; item: <span class="number">1</span> &#125;</span><br><span class="line">&#123; item: <span class="number">1</span>, location: <span class="number">1</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以只要语句满足 index prefix 原则都是可以支持使用 compound index ：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.products.find( &#123; item: <span class="string">&quot;Banana&quot;</span> &#125; )</span><br><span class="line">db.products.find( &#123; item: <span class="string">&quot;Banana&quot;</span>,location:<span class="string">&quot;4th Street Store&quot;</span>&#125; )</span><br><span class="line">db.products.find( &#123; item: <span class="string">&quot;Banana&quot;</span>,location:<span class="string">&quot;4th Street Store&quot;</span>,stock:<span class="number">4</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>相反如果不满足 index prefix 则无法使用索引，比如以下 field 的查询：</p>
+<ul>
+<li>the <strong>location</strong> field</li>
+<li>the <strong>stock</strong> field</li>
+<li>the <strong>location</strong> and <strong>stock</strong> fields</li>
+</ul>
+<p>由于 index prefix 的存在，如果一个 collection 既有 <strong>{a:1, b:1}</strong> 索引 ，也有 <strong>{a:1}</strong> 索引，如果二者没有稀疏或者唯一性的要求，single index 可以移除。</p>
+<h2 id="Sort-on-Compound-index-复合索引的排序"><a href="#Sort-on-Compound-index-复合索引的排序" class="headerlink" title="Sort on Compound index - 复合索引的排序"></a>Sort on Compound index - 复合索引的排序</h2><p>前文说过 single index 的 sort 顺序无关紧要，但是 compound index 则完全不同，考虑有如下场景：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.events.find().sort( &#123; username: <span class="number">1</span>, date: <span class="number">-1</span> &#125; )</span><br></pre></td></tr></table></figure>
+
+<p>上面的查询首先根据 username 进行 ascending 排序，然后再对结果进行 date descending 。</p>
+<p>下面的查询：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.events.find().sort( &#123; username: <span class="number">-1</span>, date: <span class="number">1</span> &#125; )</span><br></pre></td></tr></table></figure>
+
+<p>则是首先根据 username 进行 descending 排序，然后再对 date 进行 ascending 排序。</p>
+<p>如果想要索引满足以上两种查询和排序，索引类型需要满足如下条件：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.events.createIndex( &#123; <span class="attr">&quot;username&quot;</span> : <span class="number">1</span>, <span class="attr">&quot;date&quot;</span> : <span class="number">-1</span> &#125; ）</span><br></pre></td></tr></table></figure>
+
+<p>也就是 <strong>username 和 date 的顺序不同</strong>，如果顺序相同则没有办法满足以上查询，比如：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.events.find().sort( &#123; username: <span class="number">1</span>, date: <span class="number">1</span> &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>也就是说 sort 的顺序必须要和创建索引的顺序是一致的，一致的意思是不一定非要一样，总结起来大致如下：</p>
+<table>
+<thead>
+<tr>
+<th>{ “username” : 1, “date” : -1 }</th>
+<th>{ “username” : 1, “date” : 1 }</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>sort( { username: 1, date: -1 } )</td>
+<td>支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>sort( { username: -1, date: 1 } )</td>
+<td>支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>sort( { username: 1, date: 1 } )</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>sort( { username: -1, date: -1 } )</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+</tbody></table>
+<p><strong>即排序的顺序必须要和索引一致，逆序之后一致也可以</strong>，下表清晰的列出了 compound index 满足的 query 语句：</p>
+<table>
+<thead>
+<tr>
+<th>query</th>
+<th>index</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>db.data.find().sort( { a: 1 } )</td>
+<td>{ a: 1 }</td>
+</tr>
+<tr>
+<td>db.data.find().sort( { a: -1 } )</td>
+<td>{ a: 1 }</td>
+</tr>
+<tr>
+<td>db.data.find().sort( { a: 1, b: 1 } )</td>
+<td>{ a: 1, b: 1 }</td>
+</tr>
+<tr>
+<td>db.data.find().sort( { a: -1, b: -1 } )</td>
+<td>{ a: 1, b: 1 }</td>
+</tr>
+<tr>
+<td>db.data.find().sort( { a: 1, b: 1, c: 1 } )</td>
+<td>{ a: 1, b: 1, c: 1 }</td>
+</tr>
+<tr>
+<td>db.data.find( { a: { $gt: 4 } } ).sort( { a: 1, b: 1 } )</td>
+<td>{ a: 1, b: 1 }</td>
+</tr>
+</tbody></table>
+<p><strong>即排序的 filed 也要满足 index prefix 原则</strong>。</p>
+<h2 id="非-index-prefix-的排序"><a href="#非-index-prefix-的排序" class="headerlink" title="非 index prefix 的排序"></a>非 index prefix 的排序</h2><p>考虑索引 <strong>{ a: 1, b: 1, c: 1, d: 1 }<strong>，即使排序的 field 不满足 index prefix 也是可以的，但前提条件是</strong>排序 field 之前的 index field 必须是等值条件</strong>，</p>
+<table>
+<thead>
+<tr>
+<th>Example</th>
+<th>Index Prefix</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>r1</td>
+<td>db.data.find( { a: 5 } ).sort( { b: 1, c: 1 } )</td>
+<td>{ a: 1 , b: 1, c: 1 }</td>
+</tr>
+<tr>
+<td>r2</td>
+<td>db.data.find( { b: 3, a: 4 } ).sort( { c: 1 } )</td>
+<td>{ a: 1, b: 1, c: 1 }</td>
+</tr>
+<tr>
+<td>r3</td>
+<td>db.data.find( { a: 5, b: { $lt: 3} } ).sort( { b: 1 } )</td>
+<td>{ a: 1, b: 1 }</td>
+</tr>
+</tbody></table>
+<p>上面表格 r1 的排序 field 是 b 和 c，a 是 index field 而且在 b 和 c 之前，可以使用索引；r3 的排序中 b 是范围查询，但是 b 之前的 a 用的也是等值条件，也就是只要排序 field 之前的 field 满足等值条件即可，其它的 field 可以任意条件。</p>
+<h1 id="如何建立正确索引"><a href="#如何建立正确索引" class="headerlink" title="如何建立正确索引"></a>如何建立正确索引</h1><p>前文基本覆盖了日常使用 MongoDB 所需要的主要索引知识，但是如何才建立正确的索引？</p>
+<h2 id="使用-explain-分析查询语句"><a href="#使用-explain-分析查询语句" class="headerlink" title="使用 explain 分析查询语句"></a>使用 explain 分析查询语句</h2><p>MongoDB 默认提供了类似 MySQL explain 的语句来分析查询语句的来对我们正确建立索引提供帮助，在建立索引时我们需要对照 explain 对各种查询条件进行分析。</p>
+<h2 id="理解-field-顺序对索引的影响"><a href="#理解-field-顺序对索引的影响" class="headerlink" title="理解 field 顺序对索引的影响"></a>理解 field 顺序对索引的影响</h2><p>索引的真正作用是帮助我们限制数据的选择范围，比如 Compound index 多个 feild 的顺序如何决定，应该首选可以最大化的缩小数据查找范围的 field，这样如果第一个 field 可以迅速缩小数据的查找范围，那么后续的 feild 匹配的行就会变少很多。考虑语句：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;&#x27;start_time&#x27;: &#123;&#x27;$lte&#x27;: present&#125;, &#x27;end_time&#x27;: &#123;&#x27;$gt&#x27;: present&#125;, &#x27;origin&#x27;: <span class="number">1</span>, &#x27;orientation&#x27;: &#x27;quality&#x27;, &#x27;id&#x27;: &#123;&#x27;$gt&#x27;: max_id&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>考虑如下索引</p>
+<table>
+<thead>
+<tr>
+<th>索引</th>
+<th>nscanded</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>r1</td>
+<td>{start_time:1, end_time: 1, origin: 1, id: 1, orientation: 1}</td>
+<td>12959</td>
+</tr>
+<tr>
+<td>r2</td>
+<td>{start_time:1, end_time: 1, origin: 1, orientation: 1, id: 1}</td>
+<td>2700</td>
+</tr>
+</tbody></table>
+<p>由于 field <code>id</code> 和 <code>orientation</code> 的顺序不同会导致需要扫描的 documents 数量差异巨大，说明二者对对数据的限制范围差别很大，优先考虑能够最大化限制数据范围的索引顺序。</p>
+<h2 id="监控慢查询"><a href="#监控慢查询" class="headerlink" title="监控慢查询"></a>监控慢查询</h2><p>始终对生成环境产生的慢查询进行第一时间分析，提早发现问题并解决。</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><a href="https://docs.mongodb.com/manual/core/index-compound/">https://docs.mongodb.com/manual/core/index-compound/</a></li>
+<li><a href="http://www.infoq.com/cn/articles/improve-find-performance-in-mongo">http://www.infoq.com/cn/articles/improve-find-performance-in-mongo</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>MongoDB</tag>
       </tags>
   </entry>
   <entry>
@@ -5197,212 +5405,64 @@
       </tags>
   </entry>
   <entry>
-    <title>MongoDB中的索引(一)</title>
-    <url>/MongoDB%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95/</url>
-    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在 MongoDB 典型的数据库查询场景中，索引 index 扮演着非常重要的作用，如果没有索引，MongoDB 需要为了找到一个匹配的文档而扫描整个 collection，代价非常高昂。<div align=center><img width="220" height="220" src="../../../../images/2019/1-3/MongoDB-1.jpg" algin="center"/></div><span id="more"></span></p>
-<h1 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h1><p>MongoDB 的索引使用的 B-tree 这一特殊的数据结构，借助索引 MongoDB 可以高效的匹配到需要查询的数据，以下图来为例(来自官方)：</p>
-<div align=center><img src="../../../../images/2019/1-3/MongoDB-2.jpg" algin="center"/></div>
-
-<p>score 索引不但可以高效的支持 range 查询，此外也可以让 MongoDB 高效地返回排序之后的数据，MongoDB 的索引同其它数据库系统很相似，MongoDB 的索引是定义在 collection 级别的，支持对任何单个 field 以及任何 sub-field 建立索引。</p>
-<h1 id="默认的-id-index"><a href="#默认的-id-index" class="headerlink" title="默认的 _id index"></a>默认的 <code>_id</code> index</h1><p>MongoDB 在 collection 创建时会默认建立一个基于<code>_id</code>的唯一性索引作为 document 的 primary key，这个 index 无法被删除。</p>
-<p>Mongodb 支持多种方式创建索引，具体创建方式见官方文档 <a href="https://docs.mongodb.com/manual/indexes/#create-an-index">https://docs.mongodb.com/manual/indexes/#create-an-index</a></p>
-<h1 id="Single-field-index-单索引"><a href="#Single-field-index-单索引" class="headerlink" title="Single field index - 单索引"></a>Single field index - 单索引</h1><p>Single field index 是 MongoDB 最简单的索引类型，不同于 MySQL，MongoDB 的索引是有序的 ascending 或 descending。</p>
-<div align=center><img src="../../../../images/2019/1-3/MongoDB-3.jpg" algin="center"/></div>
-
-<p>但是对于 single field index 来说，索引的顺序无关紧要，因为 MongoDB 支持任意顺序遍历 single field index。</p>
-<p>在此创建一个 records collection：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;_id&quot;</span>: ObjectId(<span class="string">&quot;570c04a4ad233577f97dc459&quot;</span>),</span><br><span class="line">  <span class="attr">&quot;score&quot;</span>: <span class="number">1034</span>,</span><br><span class="line">  <span class="attr">&quot;location&quot;</span>: &#123; state: <span class="string">&quot;NY&quot;</span>, city: <span class="string">&quot;New York&quot;</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然后创建一个 single field index：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.records.createIndex( &#123; score: <span class="number">1</span> &#125; )</span><br></pre></td></tr></table></figure>
-
-<p>上面的语句在 collection 的 score field 上创建了一个 ascending 索引，这个索引支持以下查询：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.records.find( &#123; score: <span class="number">2</span> &#125; )</span><br><span class="line">db.records.find( &#123; score: &#123; $gt: <span class="number">10</span> &#125; &#125; )</span><br></pre></td></tr></table></figure>
-
-<p>可以使用 MongoDB 的 <em>explain</em> 来对以上两个查询进行分析：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.records.find(&#123;score:<span class="number">2</span>&#125;).explain(&#x27;executionStats&#x27;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="single-index-on-embedded-field-内嵌字段上的单索引"><a href="#single-index-on-embedded-field-内嵌字段上的单索引" class="headerlink" title="single index on embedded field - 内嵌字段上的单索引"></a>single index on embedded field - 内嵌字段上的单索引</h2><p>此外 MongoDB 还支持对 embedded field 进行索引创建：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.records.createIndex( &#123; <span class="attr">&quot;location.state&quot;</span>: <span class="number">1</span> &#125; )</span><br></pre></td></tr></table></figure>
-
-<p>上面的 embedded index 支持以下查询：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.records.find( &#123; <span class="attr">&quot;location.state&quot;</span>: <span class="string">&quot;CA&quot;</span> &#125; )</span><br><span class="line">db.records.find( &#123; <span class="attr">&quot;location.city&quot;</span>: <span class="string">&quot;Albany&quot;</span>, <span class="attr">&quot;location.state&quot;</span>: <span class="string">&quot;NY&quot;</span> &#125; )</span><br></pre></td></tr></table></figure>
-
-<h2 id="sort-on-single-index-单索引的排序"><a href="#sort-on-single-index-单索引的排序" class="headerlink" title="sort on single index - 单索引的排序"></a>sort on single index - 单索引的排序</h2><p>对于 single index 来说，由于 MongoDB index 本身支持顺序查找，所以对于single index 来说:</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.records.find().sort( &#123; score: <span class="number">1</span> &#125; )</span><br><span class="line">db.records.find().sort( &#123; score: <span class="number">-1</span> &#125; )</span><br><span class="line">db.records.find(&#123;score:&#123;$lte:<span class="number">100</span>&#125;&#125;).sort( &#123; score: <span class="number">-1</span> &#125; )</span><br></pre></td></tr></table></figure>
-
-<p>这些查询语句都是满足使用 index 的。</p>
-<h1 id="Compound-index-组合索引"><a href="#Compound-index-组合索引" class="headerlink" title="Compound index - 组合索引"></a>Compound index - 组合索引</h1><p>Mongodb 支持对多个 field 建立索引，称之为 <em>compound index</em>。<em>Compound index</em> 中 field 的顺序对索引的性能有至关重要的影响，比如索引 <em><strong>{userid:1, score:-1}</strong></em> 首先根据 userid 排序，然后再在每个 userid 中根据 score 排序。</p>
-<div align=center><img src="../../../../images/2019/1-3/MongoDB-4.jpg" algin="center"/></div>
-
-<h2 id="创建-Compound-index"><a href="#创建-Compound-index" class="headerlink" title="创建 Compound index"></a>创建 Compound index</h2><p>在此创建一个 products collection：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> <span class="attr">&quot;_id&quot;</span>: ObjectId(...),</span><br><span class="line"> <span class="attr">&quot;item&quot;</span>: <span class="string">&quot;Banana&quot;</span>,</span><br><span class="line"> <span class="attr">&quot;category&quot;</span>: [<span class="string">&quot;food&quot;</span>, <span class="string">&quot;produce&quot;</span>, <span class="string">&quot;grocery&quot;</span>],</span><br><span class="line"> <span class="attr">&quot;location&quot;</span>: <span class="string">&quot;4th Street Store&quot;</span>,</span><br><span class="line"> <span class="attr">&quot;stock&quot;</span>: <span class="number">4</span>,</span><br><span class="line"> <span class="attr">&quot;type&quot;</span>: <span class="string">&quot;cases&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然后创建一个 compound index：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.products.createIndex( &#123; <span class="attr">&quot;item&quot;</span>: <span class="number">1</span>, <span class="attr">&quot;stock&quot;</span>: <span class="number">1</span> &#125; )</span><br></pre></td></tr></table></figure>
-
-<p>这个 index 引用的 document 首先会根据 item 排序，然后在 每个 item 中，又会根据 stock 排序，以下语句都满足该索引：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.products.find( &#123; item: <span class="string">&quot;Banana&quot;</span> &#125; )</span><br><span class="line">db.products.find( &#123; item: <span class="string">&quot;Banana&quot;</span>, stock: &#123; $gt: <span class="number">5</span> &#125; &#125; )</span><br></pre></td></tr></table></figure>
-
-<p>条件 {item: “Banana”} 满足是因为这个 query 满足 prefix 原则。</p>
-<h2 id="使用-compound-index-需要满足-prefix-原则"><a href="#使用-compound-index-需要满足-prefix-原则" class="headerlink" title="使用 compound index 需要满足 prefix 原则"></a>使用 compound index 需要满足 prefix 原则</h2><p>Index prefix 是指 index fields 的左前缀子集，考虑以下索引：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123; <span class="attr">&quot;item&quot;</span>: <span class="number">1</span>, <span class="attr">&quot;location&quot;</span>: <span class="number">1</span>, <span class="attr">&quot;stock&quot;</span>: <span class="number">1</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个索引包含以下 index prefix：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123; item: <span class="number">1</span> &#125;</span><br><span class="line">&#123; item: <span class="number">1</span>, location: <span class="number">1</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>所以只要语句满足 index prefix 原则都是可以支持使用 compound index ：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.products.find( &#123; item: <span class="string">&quot;Banana&quot;</span> &#125; )</span><br><span class="line">db.products.find( &#123; item: <span class="string">&quot;Banana&quot;</span>,location:<span class="string">&quot;4th Street Store&quot;</span>&#125; )</span><br><span class="line">db.products.find( &#123; item: <span class="string">&quot;Banana&quot;</span>,location:<span class="string">&quot;4th Street Store&quot;</span>,stock:<span class="number">4</span>&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>相反如果不满足 index prefix 则无法使用索引，比如以下 field 的查询：</p>
-<ul>
-<li>the <strong>location</strong> field</li>
-<li>the <strong>stock</strong> field</li>
-<li>the <strong>location</strong> and <strong>stock</strong> fields</li>
-</ul>
-<p>由于 index prefix 的存在，如果一个 collection 既有 <strong>{a:1, b:1}</strong> 索引 ，也有 <strong>{a:1}</strong> 索引，如果二者没有稀疏或者唯一性的要求，single index 可以移除。</p>
-<h2 id="Sort-on-Compound-index-复合索引的排序"><a href="#Sort-on-Compound-index-复合索引的排序" class="headerlink" title="Sort on Compound index - 复合索引的排序"></a>Sort on Compound index - 复合索引的排序</h2><p>前文说过 single index 的 sort 顺序无关紧要，但是 compound index 则完全不同，考虑有如下场景：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.events.find().sort( &#123; username: <span class="number">1</span>, date: <span class="number">-1</span> &#125; )</span><br></pre></td></tr></table></figure>
-
-<p>上面的查询首先根据 username 进行 ascending 排序，然后再对结果进行 date descending 。</p>
-<p>下面的查询：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.events.find().sort( &#123; username: <span class="number">-1</span>, date: <span class="number">1</span> &#125; )</span><br></pre></td></tr></table></figure>
-
-<p>则是首先根据 username 进行 descending 排序，然后再对 date 进行 ascending 排序。</p>
-<p>如果想要索引满足以上两种查询和排序，索引类型需要满足如下条件：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.events.createIndex( &#123; <span class="attr">&quot;username&quot;</span> : <span class="number">1</span>, <span class="attr">&quot;date&quot;</span> : <span class="number">-1</span> &#125; ）</span><br></pre></td></tr></table></figure>
-
-<p>也就是 <strong>username 和 date 的顺序不同</strong>，如果顺序相同则没有办法满足以上查询，比如：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">db.events.find().sort( &#123; username: <span class="number">1</span>, date: <span class="number">1</span> &#125;)</span><br></pre></td></tr></table></figure>
-
-<p>也就是说 sort 的顺序必须要和创建索引的顺序是一致的，一致的意思是不一定非要一样，总结起来大致如下：</p>
-<table>
+    <title>网址收藏</title>
+    <url>/%E7%BD%91%E5%9D%80%E6%94%B6%E8%97%8F/</url>
+    <content><![CDATA[<h1 id="开发类"><a href="#开发类" class="headerlink" title="开发类"></a>开发类</h1><table>
 <thead>
 <tr>
-<th>{ “username” : 1, “date” : -1 }</th>
-<th>{ “username” : 1, “date” : 1 }</th>
-<th></th>
+<th>名称</th>
+<th>地址</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>sort( { username: 1, date: -1 } )</td>
-<td>支持</td>
-<td>不支持</td>
+<td>Jetbrains系列产品重置试用方法</td>
+<td><a href="https://zhile.io/">https://zhile.io</a></td>
 </tr>
 <tr>
-<td>sort( { username: -1, date: 1 } )</td>
-<td>支持</td>
-<td>不支持</td>
-</tr>
-<tr>
-<td>sort( { username: 1, date: 1 } )</td>
-<td>不支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>sort( { username: -1, date: -1 } )</td>
-<td>不支持</td>
-<td>支持</td>
+<td>23种设计模式</td>
+<td><a href="https://refactoringguru.cn/design-patterns">https://refactoringguru.cn/design-patterns</a></td>
 </tr>
 </tbody></table>
-<p><strong>即排序的顺序必须要和索引一致，逆序之后一致也可以</strong>，下表清晰的列出了 compound index 满足的 query 语句：</p>
-<table>
+<h1 id="手册类"><a href="#手册类" class="headerlink" title="手册类"></a>手册类</h1><table>
 <thead>
 <tr>
-<th>query</th>
-<th>index</th>
+<th>名称</th>
+<th>地址</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>db.data.find().sort( { a: 1 } )</td>
-<td>{ a: 1 }</td>
+<td>Elasticsearch中文文档</td>
+<td><a href="https://doc.codingdict.com/elasticsearch/323/">https://doc.codingdict.com/elasticsearch/323/</a></td>
 </tr>
 <tr>
-<td>db.data.find().sort( { a: -1 } )</td>
-<td>{ a: 1 }</td>
-</tr>
-<tr>
-<td>db.data.find().sort( { a: 1, b: 1 } )</td>
-<td>{ a: 1, b: 1 }</td>
-</tr>
-<tr>
-<td>db.data.find().sort( { a: -1, b: -1 } )</td>
-<td>{ a: 1, b: 1 }</td>
-</tr>
-<tr>
-<td>db.data.find().sort( { a: 1, b: 1, c: 1 } )</td>
-<td>{ a: 1, b: 1, c: 1 }</td>
-</tr>
-<tr>
-<td>db.data.find( { a: { $gt: 4 } } ).sort( { a: 1, b: 1 } )</td>
-<td>{ a: 1, b: 1 }</td>
+<td>Elasticsearch中文文档</td>
+<td><a href="https://learnku.com/docs/elasticsearch73/7.3">https://learnku.com/docs/elasticsearch73/7.3</a></td>
 </tr>
 </tbody></table>
-<p><strong>即排序的 filed 也要满足 index prefix 原则</strong>。</p>
-<h2 id="非-index-prefix-的排序"><a href="#非-index-prefix-的排序" class="headerlink" title="非 index prefix 的排序"></a>非 index prefix 的排序</h2><p>考虑索引 <strong>{ a: 1, b: 1, c: 1, d: 1 }<strong>，即使排序的 field 不满足 index prefix 也是可以的，但前提条件是</strong>排序 field 之前的 index field 必须是等值条件</strong>，</p>
-<table>
+<h1 id="工具类"><a href="#工具类" class="headerlink" title="工具类"></a>工具类</h1><table>
 <thead>
 <tr>
-<th>Example</th>
-<th>Index Prefix</th>
-<th></th>
+<th>名称</th>
+<th>地址</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>r1</td>
-<td>db.data.find( { a: 5 } ).sort( { b: 1, c: 1 } )</td>
-<td>{ a: 1 , b: 1, c: 1 }</td>
+<td>青龙面板</td>
+<td><a href="https://github.com/whyour/qinglong">https://github.com/whyour/qinglong</a></td>
 </tr>
 <tr>
-<td>r2</td>
-<td>db.data.find( { b: 3, a: 4 } ).sort( { c: 1 } )</td>
-<td>{ a: 1, b: 1, c: 1 }</td>
+<td>AutoHotkey</td>
+<td><a href="https://www.autohotkey.com/">https://www.autohotkey.com</a></td>
 </tr>
 <tr>
-<td>r3</td>
-<td>db.data.find( { a: 5, b: { $lt: 3} } ).sort( { b: 1 } )</td>
-<td>{ a: 1, b: 1 }</td>
+<td>数据库建模工具PDManer</td>
+<td><a href="https://gitee.com/robergroup/pdmaner">https://gitee.com/robergroup/pdmaner</a></td>
 </tr>
 </tbody></table>
-<p>上面表格 r1 的排序 field 是 b 和 c，a 是 index field 而且在 b 和 c 之前，可以使用索引；r3 的排序中 b 是范围查询，但是 b 之前的 a 用的也是等值条件，也就是只要排序 field 之前的 field 满足等值条件即可，其它的 field 可以任意条件。</p>
-<h1 id="如何建立正确索引"><a href="#如何建立正确索引" class="headerlink" title="如何建立正确索引"></a>如何建立正确索引</h1><p>前文基本覆盖了日常使用 MongoDB 所需要的主要索引知识，但是如何才建立正确的索引？</p>
-<h2 id="使用-explain-分析查询语句"><a href="#使用-explain-分析查询语句" class="headerlink" title="使用 explain 分析查询语句"></a>使用 explain 分析查询语句</h2><p>MongoDB 默认提供了类似 MySQL explain 的语句来分析查询语句的来对我们正确建立索引提供帮助，在建立索引时我们需要对照 explain 对各种查询条件进行分析。</p>
-<h2 id="理解-field-顺序对索引的影响"><a href="#理解-field-顺序对索引的影响" class="headerlink" title="理解 field 顺序对索引的影响"></a>理解 field 顺序对索引的影响</h2><p>索引的真正作用是帮助我们限制数据的选择范围，比如 Compound index 多个 feild 的顺序如何决定，应该首选可以最大化的缩小数据查找范围的 field，这样如果第一个 field 可以迅速缩小数据的查找范围，那么后续的 feild 匹配的行就会变少很多。考虑语句：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;&#x27;start_time&#x27;: &#123;&#x27;$lte&#x27;: present&#125;, &#x27;end_time&#x27;: &#123;&#x27;$gt&#x27;: present&#125;, &#x27;origin&#x27;: <span class="number">1</span>, &#x27;orientation&#x27;: &#x27;quality&#x27;, &#x27;id&#x27;: &#123;&#x27;$gt&#x27;: max_id&#125;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>考虑如下索引</p>
-<table>
-<thead>
-<tr>
-<th>索引</th>
-<th>nscanded</th>
-<th></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>r1</td>
-<td>{start_time:1, end_time: 1, origin: 1, id: 1, orientation: 1}</td>
-<td>12959</td>
-</tr>
-<tr>
-<td>r2</td>
-<td>{start_time:1, end_time: 1, origin: 1, orientation: 1, id: 1}</td>
-<td>2700</td>
-</tr>
-</tbody></table>
-<p>由于 field <code>id</code> 和 <code>orientation</code> 的顺序不同会导致需要扫描的 documents 数量差异巨大，说明二者对对数据的限制范围差别很大，优先考虑能够最大化限制数据范围的索引顺序。</p>
-<h2 id="监控慢查询"><a href="#监控慢查询" class="headerlink" title="监控慢查询"></a>监控慢查询</h2><p>始终对生成环境产生的慢查询进行第一时间分析，提早发现问题并解决。</p>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
-<li><a href="https://docs.mongodb.com/manual/core/index-compound/">https://docs.mongodb.com/manual/core/index-compound/</a></li>
-<li><a href="http://www.infoq.com/cn/articles/improve-find-performance-in-mongo">http://www.infoq.com/cn/articles/improve-find-performance-in-mongo</a></li>
-</ul>
 ]]></content>
       <categories>
-        <category>数据库</category>
+        <category>工具</category>
       </categories>
-      <tags>
-        <tag>MongoDB</tag>
-      </tags>
   </entry>
   <entry>
     <title>自定义StopWatch</title>
@@ -6305,66 +6365,6 @@
       <tags>
         <tag>架构</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>网址收藏</title>
-    <url>/%E7%BD%91%E5%9D%80%E6%94%B6%E8%97%8F/</url>
-    <content><![CDATA[<h1 id="开发类"><a href="#开发类" class="headerlink" title="开发类"></a>开发类</h1><table>
-<thead>
-<tr>
-<th>名称</th>
-<th>地址</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Jetbrains系列产品重置试用方法</td>
-<td><a href="https://zhile.io/">https://zhile.io</a></td>
-</tr>
-<tr>
-<td>23种设计模式</td>
-<td><a href="https://refactoringguru.cn/design-patterns">https://refactoringguru.cn/design-patterns</a></td>
-</tr>
-</tbody></table>
-<h1 id="手册类"><a href="#手册类" class="headerlink" title="手册类"></a>手册类</h1><table>
-<thead>
-<tr>
-<th>名称</th>
-<th>地址</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Elasticsearch中文文档</td>
-<td><a href="https://doc.codingdict.com/elasticsearch/323/">https://doc.codingdict.com/elasticsearch/323/</a></td>
-</tr>
-<tr>
-<td>Elasticsearch中文文档</td>
-<td><a href="https://learnku.com/docs/elasticsearch73/7.3">https://learnku.com/docs/elasticsearch73/7.3</a></td>
-</tr>
-</tbody></table>
-<h1 id="工具类"><a href="#工具类" class="headerlink" title="工具类"></a>工具类</h1><table>
-<thead>
-<tr>
-<th>名称</th>
-<th>地址</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>青龙面板</td>
-<td><a href="https://github.com/whyour/qinglong">https://github.com/whyour/qinglong</a></td>
-</tr>
-<tr>
-<td>AutoHotkey</td>
-<td><a href="https://www.autohotkey.com/">https://www.autohotkey.com</a></td>
-</tr>
-<tr>
-<td>数据库建模工具PDManer</td>
-<td><a href="https://gitee.com/robergroup/pdmaner">https://gitee.com/robergroup/pdmaner</a></td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
   </entry>
   <entry>
     <title>JAVA并发之锁</title>
