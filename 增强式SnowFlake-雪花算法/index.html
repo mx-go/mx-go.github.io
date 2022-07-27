@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://mx-go.github.io/images/2022/7-9/snowflake_0.jpeg">
 <meta property="article:published_time" content="2022-05-26T02:34:16.000Z">
-<meta property="article:modified_time" content="2022-07-27T02:57:01.968Z">
+<meta property="article:modified_time" content="2022-07-27T05:45:17.566Z">
 <meta property="article:author" content="彩虹马">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://mx-go.github.io/images/2022/7-9/snowflake_0.jpeg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://mx-go.github.io/%E5%A2%9E%E5%BC%BA%E5%BC%8FSnowFlake-%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.js" defer></script><script>const GLOBAL_CONFIG = { 
@@ -57,7 +57,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2022-07-27 10:57:01'
+  postUpdate: '2022-07-27 13:45:17'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -225,7 +225,7 @@
 <p><strong>符号位</strong>：<code>1bit</code>。最高位是符号位，固定为0。0表示正，1表示负。</p>
 <p><strong>时间戳</strong>：<code>41bit</code>。毫秒级时间戳（41位的长度可以使用69年）。</p>
 <p><strong>标识位</strong>：<code>5bit</code>数据中心ID（DataCenterId），<code>5bit</code>工作机器ID（WorkId），两个标识位组合最多可支持部署1024个节点。</p>
-<p><strong>序列号</strong>：<code>12bit</code>。递增序列号，毫秒内生成的ID通过序列号表示唯一，12bit每毫秒可产生4096个ID。</p>
+<p><strong>序列号</strong>：<code>12bit</code>。递增序列号，毫秒内生成的ID通过序列号表示唯一，<code>12bit</code>每毫秒可产生4096个ID。</p>
 <blockquote>
 <p>默认的雪花算法是64bit，具体长度也可以自行配置。</p>
 <ul>
