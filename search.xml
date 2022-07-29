@@ -671,62 +671,6 @@
       </tags>
   </entry>
   <entry>
-    <title>JAVA实现简单网络爬虫</title>
-    <url>/JAVA%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E7%88%AC%E8%99%AB/</url>
-    <content><![CDATA[<div align=center><img width="700" height="300" src="../../../../images/2017-4-1/%E7%88%AC%E8%99%AB.jpg" algin="center"/></div><span id="more"></span>
-
-<h2 id="爬虫基本理解"><a href="#爬虫基本理解" class="headerlink" title="爬虫基本理解"></a>爬虫基本理解</h2><blockquote>
-<p>通俗一点，<code>爬虫</code>是用来快速、批量获取我们在网络需要的东西，过滤掉不需要的东西，比如我可以爬一个网站的所有图片省的一张一张去保存，也可以爬其他数据来做研究、统计、数据分析，即是：</p>
-<p>(1) 对抓取目标的描述或定义；</p>
-<p>(2) 对网页或数据的分析与过滤；</p>
-<p>(3) 对URL的搜索策略。</p>
-<p>很多语言都可以做爬虫，在这里记录JAVA做一个简单的爬虫，等以后学会其他语言了再用其他语言做爬虫，哈哈…</p>
-</blockquote>
-<h2 id="实现爬虫需要"><a href="#实现爬虫需要" class="headerlink" title="实现爬虫需要"></a>实现爬虫需要</h2><h3 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h3><ul>
-<li>简单<strong>HTML、CSS、JS</strong>等前端知识</li>
-<li><a href="http://deerchao.net/tutorials/regex/regex.htm"><strong>正则表达式</strong></a>（很重要，用于过滤不需要的信息）</li>
-<li>JAVA<strong>语言知识</strong>（可换成其他语言）</li>
-</ul>
-<h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><ol>
-<li>首先你要给它一个种子链接<code>URL</code></li>
-<li>在种子链接的页面查找其他的URL，重复1步骤</li>
-<li>有链接有页面，然后你可以在页面中查找需要的内容</li>
-</ol>
-<h2 id="简单爬虫代码"><a href="#简单爬虫代码" class="headerlink" title="简单爬虫代码"></a>简单爬虫代码</h2><p>在这里做个示例：把网站<code>https://www.baidu.com/home/news/data/newspage?nid=7953839918275534&amp;n_type=0&amp;p_from=1</code>  图片全部down下来并保存到本地磁盘的操作。</p>
-<h3 id="JAVA基本方式"><a href="#JAVA基本方式" class="headerlink" title="JAVA基本方式"></a>JAVA基本方式</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Reptile</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doGet</span><span class="params">(String urlStr)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		URL url;</span><br><span class="line">		String html = <span class="string">&quot;&quot;</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			url = <span class="keyword">new</span> URL(urlStr);</span><br><span class="line">			HttpURLConnection connection = (HttpURLConnection) url.openConnection();</span><br><span class="line">			connection.setRequestProperty(<span class="string">&quot;Accept&quot;</span>, <span class="string">&quot;text/html&quot;</span>);</span><br><span class="line">			connection.setRequestProperty(<span class="string">&quot;Accept-Charset&quot;</span>, <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">			connection.setRequestProperty(<span class="string">&quot;Accept-Language&quot;</span>, <span class="string">&quot;en-US,en&quot;</span>);</span><br><span class="line">			connection.setRequestProperty(<span class="string">&quot;User-Agent&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) 					Chrome/25.0.1364.160 Safari/537.22&quot;</span>);</span><br><span class="line">			connection.setRequestMethod(<span class="string">&quot;GET&quot;</span>);</span><br><span class="line">			connection.setConnectTimeout(<span class="number">5000</span>);</span><br><span class="line">			connection.setDoInput(<span class="keyword">true</span>);</span><br><span class="line">			connection.setDoOutput(<span class="keyword">true</span>);</span><br><span class="line">			<span class="keyword">if</span> (connection.getResponseCode() == <span class="number">200</span>) &#123;</span><br><span class="line">				System.out.println(<span class="string">&quot;已连接，正在解析。。。。。。&quot;</span>);</span><br><span class="line">				InputStream in = connection.getInputStream();</span><br><span class="line">				html = StreamTool.inToStringByByte(in);</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				System.out.println(connection.getResponseCode());</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">&quot;get请求失败&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> html;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		Reptile reptile = <span class="keyword">new</span> Reptile()</span><br><span class="line">		String htmlStr = Reptile.doGet(<span class="string">&quot;https://www.baidu.com/home/news/data/</span></span><br><span class="line"><span class="string">                                       newspagenid=7953839918275534&amp;n_type=0&amp;p_from=1&quot;</span>);</span><br><span class="line"></span><br><span class="line">		File f = <span class="keyword">new</span> File(<span class="string">&quot;E://imgs&quot;</span>);</span><br><span class="line">		<span class="keyword">if</span> (!f.exists()) &#123;</span><br><span class="line">			f.mkdirs();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		Pattern pattern = Pattern.compile(<span class="string">&quot;&lt;img.*src=(.*?)[^&gt;]*?&gt;&quot;</span>); <span class="comment">//匹配Imag标签</span></span><br><span class="line">		Matcher matcher = pattern.matcher(htmlStr); <span class="comment">// 定义一个matcher用来做匹配</span></span><br><span class="line">      </span><br><span class="line">		System.out.println(<span class="string">&quot;正在下载&quot;</span>);</span><br><span class="line">		<span class="keyword">while</span> (matcher.find()) &#123;</span><br><span class="line">			String imgs = matcher.group();</span><br><span class="line">			Matcher srcMatcher = Pattern.compile(<span class="string">&quot;https:\&quot;?(.*?)(\&quot;|&gt;|\\s+)&quot;</span>).matcher(imgs);</span><br><span class="line">			<span class="keyword">while</span> (srcMatcher.find()) &#123;</span><br><span class="line">				String src = srcMatcher.group().substring(<span class="number">0</span>,srcMatcher.group().length() - <span class="number">1</span>);</span><br><span class="line">				System.out.println(src);</span><br><span class="line">              	 <span class="comment">// 获取后缀名</span></span><br><span class="line">				String imageName = src.substring(src.lastIndexOf(<span class="string">&quot;/&quot;</span>) + <span class="number">1</span>,src.length());</span><br><span class="line">				reptile.downLoad(src, imageName);   <span class="comment">//下载图片到本地</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//下载图片到本地</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">downLoad</span><span class="params">(String src, String imageName)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		URL url = <span class="keyword">new</span> URL(src);</span><br><span class="line">      </span><br><span class="line">		URLConnection uri = url.openConnection();</span><br><span class="line">		InputStream is = uri.getInputStream(); <span class="comment">// 获取数据流</span></span><br><span class="line">		<span class="comment">// 写入数据流</span></span><br><span class="line">		OutputStream os = <span class="keyword">new</span> FileOutputStream(<span class="keyword">new</span> File(<span class="string">&quot;E://imgs&quot;</span>, imageName));</span><br><span class="line">		<span class="keyword">byte</span>[] buf = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">		<span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">while</span> ((len = is.read(buf)) != -<span class="number">1</span>) &#123;</span><br><span class="line">			os.write(buf, <span class="number">0</span>, len);</span><br><span class="line">		&#125;</span><br><span class="line">		os.close();</span><br><span class="line">		is.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>JAVA基本方法主要是利用JAVA中的正则表达式匹配我们我需要的元素，然后再进行其他操作。简单、粗暴。</p>
-</blockquote>
-<h3 id="Jsoup方式"><a href="#Jsoup方式" class="headerlink" title="Jsoup方式"></a><a href="http://baike.baidu.com/link?url=utl_VUDcVYjjpjXYnY1NKXoTbfToHXosLWBr9qmIjSe0DuYkIUv-zgBbXbJsMPoVjp6YGRMjt_B95v4mRKCdK_">Jsoup</a>方式</h3><blockquote>
-<p><code>Jsoup</code> 是一个 Java 的开源HTML解析器，可直接解析某个URL地址、HTML文本内容。同时提供了一套非常省力的API，可通过DOM，CSS以及类似于jQuery的操作方法来取出和操作数据。可以直接使用DOM或者JQuery方法和表达式取出数据。</p>
-<p>需要下载JAR包，下载地址：<a href="../../../../images/2017-4-1/jsoup-1.10.2.jar"><em>点我</em></a></p>
-<p><code>Jsoup API</code>：详见：<em><a href="http://www.open-open.com/jsoup/">http://www.open-open.com/jsoup/</a></em></p>
-</blockquote>
-<p><strong>工具类StreamTool</strong> ：将byte对象转化为String对象</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StreamTool</span> </span>&#123;</span><br><span class="line"><span class="comment">//  将byte对象转化为String对象</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">inToStringByByte</span><span class="params">(InputStream in)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		ByteArrayOutputStream outStr = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">		<span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">		<span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">		StringBuilder content = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">		<span class="keyword">while</span> ((len = in.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">			content.append(<span class="keyword">new</span> String(buffer, <span class="number">0</span>, len, <span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line">		&#125;</span><br><span class="line">		outStr.close();</span><br><span class="line">		<span class="keyword">return</span> content.toString();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>基本实现类Reptile</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Reptile</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doGet</span><span class="params">(String urlStr)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		URL url;</span><br><span class="line">		String html = <span class="string">&quot;&quot;</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			url = <span class="keyword">new</span> URL(urlStr);</span><br><span class="line">			HttpURLConnection connection = (HttpURLConnection) url.openConnection();</span><br><span class="line">			<span class="comment">//伪装爬虫，不然会报403错误</span></span><br><span class="line">			connection.setRequestProperty(<span class="string">&quot;Accept&quot;</span>, <span class="string">&quot;text/html&quot;</span>); </span><br><span class="line">			connection.setRequestProperty(<span class="string">&quot;Accept-Charset&quot;</span>, <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">			connection.setRequestProperty(<span class="string">&quot;Accept-Language&quot;</span>, <span class="string">&quot;en-US,en&quot;</span>);</span><br><span class="line">			connection.setRequestProperty(<span class="string">&quot;User-Agent&quot;</span>,<span class="string">&quot;Mozilla/5.0 (X11; Linux x86_64)</span></span><br><span class="line"><span class="string">              AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22&quot;</span>);</span><br><span class="line">			</span><br><span class="line">			connection.setRequestMethod(<span class="string">&quot;GET&quot;</span>); <span class="comment">// 定义请求方式</span></span><br><span class="line">			connection.setConnectTimeout(<span class="number">5000</span>);</span><br><span class="line">			connection.setDoInput(<span class="keyword">true</span>); <span class="comment">//设置是否向httpUrlConnection输出， 默认情况下是false;</span></span><br><span class="line">			connection.setDoOutput(<span class="keyword">true</span>); <span class="comment">// 设置是否从httpUrlConnection读入，默认情况下是true; </span></span><br><span class="line">			<span class="keyword">if</span> (connection.getResponseCode() == <span class="number">200</span>) &#123; <span class="comment">//连接成功</span></span><br><span class="line">				System.out.println(<span class="string">&quot;已连接，正在解析。。。。。。&quot;</span>);</span><br><span class="line">				InputStream in = connection.getInputStream();</span><br><span class="line">				html = StreamTool.inToStringByByte(in);</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				System.out.println(connection.getResponseCode());</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">&quot;get请求失败&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> html;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">      	URL url ;</span><br><span class="line">     	InputStream is = <span class="keyword">null</span>;</span><br><span class="line">		OutputStream os = <span class="keyword">null</span>;</span><br><span class="line">     	String urlStr = <span class="string">&quot;https://www.baidu.com/home/news/data/newspage?nid=7953839918275534&amp;n_type=0&amp;p_from=1&quot;</span>;</span><br><span class="line">      </span><br><span class="line">		String htmlStr = Reptile.doGet(urlStr);</span><br><span class="line">		Document doc = Jsoup.parse(htmlStr); <span class="comment">// 将获取的网页 HTML 源代码转化为 Document对象</span></span><br><span class="line"></span><br><span class="line">		File f = <span class="keyword">new</span> File(<span class="string">&quot;E://imgs&quot;</span>);  <span class="comment">//把文件存在E://imgs</span></span><br><span class="line">		<span class="keyword">if</span> (!f.exists()) &#123;</span><br><span class="line">			f.mkdirs();</span><br><span class="line">		&#125;</span><br><span class="line">		Elements pngs = doc.select(<span class="string">&quot;img[src]&quot;</span>);  <span class="comment">//获取所有图片</span></span><br><span class="line"><span class="comment">//		Elements pngs = doc.select(&quot;img[src$=.png]&quot;);只爬取png图片</span></span><br><span class="line">		<span class="keyword">int</span> i = <span class="number">1</span>;	 <span class="comment">//计数</span></span><br><span class="line">		<span class="keyword">for</span> (Element e : pngs) &#123;</span><br><span class="line">			String src = e.attr(<span class="string">&quot;src&quot;</span>);  <span class="comment">// 获取img中的src路径</span></span><br><span class="line">			String imageName = src.substring(src.lastIndexOf(<span class="string">&quot;/&quot;</span>) + <span class="number">1</span>,</span><br><span class="line">             		src.length());	<span class="comment">// 获取后缀名</span></span><br><span class="line"></span><br><span class="line">			System.out.println(<span class="string">&quot;正在下载第&quot;</span> + i + <span class="string">&quot;张图片：&quot;</span>+ imageName);</span><br><span class="line">			</span><br><span class="line">			URL url = <span class="keyword">new</span> URL(src); 	<span class="comment">// 连接url</span></span><br><span class="line">			URLConnection uri = url.openConnection();</span><br><span class="line">			</span><br><span class="line">			is = uri.getInputStream();	 <span class="comment">// 获取数据流</span></span><br><span class="line">			os = <span class="keyword">new</span> FileOutputStream(<span class="keyword">new</span> File(<span class="string">&quot;E://imgs&quot;</span>,imageName));<span class="comment">// 写入数据流</span></span><br><span class="line">			<span class="keyword">byte</span>[] buf = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">			<span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">			<span class="keyword">while</span> ((len = is.read(buf)) != -<span class="number">1</span>) &#123;</span><br><span class="line">				os.write(buf, <span class="number">0</span>, len);</span><br><span class="line">			&#125;</span><br><span class="line">			i++;</span><br><span class="line">		&#125;</span><br><span class="line">      		os.close();</span><br><span class="line">      		is.close();</span><br><span class="line">		System.out.println(<span class="string">&quot;共有&quot;</span> + (i-<span class="number">1</span>) + <span class="string">&quot;张图片。&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在这里只做个一个简单的爬虫示例，<strong>通过两种方式的比较后，发现Jsoup更佳。</strong></p>
-<p><code>JAVA</code>基本的方式能用正则表达式来匹配所需要的元素，灵活性不高。</p>
-<p><code>Jsoup</code>这个强大的工具提供了DOM和JQuery方法，可以直接操作节点，同时也支持正则表达式，更加的灵活、省力，同时选择性、可玩性和扩展性更高。Jsoup更多的方法可以查看<a href="http://www.open-open.com/jsoup/"><em>Jsoup的API</em></a>。</p>
-<p>现在已经有很多开源的爬虫的框架供我们选择，比如webmagic、Heritrix等，可以适当选择。</p>
-<h2 id="附"><a href="#附" class="headerlink" title="附"></a>附</h2><p>还有一种更为简单强大的方式，在<code>Linux环境</code>下，利用<code>wget命令</code>只需要一行命令就可以实现以上功能。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wget -m -H -nd -l 1 -t 1 -A .jpg,.png,.jpeg,.JPEG -e robots=off -P /opt/download --no-check-certificate https://www.baidu.com/home/news/data/newspage?nid=7953839918275534&amp;n_type=0&amp;p_from=1</span><br></pre></td></tr></table></figure>
-
-<p>在下篇博客写一下Linux的基本命令。</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>tools</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>JVM类加载机制</title>
     <url>/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>之前的博客说了Java虚拟机的运行时数据区域、GC算法、垃圾回收器等知识。距离深入了解还有一段距离，包括虚拟机的类加载机制、性能调优、线程并发等等还都没有涉及到，一直在看周志明的《深入理解Java虚拟机》，越深入去读发现这本书写的真的是经典，解决了自己很多的疑惑。</p>
@@ -1136,65 +1080,6 @@
       <tags>
         <tag>java</tag>
         <tag>mysql</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux下Tomcat的安装与优化</title>
-    <url>/Linux%E4%B8%8BTomcat%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BC%98%E5%8C%96/</url>
-    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>Linux系统已经搁置很久了，之前有在Ubuntu系统上开发过，但是Linux已经很久没有用了。现在公司把项目部署在Linux系统上，又要把Linux相关知识温习一下。这篇博客温习一下Linux下Tomcat的部署与优化，大部分的操作与在windows上相同。<div align=center><img width="700" height="300" src="../../../../images/2018-01/linux_tomcat/tomcat_linux.png" algin="center"/></div><span id="more"></span></p>
-<h1 id="Tomcat的安装"><a href="#Tomcat的安装" class="headerlink" title="Tomcat的安装"></a>Tomcat的安装</h1><p>首先下载Tomcat的压缩包（apache-tomcat-7.0.82.tar.gz），下载地址为：<em><a href="https://tomcat.apache.org/download-70.cgi">https://tomcat.apache.org/download-70.cgi</a></em></p>
-<p>将压缩包放到Linux预定目录下，执行tar的解压缩命令</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">cd /usr/soft/</span><br><span class="line">tar -zxvf apache-tomcat-7.0.82.tar.gz</span><br></pre></td></tr></table></figure>
-
-<p>进入到apache-tomcat-7.0.82.tar.gz的bin目录下执行**./startup.sh** 命令即可启动Tomcat。</p>
-<div align=center><img width="700" height="300" src="../../../../images/2018-01/linux_tomcat/1.png" algin="center"/>
-
-</div>
-
-<h1 id="Tomcat的优化"><a href="#Tomcat的优化" class="headerlink" title="Tomcat的优化"></a>Tomcat的优化</h1><p>默认情况下Tomcat的配置适合开发模式或者比较小的系统应用，当访问量稍微多的时候比如1000人同时在线做一些频繁的业务操作的时候，可能性能方面就会存在问题，所以有必要在生产环境下对Tomcat做一些优化。</p>
-<p>之前几篇文章也提到了Tomcat相关参数的设置与优化，Windows操作系统与Linux操作系统大同小异。</p>
-<h2 id="APR模式"><a href="#APR模式" class="headerlink" title="APR模式"></a>APR模式</h2><p>Tomcat 常用运行模式有3种，分别为 BIO，NIO，APR。生产环境建议用APR，从操作系统级别来解决异步的IO问题，大幅度的提高性能。Linux下需要另安装配置APR。</p>
-<h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p>APR模式需要下载<strong>apr-1.6.3.tar.gz</strong>和<strong>apr-util-1.6.1.tar.gz</strong>两个文件，下载地址为：<em><a href="http://apr.apache.org/download.cgi">http://apr.apache.org/download.cgi</a></em></p>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>将连个文件放到合适的位置然后进行安装操作。</p>
-<h4 id="apr的安装"><a href="#apr的安装" class="headerlink" title="apr的安装"></a>apr的安装</h4><p>依次执行，将安装路径设为<code>/usr/local/apr</code></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tar -zxvf apr-1.6.3.tar.gz</span><br><span class="line">cd apr-1.6.3.tar.gz</span><br><span class="line">./configure --prefix=/usr/local/apr</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-
-<h4 id="apr-util的安装"><a href="#apr-util的安装" class="headerlink" title="apr-util的安装"></a>apr-util的安装</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tar -zxvf apr-util-1.6.1.tar.gz</span><br><span class="line">cd apr-util-1.6.1.tar.gz</span><br><span class="line">./configure --with-apr=/usr/local/apr/bin/apr-1-config</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-
-<h4 id="安装tomcat-native"><a href="#安装tomcat-native" class="headerlink" title="安装tomcat-native"></a>安装tomcat-native</h4><p><code>tomcat-native.tar.gz是Tomcat自带的压缩包</code>，该文件在tomcat的bin目录下。</p>
-<p>系统要先安装好JDK，我的JDK的安装目录为：<code>/usr/soft/jdk1.8.0_152</code></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /usr/soft/apache-tomcat-7.0.82/bin/</span><br><span class="line">tar -zxvf tomcat-native.tar.gz</span><br><span class="line">cd tomcat-native-1.2.14-src/java/org/apache/tomcat/jni/</span><br><span class="line">./configure --with-apr=/usr/local/apr/bin/apr-1-config --with-java-home=/usr/soft/jdk1.8.0_152</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-
-<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><ol>
-<li> 编辑tomcat目录下文件bin/catalina.sh<strong>加载apr</strong>，在任意地方加入下面一行</li>
-</ol>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">CATALINA_OPTS=&quot;$CATALINA_OPTS -Djava.library.path=/usr/local/apr/lib&quot;</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li> 编辑bin/catalina.sh<strong>配置JVM运行参数</strong>，注意引号不要忘记。</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">JAVA_OPTS=&quot;-server -Xmx4g -Xms4g -Xmn1g -XX:PermSize=512M -XX:MaxPermSize=521M -XX:+DisableExplicitGC -XX:SurvivorRatio=3 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/usr/soft/apache-tomcat-7.0.82 -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:CMSInitiatingOccupancyFraction=65 -XX:+UseCMSInitiatingOccupancyOnly -XX:SoftRefLRUPolicyMSPerMB=0 -XX:+UseCMSCompactAtFullCollection -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintHeapAtGC -Xloggc:/usr/soft/jdk1.8.0_152/log/gc.log -Djava.awt.headless=true&quot;</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>编辑conf/server.xml<strong>使用apr运行模式</strong></li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;Connector port=&quot;8080&quot; protocol=&quot;org.apache.coyote.http11.Http11AprProtocol&quot;</span><br><span class="line">               connectionTimeout=&quot;20000&quot; maxThreads=&quot;1000&quot; minSpareThreads=&quot;100&quot;</span><br><span class="line">			   maxSpareThreads=&quot;200&quot; acceptCount=&quot;900&quot; enableLookups=&quot;false&quot;</span><br><span class="line">			   compression=&quot;on&quot; compressionMinSize=&quot;1024&quot; compressableMimeType=&quot;text/html,text/xml,text/css,text/javascript&quot;</span><br><span class="line">               redirectPort=&quot;8443&quot; URIEncoding=&quot;UTF-8&quot; maxHttpHeaderSize=&quot;8192&quot;/&gt;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>启动Tomcat</li>
-</ol>
-<p>启动tomcat，查看tomcat日志文件，若出现如下信息则表明安装配置成功。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">一月 05, 2018 2:03:09 下午 org.apache.coyote.AbstractProtocol init</span><br><span class="line">信息: Initializing ProtocolHandler [&quot;http-apr-8080&quot;]</span><br><span class="line">一月 05, 2018 2:03:09 下午 org.apache.coyote.AbstractProtocol init</span><br><span class="line">信息:: Initializing ProtocolHandler [&quot;ajp-apr-8009&quot;]</span><br><span class="line">一月 05, 2018 2:03:09 下午 org.apache.catalina.startup.Catalina load</span><br><span class="line">信息:: Initialization processed in 1471 ms</span><br></pre></td></tr></table></figure>
-
-<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>性能的影响因素是多方面的，互相影响，首先是系统本身没问题，数据库的响应没问题，web容器顺畅，硬件顺畅，网络带宽足够，再使用一些小工具进行检测，只有在大量用户在实际的生产环境中使用系统，才能发现问题，找到问题的根源到底是哪一块引发的性能瓶颈，调整一下自然一切都变得顺畅。</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-        <category>安装</category>
-      </categories>
-      <tags>
-        <tag>tips</tag>
-        <tag>tomcat</tag>
       </tags>
   </entry>
   <entry>
@@ -1721,6 +1606,62 @@
 ]]></content>
       <tags>
         <tag>tips</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JAVA实现简单网络爬虫</title>
+    <url>/JAVA%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E7%88%AC%E8%99%AB/</url>
+    <content><![CDATA[<div align=center><img width="700" height="300" src="../../../../images/2017-4-1/%E7%88%AC%E8%99%AB.jpg" algin="center"/></div><span id="more"></span>
+
+<h2 id="爬虫基本理解"><a href="#爬虫基本理解" class="headerlink" title="爬虫基本理解"></a>爬虫基本理解</h2><blockquote>
+<p>通俗一点，<code>爬虫</code>是用来快速、批量获取我们在网络需要的东西，过滤掉不需要的东西，比如我可以爬一个网站的所有图片省的一张一张去保存，也可以爬其他数据来做研究、统计、数据分析，即是：</p>
+<p>(1) 对抓取目标的描述或定义；</p>
+<p>(2) 对网页或数据的分析与过滤；</p>
+<p>(3) 对URL的搜索策略。</p>
+<p>很多语言都可以做爬虫，在这里记录JAVA做一个简单的爬虫，等以后学会其他语言了再用其他语言做爬虫，哈哈…</p>
+</blockquote>
+<h2 id="实现爬虫需要"><a href="#实现爬虫需要" class="headerlink" title="实现爬虫需要"></a>实现爬虫需要</h2><h3 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h3><ul>
+<li>简单<strong>HTML、CSS、JS</strong>等前端知识</li>
+<li><a href="http://deerchao.net/tutorials/regex/regex.htm"><strong>正则表达式</strong></a>（很重要，用于过滤不需要的信息）</li>
+<li>JAVA<strong>语言知识</strong>（可换成其他语言）</li>
+</ul>
+<h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><ol>
+<li>首先你要给它一个种子链接<code>URL</code></li>
+<li>在种子链接的页面查找其他的URL，重复1步骤</li>
+<li>有链接有页面，然后你可以在页面中查找需要的内容</li>
+</ol>
+<h2 id="简单爬虫代码"><a href="#简单爬虫代码" class="headerlink" title="简单爬虫代码"></a>简单爬虫代码</h2><p>在这里做个示例：把网站<code>https://www.baidu.com/home/news/data/newspage?nid=7953839918275534&amp;n_type=0&amp;p_from=1</code>  图片全部down下来并保存到本地磁盘的操作。</p>
+<h3 id="JAVA基本方式"><a href="#JAVA基本方式" class="headerlink" title="JAVA基本方式"></a>JAVA基本方式</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Reptile</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doGet</span><span class="params">(String urlStr)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		URL url;</span><br><span class="line">		String html = <span class="string">&quot;&quot;</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			url = <span class="keyword">new</span> URL(urlStr);</span><br><span class="line">			HttpURLConnection connection = (HttpURLConnection) url.openConnection();</span><br><span class="line">			connection.setRequestProperty(<span class="string">&quot;Accept&quot;</span>, <span class="string">&quot;text/html&quot;</span>);</span><br><span class="line">			connection.setRequestProperty(<span class="string">&quot;Accept-Charset&quot;</span>, <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">			connection.setRequestProperty(<span class="string">&quot;Accept-Language&quot;</span>, <span class="string">&quot;en-US,en&quot;</span>);</span><br><span class="line">			connection.setRequestProperty(<span class="string">&quot;User-Agent&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) 					Chrome/25.0.1364.160 Safari/537.22&quot;</span>);</span><br><span class="line">			connection.setRequestMethod(<span class="string">&quot;GET&quot;</span>);</span><br><span class="line">			connection.setConnectTimeout(<span class="number">5000</span>);</span><br><span class="line">			connection.setDoInput(<span class="keyword">true</span>);</span><br><span class="line">			connection.setDoOutput(<span class="keyword">true</span>);</span><br><span class="line">			<span class="keyword">if</span> (connection.getResponseCode() == <span class="number">200</span>) &#123;</span><br><span class="line">				System.out.println(<span class="string">&quot;已连接，正在解析。。。。。。&quot;</span>);</span><br><span class="line">				InputStream in = connection.getInputStream();</span><br><span class="line">				html = StreamTool.inToStringByByte(in);</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				System.out.println(connection.getResponseCode());</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">&quot;get请求失败&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> html;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		Reptile reptile = <span class="keyword">new</span> Reptile()</span><br><span class="line">		String htmlStr = Reptile.doGet(<span class="string">&quot;https://www.baidu.com/home/news/data/</span></span><br><span class="line"><span class="string">                                       newspagenid=7953839918275534&amp;n_type=0&amp;p_from=1&quot;</span>);</span><br><span class="line"></span><br><span class="line">		File f = <span class="keyword">new</span> File(<span class="string">&quot;E://imgs&quot;</span>);</span><br><span class="line">		<span class="keyword">if</span> (!f.exists()) &#123;</span><br><span class="line">			f.mkdirs();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		Pattern pattern = Pattern.compile(<span class="string">&quot;&lt;img.*src=(.*?)[^&gt;]*?&gt;&quot;</span>); <span class="comment">//匹配Imag标签</span></span><br><span class="line">		Matcher matcher = pattern.matcher(htmlStr); <span class="comment">// 定义一个matcher用来做匹配</span></span><br><span class="line">      </span><br><span class="line">		System.out.println(<span class="string">&quot;正在下载&quot;</span>);</span><br><span class="line">		<span class="keyword">while</span> (matcher.find()) &#123;</span><br><span class="line">			String imgs = matcher.group();</span><br><span class="line">			Matcher srcMatcher = Pattern.compile(<span class="string">&quot;https:\&quot;?(.*?)(\&quot;|&gt;|\\s+)&quot;</span>).matcher(imgs);</span><br><span class="line">			<span class="keyword">while</span> (srcMatcher.find()) &#123;</span><br><span class="line">				String src = srcMatcher.group().substring(<span class="number">0</span>,srcMatcher.group().length() - <span class="number">1</span>);</span><br><span class="line">				System.out.println(src);</span><br><span class="line">              	 <span class="comment">// 获取后缀名</span></span><br><span class="line">				String imageName = src.substring(src.lastIndexOf(<span class="string">&quot;/&quot;</span>) + <span class="number">1</span>,src.length());</span><br><span class="line">				reptile.downLoad(src, imageName);   <span class="comment">//下载图片到本地</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//下载图片到本地</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">downLoad</span><span class="params">(String src, String imageName)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		URL url = <span class="keyword">new</span> URL(src);</span><br><span class="line">      </span><br><span class="line">		URLConnection uri = url.openConnection();</span><br><span class="line">		InputStream is = uri.getInputStream(); <span class="comment">// 获取数据流</span></span><br><span class="line">		<span class="comment">// 写入数据流</span></span><br><span class="line">		OutputStream os = <span class="keyword">new</span> FileOutputStream(<span class="keyword">new</span> File(<span class="string">&quot;E://imgs&quot;</span>, imageName));</span><br><span class="line">		<span class="keyword">byte</span>[] buf = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">		<span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">while</span> ((len = is.read(buf)) != -<span class="number">1</span>) &#123;</span><br><span class="line">			os.write(buf, <span class="number">0</span>, len);</span><br><span class="line">		&#125;</span><br><span class="line">		os.close();</span><br><span class="line">		is.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>JAVA基本方法主要是利用JAVA中的正则表达式匹配我们我需要的元素，然后再进行其他操作。简单、粗暴。</p>
+</blockquote>
+<h3 id="Jsoup方式"><a href="#Jsoup方式" class="headerlink" title="Jsoup方式"></a><a href="http://baike.baidu.com/link?url=utl_VUDcVYjjpjXYnY1NKXoTbfToHXosLWBr9qmIjSe0DuYkIUv-zgBbXbJsMPoVjp6YGRMjt_B95v4mRKCdK_">Jsoup</a>方式</h3><blockquote>
+<p><code>Jsoup</code> 是一个 Java 的开源HTML解析器，可直接解析某个URL地址、HTML文本内容。同时提供了一套非常省力的API，可通过DOM，CSS以及类似于jQuery的操作方法来取出和操作数据。可以直接使用DOM或者JQuery方法和表达式取出数据。</p>
+<p>需要下载JAR包，下载地址：<a href="../../../../images/2017-4-1/jsoup-1.10.2.jar"><em>点我</em></a></p>
+<p><code>Jsoup API</code>：详见：<em><a href="http://www.open-open.com/jsoup/">http://www.open-open.com/jsoup/</a></em></p>
+</blockquote>
+<p><strong>工具类StreamTool</strong> ：将byte对象转化为String对象</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StreamTool</span> </span>&#123;</span><br><span class="line"><span class="comment">//  将byte对象转化为String对象</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">inToStringByByte</span><span class="params">(InputStream in)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		ByteArrayOutputStream outStr = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">		<span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">		<span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">		StringBuilder content = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">		<span class="keyword">while</span> ((len = in.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">			content.append(<span class="keyword">new</span> String(buffer, <span class="number">0</span>, len, <span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line">		&#125;</span><br><span class="line">		outStr.close();</span><br><span class="line">		<span class="keyword">return</span> content.toString();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>基本实现类Reptile</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Reptile</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doGet</span><span class="params">(String urlStr)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		URL url;</span><br><span class="line">		String html = <span class="string">&quot;&quot;</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			url = <span class="keyword">new</span> URL(urlStr);</span><br><span class="line">			HttpURLConnection connection = (HttpURLConnection) url.openConnection();</span><br><span class="line">			<span class="comment">//伪装爬虫，不然会报403错误</span></span><br><span class="line">			connection.setRequestProperty(<span class="string">&quot;Accept&quot;</span>, <span class="string">&quot;text/html&quot;</span>); </span><br><span class="line">			connection.setRequestProperty(<span class="string">&quot;Accept-Charset&quot;</span>, <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">			connection.setRequestProperty(<span class="string">&quot;Accept-Language&quot;</span>, <span class="string">&quot;en-US,en&quot;</span>);</span><br><span class="line">			connection.setRequestProperty(<span class="string">&quot;User-Agent&quot;</span>,<span class="string">&quot;Mozilla/5.0 (X11; Linux x86_64)</span></span><br><span class="line"><span class="string">              AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22&quot;</span>);</span><br><span class="line">			</span><br><span class="line">			connection.setRequestMethod(<span class="string">&quot;GET&quot;</span>); <span class="comment">// 定义请求方式</span></span><br><span class="line">			connection.setConnectTimeout(<span class="number">5000</span>);</span><br><span class="line">			connection.setDoInput(<span class="keyword">true</span>); <span class="comment">//设置是否向httpUrlConnection输出， 默认情况下是false;</span></span><br><span class="line">			connection.setDoOutput(<span class="keyword">true</span>); <span class="comment">// 设置是否从httpUrlConnection读入，默认情况下是true; </span></span><br><span class="line">			<span class="keyword">if</span> (connection.getResponseCode() == <span class="number">200</span>) &#123; <span class="comment">//连接成功</span></span><br><span class="line">				System.out.println(<span class="string">&quot;已连接，正在解析。。。。。。&quot;</span>);</span><br><span class="line">				InputStream in = connection.getInputStream();</span><br><span class="line">				html = StreamTool.inToStringByByte(in);</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				System.out.println(connection.getResponseCode());</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">&quot;get请求失败&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> html;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">      	URL url ;</span><br><span class="line">     	InputStream is = <span class="keyword">null</span>;</span><br><span class="line">		OutputStream os = <span class="keyword">null</span>;</span><br><span class="line">     	String urlStr = <span class="string">&quot;https://www.baidu.com/home/news/data/newspage?nid=7953839918275534&amp;n_type=0&amp;p_from=1&quot;</span>;</span><br><span class="line">      </span><br><span class="line">		String htmlStr = Reptile.doGet(urlStr);</span><br><span class="line">		Document doc = Jsoup.parse(htmlStr); <span class="comment">// 将获取的网页 HTML 源代码转化为 Document对象</span></span><br><span class="line"></span><br><span class="line">		File f = <span class="keyword">new</span> File(<span class="string">&quot;E://imgs&quot;</span>);  <span class="comment">//把文件存在E://imgs</span></span><br><span class="line">		<span class="keyword">if</span> (!f.exists()) &#123;</span><br><span class="line">			f.mkdirs();</span><br><span class="line">		&#125;</span><br><span class="line">		Elements pngs = doc.select(<span class="string">&quot;img[src]&quot;</span>);  <span class="comment">//获取所有图片</span></span><br><span class="line"><span class="comment">//		Elements pngs = doc.select(&quot;img[src$=.png]&quot;);只爬取png图片</span></span><br><span class="line">		<span class="keyword">int</span> i = <span class="number">1</span>;	 <span class="comment">//计数</span></span><br><span class="line">		<span class="keyword">for</span> (Element e : pngs) &#123;</span><br><span class="line">			String src = e.attr(<span class="string">&quot;src&quot;</span>);  <span class="comment">// 获取img中的src路径</span></span><br><span class="line">			String imageName = src.substring(src.lastIndexOf(<span class="string">&quot;/&quot;</span>) + <span class="number">1</span>,</span><br><span class="line">             		src.length());	<span class="comment">// 获取后缀名</span></span><br><span class="line"></span><br><span class="line">			System.out.println(<span class="string">&quot;正在下载第&quot;</span> + i + <span class="string">&quot;张图片：&quot;</span>+ imageName);</span><br><span class="line">			</span><br><span class="line">			URL url = <span class="keyword">new</span> URL(src); 	<span class="comment">// 连接url</span></span><br><span class="line">			URLConnection uri = url.openConnection();</span><br><span class="line">			</span><br><span class="line">			is = uri.getInputStream();	 <span class="comment">// 获取数据流</span></span><br><span class="line">			os = <span class="keyword">new</span> FileOutputStream(<span class="keyword">new</span> File(<span class="string">&quot;E://imgs&quot;</span>,imageName));<span class="comment">// 写入数据流</span></span><br><span class="line">			<span class="keyword">byte</span>[] buf = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">			<span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">			<span class="keyword">while</span> ((len = is.read(buf)) != -<span class="number">1</span>) &#123;</span><br><span class="line">				os.write(buf, <span class="number">0</span>, len);</span><br><span class="line">			&#125;</span><br><span class="line">			i++;</span><br><span class="line">		&#125;</span><br><span class="line">      		os.close();</span><br><span class="line">      		is.close();</span><br><span class="line">		System.out.println(<span class="string">&quot;共有&quot;</span> + (i-<span class="number">1</span>) + <span class="string">&quot;张图片。&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在这里只做个一个简单的爬虫示例，<strong>通过两种方式的比较后，发现Jsoup更佳。</strong></p>
+<p><code>JAVA</code>基本的方式能用正则表达式来匹配所需要的元素，灵活性不高。</p>
+<p><code>Jsoup</code>这个强大的工具提供了DOM和JQuery方法，可以直接操作节点，同时也支持正则表达式，更加的灵活、省力，同时选择性、可玩性和扩展性更高。Jsoup更多的方法可以查看<a href="http://www.open-open.com/jsoup/"><em>Jsoup的API</em></a>。</p>
+<p>现在已经有很多开源的爬虫的框架供我们选择，比如webmagic、Heritrix等，可以适当选择。</p>
+<h2 id="附"><a href="#附" class="headerlink" title="附"></a>附</h2><p>还有一种更为简单强大的方式，在<code>Linux环境</code>下，利用<code>wget命令</code>只需要一行命令就可以实现以上功能。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wget -m -H -nd -l 1 -t 1 -A .jpg,.png,.jpeg,.JPEG -e robots=off -P /opt/download --no-check-certificate https://www.baidu.com/home/news/data/newspage?nid=7953839918275534&amp;n_type=0&amp;p_from=1</span><br></pre></td></tr></table></figure>
+
+<p>在下篇博客写一下Linux的基本命令。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>tools</tag>
       </tags>
   </entry>
   <entry>
@@ -3523,6 +3464,96 @@
       </tags>
   </entry>
   <entry>
+    <title>UML工具-PowerDesigner设计数据库</title>
+    <url>/UML%E5%B7%A5%E5%85%B7-PowerDesigner%E8%AE%BE%E8%AE%A1%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在数据库的开发设计中，PowerDesiger（PD）是一个较为常用的UML工具。PowerDesiger为各类数据模型提供了直观的符号表示，不仅使设计人员能更方便、更快捷地使非计算机专业技术人员展示数据库设计和应用系统设计，使系统设计人员与使用系统的业务人员更易于相互理解和交流，同时也使项目组内的交流更为直观、准确，更便于协调工作，从而加速系统的设计和开发过程。PowerDesiger设计完成后的数据库可直接生成SQL语句。<div align=center><img width="200" height="100" src="../../../../images/2017/12/PowerDesigner/logo-powerdesigner.png" algin="center"/></div><span id="more"></span></p>
+<h1 id="使用ODBC连接MySQL"><a href="#使用ODBC连接MySQL" class="headerlink" title="使用ODBC连接MySQL"></a>使用ODBC连接MySQL</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p><strong>PowerDesigner本身是32位的程序（特别重要），故不管在32位或者64位操作系统中，都需要安装32位的MySQL Connector /ODBC。</strong></p>
+<p>MySQL Connector /ODBC下载地址：<em><a href="https://dev.mysql.com/downloads/connector/odbc/">https://dev.mysql.com/downloads/connector/odbc/</a></em></p>
+<h2 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h2><ol>
+<li>安装完ODBC之后，打开PowerDesigner，新建一个Model，File—&gt;New Model</li>
+</ol>
+<div align=center><img width="500" height="300" src="../../../../images/2017/12/PowerDesigner/2.png" algin="center"/>
+
+</div>
+
+<ol start="2">
+<li>选择工具栏中的Database—&gt; Update Model from Database，如下图</li>
+</ol>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/3.png" algin="center"/>
+
+</div>
+
+<ol start="3">
+<li>打开配置对话框，选择[Using a data source]，点击输入框后的图标</li>
+</ol>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/4.png" algin="center"/>
+
+</div>
+
+<ol start="4">
+<li>配置ODBC数据源</li>
+</ol>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/5.png" algin="center"/></div>
+
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/6.png" algin="center"/></div>
+
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/7.png" algin="center"/></div>
+
+<p>说明：这里提供了ANSI和Unicode两种字符集版本的Driver，<strong>Unicode提供更丰富的字符集，一般推荐使用Unicode</strong>。</p>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/8.png" algin="center"/></div>
+
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/9.png" algin="center"/></div>
+
+<p>点击完成，配置连接信息。</p>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/10.png" algin="center"/></div>
+
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">说明：</span><br><span class="line">Data Source Name：指定当前配置的ODBC数据源名称，可随意填写。</span><br><span class="line">Description：指定ODBC数据源的描述信息，可根据用途随意填写。</span><br><span class="line">TCP/IP Server：采用TCP/IP协议连接服务器，如果是本地填写localhost或者127.0.0.1（根据实际MySQL用户情况选择），如果是远程服务器则填写相应IP地址即可。</span><br><span class="line">Port：默认3306，根据实际MySQL的端口设置填写。</span><br><span class="line">lNamed Pipe：命名管道方式连接，只适用于widows下的本地连接。连接性能比TCP/IP方式更高，更安全。请按照MySQL的配置文件my.ini中的socket参数指定的值填写，如果没有设置则默认为MySQL（但是目前为止这种方式我还没有测试成功）。</span><br><span class="line">User：数据库用户名。</span><br><span class="line">Password：数据库密码。</span><br><span class="line">Database：数据库中的database。</span><br></pre></td></tr></table></figure>
+
+<p>信息输入完之后可以选择Test测试配置是否正确，点击OK就结束了配置。</p>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/12.png" algin="center"/></div>
+
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/13.png" algin="center"/></div>
+
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/14.png" algin="center"/></div>
+
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/15.png" algin="center"/></div>
+
+<p>到这里已经可以连接数据库了。</p>
+<h1 id="设计数据库"><a href="#设计数据库" class="headerlink" title="设计数据库"></a>设计数据库</h1><p>如果在已有的数据库上需要设计和修改，先取消所有表，再选择需要设计或修改的数据库，选择表，点击ok。</p>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-1.png" algin="center"/></div>
+
+<p>连接后的UML如下，可以新建和修改表</p>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-2.png" algin="center"/></div>
+
+<p>同时可对表进行主外键设计，现在主外键已经很少用到了。</p>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-3.png" algin="center"/></div>
+
+<p>双击表之间的连接线，点击Joins</p>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-4.png" algin="center"/></div>
+
+<p>点击【确定】按钮，即可如我们所愿： </p>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-6.png" algin="center"/></div>
+
+<h1 id="生成建表语句"><a href="#生成建表语句" class="headerlink" title="生成建表语句"></a>生成建表语句</h1><p>点击Database—&gt;Generate Database</p>
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-7.png" algin="center"/></div>
+
+<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-8.png" algin="center"/></div>
+
+<p>点击【确定】按钮之后，可以在桌面上找到shiro.sql这样的一个文件，打开，即可看到建表语句： </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="comment">/* DBMS name:      MySQL 5.0                                    */</span></span><br><span class="line"><span class="comment">/* Created on:     2017.12.6 17:22:25                          */</span></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> if <span class="keyword">exists</span> shiro.u_permission;</span><br><span class="line"></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> if <span class="keyword">exists</span> shiro.u_role;</span><br><span class="line"></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> if <span class="keyword">exists</span> shiro.u_role_permission;</span><br><span class="line"></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> if <span class="keyword">exists</span> shiro.u_user;</span><br><span class="line"></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> if <span class="keyword">exists</span> shiro.u_user_role;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="comment">/* User: shiro                                                  */</span></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">user</span> shiro;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="comment">/* Table: u_permission                                          */</span></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> shiro.u_permission</span><br><span class="line">(</span><br><span class="line">   id                   <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="keyword">null</span> auto_increment,</span><br><span class="line">   url                  <span class="type">national</span> <span class="type">varchar</span>(<span class="number">256</span>) comment <span class="string">&#x27;url地址&#x27;</span>,</span><br><span class="line">   name                 <span class="type">national</span> <span class="type">varchar</span>(<span class="number">64</span>) comment <span class="string">&#x27;url描述&#x27;</span>,</span><br><span class="line">   <span class="keyword">primary</span> key (id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="comment">/* Table: u_role                                                */</span></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> shiro.u_role</span><br><span class="line">(</span><br><span class="line">   id                   <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="keyword">null</span> auto_increment,</span><br><span class="line">   name                 <span class="type">national</span> <span class="type">varchar</span>(<span class="number">32</span>) comment <span class="string">&#x27;角色名称&#x27;</span>,</span><br><span class="line">   type                 <span class="type">national</span> <span class="type">varchar</span>(<span class="number">10</span>) comment <span class="string">&#x27;角色类型&#x27;</span>,</span><br><span class="line">   <span class="keyword">primary</span> key (id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="comment">/* Table: u_role_permission                                     */</span></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> shiro.u_role_permission</span><br><span class="line">(</span><br><span class="line">   rid                  <span class="type">bigint</span>(<span class="number">20</span>) comment <span class="string">&#x27;角色ID&#x27;</span>,</span><br><span class="line">   pid                  <span class="type">bigint</span>(<span class="number">20</span>) comment <span class="string">&#x27;权限ID&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="comment">/* Table: u_user                                                */</span></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> shiro.u_user</span><br><span class="line">(</span><br><span class="line">   id                   <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="keyword">null</span> auto_increment,</span><br><span class="line">   nickname             <span class="type">national</span> <span class="type">varchar</span>(<span class="number">20</span>) comment <span class="string">&#x27;用户昵称&#x27;</span>,</span><br><span class="line">   email                <span class="type">national</span> <span class="type">varchar</span>(<span class="number">128</span>) comment <span class="string">&#x27;邮箱|登录帐号&#x27;</span>,</span><br><span class="line">   pswd                 <span class="type">national</span> <span class="type">varchar</span>(<span class="number">32</span>) comment <span class="string">&#x27;密码&#x27;</span>,</span><br><span class="line">   create_time          datetime comment <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">   last_login_time      datetime comment <span class="string">&#x27;最后登录时间&#x27;</span>,</span><br><span class="line">   status               <span class="type">bigint</span>(<span class="number">1</span>) <span class="keyword">default</span> <span class="number">1</span> comment <span class="string">&#x27;1:有效，0:禁止登录&#x27;</span>,</span><br><span class="line">   <span class="keyword">primary</span> key (id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="comment">/* Table: u_user_role                                           */</span></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> shiro.u_user_role</span><br><span class="line">(</span><br><span class="line">   uid                  <span class="type">bigint</span>(<span class="number">20</span>) comment <span class="string">&#x27;用户ID&#x27;</span>,</span><br><span class="line">   rid                  <span class="type">bigint</span>(<span class="number">20</span>) comment <span class="string">&#x27;角色ID&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> shiro.u_user_role <span class="keyword">add</span> <span class="keyword">constraint</span> FK_Reference_1 <span class="keyword">foreign</span> key (uid)</span><br><span class="line">      <span class="keyword">references</span> shiro.u_user (id) <span class="keyword">on</span> <span class="keyword">delete</span> restrict <span class="keyword">on</span> update restrict;</span><br></pre></td></tr></table></figure>
+
+<p>得到SQL语句后可直接导入到数据库。由此我们设计数据库已经完成。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这里只是简单介绍了PowerDesigner进行数据库模型设计，自动生成SQL语句等功能。PowerDesigner还有很多技巧和功能在摸索中。</p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>tools</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>About</title>
     <url>/about/</url>
     <content><![CDATA[<p>​                    </p>
@@ -4894,6 +4925,47 @@
       </tags>
   </entry>
   <entry>
+    <title>架构设计及概念</title>
+    <url>/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%8F%8A%E6%A6%82%E5%BF%B5/</url>
+    <content><![CDATA[<h1 id="架构定义"><a href="#架构定义" class="headerlink" title="架构定义"></a><a href="https://www.mubucm.com/doc/Kh30n3bevp">架构定义</a></h1><h2 id="系统拆分"><a href="#系统拆分" class="headerlink" title="系统拆分"></a>系统拆分</h2><ul>
+<li>按<strong>逻辑</strong>拆分：模块</li>
+<li>按<strong>物理</strong>拆分：组件</li>
+</ul>
+<h2 id="4R架构定义"><a href="#4R架构定义" class="headerlink" title="4R架构定义"></a>4R架构定义</h2><ul>
+<li><strong>Rank</strong>：顶层架构</li>
+<li><strong>Role</strong>：角色组成</li>
+<li><strong>Relation</strong>：角色关系</li>
+<li><strong>Rule</strong>：运作规则</li>
+</ul>
+<div align=center><img src="../../../../images/2022/1-3/1.1_arch_definition.png" algin="center"/></div>
+
+<h1 id="架构分类"><a href="#架构分类" class="headerlink" title="架构分类"></a><a href="https://www.mubucm.com/doc/6mSpcn-gt7p">架构分类</a></h1><h2 id="按业务划分"><a href="#按业务划分" class="headerlink" title="按业务划分"></a>按业务划分</h2><ul>
+<li>业务架构图</li>
+</ul>
+<h2 id="按领域划分"><a href="#按领域划分" class="headerlink" title="按领域划分"></a>按领域划分</h2><ul>
+<li>客户端架构图</li>
+<li>前端架构图</li>
+<li>后端架构图</li>
+</ul>
+<div align=center><img src="../../../../images/2022/1-3/1.2_arch_classify.png" algin="center"/></div>
+
+<h1 id="面向复杂度的架构分析"><a href="#面向复杂度的架构分析" class="headerlink" title="面向复杂度的架构分析"></a><a href="https://www.mubucm.com/doc/3iP82kZ-tnp">面向复杂度的架构分析</a></h1><h2 id="本质"><a href="#本质" class="headerlink" title="本质"></a>本质</h2><p>架构设计是为了降低软件系统的复杂度。</p>
+<div align=center><img src="../../../../images/2022/1-3/1.3_arch_complexity.png" algin="center"/></div>
+
+<h1 id="架构设计三原则"><a href="#架构设计三原则" class="headerlink" title="架构设计三原则"></a><a href="https://www.mubucm.com/doc/2sOoT5Jcknp">架构设计三原则</a></h1><h2 id="合适原则"><a href="#合适原则" class="headerlink" title="合适原则"></a>合适原则</h2><p>合适优于业界领先。</p>
+<h2 id="简单原则"><a href="#简单原则" class="headerlink" title="简单原则"></a>简单原则</h2><p>简单优于复杂。</p>
+<h2 id="演进原则"><a href="#演进原则" class="headerlink" title="演进原则"></a>演进原则</h2><p>演化优于一步到位。</p>
+<div align=center><img src="../../../../images/2022/1-3/1.4_arch_principle.png" algin="center"/></div>
+
+]]></content>
+      <categories>
+        <category>架构</category>
+      </categories>
+      <tags>
+        <tag>架构</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>浅谈共享单车</title>
     <url>/%E6%B5%85%E8%B0%88%E5%85%B1%E4%BA%AB%E5%8D%95%E8%BD%A6/</url>
     <content><![CDATA[<p>​    要说目前最火爆的互联网现象，当属<code>共享单车</code>。这里所谓的共享，本质上指的是需求共享。就骑车的需求，从一个地方骑到另一个地方，就是用户触点（产品投放）、产品操作（骑行过程）、付费模式（支付）的流程，从个体上来讲，这个流程是单向的。但在“共享”的模式下，扫码骑走，停车即走，把不同的人，在不同的时间和地点，相同的骑行需求，通过产品操作节点，形成需求闭环，停车点同时又是骑行出发点，这就是需求共享。</p>
@@ -5465,6 +5537,65 @@
       </tags>
   </entry>
   <entry>
+    <title>设计合理的架构</title>
+    <url>/%E8%AE%BE%E8%AE%A1%E5%90%88%E7%90%86%E7%9A%84%E6%9E%B6%E6%9E%84/</url>
+    <content><![CDATA[<h1 id="架构师职责"><a href="#架构师职责" class="headerlink" title="架构师职责"></a><a href="https://www.mubucm.com/doc/5jhFgPTD_Zp">架构师职责</a></h1><mark class="hl-label red">架构师是业务与技术之间的桥梁。</mark> 
+
+<h2 id="核心能力"><a href="#核心能力" class="headerlink" title="核心能力"></a>核心能力</h2><ul>
+<li>判断-确定性思维</li>
+<li>拆解-创造性思维</li>
+<li>取舍-系统性思维</li>
+</ul>
+<h2 id="主要职责"><a href="#主要职责" class="headerlink" title="主要职责"></a>主要职责</h2><h3 id="架构设计前期"><a href="#架构设计前期" class="headerlink" title="架构设计前期"></a>架构设计前期</h3><ul>
+<li>澄清不确定性</li>
+<li>识别复杂需求</li>
+<li>与业务方交流</li>
+<li>与利益干系人交流</li>
+<li>业务架构图</li>
+<li>核心场景流程</li>
+</ul>
+<h3 id="架构设计中期"><a href="#架构设计中期" class="headerlink" title="架构设计中期"></a>架构设计中期</h3><ul>
+<li>选择、设计备选方案</li>
+<li>架构小组讨论</li>
+<li>方案评估</li>
+<li>方案汇报</li>
+</ul>
+<h3 id="架构设计后期"><a href="#架构设计后期" class="headerlink" title="架构设计后期"></a>架构设计后期</h3><ul>
+<li>细化架构</li>
+<li>完善架构</li>
+<li>写文档</li>
+<li>架构宣讲</li>
+<li>最终的架构文档</li>
+</ul>
+<div align=center><img src="../../../../images/2022/1-3/3.1_architect_ responsibilities.png" algin="center"/></div>
+
+<h1 id="架构设计前期-1"><a href="#架构设计前期-1" class="headerlink" title="架构设计前期"></a><a href="https://www.mubucm.com/doc/2SasZqNwyZp">架构设计前期</a></h1><div align=center><img src="../../../../images/2022/1-3/3.2_arch_prophase.png" algin="center"/></div>
+
+<h1 id="架构设计中期-1"><a href="#架构设计中期-1" class="headerlink" title="架构设计中期"></a><a href="https://www.mubucm.com/doc/7FhHnbjLDdp">架构设计中期</a></h1><div align=center><img src="../../../../images/2022/1-3/3.3_arch_metaphase.png" algin="center"/></div>
+
+<h1 id="架构设计后期-1"><a href="#架构设计后期-1" class="headerlink" title="架构设计后期"></a><a href="https://www.mubucm.com/doc/2C5tQ9wHvdp">架构设计后期</a></h1><h2 id="架构设计文档"><a href="#架构设计文档" class="headerlink" title="架构设计文档"></a>架构设计文档</h2><ol>
+<li>业务背景</li>
+<li>约束&amp;限制</li>
+<li>总体架构设计</li>
+<li>详细架构设计</li>
+<li>架构质量设计</li>
+<li>架构演进规则</li>
+</ol>
+<h2 id="详细架构设计"><a href="#详细架构设计" class="headerlink" title="详细架构设计"></a>详细架构设计</h2><ul>
+<li>架构规范</li>
+<li>架构质量</li>
+</ul>
+<div align=center><img src="../../../../images/2022/1-3/3.4_arch_anaphase.png" algin="center"/></div>
+]]></content>
+      <categories>
+        <category>架构</category>
+        <category>设计</category>
+      </categories>
+      <tags>
+        <tag>架构</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>详解MongoDB执行计划</title>
     <url>/%E8%AF%A6%E8%A7%A3MongoDB%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在RDBMS(Relational Database Management System)中，无论哪种数据库，都提供了SQL剖析工具，用来解决SQL效率低下的问题。在MongoDB中，也有相应的策略来实现剖析。MongoDB提供了**db.collection.explain()<strong>、</strong>cursor.explain()**方法和<code>explain</code>命令返回查询计划信息和查询计划的执行统计信息。<div align=center><img width="420" height="220" src="../../../../images/2019/4-6/MongoDB-explain.png" algin="center"/></div><span id="more"></span></p>
@@ -5666,65 +5797,6 @@
       <tags>
         <tag>tips</tag>
         <tag>tomcat</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>设计合理的架构</title>
-    <url>/%E8%AE%BE%E8%AE%A1%E5%90%88%E7%90%86%E7%9A%84%E6%9E%B6%E6%9E%84/</url>
-    <content><![CDATA[<h1 id="架构师职责"><a href="#架构师职责" class="headerlink" title="架构师职责"></a><a href="https://www.mubucm.com/doc/5jhFgPTD_Zp">架构师职责</a></h1><mark class="hl-label red">架构师是业务与技术之间的桥梁。</mark> 
-
-<h2 id="核心能力"><a href="#核心能力" class="headerlink" title="核心能力"></a>核心能力</h2><ul>
-<li>判断-确定性思维</li>
-<li>拆解-创造性思维</li>
-<li>取舍-系统性思维</li>
-</ul>
-<h2 id="主要职责"><a href="#主要职责" class="headerlink" title="主要职责"></a>主要职责</h2><h3 id="架构设计前期"><a href="#架构设计前期" class="headerlink" title="架构设计前期"></a>架构设计前期</h3><ul>
-<li>澄清不确定性</li>
-<li>识别复杂需求</li>
-<li>与业务方交流</li>
-<li>与利益干系人交流</li>
-<li>业务架构图</li>
-<li>核心场景流程</li>
-</ul>
-<h3 id="架构设计中期"><a href="#架构设计中期" class="headerlink" title="架构设计中期"></a>架构设计中期</h3><ul>
-<li>选择、设计备选方案</li>
-<li>架构小组讨论</li>
-<li>方案评估</li>
-<li>方案汇报</li>
-</ul>
-<h3 id="架构设计后期"><a href="#架构设计后期" class="headerlink" title="架构设计后期"></a>架构设计后期</h3><ul>
-<li>细化架构</li>
-<li>完善架构</li>
-<li>写文档</li>
-<li>架构宣讲</li>
-<li>最终的架构文档</li>
-</ul>
-<div align=center><img src="../../../../images/2022/1-3/3.1_architect_ responsibilities.png" algin="center"/></div>
-
-<h1 id="架构设计前期-1"><a href="#架构设计前期-1" class="headerlink" title="架构设计前期"></a><a href="https://www.mubucm.com/doc/2SasZqNwyZp">架构设计前期</a></h1><div align=center><img src="../../../../images/2022/1-3/3.2_arch_prophase.png" algin="center"/></div>
-
-<h1 id="架构设计中期-1"><a href="#架构设计中期-1" class="headerlink" title="架构设计中期"></a><a href="https://www.mubucm.com/doc/7FhHnbjLDdp">架构设计中期</a></h1><div align=center><img src="../../../../images/2022/1-3/3.3_arch_metaphase.png" algin="center"/></div>
-
-<h1 id="架构设计后期-1"><a href="#架构设计后期-1" class="headerlink" title="架构设计后期"></a><a href="https://www.mubucm.com/doc/2C5tQ9wHvdp">架构设计后期</a></h1><h2 id="架构设计文档"><a href="#架构设计文档" class="headerlink" title="架构设计文档"></a>架构设计文档</h2><ol>
-<li>业务背景</li>
-<li>约束&amp;限制</li>
-<li>总体架构设计</li>
-<li>详细架构设计</li>
-<li>架构质量设计</li>
-<li>架构演进规则</li>
-</ol>
-<h2 id="详细架构设计"><a href="#详细架构设计" class="headerlink" title="详细架构设计"></a>详细架构设计</h2><ul>
-<li>架构规范</li>
-<li>架构质量</li>
-</ul>
-<div align=center><img src="../../../../images/2022/1-3/3.4_arch_anaphase.png" algin="center"/></div>
-]]></content>
-      <categories>
-        <category>架构</category>
-        <category>设计</category>
-      </categories>
-      <tags>
-        <tag>架构</tag>
       </tags>
   </entry>
   <entry>
@@ -6077,77 +6149,62 @@
       </tags>
   </entry>
   <entry>
-    <title>高可用计算架构</title>
-    <url>/%E9%AB%98%E5%8F%AF%E7%94%A8%E8%AE%A1%E7%AE%97%E6%9E%B6%E6%9E%84/</url>
-    <content><![CDATA[<h1 id="多级缓存架构"><a href="#多级缓存架构" class="headerlink" title="多级缓存架构"></a><a href="https://www.mubucm.com/doc/2PGxjaaeQrp">多级缓存架构</a></h1><h2 id="缓存设计"><a href="#缓存设计" class="headerlink" title="缓存设计"></a>缓存设计</h2><ul>
-<li>缓存内容</li>
-<li>缓存时间</li>
-<li>缓存系统</li>
-<li>更新机制</li>
-</ul>
-<h2 id="多级缓存"><a href="#多级缓存" class="headerlink" title="多级缓存"></a>多级缓存</h2><ul>
-<li>客户端缓存</li>
-<li>CDN缓存</li>
-<li>WEB容器缓存</li>
-<li>应用缓存</li>
-<li>分布式缓存</li>
-</ul>
-<div align=center><img src="../../../../images/2022/1-3/5.1_multilevel_cache.png" algin="center"/></div>
+    <title>Linux下Tomcat的安装与优化</title>
+    <url>/Linux%E4%B8%8BTomcat%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BC%98%E5%8C%96/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>Linux系统已经搁置很久了，之前有在Ubuntu系统上开发过，但是Linux已经很久没有用了。现在公司把项目部署在Linux系统上，又要把Linux相关知识温习一下。这篇博客温习一下Linux下Tomcat的部署与优化，大部分的操作与在windows上相同。<div align=center><img width="700" height="300" src="../../../../images/2018-01/linux_tomcat/tomcat_linux.png" algin="center"/></div><span id="more"></span></p>
+<h1 id="Tomcat的安装"><a href="#Tomcat的安装" class="headerlink" title="Tomcat的安装"></a>Tomcat的安装</h1><p>首先下载Tomcat的压缩包（apache-tomcat-7.0.82.tar.gz），下载地址为：<em><a href="https://tomcat.apache.org/download-70.cgi">https://tomcat.apache.org/download-70.cgi</a></em></p>
+<p>将压缩包放到Linux预定目录下，执行tar的解压缩命令</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">cd /usr/soft/</span><br><span class="line">tar -zxvf apache-tomcat-7.0.82.tar.gz</span><br></pre></td></tr></table></figure>
 
-<h1 id="分布式缓存架构设计"><a href="#分布式缓存架构设计" class="headerlink" title="分布式缓存架构设计"></a><a href="https://www.mubucm.com/doc/5SyKwv7LGrp">分布式缓存架构设计</a></h1><h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><ul>
-<li>数据缓存：实时性要求高，读多写少</li>
-<li>结果缓存：计算量大实时性要求不高</li>
-</ul>
-<h2 id="缓存问题"><a href="#缓存问题" class="headerlink" title="缓存问题"></a>缓存问题</h2><ul>
-<li>缓存穿透</li>
-<li>缓存雪崩</li>
-<li>缓存热点</li>
-</ul>
-<div align=center><img src="../../../../images/2022/1-3/5.2_distributed_cache.png" algin="center"/></div>
+<p>进入到apache-tomcat-7.0.82.tar.gz的bin目录下执行**./startup.sh** 命令即可启动Tomcat。</p>
+<div align=center><img width="700" height="300" src="../../../../images/2018-01/linux_tomcat/1.png" algin="center"/>
 
-<h1 id="负载均衡架构"><a href="#负载均衡架构" class="headerlink" title="负载均衡架构"></a><a href="https://www.mubucm.com/doc/6rSJ5MVs4Hp">负载均衡架构</a></h1><div align=center><img src="../../../../images/2022/1-3/5.3_load_balancing_1.jpg" algin="center"/></div>
+</div>
 
-<ol>
-<li>DNS</li>
-<li>F5：100万~1000万</li>
-<li>LVS：10万~100万</li>
-<li>Nginx：5万~10万</li>
-<li>服务路由(Gateway)：1000~5000</li>
+<h1 id="Tomcat的优化"><a href="#Tomcat的优化" class="headerlink" title="Tomcat的优化"></a>Tomcat的优化</h1><p>默认情况下Tomcat的配置适合开发模式或者比较小的系统应用，当访问量稍微多的时候比如1000人同时在线做一些频繁的业务操作的时候，可能性能方面就会存在问题，所以有必要在生产环境下对Tomcat做一些优化。</p>
+<p>之前几篇文章也提到了Tomcat相关参数的设置与优化，Windows操作系统与Linux操作系统大同小异。</p>
+<h2 id="APR模式"><a href="#APR模式" class="headerlink" title="APR模式"></a>APR模式</h2><p>Tomcat 常用运行模式有3种，分别为 BIO，NIO，APR。生产环境建议用APR，从操作系统级别来解决异步的IO问题，大幅度的提高性能。Linux下需要另安装配置APR。</p>
+<h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p>APR模式需要下载<strong>apr-1.6.3.tar.gz</strong>和<strong>apr-util-1.6.1.tar.gz</strong>两个文件，下载地址为：<em><a href="http://apr.apache.org/download.cgi">http://apr.apache.org/download.cgi</a></em></p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>将连个文件放到合适的位置然后进行安装操作。</p>
+<h4 id="apr的安装"><a href="#apr的安装" class="headerlink" title="apr的安装"></a>apr的安装</h4><p>依次执行，将安装路径设为<code>/usr/local/apr</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tar -zxvf apr-1.6.3.tar.gz</span><br><span class="line">cd apr-1.6.3.tar.gz</span><br><span class="line">./configure --prefix=/usr/local/apr</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+<h4 id="apr-util的安装"><a href="#apr-util的安装" class="headerlink" title="apr-util的安装"></a>apr-util的安装</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tar -zxvf apr-util-1.6.1.tar.gz</span><br><span class="line">cd apr-util-1.6.1.tar.gz</span><br><span class="line">./configure --with-apr=/usr/local/apr/bin/apr-1-config</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装tomcat-native"><a href="#安装tomcat-native" class="headerlink" title="安装tomcat-native"></a>安装tomcat-native</h4><p><code>tomcat-native.tar.gz是Tomcat自带的压缩包</code>，该文件在tomcat的bin目录下。</p>
+<p>系统要先安装好JDK，我的JDK的安装目录为：<code>/usr/soft/jdk1.8.0_152</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /usr/soft/apache-tomcat-7.0.82/bin/</span><br><span class="line">tar -zxvf tomcat-native.tar.gz</span><br><span class="line">cd tomcat-native-1.2.14-src/java/org/apache/tomcat/jni/</span><br><span class="line">./configure --with-apr=/usr/local/apr/bin/apr-1-config --with-java-home=/usr/soft/jdk1.8.0_152</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><ol>
+<li> 编辑tomcat目录下文件bin/catalina.sh<strong>加载apr</strong>，在任意地方加入下面一行</li>
 </ol>
-<div align=center><img src="../../../../images/2022/1-3/5.3_load_balancing.png" algin="center"/></div>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">CATALINA_OPTS=&quot;$CATALINA_OPTS -Djava.library.path=/usr/local/apr/lib&quot;</span><br></pre></td></tr></table></figure>
 
-<h1 id="负载均衡技巧"><a href="#负载均衡技巧" class="headerlink" title="负载均衡技巧"></a><a href="https://www.mubucm.com/doc/1WhWFH8AMp">负载均衡技巧</a></h1><h2 id="通用算法"><a href="#通用算法" class="headerlink" title="通用算法"></a>通用算法</h2><ul>
-<li>轮训</li>
-<li>随机</li>
-<li>加权轮训</li>
-<li>负载有限</li>
-<li>性能优先</li>
-<li>hash</li>
-</ul>
-<h2 id="服务器性能估算"><a href="#服务器性能估算" class="headerlink" title="服务器性能估算"></a>服务器性能估算</h2><h3 id="接口性能"><a href="#接口性能" class="headerlink" title="接口性能"></a>接口性能</h3><ol>
-<li>线上业务服务器接口处理时间分布为 20~100ms；</li>
-<li>平均大约为 50ms；</li>
-<li> 访问存储或者其它系统接口是主要的性能消耗点。</li>
+<ol start="2">
+<li> 编辑bin/catalina.sh<strong>配置JVM运行参数</strong>，注意引号不要忘记。</li>
 </ol>
-<h3 id="服务器性能"><a href="#服务器性能" class="headerlink" title="服务器性能"></a>服务器性能</h3><p>线上单个服务器（32核）性能大约为 300~1000 TPS/QPS</p>
-<h3 id="服务器数量"><a href="#服务器数量" class="headerlink" title="服务器数量"></a>服务器数量</h3><p>服务器数量 = (总 TPS+QPS) / 单个服务器性能</p>
-<div align=center><img src="../../../../images/2022/1-3/5.4_load_balancing_techniques.png" algin="center"/></div>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">JAVA_OPTS=&quot;-server -Xmx4g -Xms4g -Xmn1g -XX:PermSize=512M -XX:MaxPermSize=521M -XX:+DisableExplicitGC -XX:SurvivorRatio=3 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/usr/soft/apache-tomcat-7.0.82 -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:CMSInitiatingOccupancyFraction=65 -XX:+UseCMSInitiatingOccupancyOnly -XX:SoftRefLRUPolicyMSPerMB=0 -XX:+UseCMSCompactAtFullCollection -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintHeapAtGC -Xloggc:/usr/soft/jdk1.8.0_152/log/gc.log -Djava.awt.headless=true&quot;</span><br></pre></td></tr></table></figure>
 
-<h1 id="接口高可用"><a href="#接口高可用" class="headerlink" title="接口高可用"></a><a href="https://www.mubucm.com/doc/6eQCM4fSZwp">接口高可用</a></h1><ul>
-<li>限流</li>
-<li>排队</li>
-<li>降级</li>
-<li>熔断</li>
-</ul>
-<div align=center><img src="../../../../images/2022/1-3/5.5_interface_high_availability.png" algin="center"/></div>
+<ol start="3">
+<li>编辑conf/server.xml<strong>使用apr运行模式</strong></li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;Connector port=&quot;8080&quot; protocol=&quot;org.apache.coyote.http11.Http11AprProtocol&quot;</span><br><span class="line">               connectionTimeout=&quot;20000&quot; maxThreads=&quot;1000&quot; minSpareThreads=&quot;100&quot;</span><br><span class="line">			   maxSpareThreads=&quot;200&quot; acceptCount=&quot;900&quot; enableLookups=&quot;false&quot;</span><br><span class="line">			   compression=&quot;on&quot; compressionMinSize=&quot;1024&quot; compressableMimeType=&quot;text/html,text/xml,text/css,text/javascript&quot;</span><br><span class="line">               redirectPort=&quot;8443&quot; URIEncoding=&quot;UTF-8&quot; maxHttpHeaderSize=&quot;8192&quot;/&gt;</span><br></pre></td></tr></table></figure>
 
+<ol start="4">
+<li>启动Tomcat</li>
+</ol>
+<p>启动tomcat，查看tomcat日志文件，若出现如下信息则表明安装配置成功。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">一月 05, 2018 2:03:09 下午 org.apache.coyote.AbstractProtocol init</span><br><span class="line">信息: Initializing ProtocolHandler [&quot;http-apr-8080&quot;]</span><br><span class="line">一月 05, 2018 2:03:09 下午 org.apache.coyote.AbstractProtocol init</span><br><span class="line">信息:: Initializing ProtocolHandler [&quot;ajp-apr-8009&quot;]</span><br><span class="line">一月 05, 2018 2:03:09 下午 org.apache.catalina.startup.Catalina load</span><br><span class="line">信息:: Initialization processed in 1471 ms</span><br></pre></td></tr></table></figure>
+
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>性能的影响因素是多方面的，互相影响，首先是系统本身没问题，数据库的响应没问题，web容器顺畅，硬件顺畅，网络带宽足够，再使用一些小工具进行检测，只有在大量用户在实际的生产环境中使用系统，才能发现问题，找到问题的根源到底是哪一块引发的性能瓶颈，调整一下自然一切都变得顺畅。</p>
 ]]></content>
       <categories>
-        <category>架构</category>
-        <category>设计</category>
+        <category>Linux</category>
+        <category>安装</category>
       </categories>
       <tags>
-        <tag>架构</tag>
+        <tag>tips</tag>
+        <tag>tomcat</tag>
       </tags>
   </entry>
   <entry>
@@ -6236,131 +6293,74 @@
       </tags>
   </entry>
   <entry>
-    <title>UML工具-PowerDesigner设计数据库</title>
-    <url>/UML%E5%B7%A5%E5%85%B7-PowerDesigner%E8%AE%BE%E8%AE%A1%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在数据库的开发设计中，PowerDesiger（PD）是一个较为常用的UML工具。PowerDesiger为各类数据模型提供了直观的符号表示，不仅使设计人员能更方便、更快捷地使非计算机专业技术人员展示数据库设计和应用系统设计，使系统设计人员与使用系统的业务人员更易于相互理解和交流，同时也使项目组内的交流更为直观、准确，更便于协调工作，从而加速系统的设计和开发过程。PowerDesiger设计完成后的数据库可直接生成SQL语句。<div align=center><img width="200" height="100" src="../../../../images/2017/12/PowerDesigner/logo-powerdesigner.png" algin="center"/></div><span id="more"></span></p>
-<h1 id="使用ODBC连接MySQL"><a href="#使用ODBC连接MySQL" class="headerlink" title="使用ODBC连接MySQL"></a>使用ODBC连接MySQL</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p><strong>PowerDesigner本身是32位的程序（特别重要），故不管在32位或者64位操作系统中，都需要安装32位的MySQL Connector /ODBC。</strong></p>
-<p>MySQL Connector /ODBC下载地址：<em><a href="https://dev.mysql.com/downloads/connector/odbc/">https://dev.mysql.com/downloads/connector/odbc/</a></em></p>
-<h2 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h2><ol>
-<li>安装完ODBC之后，打开PowerDesigner，新建一个Model，File—&gt;New Model</li>
-</ol>
-<div align=center><img width="500" height="300" src="../../../../images/2017/12/PowerDesigner/2.png" algin="center"/>
-
-</div>
-
-<ol start="2">
-<li>选择工具栏中的Database—&gt; Update Model from Database，如下图</li>
-</ol>
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/3.png" algin="center"/>
-
-</div>
-
-<ol start="3">
-<li>打开配置对话框，选择[Using a data source]，点击输入框后的图标</li>
-</ol>
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/4.png" algin="center"/>
-
-</div>
-
-<ol start="4">
-<li>配置ODBC数据源</li>
-</ol>
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/5.png" algin="center"/></div>
-
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/6.png" algin="center"/></div>
-
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/7.png" algin="center"/></div>
-
-<p>说明：这里提供了ANSI和Unicode两种字符集版本的Driver，<strong>Unicode提供更丰富的字符集，一般推荐使用Unicode</strong>。</p>
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/8.png" algin="center"/></div>
-
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/9.png" algin="center"/></div>
-
-<p>点击完成，配置连接信息。</p>
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/10.png" algin="center"/></div>
-
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">说明：</span><br><span class="line">Data Source Name：指定当前配置的ODBC数据源名称，可随意填写。</span><br><span class="line">Description：指定ODBC数据源的描述信息，可根据用途随意填写。</span><br><span class="line">TCP/IP Server：采用TCP/IP协议连接服务器，如果是本地填写localhost或者127.0.0.1（根据实际MySQL用户情况选择），如果是远程服务器则填写相应IP地址即可。</span><br><span class="line">Port：默认3306，根据实际MySQL的端口设置填写。</span><br><span class="line">lNamed Pipe：命名管道方式连接，只适用于widows下的本地连接。连接性能比TCP/IP方式更高，更安全。请按照MySQL的配置文件my.ini中的socket参数指定的值填写，如果没有设置则默认为MySQL（但是目前为止这种方式我还没有测试成功）。</span><br><span class="line">User：数据库用户名。</span><br><span class="line">Password：数据库密码。</span><br><span class="line">Database：数据库中的database。</span><br></pre></td></tr></table></figure>
-
-<p>信息输入完之后可以选择Test测试配置是否正确，点击OK就结束了配置。</p>
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/12.png" algin="center"/></div>
-
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/13.png" algin="center"/></div>
-
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/14.png" algin="center"/></div>
-
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/15.png" algin="center"/></div>
-
-<p>到这里已经可以连接数据库了。</p>
-<h1 id="设计数据库"><a href="#设计数据库" class="headerlink" title="设计数据库"></a>设计数据库</h1><p>如果在已有的数据库上需要设计和修改，先取消所有表，再选择需要设计或修改的数据库，选择表，点击ok。</p>
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-1.png" algin="center"/></div>
-
-<p>连接后的UML如下，可以新建和修改表</p>
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-2.png" algin="center"/></div>
-
-<p>同时可对表进行主外键设计，现在主外键已经很少用到了。</p>
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-3.png" algin="center"/></div>
-
-<p>双击表之间的连接线，点击Joins</p>
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-4.png" algin="center"/></div>
-
-<p>点击【确定】按钮，即可如我们所愿： </p>
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-6.png" algin="center"/></div>
-
-<h1 id="生成建表语句"><a href="#生成建表语句" class="headerlink" title="生成建表语句"></a>生成建表语句</h1><p>点击Database—&gt;Generate Database</p>
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-7.png" algin="center"/></div>
-
-<div align=center><img width="450" height="300" src="../../../../images/2017/12/PowerDesigner/2-8.png" algin="center"/></div>
-
-<p>点击【确定】按钮之后，可以在桌面上找到shiro.sql这样的一个文件，打开，即可看到建表语句： </p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="comment">/* DBMS name:      MySQL 5.0                                    */</span></span><br><span class="line"><span class="comment">/* Created on:     2017.12.6 17:22:25                          */</span></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> if <span class="keyword">exists</span> shiro.u_permission;</span><br><span class="line"></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> if <span class="keyword">exists</span> shiro.u_role;</span><br><span class="line"></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> if <span class="keyword">exists</span> shiro.u_role_permission;</span><br><span class="line"></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> if <span class="keyword">exists</span> shiro.u_user;</span><br><span class="line"></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> if <span class="keyword">exists</span> shiro.u_user_role;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="comment">/* User: shiro                                                  */</span></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">user</span> shiro;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="comment">/* Table: u_permission                                          */</span></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> shiro.u_permission</span><br><span class="line">(</span><br><span class="line">   id                   <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="keyword">null</span> auto_increment,</span><br><span class="line">   url                  <span class="type">national</span> <span class="type">varchar</span>(<span class="number">256</span>) comment <span class="string">&#x27;url地址&#x27;</span>,</span><br><span class="line">   name                 <span class="type">national</span> <span class="type">varchar</span>(<span class="number">64</span>) comment <span class="string">&#x27;url描述&#x27;</span>,</span><br><span class="line">   <span class="keyword">primary</span> key (id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="comment">/* Table: u_role                                                */</span></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> shiro.u_role</span><br><span class="line">(</span><br><span class="line">   id                   <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="keyword">null</span> auto_increment,</span><br><span class="line">   name                 <span class="type">national</span> <span class="type">varchar</span>(<span class="number">32</span>) comment <span class="string">&#x27;角色名称&#x27;</span>,</span><br><span class="line">   type                 <span class="type">national</span> <span class="type">varchar</span>(<span class="number">10</span>) comment <span class="string">&#x27;角色类型&#x27;</span>,</span><br><span class="line">   <span class="keyword">primary</span> key (id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="comment">/* Table: u_role_permission                                     */</span></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> shiro.u_role_permission</span><br><span class="line">(</span><br><span class="line">   rid                  <span class="type">bigint</span>(<span class="number">20</span>) comment <span class="string">&#x27;角色ID&#x27;</span>,</span><br><span class="line">   pid                  <span class="type">bigint</span>(<span class="number">20</span>) comment <span class="string">&#x27;权限ID&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="comment">/* Table: u_user                                                */</span></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> shiro.u_user</span><br><span class="line">(</span><br><span class="line">   id                   <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="keyword">null</span> auto_increment,</span><br><span class="line">   nickname             <span class="type">national</span> <span class="type">varchar</span>(<span class="number">20</span>) comment <span class="string">&#x27;用户昵称&#x27;</span>,</span><br><span class="line">   email                <span class="type">national</span> <span class="type">varchar</span>(<span class="number">128</span>) comment <span class="string">&#x27;邮箱|登录帐号&#x27;</span>,</span><br><span class="line">   pswd                 <span class="type">national</span> <span class="type">varchar</span>(<span class="number">32</span>) comment <span class="string">&#x27;密码&#x27;</span>,</span><br><span class="line">   create_time          datetime comment <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">   last_login_time      datetime comment <span class="string">&#x27;最后登录时间&#x27;</span>,</span><br><span class="line">   status               <span class="type">bigint</span>(<span class="number">1</span>) <span class="keyword">default</span> <span class="number">1</span> comment <span class="string">&#x27;1:有效，0:禁止登录&#x27;</span>,</span><br><span class="line">   <span class="keyword">primary</span> key (id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="comment">/* Table: u_user_role                                           */</span></span><br><span class="line"><span class="comment">/*==============================================================*/</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> shiro.u_user_role</span><br><span class="line">(</span><br><span class="line">   uid                  <span class="type">bigint</span>(<span class="number">20</span>) comment <span class="string">&#x27;用户ID&#x27;</span>,</span><br><span class="line">   rid                  <span class="type">bigint</span>(<span class="number">20</span>) comment <span class="string">&#x27;角色ID&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> shiro.u_user_role <span class="keyword">add</span> <span class="keyword">constraint</span> FK_Reference_1 <span class="keyword">foreign</span> key (uid)</span><br><span class="line">      <span class="keyword">references</span> shiro.u_user (id) <span class="keyword">on</span> <span class="keyword">delete</span> restrict <span class="keyword">on</span> update restrict;</span><br></pre></td></tr></table></figure>
-
-<p>得到SQL语句后可直接导入到数据库。由此我们设计数据库已经完成。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这里只是简单介绍了PowerDesigner进行数据库模型设计，自动生成SQL语句等功能。PowerDesigner还有很多技巧和功能在摸索中。</p>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>tools</tag>
-        <tag>sql</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>架构设计及概念</title>
-    <url>/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%8F%8A%E6%A6%82%E5%BF%B5/</url>
-    <content><![CDATA[<h1 id="架构定义"><a href="#架构定义" class="headerlink" title="架构定义"></a><a href="https://www.mubucm.com/doc/Kh30n3bevp">架构定义</a></h1><h2 id="系统拆分"><a href="#系统拆分" class="headerlink" title="系统拆分"></a>系统拆分</h2><ul>
-<li>按<strong>逻辑</strong>拆分：模块</li>
-<li>按<strong>物理</strong>拆分：组件</li>
+    <title>高可用计算架构</title>
+    <url>/%E9%AB%98%E5%8F%AF%E7%94%A8%E8%AE%A1%E7%AE%97%E6%9E%B6%E6%9E%84/</url>
+    <content><![CDATA[<h1 id="多级缓存架构"><a href="#多级缓存架构" class="headerlink" title="多级缓存架构"></a><a href="https://www.mubucm.com/doc/2PGxjaaeQrp">多级缓存架构</a></h1><h2 id="缓存设计"><a href="#缓存设计" class="headerlink" title="缓存设计"></a>缓存设计</h2><ul>
+<li>缓存内容</li>
+<li>缓存时间</li>
+<li>缓存系统</li>
+<li>更新机制</li>
 </ul>
-<h2 id="4R架构定义"><a href="#4R架构定义" class="headerlink" title="4R架构定义"></a>4R架构定义</h2><ul>
-<li><strong>Rank</strong>：顶层架构</li>
-<li><strong>Role</strong>：角色组成</li>
-<li><strong>Relation</strong>：角色关系</li>
-<li><strong>Rule</strong>：运作规则</li>
+<h2 id="多级缓存"><a href="#多级缓存" class="headerlink" title="多级缓存"></a>多级缓存</h2><ul>
+<li>客户端缓存</li>
+<li>CDN缓存</li>
+<li>WEB容器缓存</li>
+<li>应用缓存</li>
+<li>分布式缓存</li>
 </ul>
-<div align=center><img src="../../../../images/2022/1-3/1.1_arch_definition.png" algin="center"/></div>
+<div align=center><img src="../../../../images/2022/1-3/5.1_multilevel_cache.png" algin="center"/></div>
 
-<h1 id="架构分类"><a href="#架构分类" class="headerlink" title="架构分类"></a><a href="https://www.mubucm.com/doc/6mSpcn-gt7p">架构分类</a></h1><h2 id="按业务划分"><a href="#按业务划分" class="headerlink" title="按业务划分"></a>按业务划分</h2><ul>
-<li>业务架构图</li>
+<h1 id="分布式缓存架构设计"><a href="#分布式缓存架构设计" class="headerlink" title="分布式缓存架构设计"></a><a href="https://www.mubucm.com/doc/5SyKwv7LGrp">分布式缓存架构设计</a></h1><h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><ul>
+<li>数据缓存：实时性要求高，读多写少</li>
+<li>结果缓存：计算量大实时性要求不高</li>
 </ul>
-<h2 id="按领域划分"><a href="#按领域划分" class="headerlink" title="按领域划分"></a>按领域划分</h2><ul>
-<li>客户端架构图</li>
-<li>前端架构图</li>
-<li>后端架构图</li>
+<h2 id="缓存问题"><a href="#缓存问题" class="headerlink" title="缓存问题"></a>缓存问题</h2><ul>
+<li>缓存穿透</li>
+<li>缓存雪崩</li>
+<li>缓存热点</li>
 </ul>
-<div align=center><img src="../../../../images/2022/1-3/1.2_arch_classify.png" algin="center"/></div>
+<div align=center><img src="../../../../images/2022/1-3/5.2_distributed_cache.png" algin="center"/></div>
 
-<h1 id="面向复杂度的架构分析"><a href="#面向复杂度的架构分析" class="headerlink" title="面向复杂度的架构分析"></a><a href="https://www.mubucm.com/doc/3iP82kZ-tnp">面向复杂度的架构分析</a></h1><h2 id="本质"><a href="#本质" class="headerlink" title="本质"></a>本质</h2><p>架构设计是为了降低软件系统的复杂度。</p>
-<div align=center><img src="../../../../images/2022/1-3/1.3_arch_complexity.png" algin="center"/></div>
+<h1 id="负载均衡架构"><a href="#负载均衡架构" class="headerlink" title="负载均衡架构"></a><a href="https://www.mubucm.com/doc/6rSJ5MVs4Hp">负载均衡架构</a></h1><div align=center><img src="../../../../images/2022/1-3/5.3_load_balancing_1.jpg" algin="center"/></div>
 
-<h1 id="架构设计三原则"><a href="#架构设计三原则" class="headerlink" title="架构设计三原则"></a><a href="https://www.mubucm.com/doc/2sOoT5Jcknp">架构设计三原则</a></h1><h2 id="合适原则"><a href="#合适原则" class="headerlink" title="合适原则"></a>合适原则</h2><p>合适优于业界领先。</p>
-<h2 id="简单原则"><a href="#简单原则" class="headerlink" title="简单原则"></a>简单原则</h2><p>简单优于复杂。</p>
-<h2 id="演进原则"><a href="#演进原则" class="headerlink" title="演进原则"></a>演进原则</h2><p>演化优于一步到位。</p>
-<div align=center><img src="../../../../images/2022/1-3/1.4_arch_principle.png" algin="center"/></div>
+<ol>
+<li>DNS</li>
+<li>F5：100万~1000万</li>
+<li>LVS：10万~100万</li>
+<li>Nginx：5万~10万</li>
+<li>服务路由(Gateway)：1000~5000</li>
+</ol>
+<div align=center><img src="../../../../images/2022/1-3/5.3_load_balancing.png" algin="center"/></div>
+
+<h1 id="负载均衡技巧"><a href="#负载均衡技巧" class="headerlink" title="负载均衡技巧"></a><a href="https://www.mubucm.com/doc/1WhWFH8AMp">负载均衡技巧</a></h1><h2 id="通用算法"><a href="#通用算法" class="headerlink" title="通用算法"></a>通用算法</h2><ul>
+<li>轮训</li>
+<li>随机</li>
+<li>加权轮训</li>
+<li>负载有限</li>
+<li>性能优先</li>
+<li>hash</li>
+</ul>
+<h2 id="服务器性能估算"><a href="#服务器性能估算" class="headerlink" title="服务器性能估算"></a>服务器性能估算</h2><h3 id="接口性能"><a href="#接口性能" class="headerlink" title="接口性能"></a>接口性能</h3><ol>
+<li>线上业务服务器接口处理时间分布为 20~100ms；</li>
+<li>平均大约为 50ms；</li>
+<li> 访问存储或者其它系统接口是主要的性能消耗点。</li>
+</ol>
+<h3 id="服务器性能"><a href="#服务器性能" class="headerlink" title="服务器性能"></a>服务器性能</h3><p>线上单个服务器（32核）性能大约为 300~1000 TPS/QPS</p>
+<h3 id="服务器数量"><a href="#服务器数量" class="headerlink" title="服务器数量"></a>服务器数量</h3><p>服务器数量 = (总 TPS+QPS) / 单个服务器性能</p>
+<div align=center><img src="../../../../images/2022/1-3/5.4_load_balancing_techniques.png" algin="center"/></div>
+
+<h1 id="接口高可用"><a href="#接口高可用" class="headerlink" title="接口高可用"></a><a href="https://www.mubucm.com/doc/6eQCM4fSZwp">接口高可用</a></h1><ul>
+<li>限流</li>
+<li>排队</li>
+<li>降级</li>
+<li>熔断</li>
+</ul>
+<div align=center><img src="../../../../images/2022/1-3/5.5_interface_high_availability.png" algin="center"/></div>
 
 ]]></content>
       <categories>
         <category>架构</category>
+        <category>设计</category>
       </categories>
       <tags>
         <tag>架构</tag>
@@ -7465,118 +7465,6 @@
       </tags>
   </entry>
   <entry>
-    <title>异步编程之CompletableFuture</title>
-    <url>/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E4%B9%8BCompletableFuture/</url>
-    <content><![CDATA[<p>在Java8中新增了<code>CompletableFuture</code>类，该类实现了<code>Future</code>和<code>CompletionStage</code>接口。提供了强大的<code>Future</code>扩展功能，简化了异步编程的复杂性，提供了函数式编程的能力。可通过异步回调方式处理结果，还可以对任务进行组合处理。<span id="more"></span></p>
-<h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><div align=center><img src="../../../../images/2021/10-12/completable-mind.png" algin="center"/></div><!-- more -->
-
-
-
-<h1 id="创建异步任务"><a href="#创建异步任务" class="headerlink" title="创建异步任务"></a>创建异步任务</h1><p><code>CompletableFuture</code>提供了四个静态方法来创建一个异步操作。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 无返回值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title">runAsync</span><span class="params">(Runnable runnable)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title">runAsync</span><span class="params">(Runnable runnable, Executor executor)</span></span></span><br><span class="line"><span class="function"><span class="comment">// 有返回值</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier, Executor executor)</span></span></span><br></pre></td></tr></table></figure>
-
-<p>没有指定<code>Executor</code>的话默认会使用<code>ForkJoinPool.commonPool()</code> 作为缺省线程池执行异步代码，其中<code>ForkJoinPool.commonPool()</code>核心线程数量为<strong>CPU-1</strong>核心数。如果指定线程池，则使用指定的线程池执行任务。</p>
-<h2 id="runAsync"><a href="#runAsync" class="headerlink" title="runAsync"></a>runAsync</h2><p>以<code>Runnable</code>函数式接口类型为参数，无返回值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">runAsync</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">  <span class="comment">// runAsync直接执行，无返回值</span></span><br><span class="line">  CompletableFuture&lt;Void&gt; future = CompletableFuture.runAsync(() -&gt; &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;runAsync线程名称: &quot;</span> + Thread.currentThread().getName());</span><br><span class="line">  &#125;);</span><br><span class="line">  future.get();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// runAsync线程名称: ForkJoinPool.commonPool-worker-1</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="supplyAsync"><a href="#supplyAsync" class="headerlink" title="supplyAsync"></a>supplyAsync</h2><p>以<code>Supplier&lt;U&gt;</code>函数式接口类型为参数,<code>CompletableFuture</code>的计算结果类型为<code>U</code>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">supplyAsync</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">  <span class="comment">// supplyAsync支持返回值</span></span><br><span class="line">  CompletableFuture&lt;Long&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;supplyAsync线程名称: &quot;</span> + Thread.currentThread().getName());</span><br><span class="line">    <span class="keyword">return</span> System.currentTimeMillis();</span><br><span class="line">  &#125;);</span><br><span class="line">  System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync线程名称: ForkJoinPool.commonPool-worker-1</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：1640446068495</span></span><br></pre></td></tr></table></figure>
-
-<p>以异步场景为例，可与List结合使用。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 先将 List&lt;Integer&gt; 转换成 -&gt; List&lt;CompletableFuture&lt;String&gt;&gt;的list 然后对这个list进行join操作</span></span><br><span class="line">List&lt;Integer&gt; collect = Lists.newArrayList(<span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">        .stream()</span><br><span class="line">        .map(i -&gt; CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">            Uninterruptibles.sleepUninterruptibly(<span class="number">1</span>, TimeUnit.SECONDS);</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;))</span><br><span class="line">        .collect(Collectors.toList())</span><br><span class="line">        .stream()</span><br><span class="line">        .map(CompletableFuture::join).collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
-
-<h1 id="异步回调"><a href="#异步回调" class="headerlink" title="异步回调"></a>异步回调</h1><h2 id="thenRun-thenRunAsync"><a href="#thenRun-thenRunAsync" class="headerlink" title="thenRun/thenRunAsync"></a>thenRun/thenRunAsync</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">thenRun</span><span class="params">(Runnable action)</span></span>;</span><br></pre></td></tr></table></figure>
-
-<p>执行完第一个任务再执行第二个任务，前后两个任务没有参数传递，第二个任务(<code>thenRun</code>)也没有返回值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">thenRun</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// supplyAsync执行完成后执行thenRun(无参数，无返回)</span></span><br><span class="line">    CompletableFuture&lt;Void&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">int</span> result = <span class="keyword">new</span> Random().nextInt(<span class="number">100</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：&quot;</span> + result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;).thenRun(() -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;thenRun线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。无参数，无返回值&quot;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync线程名称: ForkJoinPool.commonPool-worker-1。结果为：64</span></span><br><span class="line"><span class="comment">// thenRun线程名称: main。无参数，无返回值</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：null</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="thenRun和thenRunAsync区别"><a href="#thenRun和thenRunAsync区别" class="headerlink" title="thenRun和thenRunAsync区别"></a>thenRun和thenRunAsync区别</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Executor asyncPool = useCommonPool? ForkJoinPool.commonPool() : <span class="keyword">new</span> ThreadPerTaskExecutor();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">thenRun</span><span class="params">(Runnable action)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> uniRunStage(<span class="keyword">null</span>, action);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">thenRunAsync</span><span class="params">(Runnable action)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> uniRunStage(asyncPool, action);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果在执行第一个任务的时候传入了一个自定义线程池：</p>
-<ul>
-<li>调用<code>thenRun</code>方法执行第二个任务时，第二个任务和第一个任务共用一个线程池；</li>
-<li>调用<code>thenRunAsync</code>方法执行第二个任务时，第一个任务使用自己传入的线程池，第二个任务使用<code>ForkJoinPool</code>；</li>
-</ul>
-<p>后面所说的<code>thenAccept</code>和<code>thenAcceptAsync</code>、<code>thenApply</code>和<code>thenApplyAsync</code>等，它们之间的区别也是如此。</p>
-<h2 id="thenAccept-thenAcceptAsync"><a href="#thenAccept-thenAcceptAsync" class="headerlink" title="thenAccept/thenAcceptAsync"></a>thenAccept/thenAcceptAsync</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">thenAccept</span><span class="params">(Consumer&lt;? <span class="keyword">super</span> T&gt; action)</span></span></span><br></pre></td></tr></table></figure>
-
-<p>执行完第一个任务后，将执行结果作为入参传递到回调方法(<code>thenAccept</code>)中，回调方法无返回值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">thenAccept</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// supplyAsync执行完成后执行thenAccept(参数为上个任务的结果，无返回值)</span></span><br><span class="line">    CompletableFuture&lt;Void&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">int</span> result = <span class="keyword">new</span> Random().nextInt(<span class="number">100</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：&quot;</span> + result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;).thenAccept(arg -&gt; &#123;</span><br><span class="line">        <span class="keyword">int</span> result = arg * <span class="number">10</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;thenAccept线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：&quot;</span> + result);</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync线程名称: ForkJoinPool.commonPool-worker-1。结果为：66</span></span><br><span class="line"><span class="comment">// thenAccept线程名称: main。结果为：660</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：null</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="thenApply-thenApplyAsync"><a href="#thenApply-thenApplyAsync" class="headerlink" title="thenApply/thenApplyAsync"></a>thenApply/thenApplyAsync</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">thenApply</span><span class="params">(Function&lt;? <span class="keyword">super</span> T,? extends U&gt; fn)</span></span></span><br></pre></td></tr></table></figure>
-
-<p>执行完第一个任务后，将执行结果作为入参传递到回调方法(<code>thenApply</code>)中，回调方法有返回值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">thenApply</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// 执行完supplyAsync拿到返回结果后执行thenApply(参数为上个任务的结果，有返回值)</span></span><br><span class="line">    CompletableFuture&lt;Integer&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">int</span> result = <span class="keyword">new</span> Random().nextInt(<span class="number">100</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：&quot;</span> + result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;).thenApply(arg -&gt; &#123;</span><br><span class="line">        <span class="keyword">int</span> result = arg * <span class="number">10</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;thenApply线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：&quot;</span> + result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync线程名称: ForkJoinPool.commonPool-worker-1。结果为：44</span></span><br><span class="line"><span class="comment">// thenApply线程名称: main。结果为：440</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：440</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="exceptionally"><a href="#exceptionally" class="headerlink" title="exceptionally"></a>exceptionally</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;T&gt; <span class="title">exceptionally</span><span class="params">(Function&lt;Throwable, ? extends T&gt; fn)</span></span></span><br></pre></td></tr></table></figure>
-
-<p>某个任务执行异常时，执行的回调方法，并且将抛出异常作为参数，传递到回调方法，<code>exceptionally</code>方法有返回值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exceptionally</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// supplyAsync中发生异常进入exceptionally块，最终结果为exceptionally中返回值</span></span><br><span class="line">    CompletableFuture&lt;Object&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync线程名称: &quot;</span> + Thread.currentThread().getName());</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException();</span><br><span class="line">    &#125;).exceptionally(e -&gt; &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;系统异常&quot;</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync线程名称: ForkJoinPool.commonPool-worker-1</span></span><br><span class="line"><span class="comment">// java.util.concurrent.CompletionException: java.lang.RuntimeException</span></span><br><span class="line"><span class="comment">// Caused by: java.lang.RuntimeException</span></span><br><span class="line"><span class="comment">//	at com.user.provider.utils.Test.lambda$exceptionally$19(Test.java:160)</span></span><br><span class="line"><span class="comment">//	at java.util.concurrent.CompletableFuture$AsyncSupply.run$$$capture(CompletableFuture.java:1590)</span></span><br><span class="line"><span class="comment">// 	... 7 more</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：系统异常</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="whenComplete"><a href="#whenComplete" class="headerlink" title="whenComplete"></a>whenComplete</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;T&gt; <span class="title">whenComplete</span><span class="params">(BiConsumer&lt;? <span class="keyword">super</span> T, ? <span class="keyword">super</span> Throwable&gt; action)</span></span></span><br></pre></td></tr></table></figure>
-
-<p>某个任务执行完成后，将上个任务的结果和异常传递到回调方法<code>whenComplete</code>中，无返回值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">whenComplete</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// supplyAsync执行完成后执行whenComplete(参数为上个任务的结果，无返回值)</span></span><br><span class="line">    CompletableFuture&lt;Integer&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">int</span> result = <span class="keyword">new</span> Random().nextInt(<span class="number">100</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：&quot;</span> + result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;).whenComplete((arg, e) -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;whenComplete线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。参数为：&quot;</span> + arg);</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync线程名称: ForkJoinPool.commonPool-worker-1。结果为：66</span></span><br><span class="line"><span class="comment">// whenComplete线程名称: main。参数为：66</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：66</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="handle"><a href="#handle" class="headerlink" title="handle"></a>handle</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">handle</span><span class="params">(BiFunction&lt;? <span class="keyword">super</span> T, Throwable, ? extends U&gt; fn)</span> </span></span><br></pre></td></tr></table></figure>
-
-<p>某个任务执行完成后，将上个任务的结果和异常传递到回调方法<code>handle</code>中，有返回值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// supplyAsync执行完成后执行handle(参数为上个任务的结果，有返回值)</span></span><br><span class="line">    CompletableFuture&lt;Integer&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">int</span> result = <span class="keyword">new</span> Random().nextInt(<span class="number">100</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：&quot;</span> + result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;).handle((arg, e) -&gt; &#123;</span><br><span class="line">        <span class="keyword">int</span> result = arg * <span class="number">10</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;handle线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：&quot;</span> + result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync线程名称: ForkJoinPool.commonPool-worker-1。结果为：45</span></span><br><span class="line"><span class="comment">// handle线程名称: ForkJoinPool.commonPool-worker-1。结果为：450</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：450</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="任务组合"><a href="#任务组合" class="headerlink" title="任务组合"></a>任务组合</h1><h2 id="AND组合关系"><a href="#AND组合关系" class="headerlink" title="AND组合关系"></a>AND组合关系</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U,V&gt; <span class="function">CompletableFuture&lt;V&gt; <span class="title">thenCombine</span><span class="params">(CompletionStage&lt;? extends U&gt; other, BiFunction&lt;? <span class="keyword">super</span> T,? <span class="keyword">super</span> U,? extends V&gt; fn)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> &lt;U&gt; CompletionStage&lt;Void&gt; <span class="title">thenAcceptBoth</span><span class="params">(CompletionStage&lt;? extends U&gt; other, BiConsumer&lt;? <span class="keyword">super</span> T, ? <span class="keyword">super</span> U&gt; action)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletionStage&lt;Void&gt; <span class="title">runAfterBoth</span><span class="params">(CompletionStage&lt;?&gt; other, Runnable action)</span></span></span><br></pre></td></tr></table></figure>
-
-<p><code>thenCombine</code>/<code>thenAcceptBoth</code>/<code>runAfterBoth</code>都表示：<strong>将两个<code>CompletableFuture</code>组合起来，只有这两个都正常执行完成才会执行某个任务</strong>。区别为：</p>
-<ul>
-<li><code>thenCombine</code>：将两个任务的执行结果作为方法入参，传递到指定方法中，<strong>有返回值</strong></li>
-<li><code>thenAcceptBoth</code>: 会将两个任务的执行结果作为方法入参，传递到指定方法中，<strong>无返回值</strong></li>
-<li><code>runAfterBoth</code>：<strong>不会把执行结果当做方法入参，没有返回值</strong></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">thenCombine</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// supplyAsync1和supplyAsync2都执行完成后执行thenCombine(接收两个参数，有返回值)</span></span><br><span class="line">    CompletableFuture&lt;Integer&gt; f1 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync1线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：100&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">100</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    CompletableFuture&lt;Integer&gt; f2 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync2线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：200&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    CompletableFuture&lt;Integer&gt; future = f1.thenCombine(f2, (arg1, arg2) -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;thenCombine线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果1为：&quot;</span> + arg1 + <span class="string">&quot;。结果2为：&quot;</span> + arg2);</span><br><span class="line">        <span class="keyword">return</span> arg1 + arg2;</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync1线程名称: ForkJoinPool.commonPool-worker-1。结果为：100</span></span><br><span class="line"><span class="comment">// supplyAsync2线程名称: ForkJoinPool.commonPool-worker-1。结果为：200</span></span><br><span class="line"><span class="comment">// thenCombine线程名称: main。结果1为：100。结果2为：200</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：300</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="OR组合关系"><a href="#OR组合关系" class="headerlink" title="OR组合关系"></a>OR组合关系</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletionStage&lt;U&gt; <span class="title">applyToEither</span><span class="params">(CompletionStage&lt;? extends T&gt; other,Function&lt;? <span class="keyword">super</span> T, U&gt; fn)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">acceptEither</span><span class="params">(CompletionStage&lt;? extends T&gt; other, Consumer&lt;? <span class="keyword">super</span> T&gt; action)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">runAfterEither</span><span class="params">(CompletionStage&lt;?&gt; other, Runnable action)</span></span>;</span><br></pre></td></tr></table></figure>
-
-<p><code>applyToEither</code>/<code>acceptEither</code>/<code>runAfterEither</code>都表示：将两个<code>CompletableFuture</code>组合起来，只要其中一个执行完了就会执行下个任务。</p>
-<p>区别在于：</p>
-<ul>
-<li><code>applyToEither</code>：将已经执行完成的任务结果作为方法入参，传递到指定方法中，<strong>有返回值</strong></li>
-<li><code>acceptEither</code>：将已经执行完成的任务结果作为方法入参，传递到指定方法中，<strong>无返回值</strong></li>
-<li><code>runAfterEither</code>：<strong>不会把执行结果当做方法入参，没有返回值</strong></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">acceptEither</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// supplyAsync1、supplyAsync2其中一个执行完成后执行acceptEither(接收一个参数，为f1、f2先执行完的结果。无返回值)</span></span><br><span class="line">    Random random = <span class="keyword">new</span> Random();</span><br><span class="line">    CompletableFuture&lt;Integer&gt; f1 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        Uninterruptibles.sleepUninterruptibly(random.nextInt(<span class="number">200</span>), TimeUnit.MILLISECONDS);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync1线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：100&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">100</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    CompletableFuture&lt;Integer&gt; f2 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        Uninterruptibles.sleepUninterruptibly(random.nextInt(<span class="number">200</span>), TimeUnit.MILLISECONDS);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync2线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：200&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    CompletableFuture&lt;Void&gt; future = f1.acceptEither(f2, arg -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;acceptEither线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。参数为：&quot;</span> + arg + <span class="string">&quot;。无返回值&quot;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync2线程名称: ForkJoinPool.commonPool-worker-2。结果为：200</span></span><br><span class="line"><span class="comment">// acceptEither线程名称: ForkJoinPool.commonPool-worker-2。参数为：200。无返回值</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：null</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="anyOf"><a href="#anyOf" class="headerlink" title="anyOf"></a>anyOf</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Object&gt; <span class="title">anyOf</span><span class="params">(CompletableFuture&lt;?&gt;... cfs)</span></span></span><br></pre></td></tr></table></figure>
-
-<p>任意一个任务执行完，就执行<code>anyOf</code>返回的<code>CompletableFuture</code>。如果执行的任务异常，<code>anyOf</code>的<code>CompletableFuture</code>执行<code>get()</code>方法会抛出异常。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">anyOf</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    Random random = <span class="keyword">new</span> Random();</span><br><span class="line">    CompletableFuture&lt;Integer&gt; f1 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        Uninterruptibles.sleepUninterruptibly(random.nextInt(<span class="number">200</span>), TimeUnit.MILLISECONDS);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync1线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：100&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">100</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    CompletableFuture&lt;Integer&gt; f2 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        Uninterruptibles.sleepUninterruptibly(random.nextInt(<span class="number">100</span>), TimeUnit.MILLISECONDS);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync2线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：200&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    CompletableFuture&lt;Object&gt; future = CompletableFuture.anyOf(f1, f2).whenComplete((arg, throwable) -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;anyOf线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。参数为：&quot;</span> + arg + <span class="string">&quot;。无返回值&quot;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync2线程名称: ForkJoinPool.commonPool-worker-2。结果为：200</span></span><br><span class="line"><span class="comment">// anyOf线程名称: ForkJoinPool.commonPool-worker-2。参数为：200。无返回值</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：200</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="allOf"><a href="#allOf" class="headerlink" title="allOf"></a>allOf</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title">allOf</span><span class="params">(CompletableFuture&lt;?&gt;... cfs)</span></span></span><br></pre></td></tr></table></figure>
-
-<p>所有任务都执行完成后，才执行<code>allOf</code>返回的<code>CompletableFuture</code>。如果任意一个任务异常，<code>allOf</code>的<code>CompletableFuture</code>执行<code>get()</code>方法都会抛出异常。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">allOf</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    Random random = <span class="keyword">new</span> Random();</span><br><span class="line">    CompletableFuture&lt;Integer&gt; f1 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        Uninterruptibles.sleepUninterruptibly(random.nextInt(<span class="number">200</span>), TimeUnit.MILLISECONDS);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync1线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：100&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">100</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    CompletableFuture&lt;Integer&gt; f2 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        Uninterruptibles.sleepUninterruptibly(random.nextInt(<span class="number">100</span>), TimeUnit.MILLISECONDS);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync2线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：200&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    CompletableFuture&lt;Void&gt; future = CompletableFuture.allOf(f1, f2).whenComplete((unused, throwable) -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;allOf线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。参数为：&quot;</span> + unused + <span class="string">&quot;。无返回值&quot;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync2线程名称: ForkJoinPool.commonPool-worker-2。结果为：200</span></span><br><span class="line"><span class="comment">// supplyAsync1线程名称: ForkJoinPool.commonPool-worker-1。结果为：100</span></span><br><span class="line"><span class="comment">// allOf线程名称: ForkJoinPool.commonPool-worker-1。参数为：null。无返回值</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：null</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="thenCompose"><a href="#thenCompose" class="headerlink" title="thenCompose"></a>thenCompose</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">thenCompose</span><span class="params">(Function&lt;? <span class="keyword">super</span> T, ? extends CompletionStage&lt;U&gt;&gt; fn)</span></span></span><br></pre></td></tr></table></figure>
-
-<p>在某个任务执行完成后，将该任务的执行结果作为方法入参去执行指定的方法。该方法会返回一个新的<code>CompletableFuture</code>实例。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">thenCompose</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    Random random = <span class="keyword">new</span> Random();</span><br><span class="line">    CompletableFuture&lt;Integer&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        Uninterruptibles.sleepUninterruptibly(random.nextInt(<span class="number">200</span>), TimeUnit.MILLISECONDS);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：100&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">100</span>;</span><br><span class="line">    &#125;).thenCompose(arg -&gt; CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        Uninterruptibles.sleepUninterruptibly(random.nextInt(<span class="number">100</span>), TimeUnit.MILLISECONDS);</span><br><span class="line">        System.out.println(<span class="string">&quot;thenCompose线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。接收参数为：&quot;</span> + arg + <span class="string">&quot;。返回：200&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;));</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync线程名称: ForkJoinPool.commonPool-worker-1。结果为：100</span></span><br><span class="line"><span class="comment">// thenCompose线程名称: ForkJoinPool.commonPool-worker-2。接收参数为：100。返回：200</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：200</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h1><h2 id="CompletableFuture-get方法是阻塞的"><a href="#CompletableFuture-get方法是阻塞的" class="headerlink" title="CompletableFuture.get方法是阻塞的"></a>CompletableFuture.get方法是阻塞的</h2><p><code>CompletableFuture</code>的<code>get()</code>方法是阻塞的，如果使用它来获取异步调用的返回值，最好添加超时时间。</p>
-<blockquote>
-<p>CompletableFuture.get()：获取返回值抛出异常。</p>
-<p>CompletableFuture.join()：获取返回值不抛出异常。</p>
-</blockquote>
-<h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><p><code>CompletableFuture</code>默认使用<code>ForkJoinPool.commonPool</code>线程池，核心数量为服务器<strong>CPU-1</strong>。当有大量请求处理且任务耗时较久时就会响应很慢。建议使用自定义线程池，配置自定义线程池参数。</p>
-<h2 id="Future需要获取返回值才能获取异常信息"><a href="#Future需要获取返回值才能获取异常信息" class="headerlink" title="Future需要获取返回值才能获取异常信息"></a>Future需要获取返回值才能获取异常信息</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CompletableFuture&lt;Void&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">100</span> / <span class="number">0</span>;</span><br><span class="line">&#125;).thenAccept(System.out::println);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 不加get()方法这一行，看不到异常信息</span></span><br><span class="line">future.get();</span><br></pre></td></tr></table></figure>
-
-<p><code>Future</code>需要获取返回值，才能获取到异常信息。如果不加 <code>get()</code>/<code>join()</code>方法，看不到异常信息。使用的时候需要考虑是否加<code>try...catch...</code>或者使用<code>exceptionally</code>方法。</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Tomcat入门</title>
     <url>/tomcat%E5%85%A5%E9%97%A8/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>Tomcat 服务器是一个免费的开放源代码的Web 应用服务器，属于轻量级应用服务器。说是经常用到，也只是熟悉，还没没有真正达到了解其中的原理和其中配置的意义，最近也找了一些书籍来看，先入门。<div align=center><img width="600" height="200" src="../../../../images/2017-12-27/tomcat%E5%85%A5%E9%97%A8/tomcat.jpg"/></div><span id="more"></span></p>
@@ -7804,6 +7692,118 @@
       </categories>
       <tags>
         <tag>tomcat</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>异步编程之CompletableFuture</title>
+    <url>/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E4%B9%8BCompletableFuture/</url>
+    <content><![CDATA[<p>在Java8中新增了<code>CompletableFuture</code>类，该类实现了<code>Future</code>和<code>CompletionStage</code>接口。提供了强大的<code>Future</code>扩展功能，简化了异步编程的复杂性，提供了函数式编程的能力。可通过异步回调方式处理结果，还可以对任务进行组合处理。<span id="more"></span></p>
+<h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><div align=center><img src="../../../../images/2021/10-12/completable-mind.png" algin="center"/></div><!-- more -->
+
+
+
+<h1 id="创建异步任务"><a href="#创建异步任务" class="headerlink" title="创建异步任务"></a>创建异步任务</h1><p><code>CompletableFuture</code>提供了四个静态方法来创建一个异步操作。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 无返回值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title">runAsync</span><span class="params">(Runnable runnable)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title">runAsync</span><span class="params">(Runnable runnable, Executor executor)</span></span></span><br><span class="line"><span class="function"><span class="comment">// 有返回值</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; CompletableFuture&lt;U&gt; <span class="title">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier, Executor executor)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>没有指定<code>Executor</code>的话默认会使用<code>ForkJoinPool.commonPool()</code> 作为缺省线程池执行异步代码，其中<code>ForkJoinPool.commonPool()</code>核心线程数量为<strong>CPU-1</strong>核心数。如果指定线程池，则使用指定的线程池执行任务。</p>
+<h2 id="runAsync"><a href="#runAsync" class="headerlink" title="runAsync"></a>runAsync</h2><p>以<code>Runnable</code>函数式接口类型为参数，无返回值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">runAsync</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">  <span class="comment">// runAsync直接执行，无返回值</span></span><br><span class="line">  CompletableFuture&lt;Void&gt; future = CompletableFuture.runAsync(() -&gt; &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;runAsync线程名称: &quot;</span> + Thread.currentThread().getName());</span><br><span class="line">  &#125;);</span><br><span class="line">  future.get();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// runAsync线程名称: ForkJoinPool.commonPool-worker-1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="supplyAsync"><a href="#supplyAsync" class="headerlink" title="supplyAsync"></a>supplyAsync</h2><p>以<code>Supplier&lt;U&gt;</code>函数式接口类型为参数,<code>CompletableFuture</code>的计算结果类型为<code>U</code>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">supplyAsync</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">  <span class="comment">// supplyAsync支持返回值</span></span><br><span class="line">  CompletableFuture&lt;Long&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;supplyAsync线程名称: &quot;</span> + Thread.currentThread().getName());</span><br><span class="line">    <span class="keyword">return</span> System.currentTimeMillis();</span><br><span class="line">  &#125;);</span><br><span class="line">  System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync线程名称: ForkJoinPool.commonPool-worker-1</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：1640446068495</span></span><br></pre></td></tr></table></figure>
+
+<p>以异步场景为例，可与List结合使用。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 先将 List&lt;Integer&gt; 转换成 -&gt; List&lt;CompletableFuture&lt;String&gt;&gt;的list 然后对这个list进行join操作</span></span><br><span class="line">List&lt;Integer&gt; collect = Lists.newArrayList(<span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">        .stream()</span><br><span class="line">        .map(i -&gt; CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">            Uninterruptibles.sleepUninterruptibly(<span class="number">1</span>, TimeUnit.SECONDS);</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;))</span><br><span class="line">        .collect(Collectors.toList())</span><br><span class="line">        .stream()</span><br><span class="line">        .map(CompletableFuture::join).collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+
+<h1 id="异步回调"><a href="#异步回调" class="headerlink" title="异步回调"></a>异步回调</h1><h2 id="thenRun-thenRunAsync"><a href="#thenRun-thenRunAsync" class="headerlink" title="thenRun/thenRunAsync"></a>thenRun/thenRunAsync</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">thenRun</span><span class="params">(Runnable action)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>执行完第一个任务再执行第二个任务，前后两个任务没有参数传递，第二个任务(<code>thenRun</code>)也没有返回值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">thenRun</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// supplyAsync执行完成后执行thenRun(无参数，无返回)</span></span><br><span class="line">    CompletableFuture&lt;Void&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">int</span> result = <span class="keyword">new</span> Random().nextInt(<span class="number">100</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：&quot;</span> + result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;).thenRun(() -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;thenRun线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。无参数，无返回值&quot;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync线程名称: ForkJoinPool.commonPool-worker-1。结果为：64</span></span><br><span class="line"><span class="comment">// thenRun线程名称: main。无参数，无返回值</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：null</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="thenRun和thenRunAsync区别"><a href="#thenRun和thenRunAsync区别" class="headerlink" title="thenRun和thenRunAsync区别"></a>thenRun和thenRunAsync区别</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Executor asyncPool = useCommonPool? ForkJoinPool.commonPool() : <span class="keyword">new</span> ThreadPerTaskExecutor();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">thenRun</span><span class="params">(Runnable action)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> uniRunStage(<span class="keyword">null</span>, action);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">thenRunAsync</span><span class="params">(Runnable action)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> uniRunStage(asyncPool, action);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果在执行第一个任务的时候传入了一个自定义线程池：</p>
+<ul>
+<li>调用<code>thenRun</code>方法执行第二个任务时，第二个任务和第一个任务共用一个线程池；</li>
+<li>调用<code>thenRunAsync</code>方法执行第二个任务时，第一个任务使用自己传入的线程池，第二个任务使用<code>ForkJoinPool</code>；</li>
+</ul>
+<p>后面所说的<code>thenAccept</code>和<code>thenAcceptAsync</code>、<code>thenApply</code>和<code>thenApplyAsync</code>等，它们之间的区别也是如此。</p>
+<h2 id="thenAccept-thenAcceptAsync"><a href="#thenAccept-thenAcceptAsync" class="headerlink" title="thenAccept/thenAcceptAsync"></a>thenAccept/thenAcceptAsync</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">thenAccept</span><span class="params">(Consumer&lt;? <span class="keyword">super</span> T&gt; action)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>执行完第一个任务后，将执行结果作为入参传递到回调方法(<code>thenAccept</code>)中，回调方法无返回值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">thenAccept</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// supplyAsync执行完成后执行thenAccept(参数为上个任务的结果，无返回值)</span></span><br><span class="line">    CompletableFuture&lt;Void&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">int</span> result = <span class="keyword">new</span> Random().nextInt(<span class="number">100</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：&quot;</span> + result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;).thenAccept(arg -&gt; &#123;</span><br><span class="line">        <span class="keyword">int</span> result = arg * <span class="number">10</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;thenAccept线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：&quot;</span> + result);</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync线程名称: ForkJoinPool.commonPool-worker-1。结果为：66</span></span><br><span class="line"><span class="comment">// thenAccept线程名称: main。结果为：660</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：null</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="thenApply-thenApplyAsync"><a href="#thenApply-thenApplyAsync" class="headerlink" title="thenApply/thenApplyAsync"></a>thenApply/thenApplyAsync</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">thenApply</span><span class="params">(Function&lt;? <span class="keyword">super</span> T,? extends U&gt; fn)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>执行完第一个任务后，将执行结果作为入参传递到回调方法(<code>thenApply</code>)中，回调方法有返回值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">thenApply</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// 执行完supplyAsync拿到返回结果后执行thenApply(参数为上个任务的结果，有返回值)</span></span><br><span class="line">    CompletableFuture&lt;Integer&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">int</span> result = <span class="keyword">new</span> Random().nextInt(<span class="number">100</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：&quot;</span> + result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;).thenApply(arg -&gt; &#123;</span><br><span class="line">        <span class="keyword">int</span> result = arg * <span class="number">10</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;thenApply线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：&quot;</span> + result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync线程名称: ForkJoinPool.commonPool-worker-1。结果为：44</span></span><br><span class="line"><span class="comment">// thenApply线程名称: main。结果为：440</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：440</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="exceptionally"><a href="#exceptionally" class="headerlink" title="exceptionally"></a>exceptionally</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;T&gt; <span class="title">exceptionally</span><span class="params">(Function&lt;Throwable, ? extends T&gt; fn)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>某个任务执行异常时，执行的回调方法，并且将抛出异常作为参数，传递到回调方法，<code>exceptionally</code>方法有返回值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exceptionally</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// supplyAsync中发生异常进入exceptionally块，最终结果为exceptionally中返回值</span></span><br><span class="line">    CompletableFuture&lt;Object&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync线程名称: &quot;</span> + Thread.currentThread().getName());</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException();</span><br><span class="line">    &#125;).exceptionally(e -&gt; &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;系统异常&quot;</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync线程名称: ForkJoinPool.commonPool-worker-1</span></span><br><span class="line"><span class="comment">// java.util.concurrent.CompletionException: java.lang.RuntimeException</span></span><br><span class="line"><span class="comment">// Caused by: java.lang.RuntimeException</span></span><br><span class="line"><span class="comment">//	at com.user.provider.utils.Test.lambda$exceptionally$19(Test.java:160)</span></span><br><span class="line"><span class="comment">//	at java.util.concurrent.CompletableFuture$AsyncSupply.run$$$capture(CompletableFuture.java:1590)</span></span><br><span class="line"><span class="comment">// 	... 7 more</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：系统异常</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="whenComplete"><a href="#whenComplete" class="headerlink" title="whenComplete"></a>whenComplete</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;T&gt; <span class="title">whenComplete</span><span class="params">(BiConsumer&lt;? <span class="keyword">super</span> T, ? <span class="keyword">super</span> Throwable&gt; action)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>某个任务执行完成后，将上个任务的结果和异常传递到回调方法<code>whenComplete</code>中，无返回值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">whenComplete</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// supplyAsync执行完成后执行whenComplete(参数为上个任务的结果，无返回值)</span></span><br><span class="line">    CompletableFuture&lt;Integer&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">int</span> result = <span class="keyword">new</span> Random().nextInt(<span class="number">100</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：&quot;</span> + result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;).whenComplete((arg, e) -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;whenComplete线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。参数为：&quot;</span> + arg);</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync线程名称: ForkJoinPool.commonPool-worker-1。结果为：66</span></span><br><span class="line"><span class="comment">// whenComplete线程名称: main。参数为：66</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：66</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="handle"><a href="#handle" class="headerlink" title="handle"></a>handle</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">handle</span><span class="params">(BiFunction&lt;? <span class="keyword">super</span> T, Throwable, ? extends U&gt; fn)</span> </span></span><br></pre></td></tr></table></figure>
+
+<p>某个任务执行完成后，将上个任务的结果和异常传递到回调方法<code>handle</code>中，有返回值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// supplyAsync执行完成后执行handle(参数为上个任务的结果，有返回值)</span></span><br><span class="line">    CompletableFuture&lt;Integer&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">int</span> result = <span class="keyword">new</span> Random().nextInt(<span class="number">100</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：&quot;</span> + result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;).handle((arg, e) -&gt; &#123;</span><br><span class="line">        <span class="keyword">int</span> result = arg * <span class="number">10</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;handle线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：&quot;</span> + result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync线程名称: ForkJoinPool.commonPool-worker-1。结果为：45</span></span><br><span class="line"><span class="comment">// handle线程名称: ForkJoinPool.commonPool-worker-1。结果为：450</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：450</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="任务组合"><a href="#任务组合" class="headerlink" title="任务组合"></a>任务组合</h1><h2 id="AND组合关系"><a href="#AND组合关系" class="headerlink" title="AND组合关系"></a>AND组合关系</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U,V&gt; <span class="function">CompletableFuture&lt;V&gt; <span class="title">thenCombine</span><span class="params">(CompletionStage&lt;? extends U&gt; other, BiFunction&lt;? <span class="keyword">super</span> T,? <span class="keyword">super</span> U,? extends V&gt; fn)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> &lt;U&gt; CompletionStage&lt;Void&gt; <span class="title">thenAcceptBoth</span><span class="params">(CompletionStage&lt;? extends U&gt; other, BiConsumer&lt;? <span class="keyword">super</span> T, ? <span class="keyword">super</span> U&gt; action)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletionStage&lt;Void&gt; <span class="title">runAfterBoth</span><span class="params">(CompletionStage&lt;?&gt; other, Runnable action)</span></span></span><br></pre></td></tr></table></figure>
+
+<p><code>thenCombine</code>/<code>thenAcceptBoth</code>/<code>runAfterBoth</code>都表示：<strong>将两个<code>CompletableFuture</code>组合起来，只有这两个都正常执行完成才会执行某个任务</strong>。区别为：</p>
+<ul>
+<li><code>thenCombine</code>：将两个任务的执行结果作为方法入参，传递到指定方法中，<strong>有返回值</strong></li>
+<li><code>thenAcceptBoth</code>: 会将两个任务的执行结果作为方法入参，传递到指定方法中，<strong>无返回值</strong></li>
+<li><code>runAfterBoth</code>：<strong>不会把执行结果当做方法入参，没有返回值</strong></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">thenCombine</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// supplyAsync1和supplyAsync2都执行完成后执行thenCombine(接收两个参数，有返回值)</span></span><br><span class="line">    CompletableFuture&lt;Integer&gt; f1 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync1线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：100&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">100</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    CompletableFuture&lt;Integer&gt; f2 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync2线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：200&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    CompletableFuture&lt;Integer&gt; future = f1.thenCombine(f2, (arg1, arg2) -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;thenCombine线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果1为：&quot;</span> + arg1 + <span class="string">&quot;。结果2为：&quot;</span> + arg2);</span><br><span class="line">        <span class="keyword">return</span> arg1 + arg2;</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync1线程名称: ForkJoinPool.commonPool-worker-1。结果为：100</span></span><br><span class="line"><span class="comment">// supplyAsync2线程名称: ForkJoinPool.commonPool-worker-1。结果为：200</span></span><br><span class="line"><span class="comment">// thenCombine线程名称: main。结果1为：100。结果2为：200</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：300</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="OR组合关系"><a href="#OR组合关系" class="headerlink" title="OR组合关系"></a>OR组合关系</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletionStage&lt;U&gt; <span class="title">applyToEither</span><span class="params">(CompletionStage&lt;? extends T&gt; other,Function&lt;? <span class="keyword">super</span> T, U&gt; fn)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">acceptEither</span><span class="params">(CompletionStage&lt;? extends T&gt; other, Consumer&lt;? <span class="keyword">super</span> T&gt; action)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">runAfterEither</span><span class="params">(CompletionStage&lt;?&gt; other, Runnable action)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>applyToEither</code>/<code>acceptEither</code>/<code>runAfterEither</code>都表示：将两个<code>CompletableFuture</code>组合起来，只要其中一个执行完了就会执行下个任务。</p>
+<p>区别在于：</p>
+<ul>
+<li><code>applyToEither</code>：将已经执行完成的任务结果作为方法入参，传递到指定方法中，<strong>有返回值</strong></li>
+<li><code>acceptEither</code>：将已经执行完成的任务结果作为方法入参，传递到指定方法中，<strong>无返回值</strong></li>
+<li><code>runAfterEither</code>：<strong>不会把执行结果当做方法入参，没有返回值</strong></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">acceptEither</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// supplyAsync1、supplyAsync2其中一个执行完成后执行acceptEither(接收一个参数，为f1、f2先执行完的结果。无返回值)</span></span><br><span class="line">    Random random = <span class="keyword">new</span> Random();</span><br><span class="line">    CompletableFuture&lt;Integer&gt; f1 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        Uninterruptibles.sleepUninterruptibly(random.nextInt(<span class="number">200</span>), TimeUnit.MILLISECONDS);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync1线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：100&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">100</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    CompletableFuture&lt;Integer&gt; f2 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        Uninterruptibles.sleepUninterruptibly(random.nextInt(<span class="number">200</span>), TimeUnit.MILLISECONDS);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync2线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：200&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    CompletableFuture&lt;Void&gt; future = f1.acceptEither(f2, arg -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;acceptEither线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。参数为：&quot;</span> + arg + <span class="string">&quot;。无返回值&quot;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync2线程名称: ForkJoinPool.commonPool-worker-2。结果为：200</span></span><br><span class="line"><span class="comment">// acceptEither线程名称: ForkJoinPool.commonPool-worker-2。参数为：200。无返回值</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：null</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="anyOf"><a href="#anyOf" class="headerlink" title="anyOf"></a>anyOf</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Object&gt; <span class="title">anyOf</span><span class="params">(CompletableFuture&lt;?&gt;... cfs)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>任意一个任务执行完，就执行<code>anyOf</code>返回的<code>CompletableFuture</code>。如果执行的任务异常，<code>anyOf</code>的<code>CompletableFuture</code>执行<code>get()</code>方法会抛出异常。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">anyOf</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    Random random = <span class="keyword">new</span> Random();</span><br><span class="line">    CompletableFuture&lt;Integer&gt; f1 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        Uninterruptibles.sleepUninterruptibly(random.nextInt(<span class="number">200</span>), TimeUnit.MILLISECONDS);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync1线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：100&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">100</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    CompletableFuture&lt;Integer&gt; f2 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        Uninterruptibles.sleepUninterruptibly(random.nextInt(<span class="number">100</span>), TimeUnit.MILLISECONDS);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync2线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：200&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    CompletableFuture&lt;Object&gt; future = CompletableFuture.anyOf(f1, f2).whenComplete((arg, throwable) -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;anyOf线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。参数为：&quot;</span> + arg + <span class="string">&quot;。无返回值&quot;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync2线程名称: ForkJoinPool.commonPool-worker-2。结果为：200</span></span><br><span class="line"><span class="comment">// anyOf线程名称: ForkJoinPool.commonPool-worker-2。参数为：200。无返回值</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：200</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="allOf"><a href="#allOf" class="headerlink" title="allOf"></a>allOf</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title">allOf</span><span class="params">(CompletableFuture&lt;?&gt;... cfs)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>所有任务都执行完成后，才执行<code>allOf</code>返回的<code>CompletableFuture</code>。如果任意一个任务异常，<code>allOf</code>的<code>CompletableFuture</code>执行<code>get()</code>方法都会抛出异常。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">allOf</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    Random random = <span class="keyword">new</span> Random();</span><br><span class="line">    CompletableFuture&lt;Integer&gt; f1 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        Uninterruptibles.sleepUninterruptibly(random.nextInt(<span class="number">200</span>), TimeUnit.MILLISECONDS);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync1线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：100&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">100</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    CompletableFuture&lt;Integer&gt; f2 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        Uninterruptibles.sleepUninterruptibly(random.nextInt(<span class="number">100</span>), TimeUnit.MILLISECONDS);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync2线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：200&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    CompletableFuture&lt;Void&gt; future = CompletableFuture.allOf(f1, f2).whenComplete((unused, throwable) -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;allOf线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。参数为：&quot;</span> + unused + <span class="string">&quot;。无返回值&quot;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync2线程名称: ForkJoinPool.commonPool-worker-2。结果为：200</span></span><br><span class="line"><span class="comment">// supplyAsync1线程名称: ForkJoinPool.commonPool-worker-1。结果为：100</span></span><br><span class="line"><span class="comment">// allOf线程名称: ForkJoinPool.commonPool-worker-1。参数为：null。无返回值</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：null</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="thenCompose"><a href="#thenCompose" class="headerlink" title="thenCompose"></a>thenCompose</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">thenCompose</span><span class="params">(Function&lt;? <span class="keyword">super</span> T, ? extends CompletionStage&lt;U&gt;&gt; fn)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>在某个任务执行完成后，将该任务的执行结果作为方法入参去执行指定的方法。该方法会返回一个新的<code>CompletableFuture</code>实例。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">thenCompose</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    Random random = <span class="keyword">new</span> Random();</span><br><span class="line">    CompletableFuture&lt;Integer&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        Uninterruptibles.sleepUninterruptibly(random.nextInt(<span class="number">200</span>), TimeUnit.MILLISECONDS);</span><br><span class="line">        System.out.println(<span class="string">&quot;supplyAsync线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。结果为：100&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">100</span>;</span><br><span class="line">    &#125;).thenCompose(arg -&gt; CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">        Uninterruptibles.sleepUninterruptibly(random.nextInt(<span class="number">100</span>), TimeUnit.MILLISECONDS);</span><br><span class="line">        System.out.println(<span class="string">&quot;thenCompose线程名称: &quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;。接收参数为：&quot;</span> + arg + <span class="string">&quot;。返回：200&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">200</span>;</span><br><span class="line">    &#125;));</span><br><span class="line">    System.out.println(<span class="string">&quot;阻塞获取结果。结果为：&quot;</span> + future.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// supplyAsync线程名称: ForkJoinPool.commonPool-worker-1。结果为：100</span></span><br><span class="line"><span class="comment">// thenCompose线程名称: ForkJoinPool.commonPool-worker-2。接收参数为：100。返回：200</span></span><br><span class="line"><span class="comment">// 阻塞获取结果。结果为：200</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h1><h2 id="CompletableFuture-get方法是阻塞的"><a href="#CompletableFuture-get方法是阻塞的" class="headerlink" title="CompletableFuture.get方法是阻塞的"></a>CompletableFuture.get方法是阻塞的</h2><p><code>CompletableFuture</code>的<code>get()</code>方法是阻塞的，如果使用它来获取异步调用的返回值，最好添加超时时间。</p>
+<blockquote>
+<p>CompletableFuture.get()：获取返回值抛出异常。</p>
+<p>CompletableFuture.join()：获取返回值不抛出异常。</p>
+</blockquote>
+<h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><p><code>CompletableFuture</code>默认使用<code>ForkJoinPool.commonPool</code>线程池，核心数量为服务器<strong>CPU-1</strong>。当有大量请求处理且任务耗时较久时就会响应很慢。建议使用自定义线程池，配置自定义线程池参数。</p>
+<h2 id="Future需要获取返回值才能获取异常信息"><a href="#Future需要获取返回值才能获取异常信息" class="headerlink" title="Future需要获取返回值才能获取异常信息"></a>Future需要获取返回值才能获取异常信息</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CompletableFuture&lt;Void&gt; future = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">100</span> / <span class="number">0</span>;</span><br><span class="line">&#125;).thenAccept(System.out::println);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 不加get()方法这一行，看不到异常信息</span></span><br><span class="line">future.get();</span><br></pre></td></tr></table></figure>
+
+<p><code>Future</code>需要获取返回值，才能获取到异常信息。如果不加 <code>get()</code>/<code>join()</code>方法，看不到异常信息。使用的时候需要考虑是否加<code>try...catch...</code>或者使用<code>exceptionally</code>方法。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
