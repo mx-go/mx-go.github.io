@@ -108,6 +108,18 @@ systemctl daemon-reload
 echo '卸载成功...'
 ```
 
+### 启动
+
+```shell
+systemctl start docker
+```
+
+### 停止
+
+```shell
+systemctl stop docker
+```
+
 ## 安装
 
 目录中至少包含`docker-18.06.3-ce.tgz`、`docker.service`、`install.sh`、`uninstall.sh`文件
