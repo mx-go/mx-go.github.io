@@ -781,14 +781,14 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/tools/</loc>
+    <loc>https://mx-go.github.io/tags/grafana/</loc>
     <lastmod>2022-12-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/grafana/</loc>
+    <loc>https://mx-go.github.io/tags/tools/</loc>
     <lastmod>2022-12-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -851,14 +851,14 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/redis/</loc>
+    <loc>https://mx-go.github.io/tags/pg/</loc>
     <lastmod>2022-12-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/tags/pg/</loc>
+    <loc>https://mx-go.github.io/tags/redis/</loc>
     <lastmod>2022-12-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1021,14 +1021,14 @@
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/categories/%E6%9D%82%E8%B0%88/</loc>
+    <loc>https://mx-go.github.io/categories/%E6%9E%B6%E6%9E%84/%E8%AE%BE%E8%AE%A1/</loc>
     <lastmod>2022-12-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mx-go.github.io/categories/%E6%9E%B6%E6%9E%84/%E8%AE%BE%E8%AE%A1/</loc>
+    <loc>https://mx-go.github.io/categories/%E6%9D%82%E8%B0%88/</loc>
     <lastmod>2022-12-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
