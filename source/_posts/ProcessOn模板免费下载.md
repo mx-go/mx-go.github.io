@@ -26,7 +26,7 @@ cover: ../../../../images/2022/10-12/processon0.png
 
 ```js
 let newO = '复制的def值'
-o = JSON.parse(newC);
+o = JSON.parse(newO);
 ```
 
 #### 新建空白思维导图
