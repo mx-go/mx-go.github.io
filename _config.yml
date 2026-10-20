@@ -47,11 +47,11 @@ highlight:
 
 # search  
 algolia:
-  applicationID: 'BPJ9SXT7ZR'
-  appId: 'BPJ9SXT7ZR'
-  apiKey: '361b6069a16dee1e14d36408c5b11773'
-  adminApiKey: 'aac678c4994c5ac80601d89269c92f79'
-  indexName: 'blog'
+  applicationID: 'RU7OTEN9SN'
+  appId: 'RU7OTEN9SN'
+  apiKey: 'd360cf272c81946d25e45339544333fd'
+  adminApiKey: ""
+  indexName: 'hexo'
   chunkSize: 5000
   fields:
     - content:strip:truncate,0,600
