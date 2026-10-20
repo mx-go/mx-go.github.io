@@ -1,0 +1,457 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>大模型难度路由职责：vLLM Semantic Router与Higress | 彩虹马的博客</title><meta name="keywords" content="架构,AI"><meta name="author" content="彩虹马"><meta name="copyright" content="彩虹马"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="引言给大模型应用增加一个统一入口，看起来只需要代理几个接口。但当模型数量、Agent数量和调用成本上来以后，问题会逐渐变成：简单问题能不能用便宜的模型？复杂任务什么时候升级？同一个会话是否应该一直使用同一个模型？这些判断应该由业务、网关还是模型服务负责？ 围绕这些问题，对vLLM Semantic Router和Higress做了一次梳理。两者都有路由能力，但关注的层次不同：一个侧重理解请求并选择">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大模型难度路由职责：vLLM Semantic Router与Higress">
+<meta property="og:url" content="https://mx-go.github.io/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%9A%BE%E5%BA%A6%E8%B7%AF%E7%94%B1%E8%81%8C%E8%B4%A3-vLLM-Semantic-Router%E4%B8%8EHigress/index.html">
+<meta property="og:site_name" content="彩虹马的博客">
+<meta property="og:description" content="引言给大模型应用增加一个统一入口，看起来只需要代理几个接口。但当模型数量、Agent数量和调用成本上来以后，问题会逐渐变成：简单问题能不能用便宜的模型？复杂任务什么时候升级？同一个会话是否应该一直使用同一个模型？这些判断应该由业务、网关还是模型服务负责？ 围绕这些问题，对vLLM Semantic Router和Higress做了一次梳理。两者都有路由能力，但关注的层次不同：一个侧重理解请求并选择">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mx-go.github.io/images/2026/10-12/difficulty-routing/cover.png">
+<meta property="article:published_time" content="2026-10-20T07:43:00.000Z">
+<meta property="article:modified_time" content="2026-10-20T07:53:03.199Z">
+<meta property="article:author" content="彩虹马">
+<meta property="article:tag" content="架构">
+<meta property="article:tag" content="AI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mx-go.github.io/images/2026/10-12/difficulty-routing/cover.png"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://mx-go.github.io/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%9A%BE%E5%BA%A6%E8%B7%AF%E7%94%B1%E8%81%8C%E8%B4%A3-vLLM-Semantic-Router%E4%B8%8EHigress/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.js" defer></script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d9a302391e363bd252e65a281d62a3c3";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"BPJ9SXT7ZR","apiKey":"361b6069a16dee1e14d36408c5b11773","indexName":"blog","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: {"limitDay":800,"position":"top","messagePrev":"本文于","messageNext":"天之前发表，文中内容可能已经过时。"},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 彩虹马","link":"链接: ","source":"来源: 彩虹马的博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '大模型难度路由职责：vLLM Semantic Router与Higress',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-10-20 15:53:03'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src= "/img/loading.gif" data-lazy-src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">105</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">17</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-bars"></i><span> 其他</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E7%BD%91%E5%9D%80%E6%94%B6%E8%97%8F/"><i class="fa-fw fas fa-sitemap"></i><span> 网址收藏</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://fontawesome.dashgame.com/"><i class="fa-fw fas fa-flag"></i><span> 图标速查</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/2026/10-12/difficulty-routing/cover.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">彩虹马的博客</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-bars"></i><span> 其他</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E7%BD%91%E5%9D%80%E6%94%B6%E8%97%8F/"><i class="fa-fw fas fa-sitemap"></i><span> 网址收藏</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://fontawesome.dashgame.com/"><i class="fa-fw fas fa-flag"></i><span> 图标速查</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">大模型难度路由职责：vLLM Semantic Router与Higress</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2026-10-20T07:43:00.000Z" title="undefined 2026-10-20 15:43:00">2026-10-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9E%B6%E6%9E%84/">架构</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9E%B6%E6%9E%84/%E8%AE%BE%E8%AE%A1/">设计</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>14分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="大模型难度路由职责：vLLM Semantic Router与Higress"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>给大模型应用增加一个统一入口，看起来只需要代理几个接口。但当模型数量、Agent数量和调用成本上来以后，问题会逐渐变成：简单问题能不能用便宜的模型？复杂任务什么时候升级？同一个会话是否应该一直使用同一个模型？这些判断应该由业务、网关还是模型服务负责？</p>
+<p>围绕这些问题，对<code>vLLM Semantic Router</code>和<code>Higress</code>做了一次梳理。两者都有路由能力，但关注的层次不同：<strong>一个侧重理解请求并选择模型，一个侧重统一接入和流量治理</strong>。职责不先讲清楚，两个组件叠在一起，只会多出一套规则和一个排障入口。<span id="more"></span></p>
+<blockquote>
+<p>本文整理自“澄清难度路由职责”的讨论，以方案分析为主，部署部分仅介绍组合思路，不作为已经完成联调的安装教程。</p>
+<p>资料核对日期：2026-10-20。历史讨论涉及Semantic Router v0.3；核对时官方最新发布已为<a target="_blank" rel="noopener" href="https://github.com/vllm-project/semantic-router/releases/tag/v0.4.0">v0.4.0</a>，Higress为<a target="_blank" rel="noopener" href="https://github.com/higress-group/higress/releases/tag/v2.2.5">v2.2.5</a>。下文涉及具体字段时附对应文档，实际配置应与选定版本保持一致。</p>
+</blockquote>
+<h1 id="先把三个问题拆开"><a href="#先把三个问题拆开" class="headerlink" title="先把三个问题拆开"></a>先把三个问题拆开</h1><p><strong>请求难不难、应该用哪个模型、最终请求发到哪个节点，是三个不同的问题。</strong></p>
+<table>
+<thead>
+<tr>
+<th>层次</th>
+<th>需要回答的问题</th>
+<th>输出示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>请求判断</td>
+<td>任务属于什么领域？推理要求高不高？上下文是否复杂？</td>
+<td>领域标签、复杂度信号、难度分数</td>
+</tr>
+<tr>
+<td>模型决策</td>
+<td>在成本、质量、约束和会话状态下选谁？</td>
+<td>某个模型或模型能力路径</td>
+</tr>
+<tr>
+<td>流量执行</td>
+<td>这个模型的哪个实例能接收请求？</td>
+<td>某个可用后端节点</td>
+</tr>
+</tbody></table>
+<p>比如“查询一个Java方法的用法”和“分析一个跨服务事务的一致性方案”，都可能归到编程领域，但适合的模型不一定相同。反过来，同一个模型可以有多个副本，选定模型以后，仍然需要负载均衡。</p>
+<p>这里的<code>Small / Medium / Large</code>只表示我们为模型池定义的能力档位，不是项目内置的统一命名，也不等于参数规模的绝对排序。某个专用小模型在特定任务上可能更合适。</p>
+<h1 id="两个组件各负责什么"><a href="#两个组件各负责什么" class="headerlink" title="两个组件各负责什么"></a>两个组件各负责什么</h1><h2 id="vLLM-Semantic-Router"><a href="#vLLM-Semantic-Router" class="headerlink" title="vLLM Semantic Router"></a>vLLM Semantic Router</h2><blockquote>
+<p>根据请求信号、策略和上下文，在配置好的候选模型中选择合适的模型路径。</p>
+</blockquote>
+<p>它的核心是<strong>模型决策</strong>。请求进入以后，可以提取规则、语义、领域、上下文、复杂度等信号，再通过策略形成决策。官方的<a target="_blank" rel="noopener" href="https://vllm-sr.ai/docs/v0.3/tutorials/projection/overview/">Projection说明</a>把信号、派生分数和映射结果分开，使“如何计算”和“如何选路”能够分别维护。</p>
+<p>注意名称上的区别：<code>vLLM</code>是推理引擎，<code>vLLM Semantic Router</code>是路由项目。部署Semantic Router，不代表同时启动了所有物理模型；后端模型服务仍需要单独准备。<a target="_blank" rel="noopener" href="https://vllm-sr.ai/docs/api/cli/">CLI说明</a></p>
+<h2 id="Higress"><a href="#Higress" class="headerlink" title="Higress"></a>Higress</h2><blockquote>
+<p>为AI应用提供统一入口，并通过网关及插件能力管理访问、协议、流量和运行治理。</p>
+</blockquote>
+<p>它更贴近企业入口：谁能调用、使用哪个身份、允许多少流量、如何代理模型接口、如何记录调用。具体能力需要按插件和部署配置启用，不能把“安装网关”理解为所有治理功能自动生效。<a target="_blank" rel="noopener" href="https://higress.io/">Higress官方介绍</a></p>
+<p>这不是说Higress只能机械转发。它有<a target="_blank" rel="noopener" href="https://higress.io/docs/latest/user/plugins/ai/others/ai-intent/">AI意图识别</a>等能力，也允许扩展插件。需要比较的是：<strong>我们的目标是否能直接映射到现有能力，还是需要自己实现一套难度评分与会话决策。</strong></p>
+<h2 id="功能点对比"><a href="#功能点对比" class="headerlink" title="功能点对比"></a>功能点对比</h2><table>
+<thead>
+<tr>
+<th>关注点</th>
+<th>vLLM Semantic Router</th>
+<th>Higress</th>
+<th>选型时要看什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>设计重心</td>
+<td>请求理解与模型选择</td>
+<td>统一入口与AI流量治理</td>
+<td>当前真正缺少哪一层</td>
+</tr>
+<tr>
+<td>多模型接入</td>
+<td>配置候选模型及后端绑定</td>
+<td>模型代理与供应商接入</td>
+<td>API、鉴权和模型名称是否匹配</td>
+</tr>
+<tr>
+<td>规则与语义信号</td>
+<td>作为路由策略的输入</td>
+<td>可用路由规则、意图识别及插件</td>
+<td>有意图分类不等于有难度评分</td>
+</tr>
+<tr>
+<td>连续难度分数</td>
+<td>有Score Projection等对应抽象</td>
+<td>需核对具体插件，或接入评分服务</td>
+<td>分数来源、量纲和校准方式</td>
+</tr>
+<tr>
+<td>分数到模型档位</td>
+<td>可用Mapping与Decision组织</td>
+<td>可接收决策结果后按规则执行</td>
+<td>模型选择权由谁持有</td>
+</tr>
+<tr>
+<td>会话中的保持与切换</td>
+<td>有<code>session_aware</code>模型选择策略</td>
+<td>传统节点亲和与自定义扩展需分别看</td>
+<td>固定模型还是固定节点</td>
+</tr>
+<tr>
+<td>后端节点负载均衡</td>
+<td>与所用数据面及部署配置配合</td>
+<td>网关流量治理能力</td>
+<td>选模型之后怎样选副本</td>
+</tr>
+<tr>
+<td>鉴权、限流和配额</td>
+<td>按所用模块与部署核对</td>
+<td>有相应网关和AI插件</td>
+<td>哪一层统一计量与拒绝</td>
+</tr>
+<tr>
+<td>故障处理</td>
+<td>模型候选与路由策略的一部分</td>
+<td>重试、故障转移等网关治理</td>
+<td>避免两层各自重试</td>
+</tr>
+<tr>
+<td>可观测</td>
+<td>关注路由决策及其证据</td>
+<td>关注入口流量、用量与运行状态</td>
+<td>能否串联一次完整请求</td>
+</tr>
+<tr>
+<td>Agent接入</td>
+<td>提供兼容的模型API入口</td>
+<td>提供统一代理入口</td>
+<td>不要只测一条普通问答</td>
+</tr>
+</tbody></table>
+<p>这张表比较的是职责和能力组织方式，不是“支持/不支持”的永久清单。项目持续演进，不能因为历史对话中没看到某项能力，就推断它永远不存在。</p>
+<h1 id="难度分数到底表达什么"><a href="#难度分数到底表达什么" class="headerlink" title="难度分数到底表达什么"></a>难度分数到底表达什么</h1><h2 id="难度不是提示词长度"><a href="#难度不是提示词长度" class="headerlink" title="难度不是提示词长度"></a>难度不是提示词长度</h2><p>长文本可能只要求提取一个字段；很短的问题也可能需要复杂证明。领域、上下文长度、工具使用、输出约束都能提供线索，但没有任何一个线索天然等于难度。</p>
+<p>工程上可以先用低成本规则处理明确请求，再让语义或复杂度判断处理剩余流量。讨论中使用的<code>L1 / L2 / L3</code>是方案分层的简称，<strong>不是两个项目共有的标准接口</strong>。只有确实需要更高成本的判断时，再引入下一层。</p>
+<h2 id="连续Score需要单独设计"><a href="#连续Score需要单独设计" class="headerlink" title="连续Score需要单独设计"></a>连续Score需要单独设计</h2><p>Semantic Router的<a target="_blank" rel="noopener" href="https://vllm-semantic-router.com/docs/tutorials/projection/scores">Scores文档</a>提供<code>weighted_sum</code>，可以组合不同信号。输入既可以是是否命中，也可以是置信值或原始数值，具体取决于信号暴露的数据。</p>
+<p>下面只是业务概念示例，不是可直接粘贴到项目中的配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">request + context</span><br><span class="line">       ↓</span><br><span class="line">signals</span><br><span class="line">       ↓</span><br><span class="line">difficulty_score</span><br><span class="line">       ↓</span><br><span class="line">score band</span><br><span class="line">       ↓</span><br><span class="line">candidate models</span><br></pre></td></tr></table></figure>
+
+<p>需要注意两个细节：</p>
+<ol>
+<li><strong>加权和不自动落在0～1或0～100。</strong> 原始输入的范围、负权重和归一化都要明确；“73分”只有在评分口径确定后才有意义。</li>
+<li><strong>加权和不自动产生连续精度。</strong> 如果输入只有几个布尔值，结果仍然只会落在有限的组合上。给它取名为连续Score，并不会增加信息量。</li>
+</ol>
+<p>我们可以为了业务展示把分数划成简单、中等、复杂，但阈值要在自己的样本上确定。不能直接把别人的示例阈值当作生产结论。</p>
+<h2 id="分数与Confidence不是一回事"><a href="#分数与Confidence不是一回事" class="headerlink" title="分数与Confidence不是一回事"></a>分数与Confidence不是一回事</h2><p><code>difficulty_score</code>回答“按这套标准有多难”；<code>confidence</code>需要进一步说明“对哪个判断有多确定”。它可能指分类器置信度，也可能指映射结果离阈值有多远，二者不能混用。</p>
+<p>官方<a target="_blank" rel="noopener" href="https://vllm-sr.ai/docs/v0.3/tutorials/projection/mappings/">Mappings文档</a>提供阈值映射，并介绍了<code>sigmoid_distance</code>校准：根据分数到边界的距离产生映射置信值。<strong>这个值不是模型回答正确率，也不是未经评估就成立的统计保证。</strong></p>
+<p>举个我们自己定义的例子：若复杂档位从70分开始，69.9和70.1虽然落在两侧，但都在边界附近。合理的方案需要考虑边界样本如何处理，而不是仅凭0.2分差就认定请求发生了本质变化。</p>
+<div align="center"><img src= "/img/loading.gif" data-lazy-src="/images/2026/10-12/difficulty-routing/routing-flow.png" alt="难度信号、评分映射、会话策略与模型选择的概念流程"/></div>
+
+<h1 id="Session粘滞究竟固定什么"><a href="#Session粘滞究竟固定什么" class="headerlink" title="Session粘滞究竟固定什么"></a>Session粘滞究竟固定什么</h1><h2 id="固定节点，不等于固定模型"><a href="#固定节点，不等于固定模型" class="headerlink" title="固定节点，不等于固定模型"></a>固定节点，不等于固定模型</h2><p>Higress的<a target="_blank" rel="noopener" href="https://higress.ai/docs/latest/user/annotation-use-case/">Cookie亲和性说明</a>描述的是让相关请求落到同一个后端节点。这适用于需要节点亲和的服务，但不能直接推出“整个Agent会话始终选择同一档模型”。</p>
+<table>
+<thead>
+<tr>
+<th>亲和目标</th>
+<th>示例</th>
+<th>解决的问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>后端节点</td>
+<td>同一个模型的副本A</td>
+<td>节点状态或缓存局部性</td>
+</tr>
+<tr>
+<td>模型</td>
+<td>一直选择<code>model-a</code></td>
+<td>模型切换与上下文兼容</td>
+</tr>
+<tr>
+<td>模型档位</td>
+<td>保持在高能力候选池</td>
+<td>能力级别稳定</td>
+</tr>
+<tr>
+<td>Provider</td>
+<td>保持在某个供应商</td>
+<td>供应商侧状态与接口约束</td>
+</tr>
+</tbody></table>
+<p>这几项需要分别定义。固定一个网关或Router副本，也不等于固定了模型或供应商。</p>
+<h2 id="稳定，不是永远不允许切换"><a href="#稳定，不是永远不允许切换" class="headerlink" title="稳定，不是永远不允许切换"></a>稳定，不是永远不允许切换</h2><p>讨论里真正关心的是：同一个Agent Session可以连续完成任务，同时在需要时提高模型能力，而不是每轮重新选出一个完全不同的模型。</p>
+<p>Semantic Router的<a target="_blank" rel="noopener" href="https://vllm-sr.ai/docs/v0.3/tutorials/algorithm/selection/session-aware/"><code>session_aware</code></a>在匹配决策的<code>modelRefs</code>中选择模型，并考虑保持、切换、工具循环和状态可迁移性等因素。它不替代选定模型内部的节点负载均衡，也不会自动成为应用的对话记忆系统。</p>
+<p>因此，下面是我们期望评估的行为，不是所有配置下都保证发生的结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">第1轮：普通问答             → 轻量模型</span><br><span class="line">第2轮：继续同一任务         → 保持，避免无意义切换</span><br><span class="line">第3轮：需要更强推理         → 评估是否可升级</span><br><span class="line">工具调用尚未完成           → 按策略锁定模型</span><br><span class="line">任务结束或会话超时         → 按策略重新选择</span><br></pre></td></tr></table></figure>
+
+<p>这里还有一个容易漏掉的边界：<strong>会话策略要在当前候选集和兼容性约束内工作。</strong> 如果不同难度Decision只各自配置一个模型，就不能仅凭启用<code>session_aware</code>，认定它会跨所有Decision任意保持和升级。候选集、Decision漂移与重置行为需要一起验证。</p>
+<h2 id="Session-ID只提供身份"><a href="#Session-ID只提供身份" class="headerlink" title="Session ID只提供身份"></a>Session ID只提供身份</h2><p>对于Chat Completions等调用，可以显式传递稳定的<code>x-session-id</code>。同一会话保持一致，不同租户与会话避免冲突。不要把敏感信息直接放进标识，也不要把每轮变化的Request ID当成长期Session ID。<a target="_blank" rel="noopener" href="https://vllm-semantic-router.netlify.app/docs/api/session-identification/">会话身份说明</a></p>
+<p>标识本身不保存完整聊天历史。客户端仍需按API契约传递消息或续接状态；使用<code>previous_response_id</code>等供应商状态时，还要确认这些状态是否允许跨模型迁移。</p>
+<p>多副本部署同样需要单独设计状态一致性。给Router增加副本，并不意味着其会话状态天然共享；节点亲和可以是部署策略的一部分，但不能替代持久化、故障恢复和跨副本一致性的验证。</p>
+<h1 id="两个组件一定要一起部署吗"><a href="#两个组件一定要一起部署吗" class="headerlink" title="两个组件一定要一起部署吗"></a>两个组件一定要一起部署吗</h1><p>不一定。首先确认缺的是治理、智能决策，还是两者都缺。</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>适用情况</th>
+<th>主要代价</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>只用Semantic Router</td>
+<td>核心是模型选择，已有入口治理或暂时不需要完整网关</td>
+<td>仍需评估入口、身份、配额等要求</td>
+</tr>
+<tr>
+<td>Higress加自定义决策能力</td>
+<td>已标准化使用Higress，路由策略较简单</td>
+<td>评分、会话和决策证据可能需要自行维护</td>
+</tr>
+<tr>
+<td>Higress加Semantic Router</td>
+<td>既需要统一企业入口，也需要相对独立的模型决策</td>
+<td>多一层代理与配置，排障和延迟都要评估</td>
+</tr>
+</tbody></table>
+<p>组件越多并不代表架构越完整。如果只有两个固定模型、一条明确规则，先把这条规则跑好，比引入一套复杂评分系统更实用。</p>
+<h1 id="组合部署的职责边界"><a href="#组合部署的职责边界" class="headerlink" title="组合部署的职责边界"></a>组合部署的职责边界</h1><h2 id="Higress在前，Semantic-Router在后"><a href="#Higress在前，Semantic-Router在后" class="headerlink" title="Higress在前，Semantic Router在后"></a>Higress在前，Semantic Router在后</h2><p>对已有企业网关、又希望引入独立模型决策层的场景，可以考虑：</p>
+<div align="center"><img src= "/img/loading.gif" data-lazy-src="/images/2026/10-12/difficulty-routing/responsibility-layers.png" alt="Agent经过Higress统一治理后进入Semantic Router进行模型决策的分层架构"/></div>
+
+<p>请求先通过Higress完成入口控制，再进入Semantic Router的<strong>对外HTTP入口</strong>，由后者选择模型后端。图中的箭头是主请求方向，响应沿链路返回。</p>
+<p><strong>这是一种基于职责划分的组合设计，不等于官方已经提供了任意版本Higress的一键集成包。</strong> Semantic Router的<a target="_blank" rel="noopener" href="https://vllm-sr.com/docs/installation/k8s/istio/">Istio Gateway示例</a>使用ExtProc集成，不能因为Higress也基于Envoy，就直接套用其中的资源清单。</p>
+<p>需要区分两条路线：</p>
+<ul>
+<li><strong>HTTP串联</strong>：把Semantic Router完整服务栈的HTTP入口作为Higress上游，先验证协议透传和职责划分。</li>
+<li><strong>数据面深度集成</strong>：直接在Higress数据面调用外部处理服务，涉及ExtProc支持、过滤器顺序和路由重算，需要单独实现与验证。</li>
+</ul>
+<p>不要把ExtProc的gRPC端口当作OpenAI HTTP接口配置到网关里。这两个入口的协议和用途不同。</p>
+<h2 id="模型选择只保留一个主要责任方"><a href="#模型选择只保留一个主要责任方" class="headerlink" title="模型选择只保留一个主要责任方"></a>模型选择只保留一个主要责任方</h2><p>Higress的<a target="_blank" rel="noopener" href="https://github.com/higress-group/higress/blob/main/plugins/wasm-cpp/extensions/model_router/README.md"><code>model-router</code></a>可以提取请求中的<code>model</code>供后续路由使用。这和根据请求难度选择模型是两件事。</p>
+<p>在上述分层方案里，可以让Higress将某个逻辑模型入口交给Semantic Router，由Semantic Router统一决定物理模型。不要同时让两边维护一份难度阈值和升级规则，否则出现差异时，很难判断哪一层的选择才是最终结果。</p>
+<p>供应商凭据也要按实际调用路径管理：如果物理模型由内层Router直接调用，不能假设外层Higress会自动接管每个供应商的鉴权、连接池与故障转移。确实需要另一层出口代理时，应画成独立链路，避免回到同一入口形成循环。</p>
+<h2 id="流量经过，不代表所有信息都能看见"><a href="#流量经过，不代表所有信息都能看见" class="headerlink" title="流量经过，不代表所有信息都能看见"></a>流量经过，不代表所有信息都能看见</h2><p>Higress看到的可能是逻辑模型名，而实际物理模型由内层确定。入口审计需要同时关联逻辑入口、最终模型、请求ID和Session ID；不能仅根据入口参数统计物理模型分布。</p>
+<p>Token配额也需要核对真实<code>usage</code>，尤其是流式响应。若网关看不到用量字段、供应商计费口径不同，或者内层发生重试，计量结果可能与账单不同。不能因为请求经过网关，就认为精确配额和费用归集自然成立。</p>
+<h1 id="Agent只改BaseURL就够了吗"><a href="#Agent只改BaseURL就够了吗" class="headerlink" title="Agent只改BaseURL就够了吗"></a>Agent只改BaseURL就够了吗</h1><p>如果Agent使用兼容的API子集，调整<code>BaseURL</code>确实可以降低接入成本。但“能请求”与“业务行为兼容”之间，还有不少内容需要验证。</p>
+<p>以Chat Completions为例，接入时至少明确这几项：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">BaseURL        → 网关入口及正确的 /v1 路径</span><br><span class="line">API Key        → 企业入口的身份凭据</span><br><span class="line">model          → 部署中实际配置的逻辑模型入口</span><br><span class="line">x-session-id   → 稳定且隔离的会话标识</span><br><span class="line">messages       → 按协议传递所需历史与工具消息</span><br></pre></td></tr></table></figure>
+
+<p>这里没有给出固定的<code>model</code>别名，是因为别名属于实际部署契约，不能把文档某个版本中的<code>auto</code>或其他命名当作所有环境的默认值。</p>
+<p>普通文本问答通过以后，还要验证<code>stream</code>、工具调用、结构化输出、错误码、取消请求和超时。使用Responses或Anthropic协议时，应按对应API重新验证，不从Chat Completions的结果外推。</p>
+<h1 id="落地时先验证什么"><a href="#落地时先验证什么" class="headerlink" title="落地时先验证什么"></a>落地时先验证什么</h1><p>部署的第一步不应该是把所有插件都打开，而是逐层建立一条可观察的最小链路。下面是建议的验证顺序，不是本文已经执行过的压测结果。</p>
+<ol>
+<li><strong>模型直连</strong>：确认每个候选模型的接口、名称、能力与鉴权可用，建立固定模型基线。</li>
+<li><strong>Router直连</strong>：验证信号、分数、映射和最终模型，保留能解释决策的证据。</li>
+<li><strong>加入会话</strong>：覆盖同会话多轮、不同会话隔离、工具循环、能力升级及不可迁移状态。</li>
+<li><strong>加入Higress</strong>：先验证透传，再逐项启用鉴权、限流、配额和审计。</li>
+<li><strong>补齐异常</strong>：覆盖Router不可用、评分超时、后端429、响应中断以及客户端取消。</li>
+</ol>
+<p>对于评分超时、低置信值和候选模型不可用，需要显式规定处理方式。回退到高能力模型、保守默认模型，或者直接拒绝，都应由业务要求决定。<strong>低置信度不一定意味着任务很难，模型不可用也不意味着可以无条件降级。</strong></p>
+<p>重试尤其要控制总预算。外层重试一次、内层再重试一次，实际模型调用可能明显放大；流式输出已经开始后，也不能像普通幂等查询一样随意重放。两层需要统一超时、取消传播与故障处理边界。</p>
+<h2 id="用自己的样本评价收益"><a href="#用自己的样本评价收益" class="headerlink" title="用自己的样本评价收益"></a>用自己的样本评价收益</h2><p>离线数据至少包含任务、质量要求、候选模型效果和实际成本。样本覆盖简单问答、长上下文、复杂推理、工具调用与边界请求，避免仅凭提示词长度标注难度。</p>
+<p>重点观察：</p>
+<ul>
+<li>相比固定高能力模型，回答质量是否仍满足业务要求；</li>
+<li>被低估的复杂任务占多少，错误降级带来的损失是什么；</li>
+<li>评分和代理增加了多少延迟，P95及首Token时间如何变化；</li>
+<li>Session切换频率、工具任务成功率、状态丢失与缓存行为；</li>
+<li>总Token、费用和重试放大，而不只是高能力模型调用比例。</li>
+</ul>
+<p>少调用大模型只是一个现象。只有把路由开销、回答质量、失败重试和上下文切换成本一起算进去，才能判断这套系统是否值得保留。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h2 id="一句话定位"><a href="#一句话定位" class="headerlink" title="一句话定位"></a>一句话定位</h2><p><strong>vLLM Semantic Router：</strong></p>
+<blockquote>
+<p>一个面向LLM/Agent的<strong>智能决策与模型路由层</strong>，通过复杂度、语义、上下文、会话等信号决定应该走哪个模型或模型路径，并支持Session-aware路由。</p>
+</blockquote>
+<p><strong>Higress：</strong></p>
+<blockquote>
+<p>一个面向企业AI场景的<strong>统一API / AI Gateway</strong>，重点解决模型代理、协议适配、鉴权、限流、配额、安全、负载均衡和可观测等生产治理问题。</p>
+</blockquote>
+<p>两者可以组合，也可以根据实际需求只选择一层。如果选择组合，先明确模型选择权、会话状态、身份传递和重试边界，再逐步补齐治理能力。架构的价值在于降低实际成本、保持质量和方便排障，而不是把功能清单上所有组件都部署一遍。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">彩虹马</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://mx-go.github.io/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%9A%BE%E5%BA%A6%E8%B7%AF%E7%94%B1%E8%81%8C%E8%B4%A3-vLLM-Semantic-Router%E4%B8%8EHigress/">https://mx-go.github.io/大模型难度路由职责-vLLM-Semantic-Router与Higress/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://mx-go.github.io" target="_blank">彩虹马的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%9E%B6%E6%9E%84/">架构</a><a class="post-meta__tags" href="/tags/AI/">AI</a></div><div class="post_share"><div class="social-share" data-image="/images/2026/10-12/difficulty-routing/cover.png" data-sites="weibo"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/reward-wepay.jpg" target="_blank"><img class="post-qr-code-img" src= "/img/loading.gif" data-lazy-src="/img/reward-wepay.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/%E6%9E%B6%E6%9E%84%E5%9B%BE%E5%88%86%E7%B1%BB/"><img class="next-cover" src= "/img/loading.gif" data-lazy-src="/../../../../images/2022/7-9/arch_category_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">架构图分类</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/微服务架构设计/" title="微服务架构设计"><img class="cover" src= "/img/loading.gif" data-lazy-src="/../../../../images/2022/1-3/6.arch_cover.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-16</div><div class="title">微服务架构设计</div></div></a></div><div><a href="/数据库存储架构/" title="数据库存储架构"><img class="cover" src= "/img/loading.gif" data-lazy-src="/../../../../images/2022/1-3/4.arch_cover.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-08</div><div class="title">数据库存储架构</div></div></a></div><div><a href="/架构图分类/" title="架构图分类"><img class="cover" src= "/img/loading.gif" data-lazy-src="/../../../../images/2022/7-9/arch_category_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-18</div><div class="title">架构图分类</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src= "/img/loading.gif" data-lazy-src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">彩虹马</div><div class="author-info__description">总结个人心得，记录个人知识</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">105</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">17</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mx-go"><i class="fab fa-github"></i><span>关注我</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/mx-go" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:mx_sunny@sina.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.processon.com/u/5a55be27e4b0a447b99a9b2a/profile" target="_blank" title="ProcessOn"><i class="fas fa-pencil-square"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">一个收藏回忆与分享技术的地方！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%88%E6%8A%8A%E4%B8%89%E4%B8%AA%E9%97%AE%E9%A2%98%E6%8B%86%E5%BC%80"><span class="toc-number">2.</span> <span class="toc-text">先把三个问题拆开</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%A4%E4%B8%AA%E7%BB%84%E4%BB%B6%E5%90%84%E8%B4%9F%E8%B4%A3%E4%BB%80%E4%B9%88"><span class="toc-number">3.</span> <span class="toc-text">两个组件各负责什么</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#vLLM-Semantic-Router"><span class="toc-number">3.1.</span> <span class="toc-text">vLLM Semantic Router</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Higress"><span class="toc-number">3.2.</span> <span class="toc-text">Higress</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E7%82%B9%E5%AF%B9%E6%AF%94"><span class="toc-number">3.3.</span> <span class="toc-text">功能点对比</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9A%BE%E5%BA%A6%E5%88%86%E6%95%B0%E5%88%B0%E5%BA%95%E8%A1%A8%E8%BE%BE%E4%BB%80%E4%B9%88"><span class="toc-number">4.</span> <span class="toc-text">难度分数到底表达什么</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9A%BE%E5%BA%A6%E4%B8%8D%E6%98%AF%E6%8F%90%E7%A4%BA%E8%AF%8D%E9%95%BF%E5%BA%A6"><span class="toc-number">4.1.</span> <span class="toc-text">难度不是提示词长度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9E%E7%BB%ADScore%E9%9C%80%E8%A6%81%E5%8D%95%E7%8B%AC%E8%AE%BE%E8%AE%A1"><span class="toc-number">4.2.</span> <span class="toc-text">连续Score需要单独设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%95%B0%E4%B8%8EConfidence%E4%B8%8D%E6%98%AF%E4%B8%80%E5%9B%9E%E4%BA%8B"><span class="toc-number">4.3.</span> <span class="toc-text">分数与Confidence不是一回事</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Session%E7%B2%98%E6%BB%9E%E7%A9%B6%E7%AB%9F%E5%9B%BA%E5%AE%9A%E4%BB%80%E4%B9%88"><span class="toc-number">5.</span> <span class="toc-text">Session粘滞究竟固定什么</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BA%E5%AE%9A%E8%8A%82%E7%82%B9%EF%BC%8C%E4%B8%8D%E7%AD%89%E4%BA%8E%E5%9B%BA%E5%AE%9A%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.1.</span> <span class="toc-text">固定节点，不等于固定模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A8%B3%E5%AE%9A%EF%BC%8C%E4%B8%8D%E6%98%AF%E6%B0%B8%E8%BF%9C%E4%B8%8D%E5%85%81%E8%AE%B8%E5%88%87%E6%8D%A2"><span class="toc-number">5.2.</span> <span class="toc-text">稳定，不是永远不允许切换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Session-ID%E5%8F%AA%E6%8F%90%E4%BE%9B%E8%BA%AB%E4%BB%BD"><span class="toc-number">5.3.</span> <span class="toc-text">Session ID只提供身份</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%A4%E4%B8%AA%E7%BB%84%E4%BB%B6%E4%B8%80%E5%AE%9A%E8%A6%81%E4%B8%80%E8%B5%B7%E9%83%A8%E7%BD%B2%E5%90%97"><span class="toc-number">6.</span> <span class="toc-text">两个组件一定要一起部署吗</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%84%E5%90%88%E9%83%A8%E7%BD%B2%E7%9A%84%E8%81%8C%E8%B4%A3%E8%BE%B9%E7%95%8C"><span class="toc-number">7.</span> <span class="toc-text">组合部署的职责边界</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Higress%E5%9C%A8%E5%89%8D%EF%BC%8CSemantic-Router%E5%9C%A8%E5%90%8E"><span class="toc-number">7.1.</span> <span class="toc-text">Higress在前，Semantic Router在后</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E9%80%89%E6%8B%A9%E5%8F%AA%E4%BF%9D%E7%95%99%E4%B8%80%E4%B8%AA%E4%B8%BB%E8%A6%81%E8%B4%A3%E4%BB%BB%E6%96%B9"><span class="toc-number">7.2.</span> <span class="toc-text">模型选择只保留一个主要责任方</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%81%E9%87%8F%E7%BB%8F%E8%BF%87%EF%BC%8C%E4%B8%8D%E4%BB%A3%E8%A1%A8%E6%89%80%E6%9C%89%E4%BF%A1%E6%81%AF%E9%83%BD%E8%83%BD%E7%9C%8B%E8%A7%81"><span class="toc-number">7.3.</span> <span class="toc-text">流量经过，不代表所有信息都能看见</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Agent%E5%8F%AA%E6%94%B9BaseURL%E5%B0%B1%E5%A4%9F%E4%BA%86%E5%90%97"><span class="toc-number">8.</span> <span class="toc-text">Agent只改BaseURL就够了吗</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%90%BD%E5%9C%B0%E6%97%B6%E5%85%88%E9%AA%8C%E8%AF%81%E4%BB%80%E4%B9%88"><span class="toc-number">9.</span> <span class="toc-text">落地时先验证什么</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E8%87%AA%E5%B7%B1%E7%9A%84%E6%A0%B7%E6%9C%AC%E8%AF%84%E4%BB%B7%E6%94%B6%E7%9B%8A"><span class="toc-number">9.1.</span> <span class="toc-text">用自己的样本评价收益</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">10.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E5%8F%A5%E8%AF%9D%E5%AE%9A%E4%BD%8D"><span class="toc-number">10.1.</span> <span class="toc-text">一句话定位</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%9A%BE%E5%BA%A6%E8%B7%AF%E7%94%B1%E8%81%8C%E8%B4%A3-vLLM-Semantic-Router%E4%B8%8EHigress/" title="大模型难度路由职责：vLLM Semantic Router与Higress"><img src= "/img/loading.gif" data-lazy-src="/images/2026/10-12/difficulty-routing/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="大模型难度路由职责：vLLM Semantic Router与Higress"/></a><div class="content"><a class="title" href="/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%9A%BE%E5%BA%A6%E8%B7%AF%E7%94%B1%E8%81%8C%E8%B4%A3-vLLM-Semantic-Router%E4%B8%8EHigress/" title="大模型难度路由职责：vLLM Semantic Router与Higress">大模型难度路由职责：vLLM Semantic Router与Higress</a><time datetime="2026-10-20T07:43:00.000Z" title="发表于 2026-10-20 15:43:00">2026-10-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%9E%B6%E6%9E%84%E5%9B%BE%E5%88%86%E7%B1%BB/" title="架构图分类"><img src= "/img/loading.gif" data-lazy-src="/../../../../images/2022/7-9/arch_category_cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="架构图分类"/></a><div class="content"><a class="title" href="/%E6%9E%B6%E6%9E%84%E5%9B%BE%E5%88%86%E7%B1%BB/" title="架构图分类">架构图分类</a><time datetime="2022-08-18T10:19:34.000Z" title="发表于 2022-08-18 18:19:34">2022-08-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E5%A2%9E%E5%BC%BA%E5%BC%8FSnowFlake-%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/" title="增强式SnowFlake(雪花算法)"><img src= "/img/loading.gif" data-lazy-src="/../../../../images/2022/7-9/snowflake_0.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="增强式SnowFlake(雪花算法)"/></a><div class="content"><a class="title" href="/%E5%A2%9E%E5%BC%BA%E5%BC%8FSnowFlake-%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/" title="增强式SnowFlake(雪花算法)">增强式SnowFlake(雪花算法)</a><time datetime="2022-06-02T02:34:16.000Z" title="发表于 2022-06-02 10:34:16">2022-06-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E5%BC%82%E5%9C%B0%E5%A4%9A%E6%B4%BB%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" title="异地多活架构设计"><img src= "/img/loading.gif" data-lazy-src="/../../../../images/2022/4-6/7.arch_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="异地多活架构设计"/></a><div class="content"><a class="title" href="/%E5%BC%82%E5%9C%B0%E5%A4%9A%E6%B4%BB%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" title="异地多活架构设计">异地多活架构设计</a><time datetime="2022-05-26T08:25:19.000Z" title="发表于 2022-05-26 16:25:19">2022-05-26</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/2026/10-12/difficulty-routing/cover.png')"><div id="footer-wrap"><div class="copyright">&copy;2017 - 2026 By 彩虹马</div><div class="footer_custom_text"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">粤ICP备2022148055号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="algolia-search"><div class="search-dialog"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (true){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/algolia.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
