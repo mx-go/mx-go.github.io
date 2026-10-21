@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 900" role="img" aria-labelledby="title desc">
+  <title id="title">COLA 分层职责与依赖关系</title>
+  <desc id="desc">外部请求经过 Adapter、Application 到达 Domain；Infrastructure 实现内层声明的技术端口。Start 负责装配运行组件，Client 提供稳定对外契约。编译依赖朝向业务抽象，具体模块依赖随工程原型变化。</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fbff"/>
+      <stop offset="1" stop-color="#edf3f9"/>
+    </linearGradient>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#16304b" flood-opacity=".09"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#df7c37"/>
+    </marker>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+      .title { fill: #172b42; font-size: 32px; font-weight: 700; }
+      .subtitle { fill: #63758a; font-size: 16px; }
+      .module { fill: #18324d; font-size: 20px; font-weight: 700; }
+      .role { fill: #526980; font-size: 15px; }
+      .caption { fill: #53677d; font-size: 15px; font-weight: 600; }
+      .code { fill: #263d56; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 16px; }
+      .small { fill: #718398; font-size: 14px; }
+    </style>
+  </defs>
+
+  <rect width="1280" height="900" rx="26" fill="url(#background)"/>
+  <text x="64" y="70" class="title">COLA 分层：职责与依赖方向</text>
+  <text x="64" y="102" class="subtitle">逻辑职责示意；具体模块与依赖随应用原型和工程结构变化</text>
+
+  <g filter="url(#shadow)">
+    <rect x="450" y="138" width="380" height="82" rx="16" fill="#f2edff" stroke="#d9cdfa" stroke-width="1.5"/>
+  </g>
+  <text x="640" y="174" text-anchor="middle" class="module">start · 启动与装配</text>
+  <text x="640" y="199" text-anchor="middle" class="role">配置入口 · 组件装配 · 运行环境集成</text>
+
+  <g filter="url(#shadow)">
+    <rect x="64" y="292" width="340" height="118" rx="16" fill="#e9f2ff" stroke="#c7dcf6" stroke-width="1.5"/>
+    <rect x="470" y="292" width="340" height="118" rx="16" fill="#e9f8f3" stroke="#c4e8d9" stroke-width="1.5"/>
+    <rect x="876" y="292" width="340" height="118" rx="16" fill="#fff3e8" stroke="#f2d6bc" stroke-width="1.5"/>
+  </g>
+  <text x="234" y="334" text-anchor="middle" class="module">adapter · 入站适配</text>
+  <text x="234" y="363" text-anchor="middle" class="role">HTTP / RPC / 消息入口</text>
+  <text x="234" y="388" text-anchor="middle" class="role">协议转换 · 请求响应映射</text>
+  <text x="640" y="334" text-anchor="middle" class="module">application · 用例编排</text>
+  <text x="640" y="363" text-anchor="middle" class="role">用例入口 · 流程协调 · 事务边界</text>
+  <text x="640" y="388" text-anchor="middle" class="role">调用领域行为与所需端口</text>
+  <text x="1046" y="334" text-anchor="middle" class="module">infrastructure · 技术实现</text>
+  <text x="1046" y="363" text-anchor="middle" class="role">Repository / Gateway 实现</text>
+  <text x="1046" y="388" text-anchor="middle" class="role">数据库 · 远程服务 · 消息系统</text>
+
+  <g filter="url(#shadow)">
+    <rect x="270" y="492" width="360" height="116" rx="16" fill="#fff8e8" stroke="#f0dfb6" stroke-width="1.5"/>
+    <rect x="690" y="492" width="320" height="116" rx="16" fill="#f2edff" stroke="#ddd2fb" stroke-width="1.5"/>
+  </g>
+  <text x="450" y="536" text-anchor="middle" class="module">domain · 领域模型</text>
+  <text x="450" y="565" text-anchor="middle" class="role">业务概念 · 规则 · 不变量</text>
+  <text x="450" y="590" text-anchor="middle" class="role">必要的端口抽象</text>
+  <text x="850" y="536" text-anchor="middle" class="module">client · 对外契约</text>
+  <text x="850" y="565" text-anchor="middle" class="role">API · DTO · Command / Query</text>
+  <text x="850" y="590" text-anchor="middle" class="role">稳定契约，不暴露内部实现</text>
+
+  <path d="M 500 220 C 420 255, 325 266, 234 282" fill="none" stroke="#a5b3c1" stroke-width="2"/>
+  <path d="M 640 220 V 282" fill="none" stroke="#a5b3c1" stroke-width="2"/>
+  <path d="M 780 220 C 860 255, 955 266, 1046 282" fill="none" stroke="#a5b3c1" stroke-width="2"/>
+  <text x="640" y="258" text-anchor="middle" class="small">启动时装配所需组件</text>
+
+  <path d="M 404 351 H 460" fill="none" stroke="#df7c37" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M 640 410 V 480" fill="none" stroke="#df7c37" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="432" y="338" text-anchor="middle" class="small">运行时请求</text>
+  <text x="656" y="455" class="small">领域行为</text>
+
+  <rect x="64" y="650" width="1152" height="174" rx="18" fill="#ffffff" stroke="#dae4ef" stroke-width="1.5"/>
+  <text x="94" y="690" class="caption">一种常见的源码依赖方向（概念示意）</text>
+  <text x="100" y="730" class="code">start          → adapter, infrastructure</text>
+  <text x="100" y="760" class="code">adapter        → application, client</text>
+  <text x="100" y="790" class="code">application    → domain, client</text>
+  <text x="680" y="730" class="code">infrastructure → domain / 所需契约</text>
+  <text x="680" y="760" class="code">domain         → 不依赖外层技术实现</text>
+  <text x="680" y="790" class="code">client         → 不依赖应用内部实现</text>
+
+  <rect x="64" y="847" width="1152" height="36" rx="10" fill="#eaf0f6"/>
+  <circle cx="90" cy="865" r="6" fill="#df7c37"/>
+  <text x="108" y="871" class="small">橙色箭头表示运行时请求；源码依赖指向稳定抽象，实际模块依赖需按项目原型核对。</text>
+</svg>
