@@ -8458,4 +8458,223 @@
         <tag>AI</tag>
       </tags>
   </entry>
+  <entry>
+    <title>AgentScope中的MCP Tool管理：发现、暴露与版本治理</title>
+    <url>/AgentScope%E4%B8%AD%E7%9A%84MCP-Tool%E7%AE%A1%E7%90%86-%E5%8F%91%E7%8E%B0%E6%9A%B4%E9%9C%B2%E4%B8%8E%E7%89%88%E6%9C%AC%E6%B2%BB%E7%90%86/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>大模型应用从“回答问题”走向“完成任务”后，需要查询业务数据、调用内部 API、检索知识库或执行操作。若每个 Agent 都单独适配一种后端，连接方式、工具描述、参数格式和权限控制很快会变得重复而难以维护。</p>
+<p>Model Context Protocol（MCP）为模型应用与外部能力之间提供一套通用协议。AgentScope 则在 Agent 运行时中管理工具、MCP 客户端和工具组。理解两者的边界，才能回答工具如何发现、如何暴露给模型、同类工具如何区分，以及升级如何控制风险。本文按 MCP 基础、Tool 设计和 AgentScope 接入逐步展开。<span id="more"></span></p>
+<h1 id="MCP-是什么"><a href="#MCP-是什么" class="headerlink" title="MCP 是什么"></a>MCP 是什么</h1><p>MCP 是连接 AI 应用与外部数据源、工具服务的一种开放协议。它约定 Client 与 Server 如何初始化、协商能力、交换请求和返回结果，让应用可以用相对一致的方式连接不同能力提供方。MCP 本身不是大模型，也不负责替业务系统实现权限、事务或模型决策。</p>
+<p>一个常见部署由三类角色组成：</p>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Host</td>
+<td>承载 Agent 和用户交互的应用，例如 IDE、桌面助手或业务 Agent 服务</td>
+</tr>
+<tr>
+<td>Client</td>
+<td>Host 内负责与一个 MCP Server 建立协议连接、发现能力并转发调用的组件</td>
+</tr>
+<tr>
+<td>Server</td>
+<td>对外提供工具、资源或提示模板的服务，可运行在本机进程或远端服务中</td>
+</tr>
+</tbody></table>
+<p>一个 Host 可以连接多个 Server。MCP 规范定义了几类 Server 能力，其中最常见的是：</p>
+<ul>
+<li><strong>Tools</strong>：可执行操作，例如查询订单、创建工单、运行计算。模型可根据请求选择工具，但 Host 仍负责授权、确认和调用控制。</li>
+<li><strong>Resources</strong>：可读取的数据或上下文，例如文件、文档、数据库记录。它们提供内容，不等同于一次操作。</li>
+<li><strong>Prompts</strong>：由 Server 提供的可复用提示模板，用于组织特定任务的输入和上下文。</li>
+</ul>
+<p>三者可以组合使用：先通过 Resource 读取资料，再调用 Tool 执行业务操作，最终由 Host 将结果交还给模型。MCP 的价值在于统一连接和能力描述，而不是把所有业务逻辑都塞进协议层。<a href="https://modelcontextprotocol.io/specification/2024-11-05/basic">MCP 规范概览</a> · <a href="https://modelcontextprotocol.io/specification/2024-11-05/basic/lifecycle">MCP 生命周期</a></p>
+<h1 id="Tool-是什么"><a href="#Tool-是什么" class="headerlink" title="Tool 是什么"></a>Tool 是什么</h1><p>Tool 是一项可被调用的能力定义。MCP Server 会发布 Tool 名称、用途描述和输入参数 Schema；Client 获取这些定义后，Host 可以将适用的工具描述提供给模型。模型返回工具名称和参数，Host 校验并调用相应 Server，最后把调用结果放回对话流程。</p>
+<p>简化后的 Tool 定义如下：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;order_query&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;按订单编号查询订单状态&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;inputSchema&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;object&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;orderNo&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;订单编号&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;required&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;orderNo&quot;</span><span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>name</code> 是调用标识；<code>description</code> 告诉模型何时使用它；<code>inputSchema</code> 约束参数的结构和类型。协议的不同版本还支持可选输出 Schema、行为注解等字段。描述应写清业务范围、参数含义和限制，避免只写“查询数据”一类无法区分能力的文本。</p>
+<p>一次调用大致经过以下步骤：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">Client 初始化并协商协议能力</span><br><span class="line">        ↓</span><br><span class="line">Client 请求 tools/list，读取工具定义</span><br><span class="line">        ↓</span><br><span class="line">Host 将当前可用的 Tool Schema 提供给模型</span><br><span class="line">        ↓</span><br><span class="line">模型选择工具并生成参数</span><br><span class="line">        ↓</span><br><span class="line">Host / Client 校验并通过 tools/call 执行</span><br><span class="line">        ↓</span><br><span class="line">调用结果返回模型，继续回答或执行后续步骤</span><br></pre></td></tr></table></figure>
+
+<p>模型做的是“根据当前上下文提出工具调用”；真正的执行发生在 Host/Client 与 Server 之间。不能把模型生成了参数视为参数已经可信，也不能把 Tool Schema 当作访问控制。服务端仍需校验输入、执行身份授权、控制副作用，并对敏感操作提供确认或审批。<a href="https://modelcontextprotocol.io/specification/2024-11-05/server/tools">MCP Tools 规范</a></p>
+<h1 id="MCP-与-Tool-的-JSON-RPC-请求和响应结构"><a href="#MCP-与-Tool-的-JSON-RPC-请求和响应结构" class="headerlink" title="MCP 与 Tool 的 JSON-RPC 请求和响应结构"></a>MCP 与 Tool 的 JSON-RPC 请求和响应结构</h1><p>MCP 的消息使用 JSON-RPC 2.0。<code>initialize</code>、<code>tools/list</code>、<code>tools/call</code> 都是 MCP 定义的方法；具体业务 Tool 的名称放在 <code>tools/call</code> 的参数中。以查询订单为例，JSON-RPC 的 <code>method</code> 是 <code>tools/call</code>，<code>params.name</code> 才是 <code>order_query</code>。本节基础示例采用 MCP <code>2024-11-05</code> 的消息结构；后续协议版本增加的字段应按实际协商版本处理。</p>
+<h2 id="外层消息：请求、响应和通知"><a href="#外层消息：请求、响应和通知" class="headerlink" title="外层消息：请求、响应和通知"></a>外层消息：请求、响应和通知</h2><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>所在消息</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>jsonrpc</code></td>
+<td>所有消息</td>
+<td>固定为字符串 <code>&quot;2.0&quot;</code></td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>请求与对应响应</td>
+<td>请求标识；响应沿用相同值，用于关联并发调用。MCP 请求使用字符串或整数，不使用 <code>null</code></td>
+</tr>
+<tr>
+<td><code>method</code></td>
+<td>请求或通知</td>
+<td>方法名，例如 <code>initialize</code>、<code>tools/list</code>、<code>tools/call</code></td>
+</tr>
+<tr>
+<td><code>params</code></td>
+<td>请求或通知</td>
+<td>方法参数；是否需要由具体方法决定</td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td>成功的 JSON-RPC 响应</td>
+<td>方法返回的数据，具体结构取决于方法</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>失败的 JSON-RPC 响应</td>
+<td>包含整数 <code>code</code>、字符串 <code>message</code>，以及可选的 <code>data</code></td>
+</tr>
+</tbody></table>
+<p>正常响应的顶层只能有 <code>result</code> 或 <code>error</code> 之一，不能同时包含两者。<code>result</code> 表示 JSON-RPC 方法返回了结果，<strong>不保证其中的业务操作成功</strong>；工具执行状态还要检查 <code>result.isError</code>。<a href="https://modelcontextprotocol.io/specification/2024-11-05/basic/messages">MCP 消息规范</a></p>
+<h2 id="initialize：协商协议和能力"><a href="#initialize：协商协议和能力" class="headerlink" title="initialize：协商协议和能力"></a>initialize：协商协议和能力</h2><p>Client 在初始化时提交支持的协议版本和自身能力。下面是简化后的请求：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;initialize&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;protocolVersion&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2024-11-05&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;capabilities&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;clientInfo&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;order-agent&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Server 的响应包含协商到的协议版本、能力声明和实现信息：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;protocolVersion&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2024-11-05&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;capabilities&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;tools&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;listChanged&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span> <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;serverInfo&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;order-mcp&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>capabilities.tools</code> 声明 Server 支持工具，<code>listChanged: true</code> 表示支持发送工具列表变更通知。它不代表 Client 已经发现所有工具，也不保证 Agent 自动刷新工具列表。Client 接受初始化结果后，还要发送不含 <code>id</code> 的 <code>notifications/initialized</code> 通知，再进入正常交互阶段。</p>
+<h2 id="tools-list：返回工具定义"><a href="#tools-list：返回工具定义" class="headerlink" title="tools/list：返回工具定义"></a>tools/list：返回工具定义</h2><p>发现工具的请求如下：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tools/list&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>响应的 <code>result.tools</code> 是工具定义列表，包含名称、描述和输入 Schema：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;tools&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;order_query&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;按订单编号查询订单状态&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;inputSchema&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;object&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;orderNo&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line">          <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;required&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;orderNo&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>工具列表较大时，Server 可以返回 <code>result.nextCursor</code>；Client 将其放入下一次请求的 <code>params.cursor</code> 中继续读取，直到没有下一页。这里返回的是<strong>能力定义</strong>，没有执行订单查询；模型是否看到这些定义，还取决于 Host 的工具过滤与暴露策略。</p>
+<h2 id="tools-call：返回工具执行结果"><a href="#tools-call：返回工具执行结果" class="headerlink" title="tools/call：返回工具执行结果"></a>tools/call：返回工具执行结果</h2><p>执行具体 Tool 时，参数分为两层：<code>params.name</code> 指定 Server 内的工具名，<code>params.arguments</code> 提供业务参数。</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">3</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tools/call&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;order_query&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;arguments&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;orderNo&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ORD-10001&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>成功响应使用 <code>result.content</code> 承载内容，<code>isError</code> 为 <code>false</code>：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">3</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&#123;\&quot;orderNo\&quot;:\&quot;ORD-10001\&quot;,\&quot;status\&quot;:\&quot;PAID\&quot;&#125;&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;isError&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>content</code> 是内容块数组，不要求只能返回一个文本块。在本节采用的协议版本中，还可返回图片、嵌入式资源等内容；不同类型有各自的字段，不能假定所有内容块都存在 <code>text</code>。</p>
+<p>示例中的 <code>text</code> 是字符串，其中恰好放了一段序列化后的业务 JSON；它在 JSON-RPC 层仍然是文本。如果应用需要读取 <code>status</code>，应按业务契约解析并校验。后续 MCP 版本提供了 <code>structuredContent</code>、<code>outputSchema</code> 等结构化结果能力；采用这些能力时应核对协商版本及 SDK 支持，不能把文本中的 JSON 与结构化结果字段混为一谈。</p>
+<h2 id="两层错误：协议错误与-Tool-执行错误"><a href="#两层错误：协议错误与-Tool-执行错误" class="headerlink" title="两层错误：协议错误与 Tool 执行错误"></a>两层错误：协议错误与 Tool 执行错误</h2><p>Tool 执行过程中发生的业务或依赖错误，可以通过正常 JSON-RPC 结果中的 <code>isError: true</code> 表达。例如后端订单服务超时：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">3</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span> <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Order service timed out. Please retry later.&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;isError&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>协议层无法处理调用时，则使用顶层 <code>error</code>。例如工具名不存在，下面采用 MCP Tools 规范中的错误形式：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">4</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;error&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;code&quot;</span><span class="punctuation">:</span> <span class="number">-32602</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;message&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Unknown tool: order_query_missing&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>两类失败的处理层次不同：</p>
+<table>
+<thead>
+<tr>
+<th>响应形式</th>
+<th>表达的状态</th>
+<th>Client 应检查什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>result</code> 且 <code>isError</code> 未设置或为 <code>false</code></td>
+<td>方法返回正常工具结果</td>
+<td>按契约读取内容，判断业务含义</td>
+</tr>
+<tr>
+<td><code>result.isError: true</code></td>
+<td>Tool 执行报告失败</td>
+<td>提取错误内容，按错误类型决定是否重试或修正参数</td>
+</tr>
+<tr>
+<td>顶层 <code>error</code></td>
+<td>JSON-RPC/MCP 调用失败</td>
+<td>检查错误码、方法名、工具名与请求参数</td>
+</tr>
+</tbody></table>
+<p>例如 <code>-32601</code> 表示 JSON-RPC 方法不存在，<code>tools/call</code> 的业务工具名不存在则可按上面的 MCP 示例报告为 <code>-32602</code>。这两个标识处于不同层级。通过 HTTP 传输时，也不能仅凭 HTTP <code>200</code> 判断工具业务成功；还需检查响应中的 <code>error</code>、<code>result.isError</code> 和业务内容。<a href="https://modelcontextprotocol.io/specification/2024-11-05/server/tools#error-handling">MCP Tools 错误处理</a></p>
+<h2 id="通知没有响应"><a href="#通知没有响应" class="headerlink" title="通知没有响应"></a>通知没有响应</h2><p>工具列表变更通知的消息结构如下：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;notifications/tools/list_changed&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>通知没有 <code>id</code>，接收方不返回对应的 JSON-RPC 响应。Client 需要刷新目录时，应另外发送带新 <code>id</code> 的 <code>tools/list</code> 请求，而不是给这条通知补一个 <code>result</code>。</p>
+<h1 id="MCP-与-Tool-的架构关系"><a href="#MCP-与-Tool-的架构关系" class="headerlink" title="MCP 与 Tool 的架构关系"></a>MCP 与 Tool 的架构关系</h1><p>下面的架构图参照分层示意图，用浅色模块和方向箭头区分“工具发现”“工具暴露”和“实际调用”。Tool Group / Skill 控制任务范围，Toolkit 负责注册与分发，MCP Client 连接具体 Server。业务 Catalog 用于记录发布和契约版本，它属于应用侧治理，不是 MCP 标准对象。</p>
+<p><img src="/images/2026/10-21/agentscope-mcp-tool/mcp-tool-architecture.svg" alt="MCP、AgentScope Toolkit 与 Tool Server 的接入和调用关系"></p>
+<p>图中可分为三条路径：</p>
+<ol>
+<li><strong>发现路径</strong>：MCP Client 与 Server 初始化、协商能力，然后通过 <code>tools/list</code> 读取 Tool 定义。</li>
+<li><strong>暴露路径</strong>：Toolkit 将注册的本地工具和 MCP 工具组织起来；Tool Group 或 Skill 决定当前任务向模型开放哪些 Schema。</li>
+<li><strong>调用路径</strong>：模型产生 Tool Call 后，Toolkit 根据名称分发到本地实现或 MCP Client；远端调用通过 <code>tools/call</code> 到达对应 Server，结果再返回 Agent。</li>
+</ol>
+<h1 id="Tool-适合哪些场景"><a href="#Tool-适合哪些场景" class="headerlink" title="Tool 适合哪些场景"></a>Tool 适合哪些场景</h1><p>Tool 应用于需要 Agent 获取外部事实或产生实际动作的地方。常见场景包括：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>Tool 示例</th>
+<th>设计重点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>只读查询</td>
+<td>查询订单、检索内部知识、读取代码仓库信息</td>
+<td>限定数据范围，返回可追溯结果，避免过量返回</td>
+</tr>
+<tr>
+<td>业务写入</td>
+<td>创建工单、更新 CRM 字段、提交审批申请</td>
+<td>身份授权、参数校验、幂等控制和操作确认</td>
+</tr>
+<tr>
+<td>工程操作</td>
+<td>执行测试、创建 Pull Request、触发部署</td>
+<td>权限分级、执行环境隔离、超时与审计</td>
+</tr>
+<tr>
+<td>多步骤任务</td>
+<td>先查询客户，再核对合同，最后生成待审批变更</td>
+<td>把原子能力拆清楚，由 Agent 或业务流程编排顺序</td>
+</tr>
+</tbody></table>
+<p>如果只是提供一段稳定背景材料，Resource 或静态上下文可能更合适；如果需要模型根据实时请求决定并触发操作，Tool 更合适。不要仅因 MCP 支持 Tools，就把每个数据接口都包装成模型可调用的操作。</p>
+<h1 id="在-AgentScope-中接入-MCP"><a href="#在-AgentScope-中接入-MCP" class="headerlink" title="在 AgentScope 中接入 MCP"></a>在 AgentScope 中接入 MCP</h1><p>AgentScope Java 通过 <code>Toolkit</code> 管理工具，并通过 <code>McpClientWrapper</code> 连接 MCP Server。注册 Client 时，框架会执行 MCP 协商、工具发现和结果转换。下面示例使用 Streamable HTTP 传输，地址仅为占位符：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> io.agentscope.core.tool.Toolkit;</span><br><span class="line"><span class="keyword">import</span> io.agentscope.core.tool.mcp.McpClientBuilder;</span><br><span class="line"><span class="keyword">import</span> io.agentscope.core.tool.mcp.McpClientWrapper;</span><br><span class="line"></span><br><span class="line"><span class="type">McpClientWrapper</span> <span class="variable">orderServer</span> <span class="operator">=</span></span><br><span class="line">        McpClientBuilder.create(<span class="string">&quot;order&quot;</span>)</span><br><span class="line">                .streamableHttpTransport(<span class="string">&quot;https://example.com/mcp&quot;</span>)</span><br><span class="line">                .buildAsync()</span><br><span class="line">                .block();</span><br><span class="line"></span><br><span class="line"><span class="type">Toolkit</span> <span class="variable">toolkit</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Toolkit</span>();</span><br><span class="line">toolkit.registerMcpClient(orderServer).block();</span><br></pre></td></tr></table></figure>
+
+<p>在 AgentScope Toolkit 中，MCP Tool 会以 <code>mcp__{server_name}__{tool_name}</code> 形式命名。例如 Server 名为 <code>order</code>、Tool 名为 <code>order_query</code> 时，注册名为 <code>mcp__order__order_query</code>。Server 名是 Client 配置的一部分，应保持稳定且在当前 Toolkit 中唯一。</p>
+<p>工具注册和工具暴露是两个层次。注册解决“运行时能否找到并调用它”；暴露解决“当前模型请求能否看到它的 Schema”。当工具规模较大时，可以用 Tool Group 将相关能力分组，并结合 Skill 按任务启用工具，避免把所有 Schema 永久放入模型上下文。具体 API 和行为应以项目所使用的 AgentScope Java 版本为准。<a href="https://github.com/agentscope-ai/agentscope-java/blob/main/docs/v2/en/docs/building-blocks/tool.md">AgentScope Java 工具与 MCP 文档</a></p>
+<h1 id="同名工具与版本边界"><a href="#同名工具与版本边界" class="headerlink" title="同名工具与版本边界"></a>同名工具与版本边界</h1><h2 id="同名-Tool-不会让模型自动选对"><a href="#同名-Tool-不会让模型自动选对" class="headerlink" title="同名 Tool 不会让模型自动选对"></a>同名 Tool 不会让模型自动选对</h2><p>单个 MCP Server 内的 Tool 名称应唯一。多个 Server 可以分别提供 <code>search</code> 或 <code>order_query</code>，但聚合到同一 Host 后，需要通过 Server 命名空间、别名或代理层消除名称冲突。AgentScope 的命名空间能区分来源，例如：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">mcp__erp__order_query</span><br><span class="line">mcp__crm__order_query</span><br></pre></td></tr></table></figure>
+
+<p>来源不同不代表语义歧义消失。如果两个工具的描述和 Schema 一样，模型没有标准规则判断该调用哪个 Server；选择会受到命名、描述和上下文影响，结果并无确定性保证。对外暴露给模型的名称和描述应体现业务边界；如果它们本应是同一能力，则在业务路由层做确定性选择，再只暴露一个清晰的 Tool。</p>
+<h2 id="MCP-没有标准-Tool-版本字段"><a href="#MCP-没有标准-Tool-版本字段" class="headerlink" title="MCP 没有标准 Tool 版本字段"></a>MCP 没有标准 Tool 版本字段</h2><p>MCP 协议版本用于 Client/Server 协商；<code>serverInfo.version</code> 描述 Server 软件实现。Tool 定义本身由名称、描述、Schema 等契约组成，MCP 没有标准的独立 Tool 版本字段。Server 升级到 <code>2.3.0</code>，不等于每个 Tool 都有自己的 <code>2.3.0</code> 契约版本。</p>
+<p>若业务需要可复现地发布工具集合，可以在应用侧维护 Tool Catalog：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">catalogVersion:</span> <span class="number">2025.01</span><span class="number">.12</span></span><br><span class="line"><span class="attr">tools:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">order_query</span></span><br><span class="line">    <span class="attr">contractVersion:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">compatibility:</span> <span class="string">backward-compatible</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">order_query_v2</span></span><br><span class="line">    <span class="attr">contractVersion:</span> <span class="number">2</span></span><br><span class="line">    <span class="attr">compatibility:</span> <span class="string">breaking</span></span><br></pre></td></tr></table></figure>
+
+<p><code>catalogVersion</code> 标识一次工具集合发布；<code>contractVersion</code> 标识单个 Tool 的输入、输出和行为契约。它们是自定义治理字段，不是 MCP 标准。Catalog 还可以记录 Server 来源、Schema 摘要、兼容策略和发布状态，但 Client 是否读取这些字段由应用实现决定。</p>
+<p>兼容性扩展通常保留稳定名称并增加可选参数；必填参数、字段语义或输出结构发生不兼容变化时，可在迁移期并行发布新旧 Tool，并让对应 Skill 或路由规则明确绑定目标版本。没有破坏性变化时，不必为了版本号增加 <code>v2</code> 工具。</p>
+<h1 id="Server-更新后会不会自动热更新"><a href="#Server-更新后会不会自动热更新" class="headerlink" title="Server 更新后会不会自动热更新"></a>Server 更新后会不会自动热更新</h1><p>MCP 支持查询工具列表，也允许声明工具列表变更通知能力。收到通知只表示列表变化，Client 仍需重新执行 <code>tools/list</code>；上层框架还要刷新 Toolkit 注册结果，并确保后续模型请求拿到新 Schema。协议通知不等于整条 Agent 热更新链路已经实现。</p>
+<p>AgentScope 文档说明了 MCP Client 注册与工具发现，也提供了 Tool Group 的动态激活能力；这些信息不足以证明所有版本都会自动监听 Server 通知并热替换工具定义。上线前应针对正在使用的 AgentScope 版本验证通知、重新发现、Schema 更新和失败恢复。若没有验证动态刷新能力，可通过新实例重新注册、探活后切流的方式发布，并保留上一份 Server 与 Catalog 组合用于回滚。</p>
+<h1 id="设计与上线检查"><a href="#设计与上线检查" class="headerlink" title="设计与上线检查"></a>设计与上线检查</h1><p>设计 MCP Tool 时，至少要确认以下事项：</p>
+<ol>
+<li><strong>职责单一</strong>：一个 Tool 完成一个边界清楚的动作；复杂流程由 Agent 或业务流程编排。</li>
+<li><strong>名称和描述可判别</strong>：明确业务对象、数据范围与操作类型，避免多个能力看起来完全相同。</li>
+<li><strong>Schema 可验证</strong>：参数类型、必填项、枚举范围和格式约束清楚，服务端仍需二次校验。</li>
+<li><strong>权限与副作用可控</strong>：按用户或租户授权，敏感操作支持确认、幂等、审计和超时。</li>
+<li><strong>暴露范围可控</strong>：通过工具组、Skill 或策略只开放当前任务需要的能力。</li>
+<li><strong>发布路径可回滚</strong>：对工具定义做差异检查，记录 Catalog 版本，并验证新旧契约迁移方案。</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>MCP 定义 Host/Client 与 Server 之间如何协商、发现和调用能力；Tool 描述模型可以请求执行的原子操作；AgentScope Toolkit 负责在 Agent 运行时注册、暴露和分发这些工具；业务平台负责权限、Catalog 和契约版本治理。把协议、模型可见范围和业务治理分层处理，才能让工具接入既可复用，也可控、可追踪。</p>
+]]></content>
+      <categories>
+        <category>架构</category>
+        <category>设计</category>
+      </categories>
+      <tags>
+        <tag>AI</tag>
+        <tag>AgentScope</tag>
+        <tag>MCP</tag>
+      </tags>
+  </entry>
 </search>
