@@ -5736,10 +5736,6 @@
     <url>/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%9A%BE%E5%BA%A6%E8%B7%AF%E7%94%B1%E8%81%8C%E8%B4%A3-vLLM-Semantic-Router%E4%B8%8EHigress/</url>
     <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>给大模型应用增加一个统一入口，看起来只需要代理几个接口。但当模型数量、Agent数量和调用成本上来以后，问题会逐渐变成：简单问题能不能用便宜的模型？复杂任务什么时候升级？同一个会话是否应该一直使用同一个模型？这些判断应该由业务、网关还是模型服务负责？</p>
 <p>围绕这些问题，对<code>vLLM Semantic Router</code>和<code>Higress</code>做了一次梳理。两者都有路由能力，但关注的层次不同：<strong>一个侧重理解请求并选择模型，一个侧重统一接入和流量治理</strong>。职责不先讲清楚，两个组件叠在一起，只会多出一套规则和一个排障入口。<span id="more"></span></p>
-<blockquote>
-<p>本文整理自“澄清难度路由职责”的讨论，以方案分析为主，部署部分仅介绍组合思路，不作为已经完成联调的安装教程。</p>
-<p>资料核对日期：2026-10-20。历史讨论涉及Semantic Router v0.3；核对时官方最新发布已为<a href="https://github.com/vllm-project/semantic-router/releases/tag/v0.4.0">v0.4.0</a>，Higress为<a href="https://github.com/higress-group/higress/releases/tag/v2.2.5">v2.2.5</a>。下文涉及具体字段时附对应文档，实际配置应与选定版本保持一致。</p>
-</blockquote>
 <h1 id="先把三个问题拆开"><a href="#先把三个问题拆开" class="headerlink" title="先把三个问题拆开"></a>先把三个问题拆开</h1><p><strong>请求难不难、应该用哪个模型、最终请求发到哪个节点，是三个不同的问题。</strong></p>
 <table>
 <thead>
@@ -5858,7 +5854,7 @@
 <p>工程上可以先用低成本规则处理明确请求，再让语义或复杂度判断处理剩余流量。讨论中使用的<code>L1 / L2 / L3</code>是方案分层的简称，<strong>不是两个项目共有的标准接口</strong>。只有确实需要更高成本的判断时，再引入下一层。</p>
 <h2 id="连续Score需要单独设计"><a href="#连续Score需要单独设计" class="headerlink" title="连续Score需要单独设计"></a>连续Score需要单独设计</h2><p>Semantic Router的<a href="https://vllm-semantic-router.com/docs/tutorials/projection/scores">Scores文档</a>提供<code>weighted_sum</code>，可以组合不同信号。输入既可以是是否命中，也可以是置信值或原始数值，具体取决于信号暴露的数据。</p>
 <p>下面只是业务概念示例，不是可直接粘贴到项目中的配置：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">request + context</span><br><span class="line">       ↓</span><br><span class="line">signals</span><br><span class="line">       ↓</span><br><span class="line">difficulty_score</span><br><span class="line">       ↓</span><br><span class="line">score band</span><br><span class="line">       ↓</span><br><span class="line">candidate models</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">request + context</span><br><span class="line">       ↓</span><br><span class="line">signals</span><br><span class="line">       ↓</span><br><span class="line">difficulty_score</span><br><span class="line">       ↓</span><br><span class="line">score band</span><br><span class="line">       ↓</span><br><span class="line">candidate models</span><br></pre></td></tr></table></figure>
 
 <p>需要注意两个细节：</p>
 <ol>
@@ -5869,7 +5865,7 @@
 <h2 id="分数与Confidence不是一回事"><a href="#分数与Confidence不是一回事" class="headerlink" title="分数与Confidence不是一回事"></a>分数与Confidence不是一回事</h2><p><code>difficulty_score</code>回答“按这套标准有多难”；<code>confidence</code>需要进一步说明“对哪个判断有多确定”。它可能指分类器置信度，也可能指映射结果离阈值有多远，二者不能混用。</p>
 <p>官方<a href="https://vllm-sr.ai/docs/v0.3/tutorials/projection/mappings/">Mappings文档</a>提供阈值映射，并介绍了<code>sigmoid_distance</code>校准：根据分数到边界的距离产生映射置信值。<strong>这个值不是模型回答正确率，也不是未经评估就成立的统计保证。</strong></p>
 <p>举个我们自己定义的例子：若复杂档位从70分开始，69.9和70.1虽然落在两侧，但都在边界附近。合理的方案需要考虑边界样本如何处理，而不是仅凭0.2分差就认定请求发生了本质变化。</p>
-<div align="center"><img src="/images/2026/10-12/difficulty-routing/routing-flow.png" alt="难度信号、评分映射、会话策略与模型选择的概念流程"/></div>
+<div align="center"><img src="/images/2026/10-12/difficulty-routing/routing-flow.jpg" alt="难度信号、评分映射、会话策略与模型选择的概念流程"/></div>
 
 <h1 id="Session粘滞究竟固定什么"><a href="#Session粘滞究竟固定什么" class="headerlink" title="Session粘滞究竟固定什么"></a>Session粘滞究竟固定什么</h1><h2 id="固定节点，不等于固定模型"><a href="#固定节点，不等于固定模型" class="headerlink" title="固定节点，不等于固定模型"></a>固定节点，不等于固定模型</h2><p>Higress的<a href="https://higress.ai/docs/latest/user/annotation-use-case/">Cookie亲和性说明</a>描述的是让相关请求落到同一个后端节点。这适用于需要节点亲和的服务，但不能直接推出“整个Agent会话始终选择同一档模型”。</p>
 <table>
@@ -5905,7 +5901,7 @@
 <h2 id="稳定，不是永远不允许切换"><a href="#稳定，不是永远不允许切换" class="headerlink" title="稳定，不是永远不允许切换"></a>稳定，不是永远不允许切换</h2><p>讨论里真正关心的是：同一个Agent Session可以连续完成任务，同时在需要时提高模型能力，而不是每轮重新选出一个完全不同的模型。</p>
 <p>Semantic Router的<a href="https://vllm-sr.ai/docs/v0.3/tutorials/algorithm/selection/session-aware/"><code>session_aware</code></a>在匹配决策的<code>modelRefs</code>中选择模型，并考虑保持、切换、工具循环和状态可迁移性等因素。它不替代选定模型内部的节点负载均衡，也不会自动成为应用的对话记忆系统。</p>
 <p>因此，下面是我们期望评估的行为，不是所有配置下都保证发生的结果：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">第1轮：普通问答             → 轻量模型</span><br><span class="line">第2轮：继续同一任务         → 保持，避免无意义切换</span><br><span class="line">第3轮：需要更强推理         → 评估是否可升级</span><br><span class="line">工具调用尚未完成           → 按策略锁定模型</span><br><span class="line">任务结束或会话超时         → 按策略重新选择</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">第1轮：普通问答             → 轻量模型</span><br><span class="line">第2轮：继续同一任务         → 保持，避免无意义切换</span><br><span class="line">第3轮：需要更强推理         → 评估是否可升级</span><br><span class="line">工具调用尚未完成           → 按策略锁定模型</span><br><span class="line">任务结束或会话超时         → 按策略重新选择</span><br></pre></td></tr></table></figure>
 
 <p>这里还有一个容易漏掉的边界：<strong>会话策略要在当前候选集和兼容性约束内工作。</strong> 如果不同难度Decision只各自配置一个模型，就不能仅凭启用<code>session_aware</code>，认定它会跨所有Decision任意保持和升级。候选集、Decision漂移与重置行为需要一起验证。</p>
 <h2 id="Session-ID只提供身份"><a href="#Session-ID只提供身份" class="headerlink" title="Session ID只提供身份"></a>Session ID只提供身份</h2><p>对于Chat Completions等调用，可以显式传递稳定的<code>x-session-id</code>。同一会话保持一致，不同租户与会话避免冲突。不要把敏感信息直接放进标识，也不要把每轮变化的Request ID当成长期Session ID。<a href="https://vllm-semantic-router.netlify.app/docs/api/session-identification/">会话身份说明</a></p>
@@ -5938,7 +5934,7 @@
 </tbody></table>
 <p>组件越多并不代表架构越完整。如果只有两个固定模型、一条明确规则，先把这条规则跑好，比引入一套复杂评分系统更实用。</p>
 <h1 id="组合部署的职责边界"><a href="#组合部署的职责边界" class="headerlink" title="组合部署的职责边界"></a>组合部署的职责边界</h1><h2 id="Higress在前，Semantic-Router在后"><a href="#Higress在前，Semantic-Router在后" class="headerlink" title="Higress在前，Semantic Router在后"></a>Higress在前，Semantic Router在后</h2><p>对已有企业网关、又希望引入独立模型决策层的场景，可以考虑：</p>
-<div align="center"><img src="/images/2026/10-12/difficulty-routing/responsibility-layers.png" alt="Agent经过Higress统一治理后进入Semantic Router进行模型决策的分层架构"/></div>
+<div align="center"><img src="/images/2026/10-12/difficulty-routing/responsibility-layers.jpg" alt="Agent经过Higress统一治理后进入Semantic Router进行模型决策的分层架构"/></div>
 
 <p>请求先通过Higress完成入口控制，再进入Semantic Router的<strong>对外HTTP入口</strong>，由后者选择模型后端。图中的箭头是主请求方向，响应沿链路返回。</p>
 <p><strong>这是一种基于职责划分的组合设计，不等于官方已经提供了任意版本Higress的一键集成包。</strong> Semantic Router的<a href="https://vllm-sr.com/docs/installation/k8s/istio/">Istio Gateway示例</a>使用ExtProc集成，不能因为Higress也基于Envoy，就直接套用其中的资源清单。</p>
@@ -5955,7 +5951,7 @@
 <p>Token配额也需要核对真实<code>usage</code>，尤其是流式响应。若网关看不到用量字段、供应商计费口径不同，或者内层发生重试，计量结果可能与账单不同。不能因为请求经过网关，就认为精确配额和费用归集自然成立。</p>
 <h1 id="Agent只改BaseURL就够了吗"><a href="#Agent只改BaseURL就够了吗" class="headerlink" title="Agent只改BaseURL就够了吗"></a>Agent只改BaseURL就够了吗</h1><p>如果Agent使用兼容的API子集，调整<code>BaseURL</code>确实可以降低接入成本。但“能请求”与“业务行为兼容”之间，还有不少内容需要验证。</p>
 <p>以Chat Completions为例，接入时至少明确这几项：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">BaseURL        → 网关入口及正确的 /v1 路径</span><br><span class="line">API Key        → 企业入口的身份凭据</span><br><span class="line">model          → 部署中实际配置的逻辑模型入口</span><br><span class="line">x-session-id   → 稳定且隔离的会话标识</span><br><span class="line">messages       → 按协议传递所需历史与工具消息</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">BaseURL        → 网关入口及正确的 /v1 路径</span><br><span class="line">API Key        → 企业入口的身份凭据</span><br><span class="line">model          → 部署中实际配置的逻辑模型入口</span><br><span class="line">x-session-id   → 稳定且隔离的会话标识</span><br><span class="line">messages       → 按协议传递所需历史与工具消息</span><br></pre></td></tr></table></figure>
 
 <p>这里没有给出固定的<code>model</code>别名，是因为别名属于实际部署契约，不能把文档某个版本中的<code>auto</code>或其他命名当作所有环境的默认值。</p>
 <p>普通文本问答通过以后，还要验证<code>stream</code>、工具调用、结构化输出、错误码、取消请求和超时。使用Responses或Anthropic协议时，应按对应API重新验证，不从Chat Completions的结果外推。</p>
@@ -8324,6 +8320,142 @@
       </categories>
       <tags>
         <tag>架构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从 MVC 到 DDD：COLA 分层逻辑与事务边界</title>
+    <url>/%E4%BB%8EMVC%E5%88%B0DDD-COLA%E5%88%86%E5%B1%82%E4%B8%8E%E4%BA%8B%E5%8A%A1%E8%BE%B9%E7%95%8C/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在 Spring Boot 项目里，Controller、Service、Mapper 是熟悉的组合。随着业务规则变多，Service 可能同时承担流程编排、状态校验、数据转换和消息发布等职责，修改一个用例也会牵动多个功能。此时常见的问题是：要不要从 MVC 改成 DDD？<code>@Transactional</code> 应该放在哪层？</p>
+<p>这几个概念解决的不是同一类问题：MVC组织请求入口，DDD帮助团队理解和表达业务，COLA则把面向对象、分层和工程结构落实为一种应用架构实践。理解分层不需要先套入某个业务用例，先看每层拥有什么职责、依赖朝向哪里即可。<span id="more"></span></p>
+<h1 id="MVC-与-DDD-关注点不同"><a href="#MVC-与-DDD-关注点不同" class="headerlink" title="MVC 与 DDD 关注点不同"></a>MVC 与 DDD 关注点不同</h1><p>MVC用于组织表现层的输入、模型和输出。在 Spring Boot Web 应用中，Spring MVC负责处理HTTP请求、参数绑定和响应；Controller把请求交给应用层，是一种常见实现方式。</p>
+<p>DDD（Domain-Driven Design，领域驱动设计）是一套围绕业务领域进行分析和建模的方法。它帮助团队统一业务语言、识别模型边界，并把重要规则放在明确的领域模型中。DDD不是一个Web框架，也不要求项目采用某种固定包名。</p>
+<p>因此，问题不是“MVC还是DDD”，而是“入口如何组织，业务复杂度如何表达”。一个项目完全可以用Spring MVC接入请求，同时用DDD风格的模型承载关键业务规则。</p>
+<table>
+<thead>
+<tr>
+<th>关注点</th>
+<th>MVC / Spring MVC</th>
+<th>DDD</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主要解决</td>
+<td>请求、模型与响应如何组织</td>
+<td>业务概念、规则与模型边界如何表达</td>
+</tr>
+<tr>
+<td>常见对象</td>
+<td>Controller、请求对象、视图或响应模型</td>
+<td>Entity、Value Object、Aggregate、Domain Service</td>
+</tr>
+<tr>
+<td>能否共存</td>
+<td>可以作为Web入口</td>
+<td>可以指导入口之后的业务设计</td>
+</tr>
+<tr>
+<td>是否规定固定目录</td>
+<td>不规定DDD的领域模型</td>
+<td>不规定必须使用某种Web技术或包结构</td>
+</tr>
+</tbody></table>
+<p>把DDD理解成“在MVC项目里多建几个包”不会自动改善设计。只有当代码边界对应真实职责、规则有清晰归属时，分层才有价值。</p>
+<h1 id="COLA-的分层逻辑"><a href="#COLA-的分层逻辑" class="headerlink" title="COLA 的分层逻辑"></a>COLA 的分层逻辑</h1><p>COLA是Clean Object-Oriented and Layered Architecture的缩写。它强调围绕业务核心组织应用结构、隔离外部技术细节，并提供可落地的工程实践。层次名称用于划分职责，不代表每个项目都必须采用一模一样的模块名和POM依赖。COLA官方仓库提供不同应用原型；具体目录会随原型和版本变化。<a href="https://github.com/alibaba/COLA">COLA 官方仓库</a></p>
+<p>下面用常见的六个逻辑模块说明职责。<code>start</code>、<code>adapter</code>、<code>application</code>、<code>infrastructure</code>、<code>domain</code>、<code>client</code>是示意名称，不是要求项目必须使用的字面目录名。</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">应用启动与装配</span><br><span class="line">└── start</span><br><span class="line">    ├── adapter          入站适配</span><br><span class="line">    ├── application      用例编排</span><br><span class="line">    ├── infrastructure   技术实现</span><br><span class="line">    ├── domain           领域模型</span><br><span class="line">    └── client           对外契约</span><br></pre></td></tr></table></figure>
+
+<p>这里的树只是表达一个应用的逻辑组成。若使用Maven多模块工程，通常可以由独立的聚合POM管理模块，再由<code>start</code>作为可执行启动模块；聚合POM和启动模块是不同职责，不必合并。</p>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>职责</th>
+<th>典型内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>start</code></td>
+<td>启动应用并装配运行所需组件，不承载业务规则</td>
+<td>Spring Boot入口、配置、组件扫描、环境集成</td>
+</tr>
+<tr>
+<td><code>adapter</code></td>
+<td>把外部协议转换为应用可处理的输入，并把结果映射回协议响应</td>
+<td>HTTP Controller、RPC或消息入口、请求响应转换</td>
+</tr>
+<tr>
+<td><code>application</code></td>
+<td>表达并编排应用用例，协调领域模型和所需端口</td>
+<td>Application Service、用例输入输出、事务边界、流程协调</td>
+</tr>
+<tr>
+<td><code>domain</code></td>
+<td>表达业务概念、规则和领域不变量</td>
+<td>Entity、Value Object、Aggregate、Domain Service、领域端口</td>
+</tr>
+<tr>
+<td><code>infrastructure</code></td>
+<td>提供外部技术能力并实现内层定义的端口</td>
+<td>Repository实现、数据库访问、远程服务适配、消息与Outbox组件</td>
+</tr>
+<tr>
+<td><code>client</code></td>
+<td>定义供其他模块或外部调用方使用的稳定契约</td>
+<td>API、DTO、Command、Query、事件契约</td>
+</tr>
+</tbody></table>
+<h2 id="依赖关系：源码依赖指向稳定抽象"><a href="#依赖关系：源码依赖指向稳定抽象" class="headerlink" title="依赖关系：源码依赖指向稳定抽象"></a>依赖关系：源码依赖指向稳定抽象</h2><p>一种常见的模块编译依赖可以表示为：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">start          → adapter, infrastructure</span><br><span class="line">adapter        → application, client</span><br><span class="line">application    → domain, client</span><br><span class="line">infrastructure → domain（以及实现端口所需的契约）</span><br><span class="line">domain         → 不依赖 adapter、application、infrastructure</span><br><span class="line">client         → 不依赖应用内部实现</span><br></pre></td></tr></table></figure>
+
+<p>这不是所有COLA原型的固定POM清单。模块是否直接依赖<code>client</code>，取决于具体契约放置和工程结构；端口由<code>domain</code>还是<code>application</code>拥有，也会影响Infrastructure的依赖声明。判断原则是：依赖指向稳定的业务抽象，领域核心不反向依赖Web、数据库或消息中间件实现。</p>
+<p>从运行时看，请求通常沿<code>adapter → application → domain</code>进入业务核心。Application通过端口访问持久化或外部能力，Infrastructure提供这些端口的实现，启动配置负责把实现装配进应用。<strong>运行时调用方向与源码编译依赖方向并不总相同</strong>：Application面向抽象编程，而不是直接依赖某个数据库或消息客户端。</p>
+<div align="center"><img src="/images/2026/10-21/cola/cola-layered-architecture.svg" alt="COLA六层逻辑职责、编译依赖与运行时请求方向"/></div>
+
+<h2 id="Adapter：处理外部协议"><a href="#Adapter：处理外部协议" class="headerlink" title="Adapter：处理外部协议"></a>Adapter：处理外部协议</h2><p>Adapter是应用与外部世界之间的入站边界。它负责接收HTTP、RPC或消息请求，完成协议相关的解析、校验和转换，然后调用应用层提供的用例入口。响应也由Adapter转换成外部协议需要的格式。</p>
+<p>Adapter可以做格式、必填项、长度等输入校验；涉及业务状态和业务不变量的判断应由领域模型负责。这样，同一条业务规则不会因为HTTP、消息和批处理入口不同而被重复实现。</p>
+<h2 id="Application：编排用例"><a href="#Application：编排用例" class="headerlink" title="Application：编排用例"></a>Application：编排用例</h2><p>Application层表达系统提供哪些操作，以及完成一次操作需要协调哪些对象和能力。它组织用例步骤、调用领域行为、读写所需数据，并协调端口；它不应成为存放全部业务规则的万能Service。</p>
+<p>应用服务通常是事务声明和用例编排的清晰位置，因为它能界定一次本地应用操作。但事务策略属于工程设计，COLA或DDD并没有规定注解必须放在哪个具体类上。跨服务调用也不因处于同一个应用服务方法，就自动加入本地数据库事务。</p>
+<h2 id="Domain：保护业务不变量"><a href="#Domain：保护业务不变量" class="headerlink" title="Domain：保护业务不变量"></a>Domain：保护业务不变量</h2><p>Domain层表达核心业务概念及其规则。Entity通过标识维持身份，Value Object以属性定义相等性，Aggregate划定一组需要保持一致的领域状态，Domain Service用于表达不自然属于单个对象的领域行为。</p>
+<p>领域对象应通过业务行为维护自身不变量，而不是暴露任意状态修改给上层。领域层可以声明需要的Repository或Gateway等抽象；抽象应描述业务所需的能力，而不是MyBatis、Feign或Kafka等技术实现。</p>
+<h2 id="Infrastructure：实现外部能力"><a href="#Infrastructure：实现外部能力" class="headerlink" title="Infrastructure：实现外部能力"></a>Infrastructure：实现外部能力</h2><p>Infrastructure把内层定义的端口连接到具体技术，例如数据库、远程服务、文件系统和消息中间件。它处理ORM映射、协议客户端、消息序列化和重试等实现细节，并通过依赖注入或其他装配机制在运行时提供实现。</p>
+<p>依赖关系向内、运行时控制流可以回到外层实现：应用代码调用端口，实际执行由Infrastructure适配器完成。这种依赖倒置让替换技术实现时，领域规则不必跟着改写。</p>
+<h2 id="Client：稳定对外契约"><a href="#Client：稳定对外契约" class="headerlink" title="Client：稳定对外契约"></a>Client：稳定对外契约</h2><p>Client层用于发布稳定的调用契约，让消费者通过约定的API和数据结构与应用交互。它应避免泄漏内部持久化模型、框架对象和实现细节。对外契约的兼容性需要单独治理；内部领域模型变化不应自动变成对外接口变化。</p>
+<h2 id="Start：组装可运行应用"><a href="#Start：组装可运行应用" class="headerlink" title="Start：组装可运行应用"></a>Start：组装可运行应用</h2><p>Start层提供可执行入口，并装配配置、Adapter、应用服务和Infrastructure实现。它决定应用怎样启动和运行，不应承担业务决策。将启动配置放在单独模块，可以使应用结构的装配边界清晰，也让其他适配器或部署方式有机会复用核心模块。</p>
+<h1 id="贫血模型与充血模型：关键是规则归属"><a href="#贫血模型与充血模型：关键是规则归属" class="headerlink" title="贫血模型与充血模型：关键是规则归属"></a>贫血模型与充血模型：关键是规则归属</h1><p>贫血领域模型通常只有数据，业务行为集中在外部Service；充血领域模型则把对象状态与相关行为放在一起。所谓“充血”是Rich Domain Model的形象译法，不意味着对象里应该堆满方法。</p>
+<p>当规则自然属于某个Entity或Value Object时，由对象行为维护规则，通常比在多个Service里分别读取状态、判断条件、修改字段更容易保持一致。保存数据、发送消息、访问远程服务则属于技术协作，不应仅为了“充血”而塞进领域对象。</p>
+<p>并非所有系统都需要复杂领域模型。以简单数据录入和查询为主、规则较少且稳定的功能，采用清晰的事务脚本或CRUD服务可能更直接。是否使用DDD应由业务复杂度和变化成本决定，而不是由项目规模或目录结构决定。</p>
+<h1 id="Transactional-放在哪里"><a href="#Transactional-放在哪里" class="headerlink" title="@Transactional 放在哪里"></a><code>@Transactional</code> 放在哪里</h1><p>在Spring应用中，把事务声明在Application层的用例方法上，是一种常见的工程选择：该方法界定一次应用操作，并协调其本地数据读写。这不是DDD规定的强制规则；若事务由其他机制管理，也可以采用相应的边界设计。</p>
+<p>需要区分两个边界：</p>
+<ul>
+<li><strong>应用用例边界</strong>说明一次操作如何被编排，通常是事务声明的入口。</li>
+<li><strong>Aggregate一致性边界</strong>说明哪些领域状态需要作为整体维护不变量。</li>
+</ul>
+<p>Aggregate是领域一致性边界，不意味着每个应用服务方法只能修改一个Aggregate，也不意味着事务注解会自动识别Aggregate。多个Aggregate是否放进同一个数据库事务，应依据一致性要求、并发冲突和锁范围决定；跨服务一致性通常需要显式的消息、补偿或Saga设计。<a href="https://learn.microsoft.com/en-us/azure/architecture/microservices/model/tactical-ddd">DDD Aggregate与一致性边界</a></p>
+<p>Spring声明式事务通常通过AOP代理执行。默认代理模式下，只有经代理进入的方法调用才会被拦截；同一对象内部的自调用不会因为目标方法标注了<code>@Transactional</code>就自动开启预期事务。因此需要结合Bean调用路径、事务管理器和实际回滚行为验证配置。<a href="https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html">Spring <code>@Transactional</code> 文档</a></p>
+<h1 id="数据库更新与-Kafka-发布不是天然原子操作"><a href="#数据库更新与-Kafka-发布不是天然原子操作" class="headerlink" title="数据库更新与 Kafka 发布不是天然原子操作"></a>数据库更新与 Kafka 发布不是天然原子操作</h1><p>在一个方法里先写数据库、再调用Kafka发送消息，并不等于数据库和Kafka组成了一个原子事务。Spring Kafka支持Kafka事务，也支持与其他Spring事务管理器同步提交；但同步提交不等于XA分布式事务，提交顺序和失败窗口仍需考虑。<a href="https://docs.spring.io/spring-kafka/reference/kafka/transactions.html">Spring Kafka事务说明</a></p>
+<p>需要可靠发布事件时，可以考虑Transactional Outbox：在同一个本地数据库事务中保存业务数据变化和待发布的集成事件记录，再由独立Relay读取Outbox并投递到消息系统。领域事件描述领域内部发生的事实；是否将它转换为对外集成事件，由应用边界和对外契约决定，不必把每个领域事件都直接广播出去。</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">同一数据库事务：</span><br><span class="line">  更新业务数据</span><br><span class="line">  插入 Outbox 事件</span><br><span class="line"></span><br><span class="line">事务提交后：</span><br><span class="line">  Outbox Relay → 消息系统</span><br></pre></td></tr></table></figure>
+
+<p>Outbox避免“数据库已提交但事件没有持久记录”这类双写缺口，但Relay可能重试，消费者仍应支持幂等处理；还需规划失败重试、积压监控和已发送记录清理。<a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html">AWS Transactional Outbox 模式</a></p>
+<h1 id="落地检查"><a href="#落地检查" class="headerlink" title="落地检查"></a>落地检查</h1><p>开始调整代码前，可以先确认：</p>
+<ol>
+<li>哪些规则属于领域不变量，哪些只是协议校验或技术流程？</li>
+<li>每条业务规则是否有清晰归属，是否在多个Service重复实现？</li>
+<li>一次用例涉及哪些领域状态和数据源，哪些读写必须处于同一事务？</li>
+<li>是否把远程调用或消息发送误认为受本地数据库事务保护？</li>
+<li>应用服务、领域模型和端口实现是否能分别测试？重试和重复消息如何处理？</li>
+</ol>
+<p>如果这些边界尚不明确，应先梳理职责和依赖，再决定是否调整模块结构。迁移目录本身不会带来领域建模收益。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><strong>MVC组织请求入口，DDD表达业务模型，COLA提供一种围绕业务核心划分职责和依赖的应用架构实践；事务与跨系统消息一致性则需要按各自边界单独设计。</strong></p>
+]]></content>
+      <categories>
+        <category>架构</category>
+        <category>设计</category>
+      </categories>
+      <tags>
+        <tag>架构</tag>
+        <tag>Java</tag>
+        <tag>DDD</tag>
       </tags>
   </entry>
 </search>
