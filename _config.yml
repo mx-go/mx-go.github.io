@@ -96,6 +96,12 @@ tag_generator:
 ## snippet butterfly
 theme: butterfly
 
+# 首页加载后的滚动提示，独立于主题源码。
+theme_config:
+  inject:
+    bottom:
+      - '<script defer src="/js/home-scroll-hint.js"></script>'
+
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
