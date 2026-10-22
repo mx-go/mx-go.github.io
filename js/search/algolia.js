@@ -1,4 +1,4 @@
-window.addEventListener('load', () => {
+document.addEventListener('DOMContentLoaded', () => {
   const openSearch = () => {
     document.body.style.cssText = 'width: 100%;overflow: hidden'
     document.querySelector('#algolia-search .search-dialog').style.display = 'block'
@@ -135,4 +135,4 @@ window.addEventListener('load', () => {
   window.pjax && search.on('render', () => {
     window.pjax.refresh(document.getElementById('algolia-hits'))
   })
-})
+}, { once: true })
