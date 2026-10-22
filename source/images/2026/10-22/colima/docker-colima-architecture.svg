@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="920" viewBox="0 0 1400 920" style="display:block;width:100%;height:auto;max-width:1400px" role="img" aria-labelledby="title desc">
+  <title id="title">Colima 如何在 macOS 上运行 Docker</title>
+  <desc id="desc">macOS 宿主机上，Colima 通过 Lima 管理 Linux 虚拟机。Docker CLI 与 Compose 根据 Context 直接访问虚拟机内的 Docker Engine，后者运行容器并管理镜像和数据卷。橙色实线表示 Docker API 操作，青色虚线表示虚拟机管理。</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#f4f8ff"/><stop offset="1" stop-color="#f8fbfc"/></linearGradient>
+    <linearGradient id="vm" x2="1" y2="1"><stop stop-color="#f0fbf8"/><stop offset="1" stop-color="#e9f6f2"/></linearGradient>
+    <filter id="shadow" x="-15%" y="-20%" width="130%" height="150%"><feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#183650" flood-opacity=".07"/></filter>
+    <marker id="orangeArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#e5804d"/></marker>
+    <marker id="tealArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#32968b"/></marker>
+    <marker id="grayArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#8299ad"/></marker>
+    <style>
+      text{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;fill:#20384e}
+      .muted{fill:#61768a}.heading{font-size:26px;font-weight:650}.label{font-size:18px}.small{font-size:16px}
+      .box{fill:#fff;stroke:#dbe5ee;stroke-width:1.5;filter:url(#shadow)}
+    </style>
+  </defs>
+  <rect width="1400" height="920" rx="30" fill="url(#bg)"/>
+  <rect x="48" y="42" width="6" height="79" rx="3" fill="#4b77c9"/>
+  <text x="74" y="65" font-size="14" font-weight="700" letter-spacing="2" class="muted">DOCKER ON macOS</text>
+  <text x="74" y="112" font-size="36" font-weight="720">Colima 如何在 macOS 上运行 Docker</text>
+  <text x="74" y="145" font-size="19" class="muted">区分客户端操作与环境管理，理解命令最终在哪里执行</text>
+
+  <rect x="48" y="178" width="600" height="590" rx="26" fill="#fff" stroke="#d7e3f2" stroke-width="1.5"/>
+  <rect x="792" y="178" width="560" height="590" rx="26" fill="url(#vm)" stroke="#c5e3db" stroke-width="1.5"/>
+  <circle cx="88" cy="218" r="7" fill="#557fd0"/>
+  <text x="107" y="227" class="heading">macOS 宿主机</text>
+  <text x="80" y="251" class="small muted">客户端与环境管理工具</text>
+  <circle cx="832" cy="218" r="7" fill="#32968b"/>
+  <text x="851" y="227" class="heading">Linux 虚拟机</text>
+  <rect x="1173" y="202" width="147" height="30" rx="15" fill="#d9eee7"/>
+  <text x="1246" y="222" font-size="14" text-anchor="middle" fill="#367d6f">Docker 运行时</text>
+  <text x="824" y="251" class="small muted">提供 Linux 内核与容器运行环境</text>
+
+  <rect x="80" y="276" width="220" height="92" rx="17" class="box"/>
+  <text x="104" y="313" class="heading">Colima</text>
+  <text x="104" y="343" class="label muted">创建、配置与启停环境</text>
+  <rect x="380" y="276" width="236" height="92" rx="17" class="box"/>
+  <text x="404" y="313" class="heading">Lima</text>
+  <text x="404" y="343" class="label muted">虚拟化与文件共享</text>
+  <path d="M300 322H375" fill="none" stroke="#32968b" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#tealArrow)"/>
+  <text x="340" y="300" text-anchor="middle" class="small" style="fill:#37877f">调用</text>
+  <path d="M616 322H788" fill="none" stroke="#32968b" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#tealArrow)"/>
+  <text x="704" y="297" text-anchor="middle" font-size="16" style="fill:#37877f">管理 Linux 虚拟机</text>
+
+  <rect x="80" y="402" width="536" height="116" rx="18" fill="#edf3ff" stroke="#bed0f0" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="104" y="425" width="34" height="30" rx="6" fill="#527bc5"/>
+  <path d="m113 433 6 6-6 6m10 0h7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="153" y="451" font-size="28" font-weight="680">Docker CLI + Compose</text>
+  <text x="104" y="488" class="label muted">发起操作，由 Context 选择目标 Engine</text>
+
+  <rect x="840" y="402" width="464" height="116" rx="18" fill="#fff" stroke="#b6d9ce" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="870" y="451" font-size="28" font-weight="680">Docker Engine</text>
+  <text x="870" y="488" class="label muted">管理镜像、容器、网络和数据卷</text>
+  <path d="M616 460H834" fill="none" stroke="#e5804d" stroke-width="4" marker-end="url(#orangeArrow)"/>
+  <rect x="661" y="423" width="133" height="28" rx="14" fill="#fff0e5"/>
+  <text x="727" y="443" text-anchor="middle" font-size="17" font-weight="650" style="fill:#ba6338">Docker API</text>
+
+  <path d="M948 518V567" fill="none" stroke="#8299ad" stroke-width="2" marker-end="url(#grayArrow)"/>
+  <text x="962" y="548" class="small muted">创建并运行</text>
+  <path d="M1196 518V567" fill="none" stroke="#8299ad" stroke-width="2" marker-end="url(#grayArrow)"/>
+  <text x="1210" y="548" class="small muted">读写</text>
+  <rect x="840" y="573" width="216" height="122" rx="17" class="box"/>
+  <rect x="1088" y="573" width="216" height="122" rx="17" class="box"/>
+  <rect x="866" y="594" width="7" height="7" rx="2" fill="#e9ad70"/>
+  <text x="866" y="632" font-size="24" font-weight="650">Linux 容器</text>
+  <text x="866" y="664" class="label muted">应用与依赖服务</text>
+  <rect x="1114" y="594" width="7" height="7" rx="2" fill="#8b9acb"/>
+  <text x="1114" y="632" font-size="23" font-weight="650">镜像 / 数据卷</text>
+  <text x="1114" y="664" font-size="17" class="muted">归属于当前 Engine</text>
+
+  <rect x="80" y="573" width="536" height="122" rx="17" fill="#f6f8fb" stroke="#e0e7ef"/>
+  <text x="104" y="602" font-size="12" font-weight="700" letter-spacing="1.5" class="muted">CONNECTION TARGET</text>
+  <text x="104" y="636" font-size="24" font-weight="650">Context = 连接目标</text>
+  <text x="104" y="667" font-size="17" class="muted">切换目标，不会自动迁移镜像、容器或数据卷</text>
+  <text x="80" y="735" font-size="16" class="muted">Colima 管理环境；Docker CLI 直接访问 Engine</text>
+  <text x="824" y="735" font-size="16" class="muted">容器依赖虚拟机中的 Linux 内核</text>
+
+  <rect x="48" y="804" width="1304" height="72" rx="20" fill="#fff" stroke="#e0e7ee"/>
+  <path d="M80 840H142" stroke="#e5804d" stroke-width="3" marker-end="url(#orangeArrow)"/>
+  <text x="164" y="847" font-size="17">容器操作 · Docker API</text>
+  <path d="M514 840H576" stroke="#32968b" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#tealArrow)"/>
+  <text x="598" y="847" font-size="17">环境管理 · 虚拟机生命周期</text>
+  <text x="1320" y="847" text-anchor="end" font-size="14" class="muted">逻辑关系示意 · 采用 Docker 运行时</text>
+</svg>

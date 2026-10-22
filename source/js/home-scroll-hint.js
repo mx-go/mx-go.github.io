@@ -9,6 +9,8 @@
   let timer
   let frame
   let stopped = false
+  let heroImage
+  let scheduled = false
   let expectedTop = window.scrollY
   const inputEvents = ['wheel', 'touchstart', 'pointerdown', 'keydown']
 
@@ -16,13 +18,14 @@
     stopped = true
     clearTimeout(timer)
     cancelAnimationFrame(frame)
+    if (heroImage) heroImage.onload = heroImage.onerror = null
     inputEvents.forEach(event => window.removeEventListener(event, stop, true))
     window.removeEventListener('scroll', onScroll)
     window.removeEventListener('resize', stop)
     window.removeEventListener('pagehide', stop)
     document.removeEventListener('visibilitychange', onVisibility)
     reducedMotion.removeEventListener('change', stop)
-    window.removeEventListener('load', schedule)
+    document.removeEventListener('DOMContentLoaded', prepare)
   }
 
   const onScroll = () => {
@@ -57,7 +60,22 @@
   }
 
   function schedule () {
+    if (stopped || scheduled) return
+    scheduled = true
+    clearTimeout(timer)
+    if (heroImage) heroImage.onload = heroImage.onerror = null
     timer = setTimeout(start, 900)
+  }
+
+  function prepare () {
+    if (stopped) return
+    const imageUrl = hero.style.backgroundImage.match(/^url\(["']?(.*?)["']?\)$/)?.[1]
+    if (!imageUrl) return schedule()
+    heroImage = new Image()
+    heroImage.onload = heroImage.onerror = schedule
+    // A missing cover must not delay the scroll hint indefinitely.
+    timer = setTimeout(schedule, 1500)
+    heroImage.src = imageUrl
   }
 
   inputEvents.forEach(event => window.addEventListener(event, stop, { capture: true, passive: true }))
@@ -66,6 +84,6 @@
   window.addEventListener('pagehide', stop, { once: true })
   document.addEventListener('visibilitychange', onVisibility)
   reducedMotion.addEventListener('change', stop, { once: true })
-  if (document.readyState === 'complete') schedule()
-  else window.addEventListener('load', schedule, { once: true })
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', prepare, { once: true })
+  else prepare()
 })()

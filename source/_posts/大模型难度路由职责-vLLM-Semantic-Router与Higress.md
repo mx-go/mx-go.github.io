@@ -14,10 +14,6 @@ cover: /images/2026/10-12/difficulty-routing/cover.jpg
 
 围绕这些问题，对`vLLM Semantic Router`和`Higress`做了一次梳理。两者都有路由能力，但关注的层次不同：**一个侧重理解请求并选择模型，一个侧重统一接入和流量治理**。职责不先讲清楚，两个组件叠在一起，只会多出一套规则和一个排障入口。<!-- more -->
 
-> 本文整理自“澄清难度路由职责”的讨论，以方案分析为主，部署部分仅介绍组合思路，不作为已经完成联调的安装教程。
->
-> 资料核对日期：2026-10-20。历史讨论涉及Semantic Router v0.3；核对时官方最新发布已为[v0.4.0](https://github.com/vllm-project/semantic-router/releases/tag/v0.4.0)，Higress为[v2.2.5](https://github.com/higress-group/higress/releases/tag/v2.2.5)。下文涉及具体字段时附对应文档，实际配置应与选定版本保持一致。
-
 # 先把三个问题拆开
 
 **请求难不难、应该用哪个模型、最终请求发到哪个节点，是三个不同的问题。**

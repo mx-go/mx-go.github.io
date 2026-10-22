@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title desc">
+  <title id="title">MCP Tool 接入架构：发现、暴露与调用</title>
+  <desc id="desc">Agent 与 AgentScope Toolkit 交互，Toolkit 通过 MCP Client 连接多个 MCP Server。Tool Group 和 Skill 控制当前暴露的工具；业务 Tool Catalog 记录应用自定义的目录和契约版本。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fbff"/>
+      <stop offset="1" stop-color="#edf4fb"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#17324f" flood-opacity=".10"/>
+    </filter>
+    <marker id="arrowOrange" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M1 1 L11 6 L1 11 Z" fill="#e88735"/>
+    </marker>
+    <marker id="arrowSlate" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M1 1 L11 6 L1 11 Z" fill="#8fa2b8"/>
+    </marker>
+    <style>
+      text { font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif; fill: #1b3551; }
+      .title { font-size: 42px; font-weight: 750; }
+      .subtitle { font-size: 21px; fill: #647c97; }
+      .card-title { font-size: 25px; font-weight: 700; }
+      .body { font-size: 18px; fill: #536d89; }
+      .small { font-size: 16px; fill: #657d98; }
+      .tiny { font-size: 15px; fill: #6f849d; }
+      .mono { font-family: SFMono-Regular, Consolas, monospace; font-size: 16px; fill: #344f6b; }
+      .flow { font-size: 16px; font-weight: 650; fill: #b96524; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="1120" rx="30" fill="url(#bg)"/>
+  <text class="title" x="64" y="76">MCP Tool 接入架构：发现、暴露与调用</text>
+  <text class="subtitle" x="66" y="118">工具由 Server 提供；可见范围由 Agent 运行时管理；调用经 Client 到达具体能力</text>
+
+  <!-- Agent -->
+  <g filter="url(#shadow)">
+    <rect x="550" y="158" width="500" height="126" rx="24" fill="#f2edff" stroke="#d7c7ff" stroke-width="2"/>
+  </g>
+  <text class="card-title" x="800" y="204" text-anchor="middle">Agent / LLM</text>
+  <text class="body" x="800" y="240" text-anchor="middle">基于当前可见的 Tool Schema 选择能力并生成参数</text>
+
+  <!-- Agent-runtime relation -->
+  <path d="M800 286 L800 373" fill="none" stroke="#8fa2b8" stroke-width="3" marker-start="url(#arrowSlate)" marker-end="url(#arrowOrange)"/>
+  <rect x="685" y="315" width="230" height="34" rx="17" fill="#f8fbff"/>
+  <text class="small" x="800" y="338" text-anchor="middle">Schema ↑　·　Tool Call ↓</text>
+
+  <!-- Runtime boundary -->
+  <rect x="60" y="374" width="1480" height="354" rx="28" fill="#ffffff" fill-opacity=".58" stroke="#cbd9e8" stroke-width="2" stroke-dasharray="9 8"/>
+  <rect x="92" y="356" width="244" height="38" rx="19" fill="#eaf1f8"/>
+  <text x="214" y="382" text-anchor="middle" font-size="19" font-weight="700" fill="#59718d">AgentScope Runtime</text>
+
+  <!-- Control and dispatch connectors -->
+  <path d="M500 545 L606 545" fill="none" stroke="#e88735" stroke-width="4" marker-end="url(#arrowOrange)"/>
+  <text class="flow" x="553" y="520" text-anchor="middle">激活工具组</text>
+  <path d="M994 545 L1096 545" fill="none" stroke="#e88735" stroke-width="4" marker-end="url(#arrowOrange)"/>
+  <text class="flow" x="1045" y="520" text-anchor="middle">分发调用</text>
+
+  <!-- Tool group -->
+  <g filter="url(#shadow)">
+    <rect x="112" y="432" width="390" height="222" rx="22" fill="#f2edff" stroke="#d7c7ff" stroke-width="2"/>
+  </g>
+  <text class="card-title" x="307" y="476" text-anchor="middle">Tool Group / Skill</text>
+  <text class="body" x="307" y="516" text-anchor="middle">按任务组织和激活工具</text>
+  <text class="small" x="307" y="550" text-anchor="middle">决定当前哪些 Schema 对模型可见</text>
+  <rect x="163" y="582" width="288" height="42" rx="12" fill="#ffffff" fill-opacity=".8"/>
+  <text class="tiny" x="307" y="609" text-anchor="middle">未激活的工具不进入本轮工具集</text>
+
+  <!-- Toolkit -->
+  <g filter="url(#shadow)">
+    <rect x="606" y="432" width="390" height="222" rx="22" fill="#e9f3ff" stroke="#b8d6ff" stroke-width="2"/>
+  </g>
+  <text class="card-title" x="801" y="476" text-anchor="middle">Toolkit</text>
+  <text class="body" x="801" y="516" text-anchor="middle">注册本地 Tool 与 MCP Client</text>
+  <text class="small" x="801" y="550" text-anchor="middle">提供 Schema · 校验名称 · 分发调用</text>
+  <rect x="655" y="582" width="292" height="42" rx="12" fill="#ffffff" fill-opacity=".8"/>
+  <text class="tiny" x="801" y="609" text-anchor="middle">本地 Tool 可直接在运行时执行</text>
+
+  <!-- MCP Client -->
+  <g filter="url(#shadow)">
+    <rect x="1096" y="432" width="390" height="222" rx="22" fill="#e7f7f1" stroke="#b8e8d5" stroke-width="2"/>
+  </g>
+  <text class="card-title" x="1291" y="476" text-anchor="middle">MCP Client</text>
+  <text class="body" x="1291" y="516" text-anchor="middle">连接 Server 并协商协议能力</text>
+  <text class="small" x="1291" y="550" text-anchor="middle">发现工具 · 发起调用 · 转换结果</text>
+  <rect x="1145" y="582" width="292" height="42" rx="12" fill="#ffffff" fill-opacity=".8"/>
+  <text class="tiny" x="1291" y="609" text-anchor="middle">initialize · tools/list · tools/call</text>
+
+  <!-- Server fan-out -->
+  <path d="M1291 654 L1291 756 L306 756" fill="none" stroke="#8fa2b8" stroke-width="3"/>
+  <path d="M306 756 L306 804" fill="none" stroke="#e88735" stroke-width="3" marker-end="url(#arrowOrange)"/>
+  <path d="M800 756 L800 804" fill="none" stroke="#e88735" stroke-width="3" marker-end="url(#arrowOrange)"/>
+  <path d="M1294 756 L1294 804" fill="none" stroke="#e88735" stroke-width="3" marker-end="url(#arrowOrange)"/>
+  <rect x="646" y="734" width="308" height="38" rx="19" fill="#f8fbff"/>
+  <text class="flow" x="800" y="759" text-anchor="middle">MCP 请求发送到目标 Server</text>
+
+  <!-- Server cards -->
+  <g filter="url(#shadow)">
+    <rect x="90" y="806" width="432" height="154" rx="22" fill="#fff4e8" stroke="#ffd0a5" stroke-width="2"/>
+    <rect x="584" y="806" width="432" height="154" rx="22" fill="#eaf8f3" stroke="#b8e8d5" stroke-width="2"/>
+    <rect x="1078" y="806" width="432" height="154" rx="22" fill="#eef3ff" stroke="#bfd2ff" stroke-width="2"/>
+  </g>
+  <text class="card-title" x="306" y="849" text-anchor="middle">CRM MCP Server</text>
+  <text class="mono" x="306" y="888" text-anchor="middle">customer_query · order_query</text>
+  <text class="small" x="306" y="925" text-anchor="middle">客户与订单查询</text>
+
+  <text class="card-title" x="800" y="849" text-anchor="middle">工单 MCP Server</text>
+  <text class="mono" x="800" y="888" text-anchor="middle">ticket_search · ticket_create</text>
+  <text class="small" x="800" y="925" text-anchor="middle">工单检索与创建</text>
+
+  <text class="card-title" x="1294" y="849" text-anchor="middle">知识库 MCP Server</text>
+  <text class="mono" x="1294" y="888" text-anchor="middle">document_search · fetch_document</text>
+  <text class="small" x="1294" y="925" text-anchor="middle">文档检索与读取</text>
+
+  <!-- Governance note -->
+  <rect x="62" y="992" width="1476" height="78" rx="20" fill="#ffffff" stroke="#d6e1ed" stroke-width="2"/>
+  <circle cx="98" cy="1031" r="10" fill="#e88735"/>
+  <text x="124" y="1027" font-size="18" font-weight="700">应用级 Tool Catalog</text>
+  <text class="small" x="124" y="1052">记录目录发布与契约兼容性；Catalog / contract version 属于应用治理，不是 MCP 标准字段。</text>
+  <text class="tiny" x="1505" y="1040" text-anchor="end">发现 ≠ 暴露 ≠ 执行</text>
+</svg>

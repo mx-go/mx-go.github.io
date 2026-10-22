@@ -98,6 +98,8 @@ theme: butterfly
 
 # 首页加载后的滚动提示，独立于主题源码。
 theme_config:
+  baidu_analytics: ''
+  background: ''
   inject:
     bottom:
       - '<script defer src="/js/home-scroll-hint.js"></script>'
