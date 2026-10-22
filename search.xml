@@ -6993,8 +6993,12 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>Jetbrains系列产品重置试用方法</td>
-<td><a href="https://zhile.io/">https://zhile.io</a></td>
+<td>Jetbrains激活</td>
+<td><a href="https://ckey.run/">https://ckey.run/</a></td>
+</tr>
+<tr>
+<td>jrebel激活</td>
+<td><a href="https://www.jpy.wang/page/jrebel.html">https://www.jpy.wang/page/jrebel.html</a></td>
 </tr>
 <tr>
 <td>23种设计模式</td>
@@ -8869,6 +8873,219 @@
         <tag>架构</tag>
         <tag>AI</tag>
         <tag>AgentScope</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>macOS 使用 Colima 运行 Docker：安装、Compose 与环境切换</title>
+    <url>/macOS%E4%BD%BF%E7%94%A8Colima%E8%BF%90%E8%A1%8CDocker-%E5%AE%89%E8%A3%85Compose%E4%B8%8E%E7%8E%AF%E5%A2%83%E5%88%87%E6%8D%A2/</url>
+    <content><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在 macOS 上运行 Docker，常见选择是安装 Docker Desktop。对于主要通过终端管理容器的开发者，也可以使用 Docker CLI 配合 Colima，按需启动容器环境。</p>
+<p>两种方式都可以服务本地开发，但提供的使用体验不同。Docker Desktop 集成了图形界面和多项管理能力；Colima 更适合希望直接控制虚拟机生命周期、通过命令行完成容器操作的场景。选择应围绕实际工作流，而不是简单认定某一种工具一定更快或更省资源。<span id="more"></span></p>
+<h1 id="先分清-Docker-CLI、Engine-和-Colima"><a href="#先分清-Docker-CLI、Engine-和-Colima" class="headerlink" title="先分清 Docker CLI、Engine 和 Colima"></a>先分清 Docker CLI、Engine 和 Colima</h1><p>安装完成后，终端能够执行 <code>docker --version</code>，只能说明 Docker 客户端可用，不能证明容器引擎已经运行。</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>主要职责</th>
+<th>所在位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Docker CLI</td>
+<td>解析 <code>docker</code> 命令，向目标 Engine 发送请求</td>
+<td>macOS</td>
+</tr>
+<tr>
+<td>Docker Compose</td>
+<td>读取 Compose 配置，通过 Engine 管理一组服务</td>
+<td>macOS 上的 CLI 插件</td>
+</tr>
+<tr>
+<td>Colima</td>
+<td>创建、配置和启停容器开发环境</td>
+<td>macOS</td>
+</tr>
+<tr>
+<td>Lima</td>
+<td>为 Colima 提供 Linux 虚拟机相关能力</td>
+<td>macOS 与虚拟化层</td>
+</tr>
+<tr>
+<td>Docker Engine</td>
+<td>管理镜像、容器、网络和数据卷</td>
+<td>Linux 虚拟机内</td>
+</tr>
+</tbody></table>
+<p>本文讨论 Linux 容器。它们依赖 Linux 内核，因此不能仅靠 macOS 上的 Docker CLI 直接运行；本地方案需要一个 Linux 环境承载 Engine。Colima 利用 Lima 管理虚拟机，选择 Docker 运行时后，日常操作仍使用熟悉的 Docker 命令。<a href="https://github.com/abiosoft/colima">Colima 官方项目</a></p>
+<p><img src="/images/2026/10-22/colima/docker-colima-architecture.svg" alt="macOS Docker CLI、Colima、Lima 与 Linux 虚拟机中 Docker Engine 的关系"></p>
+<p>图中区分了两条路径：Docker CLI 通过选定的 Context 访问 Engine；Colima 负责管理 Linux 环境。Colima 不是每条 Docker 命令必须逐层经过的业务代理。</p>
+<h1 id="安装最小可用环境"><a href="#安装最小可用环境" class="headerlink" title="安装最小可用环境"></a>安装最小可用环境</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>先确认 Homebrew 可用，并查看主机架构：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew --version</span><br><span class="line"><span class="built_in">uname</span> -m</span><br></pre></td></tr></table></figure>
+
+<p>Apple Silicon 与 Intel Mac 都在 Colima 的支持范围内，但可用的安装包、虚拟化选项和镜像架构还取决于系统及工具版本。不要仅因为某篇教程使用 Apple Silicon，就认为 Intel Mac 无法使用。<a href="https://colima.run/docs/getting-started/">Colima 入门文档</a></p>
+<h2 id="安装客户端和环境管理工具"><a href="#安装客户端和环境管理工具" class="headerlink" title="安装客户端和环境管理工具"></a>安装客户端和环境管理工具</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install colima docker docker-compose</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>docker</code> formula 提供客户端工具，<code>colima</code> 管理虚拟机环境，<code>docker-compose</code> 提供 Compose。这个安装步骤本身不等于 Linux 虚拟机已经启动，也不等于已经装好 Docker Desktop。<a href="https://colima.run/docs/installation/">Colima 安装说明</a></p>
+<p>检查已安装命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">colima version</span><br><span class="line">docker --version</span><br><span class="line">docker-compose version</span><br></pre></td></tr></table></figure>
+
+<p>此时可以先确认客户端存在，稍后再验证 Engine。若系统里曾安装 Docker Desktop，还应注意 PATH 中可能保留另一份 <code>docker</code> 可执行文件；必要时用 <code>command -v docker</code> 确认当前调用的位置。</p>
+<h1 id="启动-Colima-并验证-Engine"><a href="#启动-Colima-并验证-Engine" class="headerlink" title="启动 Colima 并验证 Engine"></a>启动 Colima 并验证 Engine</h1><p>启动 Docker 运行时：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">colima start --runtime docker</span><br></pre></td></tr></table></figure>
+
+<p>首次启动可能涉及下载虚拟机镜像、创建实例和初始化服务，耗时取决于网络与本机环境。下载失败和 Engine 尚未就绪是不同问题，不应该一开始就通过反复卸载重装处理。</p>
+<p>按以下顺序检查：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">colima status</span><br><span class="line">docker context <span class="built_in">ls</span></span><br><span class="line">docker version</span><br><span class="line">docker info</span><br><span class="line">docker run --<span class="built_in">rm</span> hello-world</span><br></pre></td></tr></table></figure>
+
+<p>这些命令分别验证不同层次：</p>
+<table>
+<thead>
+<tr>
+<th>检查</th>
+<th>能说明什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>colima status</code></td>
+<td>Colima 管理的环境是否运行</td>
+</tr>
+<tr>
+<td><code>docker context ls</code></td>
+<td>客户端配置了哪些目标，当前使用哪个</td>
+</tr>
+<tr>
+<td><code>docker version</code></td>
+<td>客户端版本，以及能否取得 Server 信息</td>
+</tr>
+<tr>
+<td><code>docker info</code></td>
+<td>是否能访问 Engine 并读取运行信息</td>
+</tr>
+<tr>
+<td><code>hello-world</code></td>
+<td>镜像获取与一次容器执行是否成功</td>
+</tr>
+</tbody></table>
+<p><code>docker version</code> 只有 Client 信息、没有正常的 Server 信息时，仍不能认为完整环境已经可用。若 <code>docker info</code> 成功，而 <code>hello-world</code> 拉取失败，应继续检查镜像仓库访问、DNS 或代理，不应直接归因于客户端安装错误。</p>
+<p>日常不再需要容器环境时，可以停止虚拟机：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">colima stop</span><br></pre></td></tr></table></figure>
+
+<p>停止环境会影响其中运行的服务。它与删除实例不同；下次继续工作时重新启动即可。容器是否自动恢复运行，还取决于容器状态与重启策略，不能把“虚拟机启动”当作“所有业务服务已就绪”。<a href="https://colima.run/docs/commands/">Colima 命令说明</a></p>
+<h1 id="让-docker-compose-找到插件"><a href="#让-docker-compose-找到插件" class="headerlink" title="让 docker compose 找到插件"></a>让 docker compose 找到插件</h1><p>安装了 <code>docker-compose</code>，不一定意味着 <code>docker compose</code> 已经可以被 Docker CLI 发现。先执行：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker compose version</span><br></pre></td></tr></table></figure>
+
+<p>如果出现 <code>compose</code> 不是有效命令，但 <code>docker-compose version</code> 正常，优先检查插件发现路径。</p>
+<p>Homebrew 当前的安装说明建议，在 <code>~/.docker/config.json</code> 中配置 <code>cliPluginsExtraDirs</code>。先查看本机 Homebrew 前缀：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew --prefix</span><br></pre></td></tr></table></figure>
+
+<p>例如输出为 <code>/opt/homebrew</code> 时，对应的插件目录通常为 <code>/opt/homebrew/lib/docker/cli-plugins</code>，配置示意如下：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;cliPluginsExtraDirs&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;/opt/homebrew/lib/docker/cli-plugins&quot;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>该路径只是默认安装位置的示例，应替换为本机实际前缀。已有配置时合并此字段，保留原有认证、Context 等设置，不要直接用示例覆盖整个文件。JSON 字符串不会执行 Shell 变量展开，也不能把 <code>$(brew --prefix)</code> 原样填进去期待 Docker 自动计算。<a href="https://formulae.brew.sh/formula/docker-compose">Homebrew docker-compose 说明</a></p>
+<p>修改后重新运行 <code>docker compose version</code>。如果仍失败，再核对插件实际安装位置、文件权限与客户端版本。</p>
+<p>使用 Compose 的新旧命令写法应以项目和安装版本为准。本文后续统一使用插件形式 <code>docker compose</code>，不把命令名称是否带连字符作为服务端是否正常的判断依据。</p>
+<h1 id="用一个小服务检查端口和-Compose"><a href="#用一个小服务检查端口和-Compose" class="headerlink" title="用一个小服务检查端口和 Compose"></a>用一个小服务检查端口和 Compose</h1><p>在一个独立的示例目录中创建 <code>compose.yaml</code>：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx:alpine</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;127.0.0.1:8080:80&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>先解析配置，再启动服务：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker compose config</span><br><span class="line">docker compose up -d</span><br><span class="line">docker compose ps</span><br><span class="line">curl -I http://127.0.0.1:8080/</span><br></pre></td></tr></table></figure>
+
+<p>这里将容器的 80 端口发布到本机回环地址的 8080 端口，适合本地演示。检查时还需要确认端口没有被其他程序占用。<code>nginx:alpine</code> 是便于演示的浮动标签；需要可复现构建时，应按项目策略固定镜像版本或摘要。<a href="https://docs.docker.com/reference/cli/docker/container/run/">Docker 容器运行与端口发布</a></p>
+<p>容器显示运行，但 HTTP 请求失败时，可以进一步检查服务日志：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker compose logs --<span class="built_in">tail</span>=50 web</span><br></pre></td></tr></table></figure>
+
+<p>用完后，在相同目录停止并移除这组示例容器：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker compose down</span><br></pre></td></tr></table></figure>
+
+<p>然后根据是否还有其他工作负载，决定要不要执行 <code>colima stop</code>。应用服务的生命周期和虚拟机的生命周期应分别管理。</p>
+<h1 id="切换环境时，优先检查-Docker-Context"><a href="#切换环境时，优先检查-Docker-Context" class="headerlink" title="切换环境时，优先检查 Docker Context"></a>切换环境时，优先检查 Docker Context</h1><p>同一台 Mac 可以配置多个 Docker 环境。命令名相同，不代表它们连接同一个 Engine。Context 保存目标端点等连接信息，切换 Context 会改变后续命令的操作对象。</p>
+<p>先看当前环境：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker context <span class="built_in">ls</span></span><br><span class="line">docker context show</span><br></pre></td></tr></table></figure>
+
+<p>确认列表中存在目标后，再切换。例如默认 Colima 环境通常对应 <code>colima</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker context use colima</span><br><span class="line">docker info</span><br></pre></td></tr></table></figure>
+
+<p>如果使用多个 Colima profile，或历史安装留下不同名称，应以实际列表为准。只想对一次命令指定目标时，可以使用：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker --context colima ps</span><br></pre></td></tr></table></figure>
+
+<p>此外还要检查 <code>DOCKER_HOST</code>、<code>DOCKER_CONTEXT</code> 等环境变量是否影响连接目标。Context、环境变量和命令行参数存在优先级关系，所以排障时不能只看列表中的星号，还要核对当前命令的有效配置。<a href="https://docs.docker.com/engine/manage-resources/contexts/">Docker Context 官方说明</a></p>
+<h1 id="从-Docker-Desktop-切换时，数据不会自动搬家"><a href="#从-Docker-Desktop-切换时，数据不会自动搬家" class="headerlink" title="从 Docker Desktop 切换时，数据不会自动搬家"></a>从 Docker Desktop 切换时，数据不会自动搬家</h1><p>切换到 Colima 后，<code>docker ps -a</code> 看不到原来的容器，不一定是数据被删除了，也可能只是客户端连接到了另一台 Engine。</p>
+<p>两个独立运行环境中的镜像、容器和命名数据卷，不会仅因为切换 Context 就自动合并。迁移前应先列清楚：哪些资源可以从配置重新创建，哪些包含必须保留的数据。</p>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>迁移时的处理思路</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>镜像</td>
+<td>从镜像仓库重新拉取，或按需要导出、导入</td>
+</tr>
+<tr>
+<td>容器</td>
+<td>优先通过 Compose 等声明式配置重新创建</td>
+</tr>
+<tr>
+<td>命名数据卷</td>
+<td>单独备份、恢复，并验证目标数据完整性</td>
+</tr>
+<tr>
+<td>宿主机绑定目录</td>
+<td>检查路径、共享范围、访问权限及文件语义</td>
+</tr>
+<tr>
+<td>数据库</td>
+<td>使用适合该数据库的备份与恢复方式，保证一致性</td>
+</tr>
+</tbody></table>
+<p>Docker 管理的数据卷位于 Engine 所在主机的存储中。这里的 Engine 主机是 Linux 虚拟机，而不是 macOS 原生文件系统；不能因为两套工具装在同一台电脑上，就认为命名卷天然共享。<a href="https://docs.docker.com/engine/storage/volumes/">Docker 数据卷</a></p>
+<p>绑定目录同样需要关注路径从哪里解析、能否被虚拟机访问，以及权限是否一致。客户端本地路径和 Engine 主机上的可用路径不是天然等价，虚拟机方案需要文件共享机制衔接。<a href="https://docs.docker.com/engine/storage/bind-mounts/">Docker Bind Mounts</a></p>
+<p>迁移验收完成之前，保留旧环境及可恢复的备份。不要把删除 Colima 实例、清理数据卷或卸载旧环境当作普通连接故障的第一步。</p>
+<h1 id="常见问题的排查顺序"><a href="#常见问题的排查顺序" class="headerlink" title="常见问题的排查顺序"></a>常见问题的排查顺序</h1><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>优先检查</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>docker</code> 命令不存在</td>
+<td>CLI 是否安装、PATH 是否正确</td>
+</tr>
+<tr>
+<td>无法连接 Docker daemon</td>
+<td>Colima 状态、Context、环境变量和连接端点</td>
+</tr>
+<tr>
+<td><code>docker compose</code> 不存在</td>
+<td>Compose 是否安装、插件目录能否被发现</td>
+</tr>
+<tr>
+<td>镜像拉取失败</td>
+<td>仓库可达性、DNS、代理及仓库认证</td>
+</tr>
+<tr>
+<td>镜像无法执行</td>
+<td>镜像是否支持目标 CPU 架构，是否涉及跨架构执行</td>
+</tr>
+<tr>
+<td>容器运行但端口不通</td>
+<td>容器服务监听、端口映射、宿主机端口占用与转发</td>
+</tr>
+<tr>
+<td>目录挂载异常</td>
+<td>虚拟机共享范围、路径、权限及大小写等文件语义</td>
+</tr>
+</tbody></table>
+<p>排查应从最靠近故障现象的一层开始。CLI、Engine、镜像仓库、容器进程和宿主机端口分别可能失败，把它们都归成“Docker 没装好”，只会增加重复安装与数据丢失的风险。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><strong>Docker CLI 负责发起操作，Colima 借助 Lima 管理 Linux 环境，Docker Engine 在其中运行容器；Compose 组织应用服务，Context 决定命令连接哪一个 Engine。</strong></p>
+<p>对于终端为主的本地开发，Colima 提供了一条清晰的使用路径：安装客户端与环境工具、启动虚拟机、验证 Engine，再按需配置 Compose。真正切换环境时，连接目标和数据迁移应分别验证，不能把“命令能执行”当作“开发环境已经完整迁移”。</p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
       </tags>
   </entry>
 </search>
