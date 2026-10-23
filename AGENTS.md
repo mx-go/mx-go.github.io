@@ -4,11 +4,11 @@
 
 这是“彩虹马的博客”的 Hexo 源码仓库，用于编写中文技术文章并发布到 GitHub Pages。
 
-- 根 `package.json` 声明 Hexo `^5.4.0`，并保留 `package-lock.json`；不要顺手升级依赖或重写锁文件。
-- `_config.yml` 当前启用 `butterfly`；本地主题位于 `themes/butterfly/`，其 `package.json` 标注版本为 `3.7.6`。
+- 根 `package.json` 声明 Hexo `^8.1.2`，并保留 `package-lock.json`；不要顺手升级依赖或重写锁文件。
+- `_config.yml` 当前启用 `butterfly`；本地主题位于 `themes/butterfly/`，其 `package.json` 标注版本为 `3.8.4`。
 - 站点语言为 `zh-CN`，时区为 `Asia/Shanghai`。
 - 永久链接为 `:title/`，`post_asset_folder` 为 `false`。
-- 配置中的站点 URL 为 `https://mx-go.github.io`，`source/CNAME` 为 `rainbowhorse.site`。这是现有状态，不能凭推测自动统一域名。
+- 配置中的站点 URL 为 `https://rainbowhorse.site`，`source/CNAME` 为 `rainbowhorse.site`。这是现有状态，不能凭推测自动统一域名。
 - Git 部署目标为 `mx-go/mx-go.github.io` 的 `master` 分支；源码分支与发布分支不能混为一谈。
 
 以上信息以当前文件为依据；后续工作应重新读取相关配置，避免把本文当成永远不变的事实。
@@ -28,7 +28,7 @@
 | `themes/` 下其他主题 | 历史主题，不作为当前页面问题的默认修改目标 |
 | `public/` | 生成的站点产物，修复应回到源码，不能直接补丁式修改 HTML |
 | `.deploy_git/` | Git 部署工作目录，根仓库中记录为 gitlink；不要把它当普通源码目录编辑或重置 |
-| `node_modules/` | 依赖目录，仓库已跟踪其中部分文件；不能批量清理、格式化或重新提交 |
+| `node_modules/` | 依赖目录，通过锁文件还原，不提交依赖内容；不能批量清理或格式化本地文件 |
 | `mx-go.github.io/` | 现存辅助目录，不替代根目录的 Hexo 项目 |
 
 ## 工作方式
@@ -51,7 +51,7 @@
 
 ## 本地命令与验证
 
-根 `package.json` 没有 npm scripts，不要假设存在 `npm run build`、`npm test` 或项目级 lint。优先使用现有本地 CLI，避免 `npx` 自动下载其他版本：
+根 `package.json` 提供 `test`、`build`、`check:site`、`verify` 和 `search:sync`。日常检查优先运行 `npm run verify`；构建会检查渲染错误、链接与图片尺寸。生成和预览仍可使用现有本地 CLI，避免 `npx` 自动下载其他版本：
 
 ```bash
 # 查看本地工具与运行环境
@@ -70,7 +70,7 @@ npm --version
 ./node_modules/.bin/hexo server --ip 127.0.0.1
 ```
 
-- 依赖缺失时先核对锁文件、Node/npm 环境及现有依赖状态。当前仓库跟踪部分依赖，安装或 `npm ci` 可能产生大量变动，不作为日常检查步骤自动执行。
+- 依赖缺失时先核对锁文件、Node/npm 环境及现有依赖状态。本地已有依赖时不自动重新安装。需要恢复依赖时按锁文件安装；CI 使用独立环境执行 `npm ci --ignore-scripts`，不重写锁文件。
 - 修改文章、主题或站点配置后运行生成命令，检查退出码与错误日志。构建通过后，按变更范围检查首页、目标文章、分类/标签、搜索、图片及桌面/移动布局。
 - 检查输出中的链接、代码高亮和静态资源；涉及域名或模板时，特别检查 canonical、站内链接与 `CNAME`。
 - 仅修改本文件等协作文档时，检查内容、路径、命令与差异即可，无需生成整站。
@@ -81,7 +81,7 @@ npm --version
 
 - 本地生成与线上发布是不同操作。仅在用户明确授权发布时运行 `hexo deploy`、`hexo generate --deploy` 或推送发布分支。
 - 发布前核对部署仓库、分支、域名与生成结果，保留 `source/CNAME`。不擅自修改 DNS、切换主题、变更永久链接规则或强制推送。
-- 搜索配置包含 Algolia，评论相关脚本涉及外部服务；本地内容或样式验证不应顺带上传搜索索引或修改评论数据。
+- 搜索配置包含 Algolia，评论相关脚本涉及外部服务；本地内容或样式验证不应顺带上传搜索索引或修改评论数据。明确授权发布时运行 `npm run search:sync`；不要使用可能被同名插件覆盖的 `hexo algolia` 命令。
 - `del_latest.sh` 包含删除线上评论的操作，只能在明确授权相应删除任务后使用。
 - 不将服务密钥、令牌或管理凭据写入新文档、示例、日志、提交说明或构建产物；发现已有敏感配置时只报告字段位置，不复述值，不擅自更换凭据。
 

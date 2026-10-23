@@ -1,0 +1,78 @@
+html
+  scrollbar-gutter: stable
+
+#nav button.site-page
+  padding: 0 0 .3rem
+  border: 0
+  background: transparent
+  color: var(--light-grey)
+  font-family: inherit
+  cursor: pointer
+
+  &:focus-visible
+    outline: 2px solid currentColor
+    outline-offset: 4px
+    border-radius: 3px
+
+#page-header.not-top-img #nav button.site-page,
+#page-header.nav-fixed #nav button.site-page
+  color: var(--font-color)
+
+.search-dialog button:focus-visible,
+.search-dialog input:focus-visible,
+.search-dialog a:focus-visible
+  outline: 2px solid $light-blue
+  outline-offset: 3px
+
+#algolia-search-retry
+  margin: 0 0 .8rem
+  padding: .4rem .8rem
+  border: 1px solid $light-blue
+  border-radius: 4px
+  background: transparent
+  color: var(--font-color)
+  cursor: pointer
+
+.post #content-inner.layout
+  max-width: 1200px
+
+  &.hide-aside
+    max-width: 960px
+
+#post #article-container
+  font-size: 16px
+  line-height: 1.9
+
+  img
+    max-width: 100%
+    height: auto
+
+  h2,
+  h3,
+  h4
+    scroll-margin-top: 80px
+
++maxWidth768()
+  #nav button.site-page.search
+    min-height: 44px
+    min-width: 44px
+
+  .post #aside-content .card-announcement,
+  .post #aside-content .card-recent-post .aside-list-item:nth-child(n+3)
+    display: none
+
+@media (prefers-reduced-motion: reduce)
+  *,
+  *:before,
+  *:after
+    animation-duration: .01ms !important
+    animation-iteration-count: 1 !important
+    transition-duration: .01ms !important
+    scroll-behavior: auto !important
+
+  .typed-cursor,
+  .heart
+    display: none !important
+
+  img.post_bg
+    transform: none !important

@@ -107,11 +107,20 @@ case source
         const sub = !{JSON.stringify(theme.subtitle.sub || [])}
         element.textContent = sub[0] || !{JSON.stringify(config.subtitle || '')}
 
+        const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
         let sdkPromise
         let typed
-        const next = () => setTimeout(loadPoem, 3000)
+        let timer
+        let typing = false
+        let pending = false
+        let currentText = element.textContent
+        const next = () => {
+          clearTimeout(timer)
+          if (!document.hidden && element.isConnected) timer = setTimeout(loadPoem, 3000)
+        }
         const loadPoem = () => {
-          if (!element.isConnected) return
+          if (!element.isConnected || document.hidden || pending) return
+          pending = true
           if (!sdkPromise) {
             sdkPromise = getScript('https://sdk.jinrishici.com/v2/browser/jinrishici.js').catch(error => {
               sdkPromise = null
@@ -130,15 +139,18 @@ case source
               reject(error)
             }
           })).then(result => {
-            if (!element.isConnected) return
+            if (!element.isConnected || document.hidden) return
             const content = result && result.data && result.data.content
             if (typeof content !== 'string' || !content) return next()
             if (typed) typed.destroy()
+            currentText = content
             element.textContent = content
-            if (!{theme.subtitle.effect}) {
+            if (!{theme.subtitle.effect} && !motion.matches) {
               const animate = () => {
                 if (!element.isConnected) return
+                if (document.hidden || motion.matches) { element.textContent = currentText; return next() }
                 element.textContent = ''
+                typing = true
                 typed = window.typed = new Typed('#subtitle', {
                   strings: [content].concat(sub),
                   contentType: 'null',
@@ -146,7 +158,7 @@ case source
                   typeSpeed: 150,
                   loop: false,
                   backSpeed: 50,
-                  onComplete: next
+                  onComplete: () => { typing = false; next() }
                 })
               }
               if (typeof Typed === 'function') animate()
@@ -154,11 +166,32 @@ case source
             } else {
               next()
             }
-          }).catch(next)
+          }).catch(next).finally(() => { pending = false })
         }
 
+        const pause = () => {
+          clearTimeout(timer)
+          if (typing) typed.stop()
+        }
+        const resume = () => {
+          if (!element.isConnected || document.hidden) return pause()
+          if (typing) typed.start()
+          else if (!pending) next()
+        }
+        document.addEventListener('visibilitychange', resume)
+        window.addEventListener('pagehide', pause)
+        window.addEventListener('pageshow', event => { if (event.persisted) resume() })
+        motion.addEventListener('change', () => {
+          if (!motion.matches || !typed) return
+          typed.destroy()
+          typed = null
+          typing = false
+          element.textContent = currentText
+          next()
+        })
+
         // 在 load 事件之后发起请求，避免可选诗词服务拖延页面加载。
-        const schedule = () => setTimeout(loadPoem, 0)
+        const schedule = () => { if (!document.hidden) timer = setTimeout(loadPoem, 0) }
         if (document.readyState === 'complete') schedule()
         else window.addEventListener('load', schedule, { once: true })
       }

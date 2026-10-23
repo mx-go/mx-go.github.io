@@ -9,3 +9,9 @@
 InstantSearch 仅在首次打开搜索弹窗时加载。不蒜子统计和今日诗词仍使用各自的外部服务。
 
 兼容性说明：pangu 使用保留 `autoSpacingPage()` 和全局变量接口的 4.0.7 浏览器构建；jQuery 使用兼容现有 Fancybox 3 与 Share.js 的 3.7.1，避免浮动到新的主版本。
+
+## 图标字体子集
+
+`site-icons.css` 与 `site-*.woff2` 由当前模板、样式和文章中的图标名称生成。样式合并加载，避免完整字体先于子集样式生效而被提前下载；完整上游字体保留为回退，新增图标即使未重新生成子集也能显示。`site-subset.css` 保留子集声明，便于检查。
+
+需要更新子集时，先运行 `npm run build` 以收集插件生成的图标，在独立 Python 环境安装 `tools/font-requirements.txt`，再执行 `python tools/subset-icons.py` 并重新构建。正常构建直接使用已生成的静态文件，不要求安装 Python 字体工具。

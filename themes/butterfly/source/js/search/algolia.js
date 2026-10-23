@@ -1,6 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
   const status = document.getElementById('algolia-search-status')
   const retry = document.getElementById('algolia-search-retry')
+  const dialog = document.querySelector('#algolia-search .search-dialog')
+  const opener = document.querySelector('#search-button > .search')
+  const backgrounds = ['body-wrap', 'sidebar-menus', 'rightside'].map(id => document.getElementById(id)).filter(Boolean)
+  let backgroundStates
+  let previousFocus
+  let previousOverflow
+  let closeTimer
   let searchReady
   let searchOpen = false
 
@@ -24,9 +31,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const openSearch = async () => {
+    clearTimeout(closeTimer)
+    if (!searchOpen) {
+      previousFocus = opener
+      previousOverflow = document.body.style.overflow || ''
+      backgroundStates = backgrounds.map(element => Boolean(element.inert))
+    }
     searchOpen = true
-    document.body.style.cssText = 'width: 100%;overflow: hidden'
-    document.querySelector('#algolia-search .search-dialog').style.display = 'block'
+    document.body.style.overflow = 'hidden'
+    dialog.style.display = 'block'
+    dialog.style.animation = ''
+    dialog.inert = false
+    dialog.setAttribute('aria-hidden', 'false')
+    dialog.setAttribute('aria-busy', 'true')
+    opener.setAttribute('aria-expanded', 'true')
+    dialog.focus()
+    backgrounds.forEach(element => { element.inert = true })
     status.hidden = false
     status.textContent = '搜索加载中…'
     retry.hidden = true
@@ -38,15 +58,22 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       status.textContent = '搜索加载失败，请重试。'
       retry.hidden = false
+    } finally {
+      dialog.setAttribute('aria-busy', 'false')
     }
   }
 
   const closeSearch = () => {
+    if (!searchOpen) return
     searchOpen = false
-    document.body.style.cssText = "width: '';overflow: ''"
-    const $searchDialog = document.querySelector('#algolia-search .search-dialog')
-    $searchDialog.style.animation = 'search_close .5s'
-    setTimeout(() => { $searchDialog.style.cssText = "display: none; animation: ''" }, 500)
+    backgrounds.forEach((element, index) => { element.inert = backgroundStates[index] })
+    document.body.style.overflow = previousOverflow
+    opener.setAttribute('aria-expanded', 'false')
+    if (previousFocus?.isConnected) previousFocus.focus()
+    dialog.inert = true
+    dialog.setAttribute('aria-hidden', 'true')
+    dialog.style.animation = 'search_close .5s'
+    closeTimer = setTimeout(() => { dialog.style.cssText = 'display: none; animation: ' }, 500)
     btf.fadeOut(document.getElementById('search-mask'), 0.5)
   }
 
@@ -59,7 +86,25 @@ document.addEventListener('DOMContentLoaded', () => {
   searchClickFn()
   retry.addEventListener('click', openSearch)
   document.addEventListener('keydown', event => {
-    if (searchOpen && event.code === 'Escape') closeSearch()
+    if (!searchOpen) return
+    if (event.code === 'Escape') {
+      event.preventDefault()
+      closeSearch()
+      return
+    }
+    if (event.key !== 'Tab') return
+    const controls = [...dialog.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+      .filter(element => !element.hidden && element.getClientRects().length)
+    const first = controls[0]
+    const last = controls[controls.length - 1]
+    const active = document.activeElement
+    if (!first || active === dialog || !dialog.contains(active)) {
+      event.preventDefault()
+      ;(event.shiftKey ? last || dialog : first || dialog).focus()
+    } else if (event.shiftKey && active === first || !event.shiftKey && active === last) {
+      event.preventDefault()
+      ;(event.shiftKey ? last : first).focus()
+    }
   })
 
   window.addEventListener('pjax:complete', function () {
@@ -165,6 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
       })
     )
     search.start()
+    document.querySelector('#algolia-search .ais-search-box--input').setAttribute('aria-label', algolia.languages.input_placeholder || '搜索文章')
 
     window.pjax && search.on('render', () => {
       window.pjax.refresh(document.getElementById('algolia-hits'))

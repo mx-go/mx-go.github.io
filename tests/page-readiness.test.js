@@ -11,7 +11,7 @@ function target (extra = {}) {
       listeners.get(name).add(fn)
     },
     removeEventListener (name, fn) { listeners.get(name)?.delete(fn) },
-    emit (name) { for (const fn of [...(listeners.get(name) || [])]) if (typeof fn === 'function') fn() }
+    emit (name, event) { for (const fn of [...(listeners.get(name) || [])]) if (typeof fn === 'function') fn(event) }
   }, extra)
 }
 const read = path => fs.readFileSync(path, 'utf8')
@@ -30,11 +30,23 @@ test('loading ends on DOM ready without waiting for window load', () => {
 
 function searchContext () {
   const elements = new Map()
+  let document
   const element = selector => {
-    if (!elements.has(selector)) elements.set(selector, target({ style: {}, textContent: '', hidden: true, focus () {} }))
+    if (!elements.has(selector)) {
+      const attributes = new Map()
+      const control = target({ style: {}, textContent: '', hidden: false, isConnected: true,
+        setAttribute: (name, value) => attributes.set(name, String(value)),
+        getAttribute: name => attributes.get(name) || null,
+        getClientRects () { return this.hidden ? [] : [{}] },
+        contains: child => [element('#algolia-search .ais-search-box--input'), element('#algolia-search .search-close-button')].includes(child),
+        querySelectorAll: () => [element('#algolia-search .ais-search-box--input'), element('#algolia-search .search-close-button')],
+        focus () { document.activeElement = this }
+      })
+      elements.set(selector, control)
+    }
     return elements.get(selector)
   }
-  const document = target({ body: { style: {} }, querySelector: element, getElementById: element })
+  document = target({ body: { style: {} }, querySelector: element, getElementById: element })
   const window = target()
   let starts = 0
   const requests = []
@@ -47,7 +59,7 @@ function searchContext () {
     btf: { fadeIn () {}, fadeOut () {} }, setTimeout, clearTimeout
   })
   document.emit('DOMContentLoaded')
-  return { element, requests, starts: () => starts }
+  return { element, document, requests, starts: () => starts }
 }
 const settleSearch = () => new Promise(resolve => setImmediate(resolve))
 
@@ -84,6 +96,28 @@ test('search can retry after a failed dependency download', async () => {
   assert.equal(ctx.element('algolia-search-retry').hidden, true)
 })
 
+test('search traps keyboard focus and restores the opener when dismissed', async () => {
+  const ctx = searchContext()
+  const opener = ctx.element('#search-button > .search')
+  opener.focus()
+  opener.emit('click')
+  assert.equal(opener.getAttribute('aria-expanded'), 'true')
+  assert.equal(ctx.element('body-wrap').inert, true)
+  ctx.requests[0].resolve()
+  await settleSearch()
+  const input = ctx.element('#algolia-search .ais-search-box--input')
+  const close = ctx.element('#algolia-search .search-close-button')
+  assert.equal(ctx.document.activeElement, input)
+  let prevented = false
+  ctx.document.emit('keydown', { code: 'Tab', key: 'Tab', shiftKey: true, preventDefault () { prevented = true } })
+  assert.equal(prevented, true)
+  assert.equal(ctx.document.activeElement, close)
+  ctx.document.emit('keydown', { code: 'Escape', key: 'Escape', preventDefault () {} })
+  assert.equal(ctx.document.activeElement, opener)
+  assert.equal(ctx.element('body-wrap').inert, false)
+  assert.equal(opener.getAttribute('aria-expanded'), 'false')
+})
+
 test('homepage hint waits only for the hero, with a bounded fallback', () => {
   const timers = new Map()
   const images = []
@@ -110,7 +144,7 @@ test('homepage hint waits only for the hero, with a bounded fallback', () => {
   assert.equal(timers.size, 0)
 })
 
-function poemContext (effect = true, failure = false, readyState = 'loading') {
+function poemContext (effect = true, failure = false, readyState = 'loading', reduce = false) {
   const pug = require('pug')
   const html = pug.renderFile('themes/butterfly/layout/includes/third-party/subtitle.pug', {
     theme: { subtitle: { source: 4, effect, loop: false, sub: [] }, CDN: { typed: '/typed.js' } },
@@ -120,15 +154,16 @@ function poemContext (effect = true, failure = false, readyState = 'loading') {
   const timers = []
   const animations = []
   const element = { textContent: '', dataset: {}, isConnected: true }
-  const window = target()
-  const document = { readyState, getElementById: () => element }
+  const motion = target({ matches: reduce })
+  const window = target({ matchMedia: () => motion })
+  const document = target({ readyState, hidden: false, getElementById: () => element })
   const context = { window, document, setTimeout: (fn, delay) => { timers.push(fn); fn.delay = delay; return fn }, clearTimeout: fn => { const i = timers.indexOf(fn); if (i >= 0) timers.splice(i, 1) },
     getScript: url => { requests.push(url); return failure ? Promise.reject(new Error('offline')) : Promise.resolve() },
     jinrishici: { load: callback => callback({ data: { content: '海内存知己' } }) },
-    Typed: function (selector, options) { assert.equal(element.textContent, '', 'Typed must start with an empty element'); animations.push(options); element.textContent = options.strings[0]; this.destroy = () => { element.textContent = '' } }
+    Typed: function (selector, options) { assert.equal(element.textContent, '', 'Typed must start with an empty element'); animations.push(options); element.textContent = options.strings[0]; this.destroy = () => { element.textContent = '' }; this.stop = () => {}; this.start = () => {} }
   }
   vm.runInNewContext(html.replace(/^<script>|<\/script>$/g, ''), context)
-  return { context, requests, timers, animations, element, window, document }
+  return { context, requests, timers, animations, element, window, document, motion }
 }
 
 test('poetry waits until after load and keeps the typewriter effect', async () => {
@@ -209,4 +244,30 @@ test('post-only typography leaves navigation and filing text untouched', () => {
   })
   document.emit('DOMContentLoaded')
   assert.deepEqual(calls, ['article-container'])
+})
+
+
+test('reduced motion shows complete verses without a typewriter', async () => {
+  const state = poemContext(true, false, 'complete', true)
+  state.timers.shift()()
+  await settleSearch()
+  assert.equal(state.animations.length, 0)
+  assert.equal(state.element.textContent, '海内存知己')
+  assert.equal(state.requests.length, 1)
+  assert.equal(state.timers[0].delay, 3000)
+})
+
+test('poetry stops scheduled requests in hidden tabs and resumes with the same dwell', async () => {
+  const state = poemContext(false)
+  state.window.emit('load')
+  state.timers.shift()()
+  await settleSearch()
+  assert.equal(state.timers.length, 1)
+  state.document.hidden = true
+  state.document.emit('visibilitychange')
+  assert.equal(state.timers.length, 0)
+  state.document.hidden = false
+  state.document.emit('visibilitychange')
+  assert.equal(state.timers.length, 1)
+  assert.equal(state.timers[0].delay, 3000)
 })

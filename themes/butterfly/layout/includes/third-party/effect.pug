@@ -19,7 +19,9 @@ if theme.activate_power_mode.enable
       POWERMODE.colorful = !{theme.activate_power_mode.colorful};
       POWERMODE.shake = !{theme.activate_power_mode.shake};
       POWERMODE.mobile = !{theme.activate_power_mode.mobile};
-      document.body.addEventListener('input', POWERMODE);
+      document.body.addEventListener('input', event => {
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) POWERMODE(event);
+      });
     }, { once: true })
 
 //- 鼠標特效

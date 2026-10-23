@@ -1,5 +1,5 @@
 #algolia-search
-  .search-dialog
+  #algolia-search-dialog.search-dialog(role="dialog" aria-modal="true" aria-labelledby="algolia-search-title" aria-hidden="true" tabindex="-1")
     #algolia-search-title.search-dialog__title Algolia
     p#algolia-search-status(role="status" hidden) 搜索加载中…
     button#algolia-search-retry(type="button" hidden) 重试
@@ -10,6 +10,6 @@
       #algolia-hits
       #algolia-pagination
       #algolia-stats
-    span.search-close-button
-      i.fas.fa-times
+    button.search-close-button(type="button" aria-label="关闭搜索")
+      i.fas.fa-times(aria-hidden="true")
   #search-mask

@@ -33,6 +33,7 @@ meta(name="theme-color" content=themeColor)
 include ./head/Open_Graph.pug
 
 !=favicon_tag(theme.favicon || config.favicon)
+link(rel="apple-touch-icon" sizes="180x180" href=url_for('/img/apple-touch-icon.png'))
 link(rel="canonical" href=urlNoIndex())
 
 //- 預解析

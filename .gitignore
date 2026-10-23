@@ -1,0 +1,13 @@
+/node_modules/
+/public/
+/.deploy_git/
+/db.json
+/.codegraph/
+/themes/butterfly/ql/
+/.DS_Store
+*.pyc
+__pycache__/
+/*.log
+/.env
+/.env.*
+!/.env.example

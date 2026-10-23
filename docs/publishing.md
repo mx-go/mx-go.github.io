@@ -13,3 +13,14 @@ node tools/sync-algolia.cjs
 项目安装了两套注册同名 `algolia` 命令的插件，直接执行 `hexo algolia` 可能选中不同实现；本脚本使用明确的客户端与字段处理实现，避免命令覆盖和重建缓存后重复收录。
 
 仅本地预览时不运行此脚本。
+
+## 本地检查与 CI
+
+- `npm test`：运行行为和导航测试。
+- `npm run build`：生成站点，检查 Hexo 渲染错误、必需页面、站内静态资源和图片尺寸。
+- `npm run verify`：依次运行上述测试与构建，不发布、不上传索引。
+- `npm run search:sync`：仅在明确授权同步或发布时使用。
+
+`.github/workflows/validate-blog.yml` 在源码分支推送及 PR 时，从锁文件安装依赖并执行验证。它只检查，不部署，也不需要搜索写入凭据。
+
+Git 忽略依赖、生成产物、缓存和本地配置；保留 `package-lock.json` 及主题源码。取消依赖目录的 Git 跟踪不应删除本机依赖，后续恢复依赖使用锁文件。
