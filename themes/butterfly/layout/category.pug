@@ -9,6 +9,15 @@ block content
   else
     include ./includes/mixins/article-sort.pug
     #category
+      - const currentCategory = site.categories.toArray().find(category => category.name === page.category)
+      - const parentCategory = currentCategory && currentCategory.parent ? site.categories.findOne({_id: currentCategory.parent}) : null
+      nav.category-breadcrumb(aria-label='分类路径')
+        a(href=url_for('/categories/')) 全部分类
+        if parentCategory
+          span(aria-hidden='true') /
+          a(href=url_for(parentCategory.path))= parentCategory.name
+        span(aria-hidden='true') /
+        span(aria-current='page')= page.category
       .article-sort-title= _p('page.category') + ' - ' + page.category
       +articleSort(page.posts)
       include includes/pagination.pug

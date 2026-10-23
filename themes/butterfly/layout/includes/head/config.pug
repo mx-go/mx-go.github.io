@@ -6,6 +6,7 @@
       appId: env.ALGOLIA_APP_ID || config.algolia.appId || config.algolia.applicationID,
       apiKey: env.ALGOLIA_API_KEY || config.algolia.apiKey,
       indexName: env.ALGOLIA_INDEX_NAME || config.algolia.indexName,
+      script: url_for(theme.CDN.algolia_search),
       hits: theme.algolia_search.hits,
       // search languages
       languages: {

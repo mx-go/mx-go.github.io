@@ -1,10 +1,10 @@
 ---
 title: Grafana搭建
 date: 2020-08-04 10:07:30
-tags: [grafana, tips]
-categories: 
-- [Linux, 安装]
-- [工具]
+tags: [Grafana, 监控]
+categories:
+  - 运维与工程
+  - 日志与监控
 img: ../../../../images/2020/5-8/grafana.jpg
 cover: ../../../../images/2020/5-8/grafana.png
 ---

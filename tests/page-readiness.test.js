@@ -28,27 +28,60 @@ test('loading ends on DOM ready without waiting for window load', () => {
   assert.equal(document.body.style.overflow, 'auto')
 })
 
-test('search initializes and opens on DOM ready even if window load never fires', () => {
+function searchContext () {
   const elements = new Map()
   const element = selector => {
-    if (!elements.has(selector)) elements.set(selector, target({ style: {}, focus () {} }))
+    if (!elements.has(selector)) elements.set(selector, target({ style: {}, textContent: '', hidden: true, focus () {} }))
     return elements.get(selector)
   }
   const document = target({ body: { style: {} }, querySelector: element, getElementById: element })
   const window = target()
   let starts = 0
+  const requests = []
   const instantsearch = () => ({ addWidget () {}, start () { starts++ } })
   instantsearch.widgets = Object.fromEntries(['searchBox', 'hits', 'stats', 'pagination'].map(name => [name, () => ({})]))
   vm.runInNewContext(read('themes/butterfly/source/js/search/algolia.js'), {
-    window, document, instantsearch, console,
-    GLOBAL_CONFIG: { root: '/', algolia: { appId: 'test', apiKey: 'test', indexName: 'test', hits: {}, languages: {} } },
-    btf: { fadeIn () {}, fadeOut () {} }, setTimeout () {}
+    window, document, console, instantsearch,
+    getScript: () => new Promise((resolve, reject) => requests.push({ resolve, reject })),
+    GLOBAL_CONFIG: { root: '/', algolia: { script: '/vendor/search.js', appId: 'test', apiKey: 'test', indexName: 'test', hits: {}, languages: {} } },
+    btf: { fadeIn () {}, fadeOut () {} }, setTimeout, clearTimeout
   })
-  assert.equal(starts, 0)
   document.emit('DOMContentLoaded')
-  assert.equal(starts, 1)
-  element('#search-button > .search').emit('click')
-  assert.equal(element('#algolia-search .search-dialog').style.display, 'block')
+  return { element, requests, starts: () => starts }
+}
+const settleSearch = () => new Promise(resolve => setImmediate(resolve))
+
+test('search loads only on first open and reuses its initialized client', async () => {
+  const ctx = searchContext()
+  assert.equal(ctx.requests.length, 0)
+  assert.equal(ctx.starts(), 0)
+  ctx.element('#search-button > .search').emit('click')
+  assert.equal(ctx.element('#algolia-search .search-dialog').style.display, 'block')
+  assert.equal(ctx.requests.length, 1)
+  ctx.element('#search-button > .search').emit('click')
+  assert.equal(ctx.requests.length, 1)
+  ctx.requests[0].resolve()
+  await settleSearch()
+  assert.equal(ctx.starts(), 1)
+  ctx.element('#algolia-search .search-close-button').emit('click')
+  ctx.element('#search-button > .search').emit('click')
+  await settleSearch()
+  assert.equal(ctx.requests.length, 1)
+  assert.equal(ctx.starts(), 1)
+})
+
+test('search can retry after a failed dependency download', async () => {
+  const ctx = searchContext()
+  ctx.element('#search-button > .search').emit('click')
+  ctx.requests[0].reject(new Error('Download failed'))
+  await settleSearch()
+  assert.equal(ctx.element('algolia-search-retry').hidden, false)
+  ctx.element('algolia-search-retry').emit('click')
+  assert.equal(ctx.requests.length, 2)
+  ctx.requests[1].resolve()
+  await settleSearch()
+  assert.equal(ctx.starts(), 1)
+  assert.equal(ctx.element('algolia-search-retry').hidden, true)
 })
 
 test('homepage hint waits only for the hero, with a bounded fallback', () => {
@@ -161,4 +194,19 @@ test('poetry without typewriter also schedules the next verse', async () => {
   await new Promise(resolve => setImmediate(resolve))
   assert.equal(state.element.textContent, '海内存知己')
   assert.equal(state.timers[0].delay, 3000)
+})
+
+test('post-only typography leaves navigation and filing text untouched', () => {
+  const pug = require('pug')
+  const html = pug.renderFile('themes/butterfly/layout/includes/third-party/pangu.pug', {
+    theme: { pangu: { field: 'post' }, CDN: { pangu: '/vendor/pangu.js' } }, url_for: value => value
+  })
+  const document = target()
+  const calls = []
+  vm.runInNewContext(html.match(/<script>([\s\S]*)<\/script>/)[1], {
+    document, GLOBAL_CONFIG_SITE: { isPost: true },
+    pangu: { spacingElementById: id => calls.push(id), autoSpacingPage: () => calls.push('whole-page') }
+  })
+  document.emit('DOMContentLoaded')
+  assert.deepEqual(calls, ['article-container'])
 })

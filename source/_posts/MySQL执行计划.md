@@ -1,14 +1,16 @@
 ---
 title: MySQL执行计划
 date: 2018-04-27 09:24:06
-tags: [mysql]
-categories: 数据库
-cover: ../../../../images/2018-4/MySQL_explain/mysql-explain.png
+tags: [MySQL, 索引优化]
+categories:
+  - 数据与中间件
+  - MySQL与数据库设计
+cover: ../../../../images/2018-4/MySQL_explain/mysql-explain-optimized.webp
 ---
 
 # 引言
 
-MySQL执行计划，简单的来说，是SQL在数据库中执行时的表现情况，通常用于SQL性能分析，优化等场景。在MySQL使用 **explain** 关键字来查看SQL的执行计划。<div align=center><img src="../../../../images/2018-4/MySQL_explain/mysql-explain.png" algin="center"/></div>
+MySQL执行计划，简单的来说，是SQL在数据库中执行时的表现情况，通常用于SQL性能分析，优化等场景。在MySQL使用 **explain** 关键字来查看SQL的执行计划。<div align=center><img src="../../../../images/2018-4/MySQL_explain/mysql-explain-optimized.webp" algin="center"/></div>
 
 # 适用场景
 

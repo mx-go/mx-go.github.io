@@ -9,6 +9,10 @@ block content
   else
     include ./includes/mixins/article-sort.pug
     #tag
+      nav.tag-breadcrumb(aria-label='标签路径')
+        a(href=url_for('/tags/')) 全部标签
+        span(aria-hidden='true') /
+        span(aria-current='page')= page.tag
       .article-sort-title= _p('page.tag') + ' - ' + page.tag
       +articleSort(page.posts)
       include includes/pagination.pug

@@ -1,8 +1,10 @@
 ---
 title: Apache-Commons-Email发送邮件
 date: 2018-03-28 18:18:13
-tags: [java, tips]
-categories: 工具
+tags: [Java, 接口开发]
+categories:
+  - Java开发
+  - Web与接口
 cover: ../../../../images/2018-3/java-email/index.jpg
 ---
 

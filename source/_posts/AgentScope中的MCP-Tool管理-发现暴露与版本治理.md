@@ -3,9 +3,11 @@ title: AgentScope中的MCP Tool管理：发现、暴露与版本治理
 date: 2025-01-12 10:00:00
 tags: [AI, AgentScope, MCP]
 categories:
-- [架构, 设计]
-img: /images/2026/10-21/agentscope-mcp-tool/cover.jpg
-cover: /images/2026/10-21/agentscope-mcp-tool/cover.jpg
+  - AI与智能体
+  - 智能体工程
+img: /images/2026/10-21/agentscope-mcp-tool/cover-optimized.webp
+cover: /images/2026/10-21/agentscope-mcp-tool/cover-optimized.webp
+cover_thumbnail: /images/2026/10-21/agentscope-mcp-tool/cover-optimized-thumb.webp
 ---
 
 # 引言

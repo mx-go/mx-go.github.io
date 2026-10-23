@@ -1,8 +1,10 @@
 ---
 title: MySQL优化
 date: 2017-04-17 12:31:55
-tags: [mysql]
-categories: 数据库
+tags: [MySQL, 索引优化, 性能优化]
+categories:
+  - 数据与中间件
+  - MySQL与数据库设计
 cover: ../../../../images/2017-4-17/MYSQL.jpg
 ---
 

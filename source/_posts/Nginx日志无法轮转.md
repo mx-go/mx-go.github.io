@@ -1,8 +1,10 @@
 ---
 title: Nginx日志无法轮转
 date: 2020-10-02 23:18:39
-tags: [java, nginx]
-categories: 踩坑记录
+tags: [Nginx, 日志, 故障排查]
+categories:
+  - 运维与工程
+  - Web服务器
 cover: ../../../../images/2021/4-6/bug_nginx.jpg
 ---
 

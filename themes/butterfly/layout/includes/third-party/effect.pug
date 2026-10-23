@@ -13,12 +13,14 @@ if (theme.canvas_nest && theme.canvas_nest.enable)
   script#canvas_nest(defer color=theme.canvas_nest.color opacity=theme.canvas_nest.opacity zIndex=theme.canvas_nest.zIndex count=theme.canvas_nest.count mobile=`${theme.canvas_nest.mobile}` src=url_for(theme.CDN.canvas_nest))
 
 if theme.activate_power_mode.enable
-  script(src=url_for(theme.CDN.activate_power_mode))
+  script(defer src=url_for(theme.CDN.activate_power_mode))
   script.
-    POWERMODE.colorful = !{theme.activate_power_mode.colorful};
-    POWERMODE.shake = !{theme.activate_power_mode.shake};
-    POWERMODE.mobile = !{theme.activate_power_mode.mobile};
-    document.body.addEventListener('input', POWERMODE);
+    window.addEventListener('load', () => {
+      POWERMODE.colorful = !{theme.activate_power_mode.colorful};
+      POWERMODE.shake = !{theme.activate_power_mode.shake};
+      POWERMODE.mobile = !{theme.activate_power_mode.mobile};
+      document.body.addEventListener('input', POWERMODE);
+    }, { once: true })
 
 //- 鼠標特效
 if theme.click_heart && theme.click_heart.enable

@@ -13,7 +13,7 @@ timezone: Asia/Shanghai
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://mx-go.github.io
+url: https://rainbowhorse.site
 root: /
 # permalink: :year/:month/:title/
 permalink: :title/
@@ -69,6 +69,30 @@ plugins:
 default_category: uncategorized
 category_map:
 tag_map:
+  "Java": java
+  "JVM": jvm
+  "Spring": spring
+  "MyBatis": mybatis
+  "MySQL": mysql
+  "PostgreSQL": pg
+  "Redis": redis
+  "Docker": docker
+  "Grafana": grafana
+  "Tomcat": tomcat
+  "Nginx": nginx
+  "HTTP": http
+  "WebSocket": websocket
+  "JSON": json
+  "PDF": pdf
+  "Git": git
+  "Maven": maven
+  "Markdown": markdown
+  "Logback": logback
+  "Loki": loki
+  "Node.js": nodejs
+  "macOS": macos
+  "Higress": higress
+  "vLLM Semantic Router": vllm-semantic-router
 
 # Date / Time format
 ## Hexo uses Moment.js to parse and display date

@@ -1,8 +1,10 @@
 ---
 title: 异步编程之CompletableFuture
 date: 2021-10-12 23:01:04
-tags: [java]
-categories: 后端
+tags: [Java, 并发编程, 线程池]
+categories:
+  - Java开发
+  - 并发与调度
 img: ../../../../images/2021/10-12/completablefuture-1.png
 cover: ../../../../images/2021/10-12/completablefuture-1.png
 ---

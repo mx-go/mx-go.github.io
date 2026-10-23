@@ -1,8 +1,10 @@
 ---
 title: Mybatis之缓存
 date: 2018-03-20 10:43:53
-tags: [java, mybatis]
-categories: 后端
+tags: [Java, MyBatis, 缓存]
+categories:
+  - Java开发
+  - Spring与数据访问
 cover: ../../../../images/2018-3/Mybatis/cache.png
 ---
 

@@ -1,8 +1,10 @@
 ---
 title: Spring之循环依赖
 date: 2020-03-05 16:21:32
-tags: [java,spring]
-categories: 后端
+tags: [Java, Spring, 故障排查]
+categories:
+  - Java开发
+  - Spring与数据访问
 img: ../../../../images/2020/5-8/spring-dependency0.jpg
 cover: ../../../../images/2020/5-8/spring-dependency0.jpg
 ---

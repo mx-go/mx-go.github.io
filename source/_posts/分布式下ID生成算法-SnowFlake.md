@@ -1,8 +1,10 @@
 ---
 title: 分布式下ID生成算法 SnowFlake
 date: 2017-10-30 14:26:21
-tags: [java]
-categories: 后端
+tags: [Java, 分布式ID]
+categories:
+  - 架构设计
+  - 分布式系统
 cover: ../../../../images/2017-9-21/%E8%87%AA%E5%A2%9EID/index.png
 ---
 

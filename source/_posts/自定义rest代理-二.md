@@ -1,8 +1,10 @@
 ---
 title: 自定义rest代理(二)
 date: 2019-04-13 14:45:22
-tags: [tips]
-categories: 工具
+tags: [Java, 接口开发, 动态代理]
+categories:
+  - Java开发
+  - Web与接口
 img: ../../../../images/2019/1-3/restful.png
 cover: ../../../../images/2019/1-3/restful.png
 ---

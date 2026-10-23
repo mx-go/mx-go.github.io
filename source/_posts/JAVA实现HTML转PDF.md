@@ -1,8 +1,10 @@
 ---
 title: JAVA实现HTML转PDF
 date: 2017-07-27 13:22:32
-tags: [java, tips]
-categories: 后端
+tags: [Java, PDF]
+categories:
+  - Java开发
+  - 文档处理
 cover: ../../../../images/2017-9-13/additional/html_to_pdf.png
 ---
 

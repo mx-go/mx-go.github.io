@@ -1,8 +1,10 @@
 ---
 title: Javascript Number类型长度溢出
 date: 2019-09-19 10:36:39
-tags: [java]
-categories: 踩坑记录
+tags: [Java, Spring, JavaScript, 故障排查]
+categories:
+  - Java开发
+  - Spring与数据访问
 cover: ../../../../images/2018-8/bug.jpg
 ---
 

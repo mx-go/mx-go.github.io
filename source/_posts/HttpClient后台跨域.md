@@ -1,8 +1,10 @@
 ---
 title: HttpClient后台跨域
 date: 2018-01-20 09:48:24
-tags: [java, tips]
-categories: 后端
+tags: [Java, HTTP, 跨域]
+categories:
+  - Java开发
+  - Web与接口
 cover: ../../../../images/2018-01-20/HTTPClient.png
 ---
 

@@ -1,8 +1,10 @@
 ---
 title: 详解Tomcat连接池与连接数
 date: 2017-12-28 14:56:06
-tags: [tomcat, tips]
-categories: 后端
+tags: [Tomcat, 并发编程, 性能优化]
+categories:
+  - 运维与工程
+  - Web服务器
 cover: ../../../../images/2017-12-27/tomcat%E5%85%A5%E9%97%A8/tomcat.jpg
 ---
 

@@ -1,0 +1,49 @@
+- name: Java开发
+  slug: java
+  icon: fas fa-code
+  color: '#3978c5'
+  tint: '#edf4ff'
+  description: 语言原理、并发模型与服务端开发实践。
+  children: [基础与JVM, 并发与调度, Spring与数据访问, Web与接口, 文档处理]
+- name: 数据与中间件
+  slug: data
+  icon: fas fa-database
+  color: '#218477'
+  tint: '#eaf7f3'
+  description: 数据库设计、索引优化、缓存与消息队列。
+  children: [MySQL与数据库设计, MongoDB, Redis, 消息队列]
+- name: 架构设计
+  slug: architecture
+  icon: fas fa-project-diagram
+  color: '#8059ba'
+  tint: '#f2edfb'
+  description: 从职责与分层，到一致性、扩展性和高可用。
+  children: [架构方法, 分布式系统]
+- name: AI与智能体
+  slug: ai
+  icon: fas fa-robot
+  color: '#4465bd'
+  tint: '#edf0fc'
+  description: 智能体记忆、MCP 工具与大模型路由。
+  children: [智能体工程, 模型路由]
+- name: 运维与工程
+  slug: engineering
+  icon: fas fa-server
+  color: '#b77a27'
+  tint: '#fff6e8'
+  description: 运行环境、服务部署、日志监控与工程效率。
+  children: [Linux与网络, Docker, Web服务器, 日志与监控, 研发工具与协作]
+- name: 前端开发
+  slug: frontend
+  icon: fas fa-desktop
+  color: '#358399'
+  tint: '#eaf6fa'
+  description: 页面开发、浏览器机制与跨页面通信。
+  children: [页面开发, 浏览器通信]
+- name: 随笔与资源
+  slug: notes
+  icon: fas fa-book-open
+  color: '#b26379'
+  tint: '#fceff3'
+  description: 技术之外的思考、个人记录与实用网址。
+  children: [随笔记录, 资源收藏]

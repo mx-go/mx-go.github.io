@@ -1,8 +1,10 @@
 ---
 title: logback行号输出问号问题
 date: 2019-07-22 13:45:40
-tags: [java]
-categories: 踩坑记录
+tags: [Logback, 日志, 故障排查]
+categories:
+  - 运维与工程
+  - 日志与监控
 img: ../../../../images/2019/think.jpg
 cover: ../../../../images/2019/think.jpg
 ---

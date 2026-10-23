@@ -1,8 +1,10 @@
 ---
 title: Bug简记-长轮训Response
 date: 2020-01-05 22:29:36
-tags: [java]
-categories: 踩坑记录
+tags: [Java, 并发编程, 故障排查]
+categories:
+  - Java开发
+  - Web与接口
 cover: ../../../../images/2018-8/bug.jpg
 ---
 

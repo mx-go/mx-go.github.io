@@ -1,8 +1,10 @@
 ---
 title: JVM类加载机制
 date: 2017-12-13 10:03:36
-tags: [java, jvm]
-categories: 后端
+tags: [Java, JVM]
+categories:
+  - Java开发
+  - 基础与JVM
 cover: ../../../../images/2017/12/ClassLoader/0.png
 ---
 

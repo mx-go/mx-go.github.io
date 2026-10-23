@@ -1,8 +1,10 @@
 ---
 title: RocketMQ(三)—消息幂等
 date: 2019-11-12 16:33:29
-tags: [RocketMQ]
-categories: 中间件
+tags: [RocketMQ, 消息可靠性]
+categories:
+  - 数据与中间件
+  - 消息队列
 img: ../../../../images/2020/1-4/Idempotent.png
 cover: ../../../../images/2020/1-4/Idempotent.png
 ---

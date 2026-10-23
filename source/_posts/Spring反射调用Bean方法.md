@@ -1,8 +1,10 @@
 ---
 title: Spring反射调用Bean方法
 date: 2020-12-26 22:49:44
-tags: [java,spring]
-categories: 后端
+tags: [Java, Spring]
+categories:
+  - Java开发
+  - Spring与数据访问
 ---
 
 `Spring`通过`ApplicationContextAware`反射调用服Bean方法，`ApplicationContextAware`常用方法封装。

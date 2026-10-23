@@ -1,5 +1,48 @@
-.category-lists
-  .category-title.is-center= _p('page.category')
-    |  - 
-    span.category-amount= site.categories.length
-  div!= list_categories()
+- const groups = category_navigation()
+- const postCount = groups.reduce((count, group) => count + group.count, 0)
+- const topicCount = groups.reduce((count, group) => count + group.children.length, 0)
+.category-directory
+  .category-directory-intro
+    .category-directory-copy
+      p.category-directory-eyebrow 知识目录
+      h1 文章分类
+      p.category-directory-description 按技术领域归档，从一个主题开始阅读。
+    dl.category-directory-stats
+      div
+        dt 文章
+        dd= postCount
+      div
+        dt 主题
+        dd= groups.length
+      div
+        dt 专题
+        dd= topicCount
+  nav.category-directory-nav(aria-label='跳转到主题')
+    each group in groups
+      a(href='#category-' + group.slug)= group.name
+  .category-directory-grid
+    each group in groups
+      section.category-card(id='category-' + group.slug style='--category-accent:' + group.color + ';--category-tint:' + group.tint aria-labelledby='category-title-' + group.slug)
+        .category-card-heading
+          span.category-card-icon(aria-hidden='true')
+            i(class=group.icon)
+          .category-card-title
+            h2(id='category-title-' + group.slug)
+              a(href=url_for(group.path))= group.name
+            p= group.description
+          a.category-card-total(href=url_for(group.path) aria-label='查看' + group.name + '的全部' + group.count + '篇文章')
+            strong= group.count
+            span 篇
+        ul.category-topics
+          each child in group.children
+            li
+              a(href=url_for(child.path))
+                span.category-topic-name= child.name
+                span.category-topic-meta
+                  span.category-topic-count= child.count
+                  span.category-topic-arrow(aria-hidden='true') ›
+  .category-directory-footer
+    p 分类聚合主题，标签连接不同领域的知识。
+    .category-directory-more
+      a(href=url_for('/tags/')) 按标签查找
+      a(href=url_for('/archives/')) 按时间浏览

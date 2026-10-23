@@ -1,8 +1,10 @@
 ---
 title: JVM缓存之Caffeine
 date: 2020-05-17 09:48:52
-tags: [java,cache]
-categories: 后端
+tags: [Java, 缓存]
+categories:
+  - Java开发
+  - 基础与JVM
 img: ../../../../images/2020/5-8/caffeine.png
 cover: ../../../../images/2020/5-8/caffeine.png
 ---

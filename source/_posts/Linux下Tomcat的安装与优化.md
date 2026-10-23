@@ -1,9 +1,10 @@
 ---
 title: Linux下Tomcat的安装与优化
 date: 2018-01-05 19:04:11
-tags: [tomcat, tips]
-categories: 
-- [Linux, 安装]
+tags: [Linux, Tomcat, 性能优化]
+categories:
+  - 运维与工程
+  - Web服务器
 cover: ../../../../images/2018-01/linux_tomcat/tomcat_linux.png
 ---
 

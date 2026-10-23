@@ -1,8 +1,10 @@
 ---
 title: MySQL主从/主主复制
 date: 2018-04-17 13:43:00
-tags: [mysql]
-categories: 数据库
+tags: [MySQL, 数据复制]
+categories:
+  - 数据与中间件
+  - MySQL与数据库设计
 cover: ../../../../images/2018-4/MySQL_master_slave/index.jpg
 ---
 

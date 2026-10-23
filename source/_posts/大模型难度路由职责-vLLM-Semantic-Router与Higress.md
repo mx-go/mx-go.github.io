@@ -1,11 +1,13 @@
 ---
 title: 大模型难度路由职责：vLLM Semantic Router与Higress
 date: 2026-10-20 15:43:00
-tags: [架构, AI]
+tags: [AI, 模型路由, Higress, vLLM Semantic Router]
 categories:
-- [架构, 设计]
-img: /images/2026/10-12/difficulty-routing/cover.jpg
-cover: /images/2026/10-12/difficulty-routing/cover.jpg
+  - AI与智能体
+  - 模型路由
+img: /images/2026/10-12/difficulty-routing/cover-optimized.webp
+cover: /images/2026/10-12/difficulty-routing/cover-optimized.webp
+cover_thumbnail: /images/2026/10-12/difficulty-routing/cover-optimized-thumb.webp
 ---
 
 # 引言
@@ -105,7 +107,7 @@ candidate models
 
 举个我们自己定义的例子：若复杂档位从70分开始，69.9和70.1虽然落在两侧，但都在边界附近。合理的方案需要考虑边界样本如何处理，而不是仅凭0.2分差就认定请求发生了本质变化。
 
-<div align="center"><img src="/images/2026/10-12/difficulty-routing/routing-flow.jpg" alt="难度信号、评分映射、会话策略与模型选择的概念流程"/></div>
+<div align="center"><img src="/images/2026/10-12/difficulty-routing/routing-flow-optimized.webp" alt="难度信号、评分映射、会话策略与模型选择的概念流程"/></div>
 
 # Session粘滞究竟固定什么
 
@@ -166,7 +168,7 @@ Semantic Router的[`session_aware`](https://vllm-sr.ai/docs/v0.3/tutorials/algor
 
 对已有企业网关、又希望引入独立模型决策层的场景，可以考虑：
 
-<div align="center"><img src="/images/2026/10-12/difficulty-routing/responsibility-layers.jpg" alt="Agent经过Higress统一治理后进入Semantic Router进行模型决策的分层架构"/></div>
+<div align="center"><img src="/images/2026/10-12/difficulty-routing/responsibility-layers-optimized.webp" alt="Agent经过Higress统一治理后进入Semantic Router进行模型决策的分层架构"/></div>
 
 请求先通过Higress完成入口控制，再进入Semantic Router的**对外HTTP入口**，由后者选择模型后端。图中的箭头是主请求方向，响应沿链路返回。
 

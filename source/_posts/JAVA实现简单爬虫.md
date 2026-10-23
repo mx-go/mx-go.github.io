@@ -1,8 +1,10 @@
 ---
 title: JAVA实现简单网络爬虫
 date: 2017-04-01 14:17:39
-tags: [java, tools]
-categories: 后端
+tags: [Java, HTTP]
+categories:
+  - Java开发
+  - Web与接口
 cover: ../../../../images/2017-4-1/%E7%88%AC%E8%99%AB.jpg
 ---
 

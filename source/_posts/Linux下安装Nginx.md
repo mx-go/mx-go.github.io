@@ -1,9 +1,10 @@
 ---
 title: Linux下安装Nginx
 date: 2018-01-11 15:16:49
-tags: [nginx, tips]
-categories: 
-- [Linux, 安装]
+tags: [Linux, Nginx]
+categories:
+  - 运维与工程
+  - Web服务器
 cover: ../../../../images/2018-01/linux_nginx/index.jpg
 ---
 记录下Linux下安装Nginx。

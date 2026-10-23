@@ -1,8 +1,10 @@
 ---
 title: MongoDB索引管理(二)
 date: 2019-01-26 15:17:03
-tags: [MongoDB]
-categories: 数据库
+tags: [MongoDB, 索引优化]
+categories:
+  - 数据与中间件
+  - MongoDB
 img: ../../../../images/2019/1-3/MongoDB索引.jpg
 cover: ../../../../images/2019/1-3/MongoDB索引.jpg
 ---

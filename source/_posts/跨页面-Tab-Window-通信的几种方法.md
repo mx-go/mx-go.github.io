@@ -1,8 +1,10 @@
 ---
 title: 跨页面(Tab/Window)通信的几种方法
 date: 2017-09-01 10:32:43
-tags: [tips]
-categories: 前端
+tags: [JavaScript, WebSocket]
+categories:
+  - 前端开发
+  - 浏览器通信
 cover: ../../../../images/2017-9-13/additional/html%E9%A1%B5%E9%9D%A2%E4%BC%A0%E5%80%BC.png
 ---
 

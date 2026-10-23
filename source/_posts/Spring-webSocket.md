@@ -1,8 +1,10 @@
 ---
 title: Spring+webSocket
 date: 2018-03-16 14:00:11
-tags: [java,tips,spring]
-categories: 后端
+tags: [Spring, WebSocket, 接口开发]
+categories:
+  - Java开发
+  - Web与接口
 cover: ../../../../images//2018-3/websocket/websocket-java.jpg
 ---
 

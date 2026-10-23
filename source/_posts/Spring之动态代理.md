@@ -1,8 +1,10 @@
 ---
 title: Spring之动态代理
 date: 2018-04-02 09:55:03
-tags: [java,spring]
-categories: 后端
+tags: [Java, Spring, 动态代理]
+categories:
+  - Java开发
+  - Spring与数据访问
 cover: ../../../../images/2018-4/DynamicProxy/proxy-index.jpg
 ---
 

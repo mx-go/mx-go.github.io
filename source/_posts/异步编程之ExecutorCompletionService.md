@@ -1,8 +1,10 @@
 ---
 title: 异步编程之ExecutorCompletionService
 date: 2021-11-27 16:54:40
-tags: [java]
-categories: 后端
+tags: [Java, 并发编程, 线程池]
+categories:
+  - Java开发
+  - 并发与调度
 cover: ../../../../images/2022/1-3/executecompletionservice-cover.jpeg
 ---
 

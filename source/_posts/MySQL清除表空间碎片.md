@@ -1,8 +1,10 @@
 ---
 title: MySQL清除表空间碎片
 date: 2018-05-22 11:12:17
-tags: [mysql]
-categories: 数据库
+tags: [MySQL, 性能优化]
+categories:
+  - 数据与中间件
+  - MySQL与数据库设计
 ---
 
 # 引言

@@ -1,9 +1,10 @@
 ---
 title: 命中SpringCloudGateway组件BUG
 date: 2021-05-10 10:11:22
-tags: [bug]
-categories: 
-- [组件]
+tags: [Spring, 性能优化, 故障排查]
+categories:
+  - Java开发
+  - Spring与数据访问
 cover: ../../../../images/2020/9-12/bug_springcloudgateway.jpg
 ---
 

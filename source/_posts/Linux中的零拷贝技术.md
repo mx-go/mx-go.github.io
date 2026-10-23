@@ -1,9 +1,10 @@
 ---
 title: Linux中的零拷贝技术
 date: 2020-02-10 12:02:58
-tags: [tips]
-categories: 
-- [Linux, 基础]
+tags: [Linux, 性能优化]
+categories:
+  - 运维与工程
+  - Linux与网络
 img: ../../../../images/2020/1-4/Zero-Copy.png
 cover: ../../../../images/2020/1-4/Zero-Copy.png
 ---

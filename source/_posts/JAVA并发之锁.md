@@ -1,8 +1,10 @@
 ---
 title: JAVA并发之锁
 date: 2018-05-06 15:45:39
-tags: [java]
-categories: 后端
+tags: [Java, 并发编程]
+categories:
+  - Java开发
+  - 并发与调度
 cover: ../../../../images/2018-5/JAVA%E2%80%94Lock/index.jpg
 ---
 

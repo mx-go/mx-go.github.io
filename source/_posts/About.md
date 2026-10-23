@@ -2,6 +2,10 @@
 title: About
 date: 2017-03-07 09:00:07
 cover: ../../../../images/avatar.jpg
+categories:
+  - 随笔与资源
+  - 随笔记录
+tags: [随笔]
 ---
 
 ​					

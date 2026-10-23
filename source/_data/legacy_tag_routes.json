@@ -1,0 +1,46 @@
+[
+  {
+    "path": "tags/bug/index.html",
+    "to": "tags/故障排查/"
+  },
+  {
+    "path": "tags/cache/index.html",
+    "to": "tags/缓存/"
+  },
+  {
+    "path": "tags/sql/index.html",
+    "to": "tags/数据库设计/"
+  },
+  {
+    "path": "tags/tips/index.html",
+    "to": "tags/"
+  },
+  {
+    "path": "tags/tips/page/2/index.html",
+    "to": "tags/"
+  },
+  {
+    "path": "tags/tips/page/3/index.html",
+    "to": "tags/"
+  },
+  {
+    "path": "tags/tips/page/4/index.html",
+    "to": "tags/"
+  },
+  {
+    "path": "tags/tools/index.html",
+    "to": "tags/"
+  },
+  {
+    "path": "tags/工具/index.html",
+    "to": "tags/"
+  },
+  {
+    "path": "tags/架构/index.html",
+    "to": "tags/架构设计/"
+  },
+  {
+    "path": "tags/移动端/index.html",
+    "to": "tags/Web开发/"
+  }
+]

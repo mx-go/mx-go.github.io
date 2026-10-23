@@ -1,9 +1,10 @@
 ---
 title: 从 MVC 到 DDD：COLA 分层逻辑与事务边界
 date: 2022-10-21 10:32:00
-tags: [Java, DDD, 架构]
+tags: [DDD, 架构设计, 事务]
 categories:
-- [架构, 设计]
+  - 架构设计
+  - 架构方法
 img: /images/2026/10-21/cola/cola-layered-architecture.svg
 cover: /images/2026/10-21/cola/cola-layered-architecture.svg
 ---

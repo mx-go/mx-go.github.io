@@ -1,8 +1,10 @@
 ---
 title: JVM入门
 date: 2017-11-20 15:27:10
-tags: [java,jvm]
-categories: 后端
+tags: [Java, JVM, 性能优化]
+categories:
+  - Java开发
+  - 基础与JVM
 cover: ../../../../images/2017-12-04/JVM/jvm.png
 ---
 

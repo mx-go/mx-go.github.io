@@ -23,6 +23,6 @@
           .data-item-link
             a(href=url_for(config.category_dir) + '/')
               .headline= _p('aside.categories') 
-              .length-num= site.categories.length
+              .length-num= category_navigation().length
     hr
     !=partial('includes/header/menu_item', {}, {cache: true})

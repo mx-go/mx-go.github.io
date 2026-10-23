@@ -1,8 +1,10 @@
 ---
 title: Bug简记-Spring返回字符串加引号
 date: 2018-10-01 22:39:56
-tags: [java]
-categories: 踩坑记录
+tags: [Java, Spring, 故障排查]
+categories:
+  - Java开发
+  - Spring与数据访问
 cover: ../../../../images/2018-8/bug.jpg
 ---
 

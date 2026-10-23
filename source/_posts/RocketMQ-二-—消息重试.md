@@ -1,8 +1,10 @@
 ---
 title: RocketMQ(二)—消息重试
 date: 2019-08-13 20:37:29
-tags: [RocketMQ]
-categories: 中间件
+tags: [RocketMQ, 消息可靠性]
+categories:
+  - 数据与中间件
+  - 消息队列
 img: ../../../../images/2020/1-4/reconsumerTimes.png
 cover: ../../../../images/2020/1-4/reconsumerTimes.png
 ---

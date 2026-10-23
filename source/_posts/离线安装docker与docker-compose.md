@@ -1,10 +1,10 @@
 ---
 title: 离线安装docker与docker-compose
 date: 2021-07-23 15:20:10
-tags: [docker]
-categories: 
-- [Linux, 安装]
-- [工具]
+tags: [Docker, Linux]
+categories:
+  - 运维与工程
+  - Docker
 img: ../../../../images/2021/10-12/docker-cover.png
 cover: ../../../../images/2021/10-12/docker-cover.png
 ---

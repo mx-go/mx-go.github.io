@@ -1,8 +1,10 @@
 ---
 title: HTTPS协议
 date: 2018-05-05 10:06:57
-tags: [tips]
-categories: 方法论
+tags: [HTTP]
+categories:
+  - 运维与工程
+  - Linux与网络
 cover: ../../../../images/2018-5/HTTPS/https.jpg
 ---
 
@@ -29,7 +31,7 @@ HTTP和HTTPS协议是互联网上应用最为广泛的网络协议，现在为�
 
 ## 三次握手建立连接
 
-<div align=center><img src="../../../../images/2018-5/HTTPS/tcp_1.png" algin="center"/></div>
+<div align=center><img src="../../../../images/2018-5/HTTPS/tcp_1-optimized.webp" algin="center"/></div>
 
    1、`Client`端发送连接请求报文。
 
@@ -41,7 +43,7 @@ HTTP和HTTPS协议是互联网上应用最为广泛的网络协议，现在为�
 
 ## 四次挥手断开连接
 
-<div align=center><img src="../../../../images/2018-5/HTTPS/tcp_2.png" algin="center"/></div>
+<div align=center><img src="../../../../images/2018-5/HTTPS/tcp_2-optimized.webp" algin="center"/></div>
 
 中断连接端可以是Client端，也可以是Server端。
 

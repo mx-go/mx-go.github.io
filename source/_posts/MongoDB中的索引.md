@@ -1,8 +1,10 @@
 ---
 title: MongoDB中的索引(一)
 date: 2019-01-17 10:17:20
-tags: [MongoDB]
-categories: 数据库
+tags: [MongoDB, 索引优化]
+categories:
+  - 数据与中间件
+  - MongoDB
 img: ../../../../images/2019/1-3/MongoDB-1.jpg
 cover: ../../../../images/2019/1-3/MongoDB-1.jpg
 ---

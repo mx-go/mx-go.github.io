@@ -1,8 +1,10 @@
 ---
 title: Nginx配置文件详解
 date: 2018-01-24 14:12:52
-tags: [nginx]
-categories: 工具
+tags: [Nginx, HTTP]
+categories:
+  - 运维与工程
+  - Web服务器
 cover: ../../../../images/2018-01/nginx/index.png
 ---
 

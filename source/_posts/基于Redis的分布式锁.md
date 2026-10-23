@@ -1,8 +1,10 @@
 ---
 title: 基于Redis的分布式锁
 date: 2018-9-20 13:08:57
-tags: [redis, java]
-categories: 数据库
+tags: [Redis, 分布式锁, 并发编程]
+categories:
+  - 数据与中间件
+  - Redis
 ---
 
 # 引言

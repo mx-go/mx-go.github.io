@@ -1,10 +1,12 @@
 ---
 title: 增强式SnowFlake(雪花算法)
 date: 2022-06-02 10:34:16
-categories: 
-- [设计]
+categories:
+  - 架构设计
+  - 分布式系统
 img: ../../../../images/2022/7-9/snowflake_0.jpeg
 cover: ../../../../images/2022/7-9/snowflake_0.jpeg
+tags: [分布式ID, Redis]
 ---
 
 # 引言

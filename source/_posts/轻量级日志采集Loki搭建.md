@@ -1,10 +1,10 @@
 ---
 title: 轻量级日志采集Loki搭建
 date: 2020-09-20 09:44:59
-tags: [grafana, tips]
-categories: 
-- [Linux, 安装]
-- [工具]
+tags: [Loki, Grafana, 日志, 监控]
+categories:
+  - 运维与工程
+  - 日志与监控
 cover: ../../../../images/2020/9-12/loki-logo.jpg
 ---
 

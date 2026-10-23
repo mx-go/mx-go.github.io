@@ -1,8 +1,10 @@
 ---
 title: 说说Spring中的事务
 date: 2018-05-09 21:24:58
-tags: [java, spring]
-categories: 后端
+tags: [Java, Spring, 事务]
+categories:
+  - Java开发
+  - Spring与数据访问
 cover: ../../../../images/2018-5/transaction/spring.jpg
 ---
 

@@ -1,8 +1,10 @@
 ---
 title: Java String intern方法
 date: 2017-11-31 10:27:19
-tags: [java]
-categories: 后端
+tags: [Java, JVM]
+categories:
+  - Java开发
+  - 基础与JVM
 cover: ../../../../images/2017-12-7/String_intern/creating-java-strings.jpg
 ---
 

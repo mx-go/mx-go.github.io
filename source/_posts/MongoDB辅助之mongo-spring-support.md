@@ -1,8 +1,10 @@
 ---
 title: MongoDB辅助之mongo-spring-support
 date: 2019-04-05 11:57:23
-tags: [java,MongoDB,tips]
-categories: 工具
+tags: [MongoDB, Spring, Java]
+categories:
+  - 数据与中间件
+  - MongoDB
 img: ../../../../images/2019/4-6/mongo-spring-support.jpg
 cover: ../../../../images/2019/4-6/mongo-spring-support.jpg
 ---

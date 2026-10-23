@@ -1,9 +1,12 @@
 ---
 title: ProcessOn模板免费下载
 date: 2021-12-18 19:39:15
-tags: [tips]
+tags: [研发协作]
 img: ../../../../images/2022/10-12/processon0.png
 cover: ../../../../images/2022/10-12/processon0.png
+categories:
+  - 运维与工程
+  - 研发工具与协作
 ---
 
 # 前言
@@ -37,7 +40,7 @@ o = JSON.parse(newO);
 
 1. 在自己绘制的思维导图页面打开`F12`进入调试模式，刷新页面。使用`Ctrl + P`命令搜索 `mind.js`。<div align=center><img src="../../../../images/2022/10-12/processon2.png" algin="center"/></div>
 
-2. 格式化数据，通过`Ctrl + F`搜索关键字 `getNewDef`，找到赋值行打上`DEBUG`。<div align=center><img src="../../../../images/2022/10-12/processon3.png" algin="center"/></div>
+2. 格式化数据，通过`Ctrl + F`搜索关键字 `getNewDef`，找到赋值行打上`DEBUG`。<div align=center><img src="../../../../images/2022/10-12/processon3-optimized.webp" algin="center"/></div>
 
 3. 刷新页面，节点会停留在`DEBUG`的行。此时将【复制数据】中的代码粘贴到`console`中并执行。<div align=center><img src="../../../../images/2022/10-12/processon4.png" algin="center"/></div>
 

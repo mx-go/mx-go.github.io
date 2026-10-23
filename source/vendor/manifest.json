@@ -1,0 +1,204 @@
+[
+  {
+    "package": "vanilla-lazyload",
+    "version": "19.1.3",
+    "license": "MIT",
+    "assets": [
+      {
+        "file": "vanilla-lazyload/19.1.3/dist/lazyload.iife.min.js",
+        "url": "https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js",
+        "sha256": "a89234d3dfa453efeefcda31f7007f2502ba1714b58ec5921a959c608d25ee19"
+      }
+    ]
+  },
+  {
+    "package": "node-snackbar",
+    "version": "0.1.16",
+    "license": "MIT",
+    "assets": [
+      {
+        "file": "node-snackbar/0.1.16/dist/snackbar.min.js",
+        "url": "https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js",
+        "sha256": "34eaac416486ba5585e23d327c5945c24f6b985a40a115799e8746a881f28d4a"
+      },
+      {
+        "file": "node-snackbar/0.1.16/dist/snackbar.min.css",
+        "url": "https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css",
+        "sha256": "a9fb1d56a55e28f572e7c1f1f6a0889fc36c761d93535ca2704ec1e441e2f92b"
+      }
+    ]
+  },
+  {
+    "package": "instant.page",
+    "version": "5.2.0",
+    "license": "MIT",
+    "assets": [
+      {
+        "file": "instant.page/5.2.0/instantpage.min.js",
+        "url": "https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js",
+        "sha256": "8e4c6f7c801562e3d614795358ea65dac1baaad230ff9d7b49fa34c734f3f924"
+      }
+    ]
+  },
+  {
+    "package": "butterfly-extsrc",
+    "version": "1.1.6",
+    "license": "Apache-2.0",
+    "assets": [
+      {
+        "file": "butterfly-extsrc/1.1.6/dist/canvas-ribbon.min.js",
+        "url": "https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-ribbon.min.js",
+        "sha256": "33a7df218128737f9d039e627aeaa6598cb3cda6240a70d5e52a49523c266a4e"
+      },
+      {
+        "file": "butterfly-extsrc/1.1.6/dist/activate-power-mode.min.js",
+        "url": "https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/activate-power-mode.min.js",
+        "sha256": "4f41b934b4a06f11a09f7582a4d8b4ba2a3d7f8af6b428e918b8ee3f57529169"
+      },
+      {
+        "file": "butterfly-extsrc/1.1.6/dist/click-heart.min.js",
+        "url": "https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/click-heart.min.js",
+        "sha256": "97edd66e498c25e0e6aa4f5dfd08e3a464e4fa99ed94726d8c48754c2d2e984d"
+      }
+    ]
+  },
+  {
+    "package": "pangu",
+    "version": "4.0.7",
+    "license": "MIT",
+    "assets": [
+      {
+        "file": "pangu/4.0.7/dist/browser/pangu.min.js",
+        "url": "https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js",
+        "sha256": "8feca3e7a71d118d82c2456d1b2cf5f1f3726c51a930627c2711b7192c8edbe2"
+      }
+    ]
+  },
+  {
+    "package": "typed.js",
+    "version": "2.0.12",
+    "license": "MIT",
+    "assets": [
+      {
+        "file": "typed.js/2.0.12/lib/typed.min.js",
+        "url": "https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js",
+        "sha256": "5154391ed1d39ada814f7298e5c77802f238ee9a74809c0833eab8e470fda0b9"
+      }
+    ]
+  },
+  {
+    "package": "instantsearch.js",
+    "version": "2.10.5",
+    "license": "MIT",
+    "assets": [
+      {
+        "file": "instantsearch.js/2.10.5/dist/instantsearch.min.js",
+        "url": "https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.js",
+        "sha256": "978ee1a0c4cde9a8a517fb64340ea725f175787ecb907acce508e772b0270024"
+      },
+      {
+        "file": "instantsearch.js/2.10.5/dist/instantsearch.min.css",
+        "url": "https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.css",
+        "sha256": "1b4bf4500f272cda8d24f41739ecfca404420ffb19389bdb3ef91bf104589e78"
+      }
+    ]
+  },
+  {
+    "package": "@fortawesome/fontawesome-free",
+    "version": "7.3.1",
+    "license": "(CC-BY-4.0 AND OFL-1.1 AND MIT)",
+    "assets": [
+      {
+        "file": "fontawesome-free/7.3.1/css/all.min.css",
+        "url": "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css",
+        "sha256": "e0b69df26e19596d4b81bf7eb0c54b6047e7221ec18d5d4d40c11eefd3ef8a4b"
+      },
+      {
+        "file": "fontawesome-free/7.3.1/webfonts/fa-brands-400.woff2",
+        "url": "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/webfonts/fa-brands-400.woff2",
+        "sha256": "ff66d1cfb67dbe3da432bbe36572cabfa4eef0e591303c2cba111474ba1d15bc"
+      },
+      {
+        "file": "fontawesome-free/7.3.1/webfonts/fa-regular-400.woff2",
+        "url": "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/webfonts/fa-regular-400.woff2",
+        "sha256": "f4722d10b9e1b41eefe3b51a026312ee1970edb7782f94b0080d3d475945734c"
+      },
+      {
+        "file": "fontawesome-free/7.3.1/webfonts/fa-solid-900.woff2",
+        "url": "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/webfonts/fa-solid-900.woff2",
+        "sha256": "24e5fae26b41c08b2df81c91669f5aaae71d81a84a4713fc56b5c621b78dd456"
+      },
+      {
+        "file": "fontawesome-free/7.3.1/webfonts/fa-v4compatibility.woff2",
+        "url": "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/webfonts/fa-v4compatibility.woff2",
+        "sha256": "c776ee1f1fe21cd72195e91de7afd5c9dbd007e9d06016254d65fbcc091398ca"
+      }
+    ]
+  },
+  {
+    "package": "jquery",
+    "version": "3.7.1",
+    "license": "MIT",
+    "assets": [
+      {
+        "file": "jquery/3.7.1/dist/jquery.min.js",
+        "url": "https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js",
+        "sha256": "fc9a93dd241f6b045cbff0481cf4e1901becd0e12fb45166a8f17f95823f0b1a"
+      }
+    ]
+  },
+  {
+    "package": "social-share.js",
+    "version": "1.0.16",
+    "license": "MIT",
+    "assets": [
+      {
+        "file": "social-share.js/1.0.16/dist/js/social-share.min.js",
+        "url": "https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js",
+        "sha256": "7c63eefa270a87df394cb3e13b6bfaf14ee2d025b4744e24891d3a44de0eea3a"
+      },
+      {
+        "file": "social-share.js/1.0.16/dist/css/share.min.css",
+        "url": "https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css",
+        "sha256": "d040f0ce78d44c312270eb9984e2f4ddfa5f954ab3864072be1c2897c606929e"
+      },
+      {
+        "file": "social-share.js/1.0.16/dist/fonts/iconfont.eot",
+        "url": "https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/fonts/iconfont.eot",
+        "sha256": "71af058de3d5c8f4c9300fba3cfc5b8a80b25a7b84f6f1230197d21b4d2e9eaf"
+      },
+      {
+        "file": "social-share.js/1.0.16/dist/fonts/iconfont.woff",
+        "url": "https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/fonts/iconfont.woff",
+        "sha256": "cc03f86ff3bc607f21bd97fbe16d7105b35a627afb1bf42917fba639f480190c"
+      },
+      {
+        "file": "social-share.js/1.0.16/dist/fonts/iconfont.ttf",
+        "url": "https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/fonts/iconfont.ttf",
+        "sha256": "0e6a8be6754c03dd038b018c178496b8777a3cb343083e54078bb8abb1bcd70d"
+      },
+      {
+        "file": "social-share.js/1.0.16/dist/fonts/iconfont.svg",
+        "url": "https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/fonts/iconfont.svg",
+        "sha256": "50f182e2809d0a0f796325be5281a1a161855e3cbe1715a9344b1c561d0c61fe"
+      }
+    ]
+  },
+  {
+    "package": "@fancyapps/fancybox",
+    "version": "3.5.7",
+    "license": "GPL-3.0",
+    "assets": [
+      {
+        "file": "fancybox/3.5.7/dist/jquery.fancybox.min.js",
+        "url": "https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js",
+        "sha256": "cadda460ccb4c3c01bb45f3d5976f63f5adf8dc3ff1d31cb4fbd3ded4f18e5bf"
+      },
+      {
+        "file": "fancybox/3.5.7/dist/jquery.fancybox.min.css",
+        "url": "https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css",
+        "sha256": "5736e3eec0c34bfc288854b7b8d2a8f1e22e9e2e7dae3c8d1ad5dfb2d4734ad0"
+      }
+    ]
+  }
+]

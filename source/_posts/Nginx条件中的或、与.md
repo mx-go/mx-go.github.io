@@ -1,9 +1,10 @@
 ---
 title: Nginx条件中的或、与
 date: 2021-05-27 23:31:59
-tags: [java, nginx]
-categories: 
-- [中间件]
+tags: [Nginx]
+categories:
+  - 运维与工程
+  - Web服务器
 cover: ../../../../images/2021/4-6/nginx-and-or.jpg
 ---
 

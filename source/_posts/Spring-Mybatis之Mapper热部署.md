@@ -1,8 +1,10 @@
 ---
 title: Spring+Mybatis之Mapper热部署
 date: 2017-09-15 16:52:07
-tags: [java,tips,mybatis]
-categories: 工具
+tags: [Java, Spring, MyBatis]
+categories:
+  - Java开发
+  - Spring与数据访问
 cover: ../../../../images/2017-9-15/mybatis-mapper/relationship-with-mybatis.png
 ---
 

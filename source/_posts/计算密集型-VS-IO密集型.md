@@ -1,8 +1,10 @@
 ---
 title: 计算密集型 VS IO密集型
 date: 2018-05-17 18:56:06
-tags: [java, tips]
-categories: 后端
+tags: [Java, 并发编程, 线程池]
+categories:
+  - Java开发
+  - 并发与调度
 ---
 
 # 引言

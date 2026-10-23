@@ -1,11 +1,13 @@
 script.
   function panguFn () {
-    if (typeof pangu === 'object') pangu.autoSpacingPage()
+    const applySpacing = () => {
+      if (!{theme.pangu.field === 'post'}) pangu.spacingElementById('article-container')
+      else pangu.autoSpacingPage()
+    }
+    if (typeof pangu === 'object') applySpacing()
     else {
       getScript('!{url_for(theme.CDN.pangu)}')
-        .then(() => {
-          pangu.autoSpacingPage()
-        })
+        .then(applySpacing)
     }
   }
 

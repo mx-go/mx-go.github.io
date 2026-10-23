@@ -1,0 +1,42 @@
+- name: 语言与框架
+  slug: languages
+  icon: fas fa-code
+  color: '#3978c5'
+  tint: '#edf4ff'
+  description: 语言、运行时与服务端开发框架。
+  tags: [Java, JVM, Spring, MyBatis, JavaScript, Node.js]
+- name: 数据与存储
+  slug: data
+  icon: fas fa-database
+  color: '#218477'
+  tint: '#eaf7f3'
+  description: 数据库产品与数据处理中的关键问题。
+  tags: [MySQL, PostgreSQL, MongoDB, Redis, RocketMQ, 数据库设计, 缓存, 索引优化, 数据复制, 数据一致性, 消息可靠性, 事务]
+- name: 编程与接口
+  slug: programming
+  icon: fas fa-terminal
+  color: '#8059ba'
+  tint: '#f2edfb'
+  description: 连接不同技术栈的编程模型与接口能力。
+  tags: [并发编程, 线程池, 任务调度, 动态代理, 序列化, 接口开发, Web开发, HTTP, WebSocket, 跨域, JSON, PDF]
+- name: 架构与AI
+  slug: architecture-ai
+  icon: fas fa-project-diagram
+  color: '#4465bd'
+  tint: '#edf0fc'
+  description: 系统设计、分布式机制与智能体技术。
+  tags: [架构设计, DDD, 微服务, 高可用, 分布式ID, 分布式锁, AI, AgentScope, MCP, 智能体记忆, 模型路由, Higress, vLLM Semantic Router]
+- name: 运行与观测
+  slug: operations
+  icon: fas fa-server
+  color: '#b77a27'
+  tint: '#fff6e8'
+  description: 运行环境、可观测性与线上问题排查。
+  tags: [Linux, Docker, macOS, Nginx, Tomcat, Logback, Grafana, Loki, 日志, 监控, 性能优化, 故障排查]
+- name: 工具与记录
+  slug: tools-notes
+  icon: fas fa-book-open
+  color: '#b26379'
+  tint: '#fceff3'
+  description: 开发工具、团队协作与个人记录。
+  tags: [Maven, Git, Markdown, 研发协作, 随笔, 资源收藏]

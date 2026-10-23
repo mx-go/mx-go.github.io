@@ -2,7 +2,9 @@
 title: RocketMQ(一)—角色与术语
 date: 2019-06-15 23:00:16
 tags: [RocketMQ]
-categories: 中间件
+categories:
+  - 数据与中间件
+  - 消息队列
 img: ../../../../images/2019/4-6/cover.jpg
 cover: ../../../../images/2019/4-6/cover.jpg
 ---

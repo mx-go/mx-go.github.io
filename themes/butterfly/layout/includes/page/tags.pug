@@ -1,5 +1,40 @@
-.tag-cloud-title.is-center= _p('page.tag')
-  |  - 
-  span.tag-cloud-amount= site.tags.length
-.tag-cloud-list.is-center
-  !=cloudTags({source: site.tags, minfontsize: 1.2, maxfontsize: 2.1, limit: 0, unit: 'em'})
+- const tagGroups = tag_navigation()
+- const tagCount = tagGroups.reduce((count, group) => count + group.tags.length, 0)
+- const articleCount = site.posts.filter(post => post.published !== false).length
+- const popularTags = tagGroups.flatMap(group => group.tags).sort((left, right) => right.count - left.count || left.name.localeCompare(right.name, 'zh-CN')).slice(0, 6)
+.tag-index
+  header.tag-index-header
+    p.tag-index-eyebrow 技术与主题
+    h1 标签索引
+      span.tag-index-total= tagCount
+    p.tag-index-description= '在 ' + articleCount + ' 篇文章中，沿着技术与问题寻找关联。'
+  .tag-index-popular
+    span.tag-index-popular-label 常用标签
+    .tag-index-popular-links
+      each tag in popularTags
+        a.tag-popular-link(href=url_for(tag.path) aria-label=tag.name + '，' + tag.count + '篇文章')
+          span= tag.name
+          span.tag-usage= tag.count
+  .tag-index-layout
+    nav.tag-index-sidebar(aria-label='标签主题目录')
+      p 浏览主题
+      each group in tagGroups
+        a(href='#tag-group-' + group.slug)
+          span= group.name
+          span= group.tags.length
+    .tag-index-sections
+      each group, index in tagGroups
+        section.tag-index-section(id='tag-group-' + group.slug aria-labelledby='tag-title-' + group.slug)
+          .tag-index-section-heading
+            span.tag-index-number(aria-hidden='true')= String(index + 1).padStart(2, '0')
+            h2(id='tag-title-' + group.slug)= group.name
+            span.tag-index-section-count= group.tags.length + ' 个标签'
+          p.tag-index-section-description= group.description
+          .tag-index-terms
+            each tag in group.tags
+              a.tag-entry(href=url_for(tag.path) aria-label=tag.name + '，' + tag.count + '篇文章')
+                span.tag-name= tag.name
+                span.tag-usage= tag.count
+  footer.tag-index-footer
+    p 数字为相关文章数，同一篇文章可关联多个标签。
+    a(href=url_for('/categories/')) 分类导航 →

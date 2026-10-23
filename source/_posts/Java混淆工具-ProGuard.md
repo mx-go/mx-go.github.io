@@ -1,9 +1,12 @@
 ---
 title: Java混淆工具-ProGuard
 date: 2021-09-05 16:25:07
-tags: [tips]
+tags: [Java, Maven]
 img: ../../../../images/2021/7-9/proguard_cover.jpg
 cover: ../../../../images/2021/7-9/proguard_cover.jpg
+categories:
+  - 运维与工程
+  - 研发工具与协作
 ---
 
 Java代码是非常容易反编译，比如使用[Java Decompiler](http://java-decompiler.github.io/)很轻松可以反编译出源代码。所以为了很好的保护Java源代码，可以使用**ProGuard**进行Java编译后的class文件进行优化和混淆。

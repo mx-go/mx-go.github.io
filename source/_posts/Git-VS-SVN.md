@@ -1,8 +1,10 @@
 ---
 title: Git-VS-SVN
 date: 2018-05-14 14:04:08
-tags: [tools]
-categories: 工具
+tags: [Git, 研发协作]
+categories:
+  - 运维与工程
+  - 研发工具与协作
 cover: ../../../../images/2018-5/Git-vs-SVN/index.png
 ---
 

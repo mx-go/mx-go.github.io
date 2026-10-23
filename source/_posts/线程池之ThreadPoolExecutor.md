@@ -1,8 +1,10 @@
 ---
 title: 线程池之ThreadPoolExecutor
 date: 2018-03-17 14:09:10
-tags: [java, tips]
-categories: 后端
+tags: [Java, 并发编程, 线程池]
+categories:
+  - Java开发
+  - 并发与调度
 cover: ../../../../images//2018-3/threadpoolexcetor/threadpoolexecutor.png
 ---
 

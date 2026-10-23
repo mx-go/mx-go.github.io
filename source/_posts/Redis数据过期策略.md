@@ -1,8 +1,10 @@
 ---
 title: Redis数据过期策略
 date: 2018-04-09 16:18:12
-tags: [redis]
-categories: 后端
+tags: [Redis, 缓存]
+categories:
+  - 数据与中间件
+  - Redis
 cover: ../../../../images/2018-4/redisKeyExpire/redis.jpg
 ---
 

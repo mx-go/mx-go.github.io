@@ -1,8 +1,10 @@
 ---
 title: PG与MySQL选型分析
 date: 2018-08-07 10:50:58
-tags: [pg,mysql]
-categories: 数据库
+tags: [PostgreSQL, MySQL, 数据库设计]
+categories:
+  - 数据与中间件
+  - MySQL与数据库设计
 cover: ../../../../images/2018-8/pg-vs-mysql/pg_vs_mysql.jpg
 ---
 # 引言

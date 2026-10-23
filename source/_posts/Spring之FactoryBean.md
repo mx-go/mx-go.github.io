@@ -1,8 +1,10 @@
 ---
 title: Spring之FactoryBean
 date: 2019-03-16 17:30:37
-tags: [java,spring]
-categories: 后端
+tags: [Java, Spring]
+categories:
+  - Java开发
+  - Spring与数据访问
 cover: ../../../../images/2019/1-3/Spring-FactoryBean.jpg
 ---
 

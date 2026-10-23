@@ -1,8 +1,10 @@
 ---
 title: 深入理解Spring
 date: 2018-05-11 12:31:22
-tags: [java,spring]
-categories: 后端
+tags: [Java, Spring]
+categories:
+  - Java开发
+  - Spring与数据访问
 cover: ../../../../images/2018-5/Spring/Spring.jpg
 ---
 

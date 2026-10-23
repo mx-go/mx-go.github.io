@@ -1,8 +1,10 @@
 ---
 title: Sping定时任务
 date: 2018-03-07 17:09:22
-tags: [java,spring]
-categories: 后端
+tags: [Java, Spring, 任务调度]
+categories:
+  - Java开发
+  - 并发与调度
 cover: ../../../../images/2018-03/quartz/index.png
 ---
 

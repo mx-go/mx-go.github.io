@@ -1,9 +1,9 @@
 div
-  script(src=url_for(theme.CDN.utils))
-  script(src=url_for(theme.CDN.main))
+  script(defer src=url_for(theme.CDN.utils))
+  script(defer src=url_for(theme.CDN.main))
 
   if theme.translate.enable
-    script(src=url_for(theme.CDN.translate))
+    script(defer src=url_for(theme.CDN.translate))
 
   if theme.medium_zoom
     script(src=url_for(theme.CDN.medium_zoom))
@@ -12,17 +12,17 @@ div
     script(src=url_for(theme.CDN.instantpage) type="module")
 
   if theme.lazyload.enable
-    script(src=url_for(theme.CDN.lazyload))
+    script(defer src=url_for(theme.CDN.lazyload))
 
   if theme.snackbar.enable
-    script(src=url_for(theme.CDN.snackbar))
+    script(defer src=url_for(theme.CDN.snackbar))
 
   if theme.pangu.enable
     !=partial('includes/third-party/pangu.pug', {}, {cache: true})
 
   //- search
   if theme.algolia_search.enable
-    script(src=url_for(theme.CDN.algolia_js))
+    script(defer src=url_for(theme.CDN.algolia_js))
   else if theme.local_search.enable
     script(src=url_for(theme.CDN.local_search))
 

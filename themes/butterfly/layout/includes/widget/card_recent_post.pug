@@ -10,7 +10,7 @@ if theme.aside.card_recent_post.enable
         - let link = article.link || article.path
         - let title = article.title || _p('no_title')
         - let no_cover = article.cover === false || !theme.cover.aside_enable ? 'no-cover' : ''
-        - let post_cover = article.cover
+        - let post_cover = article.cover_thumbnail || article.cover
         .aside-list-item(class=no_cover)
           if post_cover && theme.cover.aside_enable
             a.thumbnail(href=url_for(link) title=title)

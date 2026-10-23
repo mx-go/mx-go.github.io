@@ -1,8 +1,10 @@
 ---
 title: protostuff序列化
 date: 2019-01-09 13:50:09
-tags: [tips]
-categories: 工具
+tags: [Java, 序列化]
+categories:
+  - Java开发
+  - 基础与JVM
 cover: ../../../../images/2019/1-3/protostuff.png
 ---
 

@@ -1,9 +1,10 @@
 ---
 title: Maven依赖冲突
 date: 2020-06-10 22:04:30
-tags: [工具]
-categories: 
-- [组件]
+tags: [Maven, 故障排查]
+categories:
+  - 运维与工程
+  - 研发工具与协作
 cover: ../../../../images/2020/5-8/maven.png
 ---
 

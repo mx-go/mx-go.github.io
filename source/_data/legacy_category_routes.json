@@ -1,0 +1,102 @@
+[
+  {
+    "path": "categories/架构/index.html",
+    "to": "categories/架构设计/"
+  },
+  {
+    "path": "categories/架构/page/2/index.html",
+    "to": "categories/架构设计/"
+  },
+  {
+    "path": "categories/架构/设计/index.html",
+    "to": "categories/架构设计/"
+  },
+  {
+    "path": "categories/架构/设计/page/2/index.html",
+    "to": "categories/架构设计/"
+  },
+  {
+    "path": "categories/工具/index.html",
+    "to": "categories/"
+  },
+  {
+    "path": "categories/工具/page/2/index.html",
+    "to": "categories/"
+  },
+  {
+    "path": "categories/工具/page/3/index.html",
+    "to": "categories/"
+  },
+  {
+    "path": "categories/踩坑记录/index.html",
+    "to": "categories/"
+  },
+  {
+    "path": "categories/Linux/index.html",
+    "to": "categories/运维与工程/"
+  },
+  {
+    "path": "categories/Linux/安装/index.html",
+    "to": "categories/运维与工程/"
+  },
+  {
+    "path": "categories/方法论/index.html",
+    "to": "categories/运维与工程/Linux与网络/"
+  },
+  {
+    "path": "categories/后端/index.html",
+    "to": "categories/Java开发/"
+  },
+  {
+    "path": "categories/后端/page/2/index.html",
+    "to": "categories/Java开发/"
+  },
+  {
+    "path": "categories/后端/page/3/index.html",
+    "to": "categories/Java开发/"
+  },
+  {
+    "path": "categories/后端/page/4/index.html",
+    "to": "categories/Java开发/"
+  },
+  {
+    "path": "categories/数据库/index.html",
+    "to": "categories/数据与中间件/"
+  },
+  {
+    "path": "categories/数据库/page/2/index.html",
+    "to": "categories/数据与中间件/"
+  },
+  {
+    "path": "categories/Linux/基础/index.html",
+    "to": "categories/运维与工程/Linux与网络/"
+  },
+  {
+    "path": "categories/组件/index.html",
+    "to": "categories/"
+  },
+  {
+    "path": "categories/中间件/index.html",
+    "to": "categories/"
+  },
+  {
+    "path": "categories/监控/index.html",
+    "to": "categories/运维与工程/日志与监控/"
+  },
+  {
+    "path": "categories/生活/index.html",
+    "to": "categories/随笔与资源/随笔记录/"
+  },
+  {
+    "path": "categories/设计/index.html",
+    "to": "categories/架构设计/分布式系统/"
+  },
+  {
+    "path": "categories/前端/index.html",
+    "to": "categories/前端开发/"
+  },
+  {
+    "path": "categories/杂谈/index.html",
+    "to": "categories/随笔与资源/"
+  }
+]

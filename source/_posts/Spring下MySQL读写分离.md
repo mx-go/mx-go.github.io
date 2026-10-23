@@ -1,8 +1,10 @@
 ---
 title: Spring下MySQL读写分离
 date: 2018-05-02 15:46:51
-tags: [mysql,java]
-categories: 数据库
+tags: [MySQL, Spring, 数据复制]
+categories:
+  - 数据与中间件
+  - MySQL与数据库设计
 cover: ../../../../images/2018-5/MySQL_spring/index.png
 ---
 

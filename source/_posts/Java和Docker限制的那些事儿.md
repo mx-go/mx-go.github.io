@@ -1,8 +1,10 @@
 ---
 title: Java和Docker限制的那些事儿
 date: 2019-06-01 09:01:36
-tags: [java]
-categories: 踩坑记录
+tags: [Java, JVM, Docker, 故障排查]
+categories:
+  - Java开发
+  - 基础与JVM
 img: ../../../../images/2019/4-6/java_docker.jpg
 cover: ../../../../images/2019/4-6/java_docker.jpg
 ---

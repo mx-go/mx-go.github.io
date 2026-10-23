@@ -2,9 +2,10 @@
 title: macOS 使用 Colima 运行 Docker：安装、Compose 与环境切换
 date: 2023-06-12 10:00:00
 updated: 2026-10-22 10:00:00
-tags: [docker]
+tags: [Docker, macOS]
 categories:
-- [工具]
+  - 运维与工程
+  - Docker
 img: /images/2026/10-22/colima/docker-colima-architecture.svg
 cover: /images/2026/10-22/colima/docker-colima-architecture.svg
 ---

@@ -17,3 +17,245 @@
 
     +maxWidth768()
       font-size: 2em
+
+#page .tag-index
+  --tag-heading: #263b53
+  --tag-muted: #7b899b
+  --tag-line: #e5eaf0
+  --tag-accent: #3978c5
+  padding: 10px 4px
+
+  .tag-index-eyebrow
+    margin: 0 0 10px
+    color: var(--tag-muted)
+    font-size: 12px
+    letter-spacing: 3px
+
+  h1
+    display: flex
+    align-items: flex-start
+    gap: 16px
+    margin: 0 0 14px
+    color: var(--tag-heading)
+    font-size: 40px
+    line-height: 1.35
+
+  .tag-index-total
+    margin-top: 4px
+    color: var(--tag-accent)
+    font-size: 19px
+    font-weight: 400
+    font-variant-numeric: tabular-nums
+
+  .tag-index-description
+    margin: 0
+    color: var(--tag-muted)
+    font-size: 14px
+
+  .tag-index-popular
+    display: flex
+    align-items: baseline
+    gap: 24px
+    margin: 28px 0 36px
+    padding: 17px 0
+    border-top: 1px solid var(--tag-line)
+    border-bottom: 1px solid var(--tag-line)
+
+  .tag-index-popular-label
+    flex-shrink: 0
+    color: var(--tag-muted)
+    font-size: 12px
+
+  .tag-index-popular-links
+    display: flex
+    flex-wrap: wrap
+    gap: 10px 24px
+
+  .tag-popular-link
+    display: inline-flex
+    align-items: baseline
+    gap: 6px
+    color: var(--tag-accent)
+    font-size: 14px
+
+    &:hover
+      text-decoration: underline
+      text-underline-offset: 4px
+
+  .tag-index-layout
+    display: grid
+    grid-template-columns: 154px minmax(0, 1fr)
+    align-items: start
+    gap: 40px
+
+  .tag-index-sidebar
+    position: sticky
+    top: 90px
+    padding-right: 18px
+    border-right: 1px solid var(--tag-line)
+
+    p
+      margin: 0 0 14px
+      color: var(--tag-muted)
+      font-size: 11px
+      letter-spacing: 2px
+
+    a
+      display: flex
+      align-items: center
+      justify-content: space-between
+      gap: 12px
+      padding: 8px 0
+      color: var(--font-color)
+      font-size: 13px
+
+      &:hover, &:focus-visible
+        color: var(--tag-accent)
+
+      span:last-child
+        color: var(--tag-muted)
+        font-size: 11px
+        font-variant-numeric: tabular-nums
+
+  .tag-index-section
+    margin-bottom: 32px
+    scroll-margin-top: 90px
+
+    &:last-child
+      margin-bottom: 0
+
+  .tag-index-section-heading
+    display: flex
+    align-items: baseline
+    gap: 12px
+
+    h2
+      margin: 0
+      color: var(--tag-heading)
+      font-size: 20px
+      line-height: 1.4
+
+  .tag-index-number
+    color: var(--tag-accent)
+    font-family: monospace
+    font-size: 12px
+
+  .tag-index-section-count
+    margin-left: auto
+    color: var(--tag-muted)
+    font-size: 11px
+
+  .tag-index-section-description
+    margin: 6px 0 12px
+    color: var(--tag-muted)
+    font-size: 12px
+
+  .tag-index-terms
+    display: grid
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+    column-gap: 28px
+
+  .tag-entry
+    display: flex
+    min-height: 43px
+    align-items: center
+    justify-content: space-between
+    gap: 14px
+    padding: 8px 2px
+    border-bottom: 1px dotted var(--tag-line)
+    color: var(--font-color)
+    font-size: 14px
+    line-height: 1.7
+    transition: color .2s, border-color .2s
+
+    &:hover, &:focus-visible
+      border-color: var(--tag-accent)
+      color: var(--tag-accent)
+
+  .tag-name
+    min-width: 0
+    overflow-wrap: anywhere
+
+  .tag-usage
+    flex-shrink: 0
+    color: var(--tag-muted)
+    font-family: monospace
+    font-size: 12px
+    font-variant-numeric: tabular-nums
+
+  .tag-index-footer
+    display: flex
+    flex-wrap: wrap
+    justify-content: space-between
+    gap: 12px
+    margin-top: 32px
+    padding-top: 20px
+    border-top: 1px solid var(--tag-line)
+    color: var(--tag-muted)
+    font-size: 12px
+
+    p
+      margin: 0
+
+  a:focus-visible
+    outline: 2px solid var(--tag-accent)
+    outline-offset: 4px
+
+  @media (max-width: 680px)
+    padding: 0
+
+    h1
+      font-size: 32px
+
+    .tag-index-popular
+      align-items: flex-start
+      flex-direction: column
+      gap: 10px
+      margin-bottom: 24px
+
+    .tag-index-popular-links
+      gap: 8px 20px
+
+    .tag-index-layout
+      grid-template-columns: minmax(0, 1fr)
+      gap: 28px
+
+    .tag-index-sidebar
+      position: static
+      display: grid
+      grid-template-columns: repeat(2, minmax(0, 1fr))
+      column-gap: 24px
+      padding: 0 0 16px
+      border-right: 0
+      border-bottom: 1px solid var(--tag-line)
+
+      p
+        grid-column: 1 / -1
+        margin-bottom: 6px
+
+    .tag-index-terms
+      column-gap: 20px
+
+    .tag-index-section-heading h2
+      font-size: 18px
+
+    .tag-entry
+      gap: 8px
+      font-size: 13px
+
+[data-theme='dark'] #page .tag-index
+  --tag-heading: #dbe5f1
+  --tag-muted: #9baabd
+  --tag-line: #303a46
+  --tag-accent: #a5c6ef
+
+#tag .tag-breadcrumb
+  display: flex
+  flex-wrap: wrap
+  gap: 8px
+  margin-bottom: 14px
+  color: var(--font-color)
+  font-size: 13px
+
+  a
+    color: #3978c5

@@ -1,9 +1,10 @@
 ---
 title: Docker常用命令总结
 date: 2021-08-20 20:28:49
-tags: [docker]
-categories: 
-- [工具]
+tags: [Docker]
+categories:
+  - 运维与工程
+  - Docker
 img: ../../../../images/2021/7-9/docker-cover.png
 cover: ../../../../images/2021/7-9/docker-cover.png
 ---

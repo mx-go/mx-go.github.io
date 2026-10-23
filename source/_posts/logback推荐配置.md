@@ -1,8 +1,10 @@
 ---
 title: logback推荐配置
 date: 2018-08-18 15:51:53
-tags: [tips]
-categories: 工具
+tags: [Logback, 日志]
+categories:
+  - 运维与工程
+  - 日志与监控
 cover: ../../../../images/2018-8/logback.jpg
 ---
 

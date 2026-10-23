@@ -1,8 +1,10 @@
 ---
 title: SpringMVC集成Swagger
 date: 2019-04-15 22:49:48
-tags: [tips]
-categories: 工具
+tags: [Spring, 接口开发]
+categories:
+  - Java开发
+  - Web与接口
 img: ../../../../images/2019/4-6/swagger.jpg
 cover: ../../../../images/2019/4-6/swagger.jpg
 ---
@@ -151,7 +153,7 @@ public class SwaggerConfig {
 
 <div align=center><img src="../../../../images/2019/4-6/swagger-5.jpg" algin="center"/></div>
 
-<div align=center><img src="../../../../images/2019/4-6/swagger-4.png" algin="center"/></div>
+<div align=center><img src="../../../../images/2019/4-6/swagger-4-optimized.webp" algin="center"/></div>
 
 # 环境控制
 
