@@ -2686,6 +2686,103 @@ blockquote footer cite:before {
 .layout.hide-aside > div {
   width: 100% !important;
 }
+html {
+  scrollbar-gutter: stable;
+}
+#nav button.site-page {
+  padding: 0 0 0.3rem;
+  border: 0;
+  background: transparent;
+  color: var(--light-grey);
+  font-family: inherit;
+  cursor: pointer;
+}
+#nav button.site-page:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+  border-radius: 3px;
+}
+#page-header.not-top-img #nav button.site-page,
+#page-header.nav-fixed #nav button.site-page {
+  color: var(--font-color);
+}
+.search-dialog button:focus-visible,
+.search-dialog input:focus-visible,
+.search-dialog a:focus-visible {
+  outline: 2px solid #49b1f5;
+  outline-offset: 3px;
+}
+#algolia-search-retry {
+  margin: 0 0 0.8rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #49b1f5;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--font-color);
+  cursor: pointer;
+}
+.post #content-inner.layout {
+  max-width: 1200px;
+}
+.post #content-inner.layout.hide-aside {
+  max-width: 960px;
+}
+#post #article-container {
+  font-size: 16px;
+  line-height: 1.9;
+}
+#post #article-container img {
+  max-width: 100%;
+  height: auto;
+}
+#post #article-container h2,
+#post #article-container h3,
+#post #article-container h4 {
+  scroll-margin-top: 80px;
+}
+@media screen and (max-width: 768px) {
+  #nav button.site-page.search {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .post #aside-content .card-announcement,
+  .post #aside-content .card-recent-post .aside-list-item:nth-child(n+3) {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *:before,
+  *:after {
+    -webkit-animation-duration: 0.01ms !important;
+    -moz-animation-duration: 0.01ms !important;
+    -o-animation-duration: 0.01ms !important;
+    -ms-animation-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    -webkit-animation-iteration-count: 1 !important;
+    -moz-animation-iteration-count: 1 !important;
+    -o-animation-iteration-count: 1 !important;
+    -ms-animation-iteration-count: 1 !important;
+    animation-iteration-count: 1 !important;
+    -webkit-transition-duration: 0.01ms !important;
+    -moz-transition-duration: 0.01ms !important;
+    -o-transition-duration: 0.01ms !important;
+    -ms-transition-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .typed-cursor,
+  .heart {
+    display: none !important;
+  }
+  img.post_bg {
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -o-transform: none !important;
+    -ms-transform: none !important;
+    transform: none !important;
+  }
+}
 #article-container .flink .flink-desc {
   margin: 0.2rem 0 0.5rem;
 }
@@ -7132,7 +7229,7 @@ blockquote.pullquote.right {
 .search-dialog hr {
   margin: 1rem auto;
 }
-.search-dialog span.search-close-button {
+.search-dialog .search-close-button {
   position: absolute;
   top: 0.8rem;
   right: 1rem;
@@ -7140,13 +7237,16 @@ blockquote.pullquote.right {
   font-size: 1.4em;
   line-height: 1;
   cursor: pointer;
+  border: 0;
+  padding: 0;
+  background: transparent;
   -webkit-transition: color 0.2s ease-in-out;
   -moz-transition: color 0.2s ease-in-out;
   -o-transition: color 0.2s ease-in-out;
   -ms-transition: color 0.2s ease-in-out;
   transition: color 0.2s ease-in-out;
 }
-.search-dialog span.search-close-button:hover {
+.search-dialog .search-close-button:hover {
   color: #49b1f5;
 }
 .search-dialog__title {
@@ -7270,7 +7370,7 @@ blockquote.pullquote.right {
 .search-dialog hr {
   margin: 1rem auto;
 }
-.search-dialog span.search-close-button {
+.search-dialog .search-close-button {
   position: absolute;
   top: 0.8rem;
   right: 1rem;
@@ -7278,13 +7378,16 @@ blockquote.pullquote.right {
   font-size: 1.4em;
   line-height: 1;
   cursor: pointer;
+  border: 0;
+  padding: 0;
+  background: transparent;
   -webkit-transition: color 0.2s ease-in-out;
   -moz-transition: color 0.2s ease-in-out;
   -o-transition: color 0.2s ease-in-out;
   -ms-transition: color 0.2s ease-in-out;
   transition: color 0.2s ease-in-out;
 }
-.search-dialog span.search-close-button:hover {
+.search-dialog .search-close-button:hover {
   color: #49b1f5;
 }
 .search-dialog__title {
