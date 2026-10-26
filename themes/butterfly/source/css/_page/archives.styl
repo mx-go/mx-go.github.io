@@ -113,3 +113,266 @@
     &-info
       flex: 1
       padding: 0 .8rem
+
+// 归档页单独使用年鉴目录，不影响分类和标签的共用时间线。
+#archive .archive-directory
+  .archive-intro
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 1.5rem
+    padding-bottom: 1.2rem
+
+  .archive-eyebrow
+    margin: 0 0 .4rem
+    color: $light-blue
+    font-size: .85rem
+    letter-spacing: .14em
+
+  .archive-intro h2
+    margin: 0
+    color: var(--font-color)
+    font-size: 1.75rem
+    line-height: 1.4
+
+  .archive-description
+    margin: .6rem 0 0
+    color: var(--font-color)
+    opacity: .85
+    line-height: 1.8
+
+  .archive-stats
+    display: flex
+    flex-shrink: 0
+    gap: 1.5rem
+    margin: 0
+    text-align: center
+
+    dt
+      color: var(--font-color)
+      font-size: .8rem
+      opacity: .85
+
+    dd
+      margin: .15rem 0 0
+      color: var(--font-color)
+      font-size: 1.65rem
+      font-weight: 600
+      line-height: 1.4
+      font-variant-numeric: tabular-nums
+
+  .archive-years
+    display: flex
+    flex-wrap: wrap
+    gap: .5rem
+    padding: .65rem 0
+    border-top: 1px solid var(--light-grey)
+    border-bottom: 1px solid var(--light-grey)
+
+    a
+      display: inline-flex
+      align-items: center
+      justify-content: center
+      gap: .45rem
+      min-height: 38px
+      padding: .25rem .8rem
+      border-radius: 8px
+      color: var(--font-color)
+      font-size: .9rem
+      line-height: 1.5
+      transition: background .2s, color .2s
+
+      &:hover
+        background: rgba(73, 177, 245, .1)
+        color: $light-blue
+
+      &.is-current
+        background: rgba(73, 177, 245, .14)
+        color: $light-blue
+        font-weight: 600
+
+  .archive-year-count
+    font-size: .75rem
+    opacity: .85
+    font-variant-numeric: tabular-nums
+
+  a:focus-visible,
+  summary:focus-visible
+    outline: 2px solid $light-blue
+    outline-offset: 3px
+
+  .archive-scope
+    display: flex
+    flex-wrap: wrap
+    align-items: baseline
+    justify-content: space-between
+    gap: .4rem 1rem
+    margin: 1.2rem 0 .8rem
+
+    h2
+      margin: 0
+      color: var(--font-color)
+      font-size: 1rem
+      font-weight: 500
+
+    p
+      margin: 0
+      color: var(--font-color)
+      font-size: .8rem
+      opacity: .85
+
+  .archive-year-section
+    margin-bottom: 1.4rem
+
+  .archive-year-heading
+    display: flex
+    align-items: center
+    gap: .8rem
+    padding: .55rem .8rem
+    border-radius: 8px
+    background: rgba(73, 177, 245, .07)
+    color: var(--font-color)
+    cursor: pointer
+    list-style: none
+
+    &::-webkit-details-marker
+      display: none
+
+    &:hover
+      background: rgba(73, 177, 245, .12)
+
+    h3
+      margin: 0
+      font-size: 1.3rem
+      line-height: 1.5
+      font-variant-numeric: tabular-nums
+
+    > span
+      color: var(--font-color)
+      font-size: .78rem
+      opacity: .85
+
+  .archive-year-toggle
+    flex-shrink: 0
+    width: .4rem
+    height: .4rem
+    margin-left: auto
+    border-right: 2px solid currentColor
+    border-bottom: 2px solid currentColor
+    transform: rotate(-45deg)
+    transition: transform .2s
+
+  .archive-year-section[open] > .archive-year-heading .archive-year-toggle
+    transform: rotate(45deg)
+
+  .archive-entries
+    margin: 0
+    padding: 0
+    list-style: none
+
+  .archive-entry
+    display: grid
+    grid-template-columns: 88px minmax(0, 1fr)
+    align-items: center
+    gap: .75rem
+    margin: 0
+    padding: 1rem .8rem
+    border-bottom: 1px dashed var(--light-grey)
+
+    &:last-child
+      border-bottom: 0
+
+  .archive-entry.no-cover
+    grid-template-columns: minmax(0, 1fr)
+
+  .archive-entry-cover
+    display: block
+    overflow: hidden
+    width: 88px
+    height: 66px
+    border-radius: 7px
+    background: rgba(73, 177, 245, .07)
+
+    img
+      display: block
+      width: 100%
+      height: 100%
+      object-fit: cover
+
+  .archive-entry-date
+    color: var(--font-color)
+    font-size: .85rem
+    white-space: nowrap
+    opacity: .85
+    font-variant-numeric: tabular-nums
+
+  .archive-entry-body
+    display: grid
+    grid-template-columns: 56px minmax(0, 1fr) auto
+    align-items: baseline
+    gap: .4rem .8rem
+    min-width: 0
+
+  .archive-entry-title
+    color: var(--font-color)
+    font-size: 1rem
+    line-height: 1.8
+    overflow-wrap: anywhere
+
+    &:hover
+      color: $light-blue
+
+  .archive-entry-category
+    color: var(--font-color)
+    font-size: .75rem
+    opacity: .85
+
+    &:hover
+      color: $light-blue
+      opacity: 1
+
+  +maxWidth768()
+    .archive-intro
+      display: grid
+      grid-template-columns: minmax(0, 1fr) auto
+      align-items: center
+      gap: .8rem
+      padding-bottom: 1.2rem
+
+    .archive-intro h2
+      font-size: 1.5rem
+
+    .archive-stats
+      flex-direction: column
+      gap: .5rem
+      text-align: left
+
+      dd
+        font-size: 1.4rem
+
+    .archive-years
+      gap: .3rem
+
+      a
+        min-height: 44px
+        padding: .25rem .65rem
+
+    .archive-entry
+      grid-template-columns: 64px minmax(0, 1fr)
+      gap: .5rem
+      padding: .85rem .25rem
+
+    .archive-entry-cover
+      width: 64px
+      height: 48px
+
+    .archive-entry-body
+      display: block
+
+    .archive-entry-title
+      display: block
+
+    .archive-entry-category
+      display: inline-block
+      margin-top: .3rem
+      line-height: 1.8
