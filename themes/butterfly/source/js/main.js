@@ -265,33 +265,62 @@ document.addEventListener('DOMContentLoaded', function () {
   /**
  * fancybox和 mediumZoom
  */
+  let fancyboxReady
+  const loadFancybox = () => {
+    if (!fancyboxReady) {
+      fancyboxReady = (window.jQuery ? Promise.resolve() : getScript(GLOBAL_CONFIG.source.jQuery)).then(() => {
+        const css = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+          const timer = setTimeout(() => { link.remove(); reject(new Error('Image viewer styles timed out')) }, 15000)
+          link.rel = 'stylesheet'
+          link.href = GLOBAL_CONFIG.source.fancybox.css
+          link.onload = () => { clearTimeout(timer); resolve() }
+          link.onerror = () => { clearTimeout(timer); link.remove(); reject(new Error('Image viewer styles failed')) }
+          document.head.append(link)
+        })
+        const script = window.jQuery.fancybox ? Promise.resolve() : getScript(GLOBAL_CONFIG.source.fancybox.js)
+        return Promise.all([css, script])
+      }).catch(error => { fancyboxReady = null; throw error })
+    }
+    return fancyboxReady
+  }
+
   const addFancybox = function (ele) {
-    const runFancybox = (ele) => {
-      ele.each(function (i, o) {
-        const $this = $(o)
-        const lazyloadSrc = $this.attr('data-lazy-src') || $this.attr('src')
-        const dataCaption = $this.attr('alt') || ''
-        $this.wrap(`<a href="${lazyloadSrc}" data-fancybox="group" data-caption="${dataCaption}" class="fancybox"></a>`)
+    let clickId = 0
+    const items = [...ele].map(image => ({
+      src: image.getAttribute('data-lazy-src') || image.getAttribute('src'),
+      opts: { caption: image.getAttribute('alt') || '' }
+    }))
+    ele.forEach((image, index) => {
+      const link = document.createElement('a')
+      link.href = items[index].src
+      link.className = 'fancybox'
+      image.replaceWith(link)
+      link.append(image)
+      link.addEventListener('click', async event => {
+        if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return
+        event.preventDefault()
+        event.stopPropagation()
+        const current = ++clickId
+        link.setAttribute('aria-busy', 'true')
+        try {
+          await loadFancybox()
+          if (current !== clickId || !link.isConnected) return
+          window.jQuery.fancybox.open(items, {
+            loop: true,
+            transitionEffect: 'slide',
+            protect: true,
+            buttons: ['slideShow', 'fullScreen', 'thumbs', 'close'],
+            hash: false
+          }, index)
+        } catch (error) {
+          link.title = '图片查看器加载失败，请再次点击重试'
+          console.warn('Image viewer loading failed:', error.message)
+        } finally {
+          link.removeAttribute('aria-busy')
+        }
       })
-
-      $().fancybox({
-        selector: '[data-fancybox]',
-        loop: true,
-        transitionEffect: 'slide',
-        protect: true,
-        buttons: ['slideShow', 'fullScreen', 'thumbs', 'close'],
-        hash: false
-      })
-    }
-
-    if (typeof $.fancybox === 'undefined') {
-      $('head').append(`<link rel="stylesheet" type="text/css" href="${GLOBAL_CONFIG.source.fancybox.css}">`)
-      $.getScript(`${GLOBAL_CONFIG.source.fancybox.js}`, function () {
-        runFancybox($(ele))
-      })
-    } else {
-      runFancybox($(ele))
-    }
+    })
   }
 
   const addMediumZoom = () => {
@@ -312,11 +341,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const $jgEle = document.querySelectorAll('#article-container .justified-gallery')
     const jgLengthNoZero = $jgEle.length > 0
 
-    if (jgLengthNoZero || fbLengthNoZero) {
+    if (jgLengthNoZero) {
       btf.isJqueryLoad(() => {
-        jgLengthNoZero && runJustifiedGallery($jgEle)
+        runJustifiedGallery($jgEle)
         fbLengthNoZero && addFancybox($fancyboxEle)
       })
+    } else if (fbLengthNoZero) {
+      addFancybox($fancyboxEle)
     }
   }
 
