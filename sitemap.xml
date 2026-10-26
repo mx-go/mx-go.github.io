@@ -135,14 +135,14 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/%E8%B0%88%E8%B0%88%E6%97%A5%E5%BF%97/</loc>
+    <loc>https://rainbowhorse.site/%E8%B0%88%E8%B0%88%E6%95%8F%E6%8D%B7%E5%BC%80%E5%8F%91/</loc>
     
     <lastmod>2026-10-23</lastmod>
     
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/%E8%B0%88%E8%B0%88%E6%95%8F%E6%8D%B7%E5%BC%80%E5%8F%91/</loc>
+    <loc>https://rainbowhorse.site/%E8%B0%88%E8%B0%88%E6%97%A5%E5%BF%97/</loc>
     
     <lastmod>2026-10-23</lastmod>
     
@@ -191,14 +191,14 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/%E8%87%AA%E5%AE%9A%E4%B9%89rest%E4%BB%A3%E7%90%86/</loc>
+    <loc>https://rainbowhorse.site/%E8%87%AA%E5%AE%9A%E4%B9%89rest%E4%BB%A3%E7%90%86-%E4%BA%8C/</loc>
     
     <lastmod>2026-10-23</lastmod>
     
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/%E8%87%AA%E5%AE%9A%E4%B9%89rest%E4%BB%A3%E7%90%86-%E4%BA%8C/</loc>
+    <loc>https://rainbowhorse.site/%E8%87%AA%E5%AE%9A%E4%B9%89rest%E4%BB%A3%E7%90%86/</loc>
     
     <lastmod>2026-10-23</lastmod>
     
@@ -219,14 +219,14 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E8%B8%A9%E5%9D%91/</loc>
+    <loc>https://rainbowhorse.site/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B9%8BThreadPoolExecutor/</loc>
     
     <lastmod>2026-10-23</lastmod>
     
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B9%8BThreadPoolExecutor/</loc>
+    <loc>https://rainbowhorse.site/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E8%B8%A9%E5%9D%91/</loc>
     
     <lastmod>2026-10-23</lastmod>
     
@@ -345,14 +345,14 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E6%88%90%E7%AC%AC%E4%B8%80%E5%A4%A9/</loc>
+    <loc>https://rainbowhorse.site/%E5%91%BD%E4%B8%ADSpringCloudGateway%E7%BB%84%E4%BB%B6BUG/</loc>
     
     <lastmod>2026-10-23</lastmod>
     
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/%E5%91%BD%E4%B8%ADSpringCloudGateway%E7%BB%84%E4%BB%B6BUG/</loc>
+    <loc>https://rainbowhorse.site/%E5%8D%9A%E5%AE%A2%E5%BB%BA%E6%88%90%E7%AC%AC%E4%B8%80%E5%A4%A9/</loc>
     
     <lastmod>2026-10-23</lastmod>
     
@@ -464,13 +464,6 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/Spring%E4%B9%8BFactoryBean/</loc>
-    
-    <lastmod>2026-10-23</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://rainbowhorse.site/Spring%E4%B8%8BMySQL%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB/</loc>
     
     <lastmod>2026-10-23</lastmod>
@@ -478,7 +471,7 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/Spring-Mybatis%E4%B9%8BMapper%E7%83%AD%E9%83%A8%E7%BD%B2/</loc>
+    <loc>https://rainbowhorse.site/Spring%E4%B9%8BFactoryBean/</loc>
     
     <lastmod>2026-10-23</lastmod>
     
@@ -486,6 +479,13 @@
   
   <url>
     <loc>https://rainbowhorse.site/Spring-webSocket/</loc>
+    
+    <lastmod>2026-10-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://rainbowhorse.site/Spring-Mybatis%E4%B9%8BMapper%E7%83%AD%E9%83%A8%E7%BD%B2/</loc>
     
     <lastmod>2026-10-23</lastmod>
     
@@ -823,21 +823,7 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/tags/AI/</loc>
-    <lastmod>2026-10-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://rainbowhorse.site/tags/AgentScope/</loc>
-    <lastmod>2026-10-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://rainbowhorse.site/tags/MCP/</loc>
+    <loc>https://rainbowhorse.site/tags/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -852,13 +838,6 @@
   
   <url>
     <loc>https://rainbowhorse.site/tags/docker/</loc>
-    <lastmod>2026-10-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://rainbowhorse.site/tags/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -907,14 +886,14 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/tags/pdf/</loc>
+    <loc>https://rainbowhorse.site/tags/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/tags/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/</loc>
+    <loc>https://rainbowhorse.site/tags/pdf/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -942,14 +921,14 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/tags/mysql/</loc>
+    <loc>https://rainbowhorse.site/tags/JavaScript/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/tags/JavaScript/</loc>
+    <loc>https://rainbowhorse.site/tags/mysql/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1075,14 +1054,14 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/tags/logback/</loc>
+    <loc>https://rainbowhorse.site/tags/%E9%9A%8F%E7%AC%94/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/tags/%E9%9A%8F%E7%AC%94/</loc>
+    <loc>https://rainbowhorse.site/tags/logback/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1124,13 +1103,6 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/tags/%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7/</loc>
-    <lastmod>2026-10-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://rainbowhorse.site/tags/%E5%88%86%E5%B8%83%E5%BC%8FID/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
@@ -1138,7 +1110,21 @@
   </url>
   
   <url>
+    <loc>https://rainbowhorse.site/tags/%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7/</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://rainbowhorse.site/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://rainbowhorse.site/tags/AI/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1194,6 +1180,13 @@
   </url>
   
   <url>
+    <loc>https://rainbowhorse.site/tags/AgentScope/</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://rainbowhorse.site/tags/%E6%99%BA%E8%83%BD%E4%BD%93%E8%AE%B0%E5%BF%86/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
@@ -1209,6 +1202,13 @@
   
   <url>
     <loc>https://rainbowhorse.site/tags/%E8%B5%84%E6%BA%90%E6%94%B6%E8%97%8F/</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://rainbowhorse.site/tags/MCP/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1238,13 +1238,6 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/categories/AI%E4%B8%8E%E6%99%BA%E8%83%BD%E4%BD%93/</loc>
-    <lastmod>2026-10-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://rainbowhorse.site/categories/%E8%BF%90%E7%BB%B4%E4%B8%8E%E5%B7%A5%E7%A8%8B/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
@@ -1266,7 +1259,7 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/categories/AI%E4%B8%8E%E6%99%BA%E8%83%BD%E4%BD%93/%E6%99%BA%E8%83%BD%E4%BD%93%E5%B7%A5%E7%A8%8B/</loc>
+    <loc>https://rainbowhorse.site/categories/Java%E5%BC%80%E5%8F%91/%E5%B9%B6%E5%8F%91%E4%B8%8E%E8%B0%83%E5%BA%A6/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1287,13 +1280,6 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/categories/Java%E5%BC%80%E5%8F%91/%E5%B9%B6%E5%8F%91%E4%B8%8E%E8%B0%83%E5%BA%A6/</loc>
-    <lastmod>2026-10-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://rainbowhorse.site/categories/Java%E5%BC%80%E5%8F%91/%E5%9F%BA%E7%A1%80%E4%B8%8EJVM/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
@@ -1308,13 +1294,6 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/</loc>
-    <lastmod>2026-10-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://rainbowhorse.site/categories/%E8%BF%90%E7%BB%B4%E4%B8%8E%E5%B7%A5%E7%A8%8B/%E6%97%A5%E5%BF%97%E4%B8%8E%E7%9B%91%E6%8E%A7/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
@@ -1322,7 +1301,7 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/categories/%E8%BF%90%E7%BB%B4%E4%B8%8E%E5%B7%A5%E7%A8%8B/Web%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
+    <loc>https://rainbowhorse.site/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1330,6 +1309,13 @@
   
   <url>
     <loc>https://rainbowhorse.site/categories/%E8%BF%90%E7%BB%B4%E4%B8%8E%E5%B7%A5%E7%A8%8B/Linux%E4%B8%8E%E7%BD%91%E7%BB%9C/</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://rainbowhorse.site/categories/%E8%BF%90%E7%BB%B4%E4%B8%8E%E5%B7%A5%E7%A8%8B/Web%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1357,20 +1343,6 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/Redis/</loc>
-    <lastmod>2026-10-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://rainbowhorse.site/categories/AI%E4%B8%8E%E6%99%BA%E8%83%BD%E4%BD%93/%E6%A8%A1%E5%9E%8B%E8%B7%AF%E7%94%B1/</loc>
-    <lastmod>2026-10-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://rainbowhorse.site/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/MongoDB/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
@@ -1378,7 +1350,7 @@
   </url>
   
   <url>
-    <loc>https://rainbowhorse.site/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/</loc>
+    <loc>https://rainbowhorse.site/categories/%E6%95%B0%E6%8D%AE%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/Redis/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1413,7 +1385,35 @@
   </url>
   
   <url>
+    <loc>https://rainbowhorse.site/categories/AI%E4%B8%8E%E6%99%BA%E8%83%BD%E4%BD%93/</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://rainbowhorse.site/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://rainbowhorse.site/categories/AI%E4%B8%8E%E6%99%BA%E8%83%BD%E4%BD%93/%E6%A8%A1%E5%9E%8B%E8%B7%AF%E7%94%B1/</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://rainbowhorse.site/categories/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/%E9%A1%B5%E9%9D%A2%E5%BC%80%E5%8F%91/</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://rainbowhorse.site/categories/AI%E4%B8%8E%E6%99%BA%E8%83%BD%E4%BD%93/%E6%99%BA%E8%83%BD%E4%BD%93%E5%B7%A5%E7%A8%8B/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
