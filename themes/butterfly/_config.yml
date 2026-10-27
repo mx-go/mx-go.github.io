@@ -723,8 +723,8 @@ busuanzi:
   site_pv: true
   page_pv: true
   # Display-only baselines; provider counters remain unchanged.
-  site_uv_base: 189458
-  site_pv_base: 982980
+  site_uv_base: 82985
+  site_pv_base: 189459
 
 # Time difference between publish date and now (網頁運行時間)
 # Formal: Month/Day/Year Time or Year/Month/Day Time
