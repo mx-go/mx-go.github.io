@@ -722,6 +722,9 @@ busuanzi:
   site_uv: true
   site_pv: true
   page_pv: true
+  # Display-only baselines; provider counters remain unchanged.
+  site_uv_base: 189458
+  site_pv_base: 982980
 
 # Time difference between publish date and now (網頁運行時間)
 # Formal: Month/Day/Year Time or Year/Month/Day Time
@@ -933,7 +936,7 @@ CDN:
   mermaid: https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js
 
   # count
-  busuanzi: //busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js
+  busuanzi: https://cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.min.js
 
   # background effect
   canvas_ribbon: /vendor/butterfly-extsrc/1.1.6/dist/canvas-ribbon.min.js

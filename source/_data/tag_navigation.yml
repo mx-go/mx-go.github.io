@@ -25,7 +25,7 @@
   color: '#4465bd'
   tint: '#edf0fc'
   description: 系统设计、分布式机制与智能体技术。
-  tags: [架构设计, DDD, 微服务, 高可用, 分布式ID, 分布式锁, AI, AgentScope, MCP, 智能体记忆, 模型路由, Higress, vLLM Semantic Router]
+  tags: [架构设计, DDD, 微服务, 高可用, 分布式ID, 分布式锁, AI, AgentScope, Langfuse, MCP, 智能体记忆, 模型路由, Higress, vLLM Semantic Router]
 - name: 运行与观测
   slug: operations
   icon: fas fa-server

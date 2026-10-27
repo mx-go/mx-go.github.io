@@ -63,7 +63,7 @@
 
       if theme.busuanzi.page_pv
         +pvBlock('','post-meta-pv-cv','')
-          span#busuanzi_value_page_pv
+          span#busuanzi_page_pv 加载中…
       else if comments.use && !comments.lazyload
         if (comments.use.includes('Valine') && theme.valine.visitor) || (comments.use.includes('Waline') && theme.waline.visitor)
           +pvBlock(url_for(page.path),'leancloud_visitors',page.title)

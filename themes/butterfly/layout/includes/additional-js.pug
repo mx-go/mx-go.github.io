@@ -65,4 +65,5 @@ div
     !=partial('includes/third-party/pjax', {}, {cache: true})
     
   if theme.busuanzi.site_uv || theme.busuanzi.site_pv || theme.busuanzi.page_pv
-    script(async data-pjax src=url_for(theme.CDN.busuanzi))
+    script(defer src=url_for("/js/busuanzi-display.js"))
+    script(defer data-pjax src=url_for(theme.CDN.busuanzi))

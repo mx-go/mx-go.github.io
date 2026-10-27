@@ -19,11 +19,15 @@ if theme.aside.card_webinfo.enable
       if theme.busuanzi.site_uv 
         .webinfo-item
           .item-name= _p('aside.card_webinfo.site_uv_name') + " :"
-          .item-count#busuanzi_value_site_uv
+          .item-count
+            span(id="busuanzi_site_uv" hidden)
+            span(data-busuanzi-total data-counter="busuanzi_site_uv" data-base=theme.busuanzi.site_uv_base || 0) 加载中…
       if theme.busuanzi.site_pv
         .webinfo-item
           .item-name= _p('aside.card_webinfo.site_pv_name') + " :"
-          .item-count#busuanzi_value_site_pv
+          .item-count
+            span(id="busuanzi_site_pv" hidden)
+            span(data-busuanzi-total data-counter="busuanzi_site_pv" data-base=theme.busuanzi.site_pv_base || 0) 加载中…
       if theme.aside.card_webinfo.last_push_date
         .webinfo-item
           .item-name= _p('aside.card_webinfo.last_push_date.name') + " :"
