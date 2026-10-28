@@ -1,0 +1,531 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>4A 架构设计：业务、数据、应用与技术如何协同 | 彩虹马的博客</title><meta name="keywords" content="架构设计"><meta name="author" content="彩虹马"><meta name="copyright" content="彩虹马"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="引言系统架构的完整性取决于业务目标、信息模型、应用职责与运行机制之间的一致性。仅以服务调用关系或技术组件描述系统，难以充分解释业务能力的实现责任、数据的权威来源，以及质量要求的满足方式。 4A 架构从业务架构、数据架构、应用架构和技术架构四个领域组织设计决策，建立从业务需求到系统实现的可追溯关系。其核心价值在于：以业务目标确定设计方向，以数据与应用边界明确责任，以技术机制实现质量要求，并通过验证证">
+<meta property="og:type" content="article">
+<meta property="og:title" content="4A 架构设计：业务、数据、应用与技术如何协同">
+<meta property="og:url" content="https://rainbowhorse.site/4A%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1-%E4%B8%9A%E5%8A%A1%E6%95%B0%E6%8D%AE%E5%BA%94%E7%94%A8%E4%B8%8E%E6%8A%80%E6%9C%AF%E7%9A%84%E5%8D%8F%E5%90%8C/index.html">
+<meta property="og:site_name" content="彩虹马的博客">
+<meta property="og:description" content="引言系统架构的完整性取决于业务目标、信息模型、应用职责与运行机制之间的一致性。仅以服务调用关系或技术组件描述系统，难以充分解释业务能力的实现责任、数据的权威来源，以及质量要求的满足方式。 4A 架构从业务架构、数据架构、应用架构和技术架构四个领域组织设计决策，建立从业务需求到系统实现的可追溯关系。其核心价值在于：以业务目标确定设计方向，以数据与应用边界明确责任，以技术机制实现质量要求，并通过验证证">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://rainbowhorse.site/images/2026/10-27/4a/4a-technical-cover.jpg">
+<meta property="article:published_time" content="2022-09-01T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-27T09:51:56.097Z">
+<meta property="article:author" content="彩虹马">
+<meta property="article:tag" content="架构设计">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://rainbowhorse.site/images/2026/10-27/4a/4a-technical-cover.jpg"><link rel="shortcut icon" href="/img/favicon-32.png"><link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png"><link rel="canonical" href="https://rainbowhorse.site/4A%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1-%E4%B8%9A%E5%8A%A1%E6%95%B0%E6%8D%AE%E5%BA%94%E7%94%A8%E4%B8%8E%E6%8A%80%E6%9C%AF%E7%9A%84%E5%8D%8F%E5%90%8C/"><link rel="preconnect" href="https://cdn.busuanzi.cc"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/vendor/fontawesome-free/7.3.1/css/site-icons.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="/vendor/node-snackbar/0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="/vendor/instantsearch.js/2.10.5/dist/instantsearch.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"RU7OTEN9SN","apiKey":"d360cf272c81946d25e45339544333fd","indexName":"hexo","script":"/vendor/instantsearch.js/2.10.5/dist/instantsearch.min.js","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: {"limitDay":800,"position":"top","messagePrev":"本文于","messageNext":"天之前发表，文中内容可能已经过时。"},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 彩虹马","link":"链接: ","source":"来源: 彩虹马的博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  source: {
+    jQuery: '/vendor/jquery/3.7.1/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: '/vendor/fancybox/3.5.7/dist/jquery.fancybox.min.js',
+      css: '/vendor/fancybox/3.5.7/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '4A 架构设计：业务、数据、应用与技术如何协同',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-10-27 17:51:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 8.1.2"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/img/loading.gif" data-lazy-src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar" width="399" height="397" style="aspect-ratio:399 / 397"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">111</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">62</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-bars"></i><span> 其他</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E7%BD%91%E5%9D%80%E6%94%B6%E8%97%8F/"><i class="fa-fw fas fa-sitemap"></i><span> 网址收藏</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://fontawesome.dashgame.com/"><i class="fa-fw fas fa-flag"></i><span> 图标速查</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/2026/10-27/4a/4a-technical-cover.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">彩虹马的博客</a></span><div id="menus"><div id="search-button"><button class="site-page social-icon search" type="button" aria-label="搜索文章" aria-haspopup="dialog" aria-controls="algolia-search-dialog" aria-expanded="false"><i class="fas fa-search fa-fw"></i><span> 搜索</span></button></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-bars"></i><span> 其他</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E7%BD%91%E5%9D%80%E6%94%B6%E8%97%8F/"><i class="fa-fw fas fa-sitemap"></i><span> 网址收藏</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://fontawesome.dashgame.com/"><i class="fa-fw fas fa-flag"></i><span> 图标速查</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">4A 架构设计：业务、数据、应用与技术如何协同</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2022-09-01T02:00:00.000Z" title="undefined 2022-09-01 10:00:00">2022-09-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/">架构设计</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/%E6%9E%B6%E6%9E%84%E6%96%B9%E6%B3%95/">架构方法</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>15分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="4A 架构设计：业务、数据、应用与技术如何协同"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_page_pv" hidden></span><span data-busuanzi-total data-counter="busuanzi_page_pv" data-base="0">加载中…</span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>系统架构的完整性取决于业务目标、信息模型、应用职责与运行机制之间的一致性。仅以服务调用关系或技术组件描述系统，难以充分解释业务能力的实现责任、数据的权威来源，以及质量要求的满足方式。</p>
+<p>4A 架构从业务架构、数据架构、应用架构和技术架构四个领域组织设计决策，建立从业务需求到系统实现的可追溯关系。其核心价值在于：<strong>以业务目标确定设计方向，以数据与应用边界明确责任，以技术机制实现质量要求，并通过验证证据支持架构决策。</strong><span id="more"></span></p>
+<h1 id="4A-架构的定义与适用范围"><a href="#4A-架构的定义与适用范围" class="headerlink" title="4A 架构的定义与适用范围"></a>4A 架构的定义与适用范围</h1><p>本文采用以下四个架构域：</p>
+<ul>
+<li><strong>业务架构（Business Architecture，BA）</strong>：描述业务目标、组织与角色、业务能力、流程和规则。</li>
+<li><strong>数据架构（Data Architecture，DA）</strong>：描述数据资产的语义、结构、权责、流转和生命周期管理。</li>
+<li><strong>应用架构（Application Architecture，AA）</strong>：描述应用及逻辑组件的职责、关系与交互契约。</li>
+<li><strong>技术架构（Technology Architecture，TA）</strong>：描述支撑应用和数据管理的技术能力、运行平台与实现机制。</li>
+</ul>
+<p>TOGAF 将业务、数据、应用和技术作为企业架构的重要领域。本文使用“4A”作为这四个领域的简称；后续的关系图、检查项与实施建议用于工程分析，不作为 TOGAF 的规范模板。<a target="_blank" rel="noopener" href="https://www.opengroup.org/ArchitectsToolkit">The Open Group 架构工具介绍</a></p>
+<p>架构域划分表达的是关注范围。Controller、Service、Repository 等代码分层属于应用内部设计；独立部署单元属于实现与运行设计。二者均需要接受架构约束，但与四个架构域之间不存在固定的一一对应关系。</p>
+<table>
+<thead>
+<tr>
+<th>架构域</th>
+<th>主要决策范围</th>
+<th>关键约束</th>
+<th>典型交付物</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BA</td>
+<td>业务目标、能力范围、流程与规则</td>
+<td>业务价值、组织责任、业务政策</td>
+<td>能力地图、流程模型、业务术语与规则清单</td>
+</tr>
+<tr>
+<td>DA</td>
+<td>数据语义、结构、权威来源与生命周期</td>
+<td>一致性、质量、时效、访问与保留要求</td>
+<td>概念及逻辑模型、数据权责表、数据流与治理规则</td>
+</tr>
+<tr>
+<td>AA</td>
+<td>能力分配、应用边界、协作机制与契约</td>
+<td>业务内聚性、数据责任、变化与交付边界</td>
+<td>应用全景图、职责分配表、接口与事件契约</td>
+</tr>
+<tr>
+<td>TA</td>
+<td>平台能力、运行拓扑与技术机制</td>
+<td>性能、可用性、安全、恢复能力与成本</td>
+<td>技术决策记录、部署拓扑、容量与恢复方案</td>
+</tr>
+</tbody></table>
+<p>四个领域可以描述同一业务对象的不同方面。例如，订单状态在 BA 中体现业务含义及转换规则，在 DA 中体现状态表示与权威记录，在 AA 中体现状态维护责任，在 TA 中体现持久化、并发控制与故障恢复机制。跨域设计的目标是保持这些表达在语义和行为上的一致。</p>
+<h1 id="BA：业务目标、能力与规则的结构化表达"><a href="#BA：业务目标、能力与规则的结构化表达" class="headerlink" title="BA：业务目标、能力与规则的结构化表达"></a>BA：业务目标、能力与规则的结构化表达</h1><h2 id="业务能力与业务流程"><a href="#业务能力与业务流程" class="headerlink" title="业务能力与业务流程"></a>业务能力与业务流程</h2><p>业务架构以业务目标和范围为起点，识别目标所依赖的业务能力、参与角色、执行流程及约束条件。</p>
+<p><strong>业务能力描述组织履行特定业务职能的能力；业务流程描述在具体场景下，相关活动、参与者与业务对象之间的执行关系。</strong> 能力通常用于组织相对稳定的职责，流程用于表达完成业务结果的行为路径。</p>
+<p>例如，退款处理可以作为一项业务能力；退款申请、资格校验、退款执行和结果通知构成某一场景下的流程。流程中的相邻关系不能单独作为应用合并或拆分的依据，还需要结合规则内聚性、数据责任及变化特征进行分析。</p>
+<p>业务架构应明确以下内容：</p>
+<table>
+<thead>
+<tr>
+<th>分析内容</th>
+<th>设计要求</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>目标与范围</td>
+<td>确定服务对象、价值结果、业务范围及成功标准</td>
+</tr>
+<tr>
+<td>能力与责任</td>
+<td>识别所需能力，明确业务责任主体及协作关系</td>
+</tr>
+<tr>
+<td>流程与例外</td>
+<td>定义正常路径、异常路径、人工介入与终止条件</td>
+</tr>
+<tr>
+<td>对象与规则</td>
+<td>统一术语、状态语义、业务不变量及规则依据</td>
+</tr>
+</tbody></table>
+<p>异常路径直接影响后续的一致性和恢复设计。例如，支付结果已确认但订单状态尚未更新时，应明确业务允许的处理时限、对账责任和用户可见状态，再据此确定重试、补偿或人工处置机制。</p>
+<h2 id="业务对象、领域模型与数据模型的边界"><a href="#业务对象、领域模型与数据模型的边界" class="headerlink" title="业务对象、领域模型与数据模型的边界"></a>业务对象、领域模型与数据模型的边界</h2><p>业务对象用于表达业务概念及其关系；DDD 领域模型进一步组织特定边界内的行为与不变量；数据模型则描述信息的结构、关联与存储约束。三者需要保持语义关联，但不要求采用相同的粒度和结构。</p>
+<p>同一业务对象可能对应多个应用内的数据表示。例如，“客户”在销售上下文中可能表示潜在购买主体，在结算上下文中可能表示付款责任主体。是否共享标识、如何建立映射，应以业务语义和使用范围为依据。</p>
+<p>ArchiMate 的业务对象与数据对象区分也体现了这种差异：业务概念可以在应用中具有不同的数据表示。<a target="_blank" rel="noopener" href="https://archimate-community.pages.opengroup.org/workgroups/archimate-101/">The Open Group ArchiMate 101</a></p>
+<p>因此，业务架构应为领域建模和数据设计提供统一的概念基础；具体的聚合、持久化结构与服务边界，需要在后续设计中依据行为和约束确定。</p>
+<h1 id="DA：数据语义、权责与生命周期治理"><a href="#DA：数据语义、权责与生命周期治理" class="headerlink" title="DA：数据语义、权责与生命周期治理"></a>DA：数据语义、权责与生命周期治理</h1><p>数据架构将业务信息需求转化为可管理的数据资产，覆盖概念、逻辑及必要的物理设计，并明确数据在创建、流转、使用和退出过程中的责任。</p>
+<h2 id="静态结构与动态流转的统一设计"><a href="#静态结构与动态流转的统一设计" class="headerlink" title="静态结构与动态流转的统一设计"></a>静态结构与动态流转的统一设计</h2><table>
+<thead>
+<tr>
+<th>设计维度</th>
+<th>核心内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据语义</td>
+<td>统一标识、金额、时间、状态等概念及其适用范围</td>
+</tr>
+<tr>
+<td>数据结构</td>
+<td>定义实体、关系、约束，以及权威记录与派生视图</td>
+</tr>
+<tr>
+<td>数据权责</td>
+<td>明确业务负责人、质量责任主体与授权写入应用</td>
+</tr>
+<tr>
+<td>数据流转</td>
+<td>定义生产者、消费者、同步机制、顺序与时效要求</td>
+</tr>
+<tr>
+<td>生命周期</td>
+<td>定义创建、修订、版本管理、归档和删除规则</td>
+</tr>
+<tr>
+<td>数据保护</td>
+<td>定义访问范围、分级、脱敏、审计与保留要求</td>
+</tr>
+</tbody></table>
+<p>其中，数据的业务责任与系统写入责任应分别建模。业务责任主体负责语义及质量要求；授权写入应用负责执行更新规则并维护记录。数据库账号权限是责任分配的技术实现之一，不能替代业务层面的权责定义。</p>
+<h2 id="数据分发与一致性约束"><a href="#数据分发与一致性约束" class="headerlink" title="数据分发与一致性约束"></a>数据分发与一致性约束</h2><p>在采用单一权威写入方的设计中，其他应用可以通过 API、事件或受控同步获取数据。查询、搜索和分析场景可以使用派生副本，但应明确其来源、更新延迟、重建方式和适用范围。</p>
+<p>一致性要求应落实为可验证的约束，包括：</p>
+<ol>
+<li>需要原子成立的业务不变量及其事务边界。</li>
+<li>允许暂时不一致的数据及可接受时间窗口。</li>
+<li>重复、乱序、遗漏或失败更新的识别与处理机制。</li>
+<li>对账、修复与异常升级的责任主体。</li>
+</ol>
+<p>接口调用、事件分发和批量同步分别具有不同的时效、耦合与运维特征。同步方式应由业务时效、访问规模和数据责任共同决定；“最终一致性”也应同时包含收敛条件与异常恢复机制。</p>
+<h1 id="AA：应用职责、边界与协作契约"><a href="#AA：应用职责、边界与协作契约" class="headerlink" title="AA：应用职责、边界与协作契约"></a>AA：应用职责、边界与协作契约</h1><p>应用架构将业务能力分配到应用或逻辑组件，并通过接口、事件和协作协议组织其交互。应用边界应与业务规则、数据权责及变化边界保持协调。</p>
+<h2 id="逻辑职责与部署边界"><a href="#逻辑职责与部署边界" class="headerlink" title="逻辑职责与部署边界"></a>逻辑职责与部署边界</h2><p>应用划分至少应评估以下因素：</p>
+<table>
+<thead>
+<tr>
+<th>评估因素</th>
+<th>判断依据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>业务内聚性</td>
+<td>相关行为与规则是否围绕共同目标变化</td>
+</tr>
+<tr>
+<td>数据与一致性</td>
+<td>业务不变量、写入责任和事务边界能否明确归属</td>
+</tr>
+<tr>
+<td>独立演进需求</td>
+<td>组件是否具有差异化的发布节奏与契约稳定性要求</td>
+</tr>
+<tr>
+<td>运行需求</td>
+<td>是否需要独立扩容、故障隔离或资源配置</td>
+</tr>
+<tr>
+<td>组织与交付</td>
+<td>团队责任、协作成本和运维能力是否支持相应边界</td>
+</tr>
+</tbody></table>
+<p>逻辑组件可以在同一进程中实现，也可以形成独立部署单元。独立部署应有明确的演进或运行收益，并评估网络交互、分布式状态和运维复杂度的增量成本。</p>
+<p>因此，应用边界的合理性应依据职责、约束和变化特征进行评审，服务数量本身不构成评价依据。</p>
+<h2 id="契约与业务不变量"><a href="#契约与业务不变量" class="headerlink" title="契约与业务不变量"></a>契约与业务不变量</h2><p>应用交互契约应规定业务含义、输入输出、前置条件、错误语义、幂等、重试和版本兼容策略。事件契约还需明确事实发生的时点、标识及消费者可以依赖的语义。</p>
+<p>例如，“取消订单”是受业务规则约束的命令。负责订单能力的应用应验证取消资格并维护状态不变量；调用方通过契约获取行为结果，无需复制内部状态判断。</p>
+<p>业务 API 和领域事件应根据协作需求设计，与内部持久化结构保持必要隔离。否则，表结构调整可能被动传播到外部消费者，削弱应用独立演进能力。</p>
+<h1 id="TA：质量属性驱动的技术实现"><a href="#TA：质量属性驱动的技术实现" class="headerlink" title="TA：质量属性驱动的技术实现"></a>TA：质量属性驱动的技术实现</h1><p>技术架构依据应用交互、数据管理及运行约束，确定平台、存储、网络、中间件和运维机制。技术选型应说明方案对质量属性的贡献、适用条件及成本，而不仅列出组件名称。</p>
+<h2 id="将质量要求转化为可度量场景"><a href="#将质量要求转化为可度量场景" class="headerlink" title="将质量要求转化为可度量场景"></a>将质量要求转化为可度量场景</h2><p>性能、可用性、安全和可恢复性等要求需要具备明确的适用条件与评价标准。SEI 的质量属性场景方法将需求与刺激、环境、系统响应及响应度量关联，用于澄清架构驱动因素并支持权衡。<a target="_blank" rel="noopener" href="https://www.sei.cmu.edu/library/quality-attribute-workshop-collection/">SEI Quality Attribute Workshop</a></p>
+<p>以下为方法说明所使用的假设性指标，不代表已经完成的容量评估或测试结果：</p>
+<table>
+<thead>
+<tr>
+<th>质量属性</th>
+<th>场景与验收条件示例</th>
+<th>验证依据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>性能</td>
+<td>在约定的数据规模、缓存状态和峰值负载下，订单查询 P95 响应时间不超过 300 ms</td>
+<td>可复现的负载模型、压测记录与资源指标</td>
+</tr>
+<tr>
+<td>可用性</td>
+<td>单个应用实例故障后，请求处理在约定时间内恢复，错误率保持在服务目标范围内</td>
+<td>故障注入、流量观测与恢复记录</td>
+</tr>
+<tr>
+<td>可恢复性</td>
+<td>根据业务影响确定 RPO 与 RTO，并验证备份和恢复流程满足目标</td>
+<td>恢复演练、数据核对与耗时记录</td>
+</tr>
+<tr>
+<td>幂等性</td>
+<td>同一业务操作重复提交或超时重试时，不产生重复的业务效果</td>
+<td>并发、重复请求及故障恢复测试</td>
+</tr>
+<tr>
+<td>访问控制</td>
+<td>未获授权的主体无法执行受限操作或读取受限数据，并生成必要审计记录</td>
+<td>权限测试与审计验证</td>
+</tr>
+</tbody></table>
+<p>RPO（恢复点目标）约束可容忍的数据丢失范围，通常以时间衡量；RTO（恢复时间目标）约束业务恢复所需时间。二者需要由业务影响分析确定，并通过恢复测试验证。</p>
+<p>单实例故障演练的结论也有明确适用范围，不能直接外推为跨机房或跨地域容灾能力。质量结论应与测试覆盖的故障模型保持一致。</p>
+<h2 id="技术约束的跨域反馈"><a href="#技术约束的跨域反馈" class="headerlink" title="技术约束的跨域反馈"></a>技术约束的跨域反馈</h2><p>技术条件会反向影响业务方案。例如，跨地域同步写入的时延、可用性和成本约束，可能要求重新评估数据分布、应用交互或业务完成条件。</p>
+<p>安全、可观测性、可运维性与成本同样具有跨域性质。BA 明确业务授权与责任，DA 定义数据保护要求，AA 确定执行边界，TA 提供实现与运行控制。跨域要求应具有统一的责任链和验收口径。</p>
+<h1 id="四个架构域的协同机制"><a href="#四个架构域的协同机制" class="headerlink" title="四个架构域的协同机制"></a>四个架构域的协同机制</h1><p><img src= "/img/loading.gif" data-lazy-src="/images/2026/10-27/4a/4a-relationships.svg" alt="4A 架构的职责与协同关系" width="1600" height="1180" style="aspect-ratio:1600 / 1180"></p>
+<p>图中关系表示设计输入、协同约束与实现支撑，不表示运行时调用顺序或源码依赖。</p>
+<h2 id="业务约束向数据与应用设计传递"><a href="#业务约束向数据与应用设计传递" class="headerlink" title="业务约束向数据与应用设计传递"></a>业务约束向数据与应用设计传递</h2><p>BA 为 DA 和 AA 提供一致的业务语义及规则。业务流程约束应用行为，业务对象和不变量约束数据表示与更新行为。</p>
+<p>例如，“支付完成”应明确表示支付渠道受理、资金到账，还是业务侧已确认结算。该定义应贯穿状态模型、事件语义和接口返回，防止不同应用对同一状态产生不同解释。</p>
+<h2 id="数据权责与应用职责相互校验"><a href="#数据权责与应用职责相互校验" class="headerlink" title="数据权责与应用职责相互校验"></a>数据权责与应用职责相互校验</h2><p>DA 明确数据的权威来源、更新规则和一致性要求；AA 确定执行这些职责的应用及其交互契约。二者应共同确认状态维护主体、信息分发方式和异常处理责任。</p>
+<p>对于多来源数据，设计还需明确权威范围、冲突处理与合并策略。应用划分和数据划分应迭代校验，避免形成职责重叠或无人负责的数据状态。</p>
+<h2 id="技术实现与质量目标形成反馈闭环"><a href="#技术实现与质量目标形成反馈闭环" class="headerlink" title="技术实现与质量目标形成反馈闭环"></a>技术实现与质量目标形成反馈闭环</h2><p>TA 提供应用运行和数据管理所需的技术机制，同时将平台限制、故障模式和资源成本反馈到其他架构域。对于影响方案成立的关键假设，应在设计早期通过原型、测试或分析取得证据。</p>
+<p>四个领域之间具有逻辑上的需求传递关系，但实施过程应支持迭代与反馈。设计完成的判断依据是约束的一致落实，而非文档依次交接。</p>
+<h1 id="跨域决策示例：取消订单与退款处理"><a href="#跨域决策示例：取消订单与退款处理" class="headerlink" title="跨域决策示例：取消订单与退款处理"></a>跨域决策示例：取消订单与退款处理</h1><p>假设业务要求同一支付操作不得重复扣款，已支付订单的取消流程需要包含退款处置。该示例用于说明跨域映射，不预设服务拆分或中间件方案。</p>
+<table>
+<thead>
+<tr>
+<th>架构域</th>
+<th>需要确定的约束</th>
+<th>对应设计决策</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BA</td>
+<td>取消资格、取消完成条件、退款失败后的业务责任</td>
+<td>定义状态转换、例外流程与人工处置规则</td>
+</tr>
+<tr>
+<td>DA</td>
+<td>订单、支付与退款记录的关联及权威范围</td>
+<td>定义业务标识、状态语义、写入权责与对账依据</td>
+</tr>
+<tr>
+<td>AA</td>
+<td>资格判断、退款执行、状态协调的职责分配</td>
+<td>定义命令、结果查询、事件及幂等契约</td>
+</tr>
+<tr>
+<td>TA</td>
+<td>重试、重复消息、超时与节点故障下的行为</td>
+<td>确定事务、持久化、可靠投递、监控和恢复机制</td>
+</tr>
+</tbody></table>
+<p>若业务允许取消先完成、退款异步处理，则订单取消和退款完成是两个需要分别管理的事实。DA 应表达独立状态，AA 应承担后续推进与结果查询职责，TA 应提供可靠执行和恢复能力。</p>
+<p>若业务规定退款成功是取消完成的前置条件，则状态机、对外响应和超时处置均需调整。业务规则的差异会沿数据、应用与技术设计持续传递，无法仅通过替换某个技术组件消除。</p>
+<p>该示例表明，架构评审需要验证规则到实现的映射完整性。相同的组件组合并不能证明系统具有相同的业务行为。</p>
+<h1 id="架构落地与评审依据"><a href="#架构落地与评审依据" class="headerlink" title="架构落地与评审依据"></a>架构落地与评审依据</h1><h2 id="建立需求、决策与证据的追溯链"><a href="#建立需求、决策与证据的追溯链" class="headerlink" title="建立需求、决策与证据的追溯链"></a>建立需求、决策与证据的追溯链</h2><p>关键业务目标和规则应能够追溯到数据责任、应用责任、技术措施及验证证据。以下为一种可用于评审的映射方式：</p>
+<table>
+<thead>
+<tr>
+<th>业务目标或规则</th>
+<th>数据责任</th>
+<th>应用责任</th>
+<th>技术措施</th>
+<th>验证证据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>同一操作不重复扣款</td>
+<td>保存操作标识与支付结果</td>
+<td>验证幂等并处理结果未知状态</td>
+<td>唯一约束、本地事务、渠道幂等或结果查询、对账</td>
+<td>重复提交、并发、超时及故障恢复测试</td>
+</tr>
+<tr>
+<td>订单状态具有确定的业务解释</td>
+<td>维护权威状态及查询副本时效</td>
+<td>负责状态推进与对外查询契约</td>
+<td>可靠投递、监控、状态核对与修复</td>
+<td>延迟、乱序、重复及遗漏事件测试</td>
+</tr>
+</tbody></table>
+<p>技术措施应与外部系统的协议能力共同评估。例如，本地唯一约束可以限制重复写入，但不能独立证明跨系统支付操作只产生一次业务效果；还需要分析渠道幂等、结果未知状态及对账恢复路径。</p>
+<h2 id="描述现状、目标与过渡架构"><a href="#描述现状、目标与过渡架构" class="headerlink" title="描述现状、目标与过渡架构"></a>描述现状、目标与过渡架构</h2><p>架构设计需要覆盖目标状态及其演进过程。职责迁移和数据迁移应明确：</p>
+<ul>
+<li>现有能力与目标能力之间的差距。</li>
+<li>历史数据迁移、校验和增量同步方式。</li>
+<li>过渡期的数据写入权与状态权威来源。</li>
+<li>新旧接口及事件的兼容范围和退出条件。</li>
+<li>灰度验证、故障回退与责任交接机制。</li>
+</ul>
+<p>过渡期同样需要满足业务不变量和运行要求。评审仅覆盖目标拓扑，会遗漏迁移阶段的双写冲突、状态不一致和兼容性风险。</p>
+<h2 id="按风险与证据组织验证"><a href="#按风险与证据组织验证" class="headerlink" title="按风险与证据组织验证"></a>按风险与证据组织验证</h2><p>验证优先级应依据风险的业务影响、发生可能性及修复成本确定。影响方案成立的关键假设，应在大规模实施之前完成确认。</p>
+<p>不同结论需要不同类型的证据：业务规则由责任主体确认；接口和状态约束通过契约及行为测试验证；容量与时延通过负载测试验证；恢复能力通过故障和恢复演练验证。</p>
+<p>对于范围有限的项目，可以将四个领域的分析合并到适当规模的设计文档中。文档形式可以精简，但关键决策的依据、责任和验证状态应完整保留。</p>
+<h1 id="典型设计偏差"><a href="#典型设计偏差" class="headerlink" title="典型设计偏差"></a>典型设计偏差</h1><table>
+<thead>
+<tr>
+<th>偏差</th>
+<th>主要风险</th>
+<th>评审重点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>以功能清单代替业务架构</td>
+<td>业务目标、角色责任与规则缺失</td>
+<td>能力与流程能否追溯到业务结果</td>
+</tr>
+<tr>
+<td>数据设计仅覆盖表结构</td>
+<td>语义、权责、时效与生命周期不明确</td>
+<td>权威记录、写入责任及治理规则是否完整</td>
+</tr>
+<tr>
+<td>应用边界直接等同于部署单元</td>
+<td>职责划分受实现形式主导</td>
+<td>边界是否具有业务、数据或独立演进依据</td>
+</tr>
+<tr>
+<td>技术方案仅列组件</td>
+<td>无法判断质量要求是否得到满足</td>
+<td>选型是否对应明确约束和验证证据</td>
+</tr>
+<tr>
+<td>跨域设计缺少反馈</td>
+<td>成本或可行性问题无法及时反映</td>
+<td>关键假设及约束是否持续校验</td>
+</tr>
+<tr>
+<td>图示与实现缺少关联</td>
+<td>文档逐步偏离接口、数据和部署状态</td>
+<td>变更是否同步维护追溯关系与评审记录</td>
+</tr>
+</tbody></table>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><strong>4A 架构通过业务、数据、应用和技术四个领域的协同，建立业务目标、设计决策、实现责任与验证证据之间的可追溯关系。</strong></p>
+<p>BA 确定目标、能力和规则，DA 确定信息语义与数据权责，AA 确定应用职责和协作契约，TA 确定运行机制与质量保障。架构的有效性应从业务目标覆盖程度、跨域一致性、决策可追溯性与验证充分性进行评价，并在系统演进过程中持续维护。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="/about/">彩虹马</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://rainbowhorse.site/4A%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1-%E4%B8%9A%E5%8A%A1%E6%95%B0%E6%8D%AE%E5%BA%94%E7%94%A8%E4%B8%8E%E6%8A%80%E6%9C%AF%E7%9A%84%E5%8D%8F%E5%90%8C/">https://rainbowhorse.site/4A架构设计-业务数据应用与技术的协同/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://rainbowhorse.site" target="_blank">彩虹马的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/">架构设计</a></div><div class="post_share"><div class="social-share" data-image="/images/2026/10-27/4a/4a-technical-cover.jpg" data-sites="weibo"></div><link rel="stylesheet" href="/vendor/social-share.js/1.0.16/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="/vendor/social-share.js/1.0.16/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/reward-wepay.jpg" target="_blank"><img class="post-qr-code-img" src= "/img/loading.gif" data-lazy-src="/img/reward-wepay.jpg" alt="微信" width="194" height="198" style="aspect-ratio:194 / 198"/></a><div class="post-qr-code-desc">微信</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/%E4%BB%8EMVC%E5%88%B0DDD-COLA%E5%88%86%E5%B1%82%E4%B8%8E%E4%BA%8B%E5%8A%A1%E8%BE%B9%E7%95%8C/"><img class="prev-cover" src= "/img/loading.gif" data-lazy-src="/images/2026/10-21/cola/cola-layered-architecture.svg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post" width="1280" height="900" style="aspect-ratio:1280 / 900"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">从 MVC 到 DDD：COLA 分层逻辑与事务边界</div></div></a></div><div class="next-post pull-right"><a href="/%E6%9E%B6%E6%9E%84%E5%9B%BE%E5%88%86%E7%B1%BB/"><img class="next-cover" src= "/img/loading.gif" data-lazy-src="/../../../../images/2022/7-9/arch_category_cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post" width="810" height="522" style="aspect-ratio:810 / 522"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">架构图分类</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/%E4%BB%8EMVC%E5%88%B0DDD-COLA%E5%88%86%E5%B1%82%E4%B8%8E%E4%BA%8B%E5%8A%A1%E8%BE%B9%E7%95%8C/" title="从 MVC 到 DDD：COLA 分层逻辑与事务边界"><img class="cover" src= "/img/loading.gif" data-lazy-src="/images/2026/10-21/cola/cola-layered-architecture.svg" alt="cover" width="1280" height="900" style="aspect-ratio:1280 / 900"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-21</div><div class="title">从 MVC 到 DDD：COLA 分层逻辑与事务边界</div></div></a></div><div><a href="/%E5%BC%82%E5%9C%B0%E5%A4%9A%E6%B4%BB%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" title="异地多活架构设计"><img class="cover" src= "/img/loading.gif" data-lazy-src="/../../../../images/2022/4-6/7.arch_cover.jpg" alt="cover" width="1111" height="849" style="aspect-ratio:1111 / 849"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-26</div><div class="title">异地多活架构设计</div></div></a></div><div><a href="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" title="微服务架构设计"><img class="cover" src= "/img/loading.gif" data-lazy-src="/../../../../images/2022/1-3/6.arch_cover.jpg" alt="cover" width="873" height="698" style="aspect-ratio:873 / 698"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-16</div><div class="title">微服务架构设计</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/img/loading.gif" data-lazy-src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar" width="399" height="397" style="aspect-ratio:399 / 397"/></div><div class="author-info__name">彩虹马</div><div class="author-info__description">总结个人心得，记录个人知识</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">111</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">62</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mx-go"><i class="fab fa-github"></i><span>关注我</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/mx-go" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:mx_sunny@sina.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://www.processon.com/u/5a55be27e4b0a447b99a9b2a/profile" target="_blank" title="ProcessOn"><i class="fas fa-pencil-square"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">一个收藏回忆与分享技术的地方！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4A-%E6%9E%B6%E6%9E%84%E7%9A%84%E5%AE%9A%E4%B9%89%E4%B8%8E%E9%80%82%E7%94%A8%E8%8C%83%E5%9B%B4"><span class="toc-number">2.</span> <span class="toc-text">4A 架构的定义与适用范围</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#BA%EF%BC%9A%E4%B8%9A%E5%8A%A1%E7%9B%AE%E6%A0%87%E3%80%81%E8%83%BD%E5%8A%9B%E4%B8%8E%E8%A7%84%E5%88%99%E7%9A%84%E7%BB%93%E6%9E%84%E5%8C%96%E8%A1%A8%E8%BE%BE"><span class="toc-number">3.</span> <span class="toc-text">BA：业务目标、能力与规则的结构化表达</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%9A%E5%8A%A1%E8%83%BD%E5%8A%9B%E4%B8%8E%E4%B8%9A%E5%8A%A1%E6%B5%81%E7%A8%8B"><span class="toc-number">3.1.</span> <span class="toc-text">业务能力与业务流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%9A%E5%8A%A1%E5%AF%B9%E8%B1%A1%E3%80%81%E9%A2%86%E5%9F%9F%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%BE%B9%E7%95%8C"><span class="toc-number">3.2.</span> <span class="toc-text">业务对象、领域模型与数据模型的边界</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DA%EF%BC%9A%E6%95%B0%E6%8D%AE%E8%AF%AD%E4%B9%89%E3%80%81%E6%9D%83%E8%B4%A3%E4%B8%8E%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%B2%BB%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">DA：数据语义、权责与生命周期治理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E7%BB%93%E6%9E%84%E4%B8%8E%E5%8A%A8%E6%80%81%E6%B5%81%E8%BD%AC%E7%9A%84%E7%BB%9F%E4%B8%80%E8%AE%BE%E8%AE%A1"><span class="toc-number">4.1.</span> <span class="toc-text">静态结构与动态流转的统一设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E5%8F%91%E4%B8%8E%E4%B8%80%E8%87%B4%E6%80%A7%E7%BA%A6%E6%9D%9F"><span class="toc-number">4.2.</span> <span class="toc-text">数据分发与一致性约束</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AA%EF%BC%9A%E5%BA%94%E7%94%A8%E8%81%8C%E8%B4%A3%E3%80%81%E8%BE%B9%E7%95%8C%E4%B8%8E%E5%8D%8F%E4%BD%9C%E5%A5%91%E7%BA%A6"><span class="toc-number">5.</span> <span class="toc-text">AA：应用职责、边界与协作契约</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E8%81%8C%E8%B4%A3%E4%B8%8E%E9%83%A8%E7%BD%B2%E8%BE%B9%E7%95%8C"><span class="toc-number">5.1.</span> <span class="toc-text">逻辑职责与部署边界</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A5%91%E7%BA%A6%E4%B8%8E%E4%B8%9A%E5%8A%A1%E4%B8%8D%E5%8F%98%E9%87%8F"><span class="toc-number">5.2.</span> <span class="toc-text">契约与业务不变量</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TA%EF%BC%9A%E8%B4%A8%E9%87%8F%E5%B1%9E%E6%80%A7%E9%A9%B1%E5%8A%A8%E7%9A%84%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0"><span class="toc-number">6.</span> <span class="toc-text">TA：质量属性驱动的技术实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%86%E8%B4%A8%E9%87%8F%E8%A6%81%E6%B1%82%E8%BD%AC%E5%8C%96%E4%B8%BA%E5%8F%AF%E5%BA%A6%E9%87%8F%E5%9C%BA%E6%99%AF"><span class="toc-number">6.1.</span> <span class="toc-text">将质量要求转化为可度量场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E7%BA%A6%E6%9D%9F%E7%9A%84%E8%B7%A8%E5%9F%9F%E5%8F%8D%E9%A6%88"><span class="toc-number">6.2.</span> <span class="toc-text">技术约束的跨域反馈</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E4%B8%AA%E6%9E%B6%E6%9E%84%E5%9F%9F%E7%9A%84%E5%8D%8F%E5%90%8C%E6%9C%BA%E5%88%B6"><span class="toc-number">7.</span> <span class="toc-text">四个架构域的协同机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%9A%E5%8A%A1%E7%BA%A6%E6%9D%9F%E5%90%91%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%BA%94%E7%94%A8%E8%AE%BE%E8%AE%A1%E4%BC%A0%E9%80%92"><span class="toc-number">7.1.</span> <span class="toc-text">业务约束向数据与应用设计传递</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%9D%83%E8%B4%A3%E4%B8%8E%E5%BA%94%E7%94%A8%E8%81%8C%E8%B4%A3%E7%9B%B8%E4%BA%92%E6%A0%A1%E9%AA%8C"><span class="toc-number">7.2.</span> <span class="toc-text">数据权责与应用职责相互校验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%B4%A8%E9%87%8F%E7%9B%AE%E6%A0%87%E5%BD%A2%E6%88%90%E5%8F%8D%E9%A6%88%E9%97%AD%E7%8E%AF"><span class="toc-number">7.3.</span> <span class="toc-text">技术实现与质量目标形成反馈闭环</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B7%A8%E5%9F%9F%E5%86%B3%E7%AD%96%E7%A4%BA%E4%BE%8B%EF%BC%9A%E5%8F%96%E6%B6%88%E8%AE%A2%E5%8D%95%E4%B8%8E%E9%80%80%E6%AC%BE%E5%A4%84%E7%90%86"><span class="toc-number">8.</span> <span class="toc-text">跨域决策示例：取消订单与退款处理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E8%90%BD%E5%9C%B0%E4%B8%8E%E8%AF%84%E5%AE%A1%E4%BE%9D%E6%8D%AE"><span class="toc-number">9.</span> <span class="toc-text">架构落地与评审依据</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA%E7%AB%8B%E9%9C%80%E6%B1%82%E3%80%81%E5%86%B3%E7%AD%96%E4%B8%8E%E8%AF%81%E6%8D%AE%E7%9A%84%E8%BF%BD%E6%BA%AF%E9%93%BE"><span class="toc-number">9.1.</span> <span class="toc-text">建立需求、决策与证据的追溯链</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%8F%E8%BF%B0%E7%8E%B0%E7%8A%B6%E3%80%81%E7%9B%AE%E6%A0%87%E4%B8%8E%E8%BF%87%E6%B8%A1%E6%9E%B6%E6%9E%84"><span class="toc-number">9.2.</span> <span class="toc-text">描述现状、目标与过渡架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E9%A3%8E%E9%99%A9%E4%B8%8E%E8%AF%81%E6%8D%AE%E7%BB%84%E7%BB%87%E9%AA%8C%E8%AF%81"><span class="toc-number">9.3.</span> <span class="toc-text">按风险与证据组织验证</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B8%E5%9E%8B%E8%AE%BE%E8%AE%A1%E5%81%8F%E5%B7%AE"><span class="toc-number">10.</span> <span class="toc-text">典型设计偏差</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">11.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%9A%BE%E5%BA%A6%E8%B7%AF%E7%94%B1%E8%81%8C%E8%B4%A3-vLLM-Semantic-Router%E4%B8%8EHigress/" title="大模型难度路由职责：vLLM Semantic Router与Higress"><img src= "/img/loading.gif" data-lazy-src="/images/2026/10-12/difficulty-routing/cover-optimized-thumb.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="大模型难度路由职责：vLLM Semantic Router与Higress" width="800" height="450" style="aspect-ratio:800 / 450"/></a><div class="content"><a class="title" href="/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%9A%BE%E5%BA%A6%E8%B7%AF%E7%94%B1%E8%81%8C%E8%B4%A3-vLLM-Semantic-Router%E4%B8%8EHigress/" title="大模型难度路由职责：vLLM Semantic Router与Higress">大模型难度路由职责：vLLM Semantic Router与Higress</a><time datetime="2026-10-20T07:43:00.000Z" title="发表于 2026-10-20 15:43:00">2026-10-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Langfuse%E6%8E%92%E6%9F%A5%E6%99%BA%E8%83%BD%E4%BD%93Badcase-%E9%93%BE%E8%B7%AF%E8%A7%82%E6%B5%8B%E4%B8%8E%E8%AF%84%E6%B5%8B%E5%9B%9E%E5%BD%92/" title="用 Langfuse 排查智能体 Badcase：从链路观测到评测回归"><img src= "/img/loading.gif" data-lazy-src="/images/2025/06-18/langfuse/badcase-workflow.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="用 Langfuse 排查智能体 Badcase：从链路观测到评测回归" width="1440" height="900" style="aspect-ratio:1440 / 900"/></a><div class="content"><a class="title" href="/Langfuse%E6%8E%92%E6%9F%A5%E6%99%BA%E8%83%BD%E4%BD%93Badcase-%E9%93%BE%E8%B7%AF%E8%A7%82%E6%B5%8B%E4%B8%8E%E8%AF%84%E6%B5%8B%E5%9B%9E%E5%BD%92/" title="用 Langfuse 排查智能体 Badcase：从链路观测到评测回归">用 Langfuse 排查智能体 Badcase：从链路观测到评测回归</a><time datetime="2025-06-18T02:00:00.000Z" title="发表于 2025-06-18 10:00:00">2025-06-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%99%BA%E8%83%BD%E4%BD%93%E8%AE%B0%E5%BF%86%E8%AE%BE%E8%AE%A1-%E7%9F%AD%E6%9C%9F%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E4%B8%8E%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/" title="智能体记忆设计：短期上下文、长期记忆与缓存一致性"><img src= "/img/loading.gif" data-lazy-src="/images/2026/10-22/agent-memory/memory-architecture.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="智能体记忆设计：短期上下文、长期记忆与缓存一致性" width="1290" height="678" style="aspect-ratio:1290 / 678"/></a><div class="content"><a class="title" href="/%E6%99%BA%E8%83%BD%E4%BD%93%E8%AE%B0%E5%BF%86%E8%AE%BE%E8%AE%A1-%E7%9F%AD%E6%9C%9F%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E4%B8%8E%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/" title="智能体记忆设计：短期上下文、长期记忆与缓存一致性">智能体记忆设计：短期上下文、长期记忆与缓存一致性</a><time datetime="2025-04-08T02:00:00.000Z" title="发表于 2025-04-08 10:00:00">2025-04-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/AgentScope%E4%B8%AD%E7%9A%84MCP-Tool%E7%AE%A1%E7%90%86-%E5%8F%91%E7%8E%B0%E6%9A%B4%E9%9C%B2%E4%B8%8E%E7%89%88%E6%9C%AC%E6%B2%BB%E7%90%86/" title="AgentScope中的MCP Tool管理：发现、暴露与版本治理"><img src= "/img/loading.gif" data-lazy-src="/images/2026/10-21/agentscope-mcp-tool/cover-optimized-thumb.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="AgentScope中的MCP Tool管理：发现、暴露与版本治理" width="800" height="533" style="aspect-ratio:800 / 533"/></a><div class="content"><a class="title" href="/AgentScope%E4%B8%AD%E7%9A%84MCP-Tool%E7%AE%A1%E7%90%86-%E5%8F%91%E7%8E%B0%E6%9A%B4%E9%9C%B2%E4%B8%8E%E7%89%88%E6%9C%AC%E6%B2%BB%E7%90%86/" title="AgentScope中的MCP Tool管理：发现、暴露与版本治理">AgentScope中的MCP Tool管理：发现、暴露与版本治理</a><time datetime="2025-01-12T02:00:00.000Z" title="发表于 2025-01-12 10:00:00">2025-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/2026/10-27/4a/4a-technical-cover.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2017 - 2026 By 彩虹马</div><div class="footer_custom_text"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">粤ICP备2022148055号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="algolia-search"><div class="search-dialog" id="algolia-search-dialog" role="dialog" aria-modal="true" aria-labelledby="algolia-search-title" aria-hidden="true" tabindex="-1"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><p id="algolia-search-status" role="status" hidden="hidden">搜索加载中…</p><button id="algolia-search-retry" type="button" hidden="hidden">重试</button><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><button class="search-close-button" type="button" aria-label="关闭搜索"><i class="fas fa-times" aria-hidden="true"></i></button></div><div id="search-mask"></div></div><div><script defer src="/js/utils.js"></script><script defer src="/js/main.js"></script><script defer src="/js/tw_cn.js"></script><script src="/vendor/instant.page/5.2.0/instantpage.min.js" type="module"></script><script defer src="/vendor/vanilla-lazyload/19.1.3/dist/lazyload.iife.min.js"></script><script defer src="/vendor/node-snackbar/0.1.16/dist/snackbar.min.js"></script><script>function panguFn () {
+  const applySpacing = () => {
+    if (true) pangu.spacingElementById('article-container')
+    else pangu.autoSpacingPage()
+  }
+  if (typeof pangu === 'object') applySpacing()
+  else {
+    getScript('/vendor/pangu/4.0.7/dist/browser/pangu.min.js')
+      .then(applySpacing)
+  }
+}
+
+function panguInit () {
+  if (true){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script defer src="/js/search/algolia.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', preloader.endLoading, { once: true });
+} else {
+  preloader.endLoading();
+}</script><div class="js-pjax"></div><script defer src="/js/home-scroll-hint.js"></script><script defer="defer" id="ribbon" src="/vendor/butterfly-extsrc/1.1.6/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script defer="defer" src="/vendor/butterfly-extsrc/1.1.6/dist/activate-power-mode.min.js"></script><script>window.addEventListener('load', () => {
+  POWERMODE.colorful = true;
+  POWERMODE.shake = false;
+  POWERMODE.mobile = false;
+  document.body.addEventListener('input', event => {
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) POWERMODE(event);
+  });
+}, { once: true })
+</script><script id="click-heart" src="/vendor/butterfly-extsrc/1.1.6/dist/click-heart.min.js" async="async" mobile="false"></script><script defer src="/js/busuanzi-display.js"></script><script defer data-pjax src="https://cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.min.js"></script></div></body></html>
