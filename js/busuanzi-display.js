@@ -7,8 +7,7 @@ function formatBusuanziCount (value) {
 
 document.querySelectorAll('[data-busuanzi-total]').forEach(display => {
   const counter = document.getElementById(display.dataset.counter)
-  const base = Number(display.dataset.base)
-  if (!counter || !Number.isSafeInteger(base) || base < 0) return
+  if (!counter) return
 
   const timeout = setTimeout(() => {
     display.textContent = '暂不可用'
@@ -19,7 +18,7 @@ document.querySelectorAll('[data-busuanzi-total]').forEach(display => {
     const value = counter.textContent.trim()
     if (!/^\d+$/.test(value)) return
     clearTimeout(timeout)
-    display.textContent = formatBusuanziCount(base + Number(value))
+    display.textContent = formatBusuanziCount(Number(value))
     display.title = ''
   }
   new MutationObserver(update).observe(counter, { childList: true, characterData: true, subtree: true })
