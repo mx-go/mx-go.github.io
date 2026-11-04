@@ -7,12 +7,19 @@ function formatBusuanziCount (value) {
 
 document.querySelectorAll('[data-busuanzi-total]').forEach(display => {
   const counter = document.getElementById(display.dataset.counter)
-  const base = Number(display.dataset.base)
-  if (!counter || !Number.isSafeInteger(base) || base < 0) return
+  if (!counter) return
+
+  const timeout = setTimeout(() => {
+    display.textContent = '暂不可用'
+    display.title = '统计服务暂未返回数据，请稍后刷新'
+  }, 8000)
 
   const update = () => {
     const value = counter.textContent.trim()
-    if (/^\d+$/.test(value)) display.textContent = formatBusuanziCount(base + Number(value))
+    if (!/^\d+$/.test(value)) return
+    clearTimeout(timeout)
+    display.textContent = formatBusuanziCount(Number(value))
+    display.title = ''
   }
   new MutationObserver(update).observe(counter, { childList: true, characterData: true, subtree: true })
   update()
