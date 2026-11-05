@@ -418,11 +418,69 @@ document.addEventListener('DOMContentLoaded', function () {
   /**
  *  toc
  */
+  let cleanupToc = () => {}
+  let tocSubtreeId = 0
   const tocFn = function () {
+    cleanupToc()
     const $cardTocLayout = document.getElementById('card-toc')
+    if (!$cardTocLayout) return
     const $cardToc = $cardTocLayout.getElementsByClassName('toc-content')[0]
     const $tocLink = $cardToc.querySelectorAll('.toc-link')
     const $article = document.getElementById('article-container')
+    const $mobileTocButton = document.getElementById('mobile-toc-button')
+    const $collapseAllButton = document.getElementById('toc-collapse-all')
+    const $expandAllButton = document.getElementById('toc-expand-all')
+
+    const setExpanded = (toggle, expanded) => {
+      toggle.setAttribute('aria-expanded', String(expanded))
+      toggle.closest('.toc-item').classList.toggle('toc-collapsed', !expanded)
+      document.getElementById(toggle.getAttribute('aria-controls')).hidden = !expanded
+      toggle.title = (expanded ? '收起' : '展开') + toggle.parentElement.querySelector('.toc-link').textContent.trim()
+      toggle.setAttribute('aria-label', toggle.title)
+    }
+
+    $tocLink.forEach(link => {
+      const item = link.closest('.toc-item')
+      const child = Array.from(item.children).find(element => element.classList.contains('toc-child'))
+      const toggle = item.querySelector(':scope > .toc-row > .toc-toggle')
+      if (!child) {
+        if (toggle) link.parentElement.replaceWith(link)
+        item.classList.remove('toc-collapsed')
+        return
+      }
+      if (!child.id) {
+        let id
+        do { id = 'toc-subtree-' + tocSubtreeId++ } while (document.getElementById(id))
+        child.id = id
+      }
+      if (toggle) {
+        toggle.setAttribute('aria-controls', child.id)
+        setExpanded(toggle, toggle.getAttribute('aria-expanded') === 'true')
+        return
+      }
+
+      const row = document.createElement('div')
+      row.className = 'toc-row'
+      const control = document.createElement('button')
+      control.type = 'button'
+      control.className = 'toc-toggle'
+      control.setAttribute('aria-controls', child.id)
+      control.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg>'
+      const expanded = item.parentElement.classList.contains('toc')
+      item.insertBefore(row, link)
+      row.append(link, control)
+      setExpanded(control, expanded)
+    })
+
+    const $tocToggle = $cardToc.querySelectorAll('.toc-toggle')
+    const collapseAll = () => {
+      $tocToggle.forEach(toggle => setExpanded(toggle, false))
+    }
+    const expandAll = () => {
+      $tocToggle.forEach(toggle => setExpanded(toggle, true))
+    }
+    $collapseAllButton && $collapseAllButton.addEventListener('click', collapseAll)
+    $expandAllButton && $expandAllButton.addEventListener('click', expandAll)
 
     // main of scroll
     window.tocScrollFn = function () {
@@ -471,24 +529,46 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    document.getElementById('mobile-toc-button').addEventListener('click', () => {
+    const toggleMobileToc = () => {
       if (window.getComputedStyle($cardTocLayout).getPropertyValue('opacity') === '0') mobileToc.open()
       else mobileToc.close()
-    })
+    }
+    $mobileTocButton && $mobileTocButton.addEventListener('click', toggleMobileToc)
 
-    // toc元素點擊
-    $cardToc.addEventListener('click', (e) => {
+    const clickToc = (e) => {
+      const toggle = e.target.closest('.toc-toggle')
+      if (toggle && $cardToc.contains(toggle)) {
+        setExpanded(toggle, toggle.getAttribute('aria-expanded') !== 'true')
+        return
+      }
+      const link = e.target.closest('.toc-link')
+      if (!link || !$cardToc.contains(link) || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return
       e.preventDefault()
-      const $target = e.target.classList.contains('toc-link')
-        ? e.target
-        : e.target.parentElement
-      btf.scrollToDest(btf.getEleTop(document.getElementById(decodeURI($target.getAttribute('href')).replace('#', ''))), 300)
-      if (window.innerWidth < 900) {
+      const heading = document.getElementById(decodeURIComponent(link.getAttribute('href').slice(1)))
+      if (!heading) return
+      const control = link.parentElement.querySelector(':scope > .toc-toggle')
+      if (control) setExpanded(control, true)
+      btf.scrollToDest(btf.getEleTop(heading), 300)
+      if (window.innerWidth <= 900) {
         mobileToc.close()
       }
-    })
+    }
+    const keydownToc = (e) => {
+      const toggle = e.target.closest('.toc-toggle')
+      if (!toggle || !['ArrowLeft', 'ArrowRight'].includes(e.key)) return
+      e.preventDefault()
+      setExpanded(toggle, e.key === 'ArrowRight')
+    }
+    $cardToc.addEventListener('click', clickToc)
+    $cardToc.addEventListener('keydown', keydownToc)
 
     const autoScrollToc = function (item) {
+      // 手动折叠优先于滚动高亮，只定位仍可见的祖先。
+      while (item && !item.getClientRects().length) {
+        const parentList = item.closest('.toc-child')
+        item = parentList && parentList.parentElement.querySelector('.toc-link')
+      }
+      if (!item) return
       const activePosition = item.getBoundingClientRect().top
       const sidebarScrollTop = $cardToc.scrollTop
       if (activePosition > (document.documentElement.clientHeight - 100)) {
@@ -542,6 +622,19 @@ document.addEventListener('DOMContentLoaded', function () {
       for (; !parent.matches('.toc'); parent = parent.parentNode) {
         if (parent.matches('li')) parent.classList.add('active')
       }
+    }
+
+    const observer = new MutationObserver(tocFn)
+    observer.observe($cardToc, { childList: true, subtree: true })
+    const scrollHandler = window.tocScrollFn
+    cleanupToc = () => {
+      observer.disconnect()
+      window.removeEventListener('scroll', scrollHandler)
+      $cardToc.removeEventListener('click', clickToc)
+      $cardToc.removeEventListener('keydown', keydownToc)
+      $mobileTocButton && $mobileTocButton.removeEventListener('click', toggleMobileToc)
+      $collapseAllButton && $collapseAllButton.removeEventListener('click', collapseAll)
+      $expandAllButton && $expandAllButton.removeEventListener('click', expandAll)
     }
   }
 
@@ -867,6 +960,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   window.refreshFn = function () {
+    cleanupToc()
     initAdjust()
 
     if (GLOBAL_CONFIG_SITE.isPost) {
