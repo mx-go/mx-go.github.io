@@ -4,9 +4,14 @@
   .item-headline
     i.fas.fa-stream
     span= _p('aside.card_toc')
+    button#toc-expand-all(type="button" title="展开全部目录" aria-label="展开全部目录")
+      svg(viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false")
+        path(d="M5 20h14M7 4l5 5 5-5M7 10l5 5 5-5")
+    button#toc-collapse-all(type="button" title="收起全部目录" aria-label="收起全部目录")
+      svg(viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false")
+        path(d="M5 4h14M7 14l5-5 5 5M7 20l5-5 5 5")
 
   if (page.encrypt == true)
     .toc-content.toc-div-class(style="display:none")!=toc(page.origin, {list_number: tocNumber})
   else 
     .toc-content!=toc(page.content, {list_number: tocNumber})
-      

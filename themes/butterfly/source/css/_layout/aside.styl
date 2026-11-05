@@ -248,6 +248,29 @@
 
   // toc
   #card-toc
+    #toc-expand-all,
+    #toc-collapse-all
+      display: inline-flex
+      align-items: center
+      justify-content: center
+      margin-left: .3rem
+      padding: .25rem
+      width: 1.5rem
+      height: 1.5rem
+      border: 0
+      border-radius: 4px
+      background: transparent
+      color: var(--toc-link-color)
+      vertical-align: middle
+      cursor: pointer
+
+      &:hover
+        color: $theme-toc-color
+
+      &:focus-visible
+        outline: 2px solid $theme-toc-color
+        outline-offset: 2px
+
     +minWidth901()
       right: 0 !important
 
@@ -269,15 +292,47 @@
         max-height: calc(100vh - 140px)
 
       .toc-child
-        display: none
+        display: block
 
-        +maxWidth900()
-          display: block !important
+        &[hidden]
+          display: none
 
-      .toc-item
-        &.active
-          .toc-child
-            display: block
+      .toc-row
+        display: flex
+        align-items: flex-start
+
+        > .toc-link
+          flex: 1
+          min-width: 0
+
+      .toc-toggle
+        display: inline-flex
+        align-items: center
+        justify-content: center
+        flex: 0 0 auto
+        padding: .2rem
+        width: 1.3rem
+        height: 1.4rem
+        border: 0
+        border-radius: 4px
+        background: transparent
+        color: var(--toc-link-color)
+        cursor: pointer
+
+        &:hover
+          color: $theme-toc-color
+
+        svg
+          display: block
+          transition: transform .15s ease
+
+        &[aria-expanded='true'] svg
+          transform: rotate(90deg)
+
+      .toc-link:focus-visible,
+      .toc-toggle:focus-visible
+        outline: 2px solid $theme-toc-color
+        outline-offset: 2px
 
       ol,
       li
@@ -297,10 +352,11 @@
         color: var(--toc-link-color)
         transition: all .2s ease-in-out
 
-        &.active
-          border-left-color: darken($theme-toc-color, 20%)
-          background: $theme-toc-color
-          color: $toc-active-color
+      .toc-link.active,
+      .toc-item.active.toc-collapsed > .toc-row > .toc-link
+        border-left-color: darken($theme-toc-color, 20%)
+        background: $theme-toc-color
+        color: $toc-active-color
 
       &:before
         position: absolute
