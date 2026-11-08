@@ -1,5 +1,5 @@
 #rightside
-  #rightside-config-hide(class=is_home() ? 'show' : false)
+  #rightside-config-hide(class=(is_home() || is_post()) ? 'show' : false)
     if is_post() && theme.readmode
       button#readmode(type="button" title=_p('rightside.readmode_title'))
         i.fas.fa-book-open
